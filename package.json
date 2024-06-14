@@ -12,7 +12,9 @@
     "access": "restricted"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "wallets/*",
+    "examples/*"
   ],
   "scripts": {
     "clean": "lerna run clean",
