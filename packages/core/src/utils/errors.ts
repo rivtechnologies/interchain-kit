@@ -1,0 +1,1 @@
+export const clientNotExistError = new Error('Client not exist');
