@@ -1,147 +1,45 @@
-import { Algo, OfflineAminoSigner, StdSignature, StdSignDoc } from "@cosmjs/amino";
-import { OfflineDirectSigner } from '@cosmjs/proto-signing';
-import { BroadcastMode, DirectSignDoc, SignOptions, Wallet, WalletAccount } from "./types";
-import Long from 'long';
-import { getClientFromExtension } from './utils';
-import { Keplr } from '@keplr-wallet/types';
+import { AminoSignResponse, OfflineAminoSigner, StdSignature, StdSignDoc } from "@cosmjs/amino";
+import { BroadcastMode, DirectSignDoc, SignOptions, WalletAccount } from "./types";
+import { DirectSignResponse, OfflineDirectSigner } from "@cosmjs/proto-signing";
+import { Keplr } from "@keplr-wallet/types";
 
+export abstract class BaseWallet<T extends Keplr> {
 
-export class BaseWallet {
-  client: Keplr;
-  defaultSignOptions = {
-    preferNoSetFee: false,
-    preferNoSetMemo: true,
-    disableBalanceCheck: true,
-  }
-  option: Wallet
-  constructor({ option }: { option: Wallet }) {
-    this.option = option
-  }
+  abstract client: T;
 
-  async init() {
-    this.client = await getClientFromExtension(this.option.windowKey)
-    return this.client
-  }
+  abstract init(): Promise<void>
 
-  async enable(chainId: string | string[]) {
-    await this.client.enable(chainId)
-  }
+  abstract enable(chainId: string | string[]): Promise<void>
 
-  async disable(chainId: string | string[]) {
-    await this.client.disable(chainId)
-  }
+  abstract disable(chainId: string | string[]): Promise<void>
 
-  async getAccount(chainId: string): Promise<WalletAccount> {
-    const key = await this.client.getKey(chainId);
-    return {
-      username: key.name,
-      address: key.bech32Address,
-      algo: key.algo as Algo,
-      pubkey: key.pubKey,
-      isNanoLedger: key.isNanoLedger,
-    };
-  }
+  abstract getAccount(chainId: string): Promise<WalletAccount>
 
-  async getSimpleAccount(chainId: string) {
-    const { address, username } = await this.getAccount(chainId);
-    return {
-      namespace: 'cosmos',
-      chainId,
-      address,
-      username,
-    };
-  }
+  abstract getSimpleAccount(chainId: string): Promise<any>
 
-  getOfflineSignerAmino(chainId: string): OfflineAminoSigner {
-    return {
-      getAccounts: async () => {
-        return [await this.getAccount(chainId)];
-      },
-      signAmino: async (signerAddress, signDoc) => {
-        return this.signAmino(
-          chainId,
-          signerAddress,
-          signDoc,
-          this.defaultSignOptions
-        );
-      },
-    };
-    // return this.client.getOfflineSignerOnlyAmino(chainId);
-  }
+  abstract getOfflineSignerAmino(chainId: string): OfflineAminoSigner
 
-  getOfflineSignerDirect(chainId: string): OfflineDirectSigner {
-    return {
-      getAccounts: async () => {
-        return [await this.getAccount(chainId)];
-      },
-      signDirect: async (signerAddress, signDoc) => {
-        const resp = await this.signDirect(
-          chainId,
-          signerAddress,
-          signDoc,
-          this.defaultSignOptions
-        );
-        return {
-          ...resp,
-          signed: {
-            ...resp.signed,
-            accountNumber: BigInt(resp.signed.accountNumber.toString()),
-          },
-        };
-      },
-    };
-    // return this.client.getOfflineSigner(chainId) as OfflineDirectSigner;
-  }
+  abstract getOfflineSignerDirect(chainId: string): OfflineDirectSigner
 
-  async signAmino(
+  abstract signAmino(
     chainId: string,
     signer: string,
     signDoc: StdSignDoc,
     signOptions?: SignOptions
-  ) {
-    return await this.client.signAmino(
-      chainId,
-      signer,
-      signDoc,
-      signOptions || this.defaultSignOptions
-    );
-  }
+  ): Promise<AminoSignResponse>
 
-  async signArbitrary(
+  abstract signArbitrary(
     chainId: string,
     signer: string,
     data: string | Uint8Array
-  ): Promise<StdSignature> {
-    return await this.client.signArbitrary(chainId, signer, data);
-  }
+  ): Promise<StdSignature>
 
-  async signDirect(
+  abstract signDirect(
     chainId: string,
     signer: string,
     signDoc: DirectSignDoc,
     signOptions?: SignOptions
-  ) {
-    const resp = await this.client.signDirect(
-      chainId,
-      signer,
-      {
-        ...signDoc,
-        accountNumber: Long.fromString(signDoc.accountNumber.toString()),
-      },
-      signOptions || this.defaultSignOptions
-    );
-    return {
-      ...resp,
-      signed: {
-        ...resp.signed,
-        accountNumber: BigInt(resp.signed.accountNumber.toString()),
-      },
-    };
-  }
+  ): Promise<DirectSignResponse>
 
-  async sendTx(chainId: string, tx: Uint8Array, mode: BroadcastMode) {
-    return await this.client.sendTx(chainId, tx, mode);
-  }
-
-
+  abstract sendTx(chainId: string, tx: Uint8Array, mode: BroadcastMode): Promise<Uint8Array>
 }
