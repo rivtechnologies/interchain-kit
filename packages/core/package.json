@@ -33,6 +33,8 @@
     "@cosmjs/amino": "^0.32.3",
     "@cosmjs/proto-signing": "^0.32.3",
     "@interchain-kit/core": "^0.0.1",
+    "@walletconnect/sign-client": "^2.13.3",
+    "@walletconnect/types": "^2.13.3",
     "long": "^5.2.3"
   },
   "devDependencies": {

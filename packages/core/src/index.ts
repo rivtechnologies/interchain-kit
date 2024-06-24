@@ -1,3 +1,5 @@
 export * from './base-wallet'
+export * from './extension-wallet'
+export * from './mobile-wallet'
 export * from './types'
 export * from './utils'
