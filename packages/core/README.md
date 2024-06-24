@@ -49,3 +49,63 @@ Checkout these related projects:
 AS DESCRIBED IN THE LICENSES, THE SOFTWARE IS PROVIDED “AS IS”, AT YOUR OWN RISK, AND WITHOUT WARRANTIES OF ANY KIND.
 
 No developer or entity involved in creating this software will be liable for any claims or damages whatsoever associated with your use, inability to use, or your interaction with other users of the code, including any direct, indirect, incidental, special, exemplary, punitive or consequential damages, or loss of profits, cryptocurrencies, tokens, or anything else of value.
+
+## Overview
+
+```mermaid
+classDiagram
+    class InterChainWallet{
+        <<abstract>>
+        - walletInstance
+        +init()
+        +getCosmosNetworkAminoSigner(chainId)
+        +getCosmosNetworkDirectSigner(chainId)
+        +getEthermintNetworkAminoSigner(chainId)
+        +getEthermintNetworkDirectSigner(chainId)
+        +getEthermintNetworkEIP712Signer(chainId)
+        +getEthereumNetworkAminoSigner(chainId)
+        +getEthereumNetworkDirectSigner(chainId)
+        +getSigner(chainId)
+
+        +signCosmosAmino(chainId,signer,signDoc,signOption)
+        +signCosmosDirect(chainId,signer,signDoc,signOption)
+        +signEthermintAmino(chainId,signer,signDoc,signOption)
+        +signEthermintDriect(chainId,signer,signDoc,signOption)
+        +signEthermintEIP712(chainId,signer,signDoc,signOption)
+        +signEthereumAmino(chainId,signer,signDoc,signOption)
+        +signEthereumDirect(chainId,signer,signDoc,signOption)
+        +signArbitrary(chainId,signer,data)
+    }
+
+    InterChainWallet <|-- ExtensionWallet
+    InterChainWallet <|-- MobileWallet
+
+    class ExtensionWallet {
+
+    }
+    class MobileWallet {
+      +ISignClient singClient
+    }
+
+    ExtensionWallet <|-- KeplrExtensionWallet
+    ExtensionWallet <|-- LeapExtensionWallet
+
+    MobileWallet <|-- KeplrMobileWallet
+    MobileWallet <|-- LeapMobileWallet
+
+    class KeplrExtensionWallet {
+
+    }
+    class KeplrMobileWallet {
+  
+    }
+
+    class LeapExtensionWallet {
+
+    }
+    class LeapMobileWallet {
+  
+    }
+
+
+```
