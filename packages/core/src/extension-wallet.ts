@@ -1,23 +1,23 @@
 import { Algo, OfflineAminoSigner, StdSignature, StdSignDoc } from "@cosmjs/amino";
 import { OfflineDirectSigner } from '@cosmjs/proto-signing';
-import { BroadcastMode, DirectSignDoc, SignOptions, Wallet, WalletAccount } from "./types";
+import { BroadcastMode, DirectSignDoc, SignOptions, SignType, Wallet, WalletAccount } from "./types";
 import Long from 'long';
 import { getClientFromExtension } from './utils';
-import { Keplr } from '@keplr-wallet/types';
 import { BaseWallet } from "./base-wallet";
 
 
-export class ExtensionWallet extends BaseWallet<Keplr> {
-  client: Keplr;
+export class ExtensionWallet extends BaseWallet {
+
+  isExtensionInstalled: false;
+
   defaultSignOptions = {
     preferNoSetFee: false,
     preferNoSetMemo: true,
     disableBalanceCheck: true,
   }
-  option: Wallet
+
   constructor({ option }: { option: Wallet }) {
-    super()
-    this.option = option
+    super({ option })
   }
 
   async init() {
@@ -32,6 +32,16 @@ export class ExtensionWallet extends BaseWallet<Keplr> {
     await this.client.disable(chainId)
   }
 
+  async getSimpleAccount(chainId: string) {
+    const { address, username } = await this.getAccount(chainId);
+    return {
+      namespace: 'cosmos',
+      chainId,
+      address,
+      username,
+    };
+  }
+
   async getAccount(chainId: string): Promise<WalletAccount> {
     const key = await this.client.getKey(chainId);
     return {
@@ -43,55 +53,24 @@ export class ExtensionWallet extends BaseWallet<Keplr> {
     };
   }
 
-  async getSimpleAccount(chainId: string) {
-    const { address, username } = await this.getAccount(chainId);
-    return {
-      namespace: 'cosmos',
-      chainId,
-      address,
-      username,
-    };
+  getOfflineSigner(chainId: string, preferredSignType?: SignType) {
+    switch (preferredSignType) {
+      case 'amino':
+        return this.getOfflineSignerAmino(chainId);
+      case 'direct':
+        return this.getOfflineSignerDirect(chainId);
+      default:
+        return this.getOfflineSignerAmino(chainId);
+    }
+    // return this.client.getOfflineSignerAuto(chainId);
   }
 
-  getOfflineSignerAmino(chainId: string): OfflineAminoSigner {
-    return {
-      getAccounts: async () => {
-        return [await this.getAccount(chainId)];
-      },
-      signAmino: async (signerAddress, signDoc) => {
-        return this.signAmino(
-          chainId,
-          signerAddress,
-          signDoc,
-          this.defaultSignOptions
-        );
-      },
-    };
-    // return this.client.getOfflineSignerOnlyAmino(chainId);
+  getOfflineSignerAmino(chainId: string) {
+    return this.client.getOfflineSignerOnlyAmino(chainId);
   }
 
-  getOfflineSignerDirect(chainId: string): OfflineDirectSigner {
-    return {
-      getAccounts: async () => {
-        return [await this.getAccount(chainId)];
-      },
-      signDirect: async (signerAddress, signDoc) => {
-        const resp = await this.signDirect(
-          chainId,
-          signerAddress,
-          signDoc,
-          this.defaultSignOptions
-        );
-        return {
-          ...resp,
-          signed: {
-            ...resp.signed,
-            accountNumber: BigInt(resp.signed.accountNumber.toString()),
-          },
-        };
-      },
-    };
-    // return this.client.getOfflineSigner(chainId) as OfflineDirectSigner;
+  getOfflineSignerDirect(chainId: string) {
+    return this.client.getOfflineSigner(chainId) as OfflineDirectSigner;
   }
 
   async signAmino(
@@ -122,7 +101,7 @@ export class ExtensionWallet extends BaseWallet<Keplr> {
     signDoc: DirectSignDoc,
     signOptions?: SignOptions
   ) {
-    const resp = await this.client.signDirect(
+    return await this.client.signDirect(
       chainId,
       signer,
       {
@@ -131,13 +110,6 @@ export class ExtensionWallet extends BaseWallet<Keplr> {
       },
       signOptions || this.defaultSignOptions
     );
-    return {
-      ...resp,
-      signed: {
-        ...resp.signed,
-        accountNumber: BigInt(resp.signed.accountNumber.toString()),
-      },
-    };
   }
 
   async sendTx(chainId: string, tx: Uint8Array, mode: BroadcastMode) {

@@ -1,12 +1,12 @@
 {
-  "name": "@interchain-kit/core",
+  "name": "@interchain-kit/keplr-mobile",
   "version": "0.0.1",
-  "author": "cosmology-tech <developers@cosmology.zone>",
-  "description": "cosmos-kit wallet connector core package",
+  "author": "Cosmology <developers@cosmology.zone>",
+  "description": "cosmos-kit wallet connector",
   "main": "index.js",
   "module": "esm/index.js",
   "types": "index.d.ts",
-  "homepage": "https://github.com/@interchain-kit/core",
+  "homepage": "https://github.com/@interchain-kit/keplr-mobile",
   "license": "SEE LICENSE IN LICENSE",
   "publishConfig": {
     "access": "public",
@@ -14,30 +14,23 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/@interchain-kit/core"
+    "url": "https://github.com/@interchain-kit/keplr-mobile"
   },
   "bugs": {
-    "url": "https://github.com/@interchain-kit/core/issues"
+    "url": "https://github.com/@interchain-kit/keplr-mobile/issues"
   },
   "scripts": {
     "copy": "copyfiles -f ../../LICENSE README.md package.json dist",
     "clean": "rimraf dist/**",
     "prepare": "npm run build",
     "build": "npm run clean; tsc; tsc -p tsconfig.esm.json; npm run copy",
+    "build:dev": "npm run clean; tsc --declarationMap; tsc -p tsconfig.esm.json; npm run copy",
     "lint": "eslint . --fix",
     "test": "jest",
     "test:watch": "jest --watch"
   },
   "keywords": [],
   "dependencies": {
-    "@cosmjs/amino": "^0.32.3",
-    "@cosmjs/proto-signing": "^0.32.3",
-    "@interchain-kit/core": "^0.0.1",
-    "@walletconnect/sign-client": "^2.13.3",
-    "@walletconnect/types": "^2.13.3",
-    "long": "^5.2.3"
-  },
-  "devDependencies": {
-    "@keplr-wallet/types": "^0.12.102"
+    "@interchain-kit/core": "^0.0.1"
   }
 }

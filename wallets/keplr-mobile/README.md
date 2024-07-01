@@ -1,18 +1,18 @@
-# core
+# @interchain-kit/keplr-mobile
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/545047/188804067-28e67e5e-0214-4449-ab04-2e0c564a6885.svg" width="80"><br />
-    cosmos-kit wallet connector core package
+    cosmos-kit wallet connector
 </p>
 
 ## install
 
 ```sh
-npm install core
+npm install @interchain-kit/keplr-mobile
 ```
 ## Table of contents
 
-- [core](#core)
+- [@interchain-kit/keplr-mobile](#@interchain-kit/keplr-mobile)
   - [Install](#install)
   - [Table of contents](#table-of-contents)
 - [Developing](#developing)
@@ -22,9 +22,18 @@ npm install core
 
 When first cloning the repo:
 
-```
+```sh
 yarn
+# build the prod packages. When devs would like to navigate to the source code, this will only navigate from references to their definitions (.d.ts files) between packages.
 yarn build
+```
+
+Or if you want to make your dev process smoother, you can run:
+
+```sh
+yarn
+# build the dev packages with .map files, this enables navigation from references to their source code between packages.
+yarn build:dev
 ```
 
 ## Related
@@ -49,63 +58,3 @@ Checkout these related projects:
 AS DESCRIBED IN THE LICENSES, THE SOFTWARE IS PROVIDED “AS IS”, AT YOUR OWN RISK, AND WITHOUT WARRANTIES OF ANY KIND.
 
 No developer or entity involved in creating this software will be liable for any claims or damages whatsoever associated with your use, inability to use, or your interaction with other users of the code, including any direct, indirect, incidental, special, exemplary, punitive or consequential damages, or loss of profits, cryptocurrencies, tokens, or anything else of value.
-
-## Overview
-
-```mermaid
-classDiagram
-    class InterChainWallet{
-        <<abstract>>
-        - walletInstance
-        +init()
-        +getCosmosNetworkAminoSigner(chainId)
-        +getCosmosNetworkDirectSigner(chainId)
-        +getEthermintNetworkAminoSigner(chainId)
-        +getEthermintNetworkDirectSigner(chainId)
-        +getEthermintNetworkEIP712Signer(chainId)
-        +getEthereumNetworkAminoSigner(chainId)
-        +getEthereumNetworkDirectSigner(chainId)
-        +getSigner(chainId)
-
-        +signCosmosAmino(chainId,signer,signDoc,signOption)
-        +signCosmosDirect(chainId,signer,signDoc,signOption)
-        +signEthermintAmino(chainId,signer,signDoc,signOption)
-        +signEthermintDriect(chainId,signer,signDoc,signOption)
-        +signEthermintEIP712(chainId,signer,signDoc,signOption)
-        +signEthereumAmino(chainId,signer,signDoc,signOption)
-        +signEthereumDirect(chainId,signer,signDoc,signOption)
-        +signArbitrary(chainId,signer,data)
-    }
-
-    InterChainWallet <|-- ExtensionWallet
-    InterChainWallet <|-- MobileWallet
-
-    class ExtensionWallet {
-
-    }
-    class MobileWallet {
-      +ISignClient singClient
-    }
-
-    ExtensionWallet <|-- KeplrExtensionWallet
-    ExtensionWallet <|-- LeapExtensionWallet
-
-    MobileWallet <|-- KeplrMobileWallet
-    MobileWallet <|-- LeapMobileWallet
-
-    class KeplrExtensionWallet {
-
-    }
-    class KeplrMobileWallet {
-  
-    }
-
-    class LeapExtensionWallet {
-
-    }
-    class LeapMobileWallet {
-  
-    }
-
-
-```

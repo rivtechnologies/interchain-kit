@@ -1,6 +1,16 @@
 import { AccountData } from "@cosmjs/amino";
 import { DappEnv, OS } from "./common";
 
+export interface Key {
+  readonly name: string;
+  readonly algo: string;
+  readonly pubKey: Uint8Array;
+  readonly address: Uint8Array;
+  readonly bech32Address: string;
+  readonly isNanoLedger: boolean;
+  readonly isSmartContract?: boolean;
+}
+
 export interface DownloadInfo extends DappEnv {
   icon?: string;
   link: string;
@@ -64,4 +74,11 @@ export declare enum BroadcastMode {
   Sync = 'sync',
   /** Return right away */
   Async = 'async',
+}
+
+export interface SimpleAccount {
+  namespace: string;
+  chainId: string;
+  address: string;
+  username?: string;
 }

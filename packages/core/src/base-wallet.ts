@@ -1,13 +1,18 @@
 import { AminoSignResponse, OfflineAminoSigner, StdSignature, StdSignDoc } from "@cosmjs/amino";
-import { BroadcastMode, DirectSignDoc, SignOptions, WalletAccount } from "./types";
+import { BroadcastMode, DirectSignDoc, SignOptions, SimpleAccount, Wallet, WalletAccount } from "./types";
 import { DirectSignResponse, OfflineDirectSigner } from "@cosmjs/proto-signing";
-import { Keplr } from "@keplr-wallet/types";
 
-export abstract class BaseWallet<T extends Keplr> {
+export abstract class BaseWallet {
 
-  abstract client: T;
+  option: Wallet
 
-  abstract init(): Promise<void>
+  client: any;
+
+  constructor({ option }: { option: Wallet }) {
+    this.option = option
+  }
+
+  abstract init(meta: unknown): Promise<void>
 
   abstract enable(chainId: string | string[]): Promise<void>
 
@@ -15,7 +20,7 @@ export abstract class BaseWallet<T extends Keplr> {
 
   abstract getAccount(chainId: string): Promise<WalletAccount>
 
-  abstract getSimpleAccount(chainId: string): Promise<any>
+  abstract getSimpleAccount(chainId: string): Promise<SimpleAccount>
 
   abstract getOfflineSignerAmino(chainId: string): OfflineAminoSigner
 
