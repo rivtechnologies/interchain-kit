@@ -4,7 +4,7 @@ import { ngrok } from "vite-plugin-ngrok";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    ngrok("2i8RfnPRNlOIzTxFbQZb1VF7cP3_26mbZ8HB2zSrbwwQNYPH5"),
+    // ngrok("2i8RfnPRNlOIzTxFbQZb1VF7cP3_26mbZ8HB2zSrbwwQNYPH5"),
     nodePolyfills({
       // To add only specific polyfills, add them here. If no option is passed, adds all polyfills
       include: ["path"],

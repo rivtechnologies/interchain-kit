@@ -1,5 +1,6 @@
 import { AccountData } from "@cosmjs/amino";
 import { DappEnv, OS } from "./common";
+import { BaseWallet } from "../base-wallet";
 
 export interface Key {
   readonly name: string;
@@ -35,13 +36,35 @@ export interface AppUrl {
 }
 
 export interface Wallet {
-  windowKey: string,
+  windowKey?: string,
   name: string;
+  mode: WalletMode;
   prettyName: string;
   description?: string;
   keystoreChange?: string;
   downloads?: DownloadInfo[];
   logo?: string | { major: string; minor: string };
+  walletconnect?: {
+    name: string;
+    projectId: string;
+    requiredNamespaces?: {
+      methods: string[];
+      events: string[];
+    };
+    encoding?: BufferEncoding; // encoding for bytes, default 'hex'
+    mobile?: AppUrl; // redirect link on mobile
+    formatNativeUrl?: (
+      appUrl: string,
+      wcUri: string,
+      os: OS | undefined,
+      name: string
+    ) => string;
+    formatUniversalUrl?: (
+      appUrl: string,
+      wcUri: string,
+      name: string
+    ) => string;
+  };
 }
 
 export interface DirectSignDoc {
@@ -81,4 +104,9 @@ export interface SimpleAccount {
   chainId: string;
   address: string;
   username?: string;
+}
+
+
+export class WalletList<T extends BaseWallet> {
+
 }

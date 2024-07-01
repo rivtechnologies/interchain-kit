@@ -107,5 +107,15 @@ classDiagram
   
     }
 
+    class CosmosSigner {
+      <<interface>>
+    }
+    class EthereumSinger {
+      <<interface>>
+    }
+    class EthermintSIgner {
+      <<interface>>
+    }
+
 
 ```

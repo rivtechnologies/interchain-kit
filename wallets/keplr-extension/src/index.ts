@@ -1,6 +1,6 @@
 import { KeplrWallet } from "./extension";
 import { keplrExtensionInfo } from "./registry";
 
-const keplrWallet = new KeplrWallet({ option: keplrExtensionInfo });
+const keplrWallet = new KeplrWallet(keplrExtensionInfo);
 
 export { keplrWallet }

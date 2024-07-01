@@ -1,118 +1,65 @@
+import { OS, Wallet } from '@interchain-kit/core';
 
+import { ICON } from './constant';
 
-export const keplrmobile = {
-  $schema: '../../wallet.schema.json',
-  wallet_name: 'keplrmobile',
-  pretty_name: 'Keplr Mobile',
-  connection_type: 'wallet_connect',
-  website: 'https://www.keplr.app/',
-  git_repo: 'https://github.com/chainapsis/keplr-wallet',
-  supported_chains: [
-    'cosmoshub',
-    'osmosis',
-    'secretnetwork',
-    'regen',
-    'akash',
-    'sifchain',
-    'stargaze',
-    'sentinel',
-    'persistence',
-    'cryptoorgchain',
-    'irisnet',
-    'agoric',
-    'axelar',
-    'certik',
-    'ixo',
-    'emoney',
-    'tick',
-    'terra',
-    'likecoin',
-    'bitcanna',
-    'bitsong',
-    'ki',
-    'panacea',
-    'juno',
-    'sommelier',
-    'umee',
-    'evmos',
-    'injective',
-    'bostrom',
-    'comdex',
-    'cheqd',
-    'chihuahua',
-    'lumnetwork',
-    'vidulum',
-    'desmos',
-    'dig',
-    'starname',
-    'gravitybridge',
-  ],
-  features: ['icns'],
-  platforms: [
+export const keplrMobileInfo: Wallet = {
+  name: 'keplr-mobile',
+  prettyName: 'Keplr Mobile',
+  logo: ICON,
+  mode: 'wallet-connect',
+  downloads: [
     {
       device: 'mobile',
-      type: 'application',
-      platform: 'ios',
-      install_link: 'https://apps.apple.com/app/keplr-wallet/id1567851089',
+      os: 'android',
+      link: 'https://play.google.com/store/apps/details?id=com.chainapsis.keplr&hl=en&gl=US&pli=1',
     },
     {
       device: 'mobile',
-      type: 'application',
-      platform: 'android',
-      install_link:
-        'https://play.google.com/store/apps/details?id=com.chainapsis.keplr',
+      os: 'ios',
+      link: 'https://apps.apple.com/us/app/keplr-wallet/id1567851089',
+    },
+    {
+      link: 'https://www.keplr.app/download',
     },
   ],
-  images: [
-    {
-      png: 'https://raw.githubusercontent.com/cosmos/wallet-registry/main/wallets/keplrextension/images/logo.png',
-      svg: 'https://raw.githubusercontent.com/cosmos/wallet-registry/main/wallets/keplrextension/images/logo.svg',
-      theme: {
-        primary_color_hex: '#1BB8FF',
-        circle: false,
-        dark_mode: false,
-      },
-      layout: 'logomark',
+  walletconnect: {
+    name: 'Keplr',
+    projectId:
+      '6adb6082c909901b9e7189af3a4a0223102cd6f8d5c39e39f3d49acb92b578bb',
+    encoding: 'base64',
+    requiredNamespaces: {
+      methods: [
+        'keplr_getKey',
+        'keplr_signAmino',
+        'keplr_signDirect',
+        'keplr_signArbitrary',
+        'keplr_enable',
+        'keplr_signEthereum',
+      ],
+      events: ['keplr_accountsChanged'],
     },
-    {
-      png: 'https://raw.githubusercontent.com/cosmos/wallet-registry/main/wallets/keplrextension/images/logo-text.png',
-      svg: 'https://raw.githubusercontent.com/cosmos/wallet-registry/main/wallets/keplrextension/images/logo-text.svg',
-      theme: {
-        primary_color_hex: '#EBF7FD',
-        circle: false,
-        dark_mode: true,
-      },
-      layout: 'logo',
-      text_position: 'right',
-    },
-    {
-      png: 'https://raw.githubusercontent.com/cosmos/wallet-registry/main/wallets/keplrextension/images/logo-text-dark.png',
-      svg: 'https://raw.githubusercontent.com/cosmos/wallet-registry/main/wallets/keplrextension/images/logo-text-dark.svg',
-      theme: {
-        primary_color_hex: '#0A0718',
-        circle: false,
-        dark_mode: false,
-      },
-      layout: 'logo',
-      text_position: 'right',
-    },
-  ],
-  wallet_connect: {
-    deeplink: {
-      path: {
-        android: 'wcV2',
-        ios: 'wcV2',
+    mobile: {
+      native: {
+        ios: 'keplrwallet:',
+        android: 'intent:',
       },
     },
-  },
-  mobile: {
-    ios: {
-      bundle_identifier: 'com.chainapsis.keplrwallet',
-      schema: 'keplrwallet',
-    },
-    android: {
-      package_name: 'com.chainapsis.keplr',
-      schema: 'keplrwallet',
+    formatNativeUrl: (
+      appUrl: string,
+      wcUri: string,
+      os: OS | undefined,
+      _name: string
+    ): string => {
+      const plainAppUrl = appUrl.split(':')[0];
+      const encodedWcUrl = encodeURIComponent(wcUri);
+      switch (os) {
+        case 'ios':
+          return `${plainAppUrl}://wcV2?${encodedWcUrl}`;
+        case 'android':
+          return `intent://wcV2?${encodedWcUrl}#Intent;package=com.chainapsis.keplr;scheme=keplrwallet;end;`;
+        default:
+          return `${plainAppUrl}://wcV2?${encodedWcUrl}`;
+      }
     },
   },
 };

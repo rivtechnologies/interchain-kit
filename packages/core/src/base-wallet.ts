@@ -4,15 +4,15 @@ import { DirectSignResponse, OfflineDirectSigner } from "@cosmjs/proto-signing";
 
 export abstract class BaseWallet {
 
-  option: Wallet
+  option?: Wallet
 
   client: any;
 
-  constructor({ option }: { option: Wallet }) {
+  constructor(option?: Wallet) {
     this.option = option
   }
 
-  abstract init(meta: unknown): Promise<void>
+  abstract init(meta?: unknown): Promise<void>
 
   abstract enable(chainId: string | string[]): Promise<void>
 

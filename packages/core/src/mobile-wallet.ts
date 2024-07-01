@@ -15,8 +15,8 @@ export class MobileWallet extends BaseWallet {
 
   signClient: ISignClient
 
-  constructor({ option }: { option: Wallet | undefined }) {
-    super({ option })
+  constructor(option: Wallet | undefined) {
+    super(option)
   }
 
   override async init(): Promise<void> {
@@ -33,9 +33,12 @@ export class MobileWallet extends BaseWallet {
     })
   }
 
-  async connect(chainIds: string | string[], onApprove: () => {}, onGenerateParingUri: (uri: string) => {}) {
+  async connect(chainIds: string | string[], onApprove?: () => void, onGenerateParingUri?: (uri: string) => void) {
 
     const chainIdsWithNS = Array.isArray(chainIds) ? chainIds.map((chainId) => `cosmos:${chainId}`) : [`cosmos:${chainIds}`]
+
+    console.log(chainIdsWithNS)
+
     try {
       const { uri, approval } = await this.signClient.connect({
         // Optionally: pass a known prior pairing (e.g. from `signClient.core.pairing.getPairings()`) to skip the `uri` step.

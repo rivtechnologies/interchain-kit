@@ -30,6 +30,7 @@
   },
   "keywords": [],
   "dependencies": {
+    "@chain-registry/v2-types": "^0.49.6",
     "@cosmjs/amino": "^0.32.3",
     "@cosmjs/proto-signing": "^0.32.3",
     "@interchain-kit/core": "^0.0.1",

@@ -1,14 +1,14 @@
-import { Algo, OfflineAminoSigner, StdSignature, StdSignDoc } from "@cosmjs/amino";
+import { Algo, StdSignature, StdSignDoc } from "@cosmjs/amino";
 import { OfflineDirectSigner } from '@cosmjs/proto-signing';
 import { BroadcastMode, DirectSignDoc, SignOptions, SignType, Wallet, WalletAccount } from "./types";
 import Long from 'long';
-import { getClientFromExtension } from './utils';
+import { clientNotExistError, getClientFromExtension } from './utils';
 import { BaseWallet } from "./base-wallet";
 
 
 export class ExtensionWallet extends BaseWallet {
 
-  isExtensionInstalled: false;
+  isExtensionInstalled: boolean = false;
 
   defaultSignOptions = {
     preferNoSetFee: false,
@@ -16,12 +16,19 @@ export class ExtensionWallet extends BaseWallet {
     disableBalanceCheck: true,
   }
 
-  constructor({ option }: { option: Wallet }) {
-    super({ option })
+  constructor(option: Wallet) {
+    super(option)
   }
 
   async init() {
-    this.client = await getClientFromExtension(this.option.windowKey)
+    try {
+      this.client = await getClientFromExtension(this.option.windowKey)
+      this.isExtensionInstalled = true
+    } catch (error) {
+      if (error === clientNotExistError.message) {
+        this.isExtensionInstalled = false;
+      }
+    }
   }
 
   async enable(chainId: string | string[]) {
@@ -79,7 +86,7 @@ export class ExtensionWallet extends BaseWallet {
     signDoc: StdSignDoc,
     signOptions?: SignOptions
   ) {
-    return await this.client.signAmino(
+    return this.client.signAmino(
       chainId,
       signer,
       signDoc,
@@ -92,7 +99,7 @@ export class ExtensionWallet extends BaseWallet {
     signer: string,
     data: string | Uint8Array
   ): Promise<StdSignature> {
-    return await this.client.signArbitrary(chainId, signer, data);
+    return this.client.signArbitrary(chainId, signer, data);
   }
 
   async signDirect(
@@ -101,7 +108,7 @@ export class ExtensionWallet extends BaseWallet {
     signDoc: DirectSignDoc,
     signOptions?: SignOptions
   ) {
-    return await this.client.signDirect(
+    return this.client.signDirect(
       chainId,
       signer,
       {
@@ -113,7 +120,7 @@ export class ExtensionWallet extends BaseWallet {
   }
 
   async sendTx(chainId: string, tx: Uint8Array, mode: BroadcastMode) {
-    return await this.client.sendTx(chainId, tx, mode);
+    return this.client.sendTx(chainId, tx, mode);
   }
 
 

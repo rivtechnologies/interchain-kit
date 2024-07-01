@@ -1,58 +1,79 @@
-import { keplrmobile } from './../../../wallets/keplr-mobile/src/registry';
 
-import { OfflineAminoSigner } from '@cosmjs/amino';
-import { keplrWallet } from '@interchain-kit/keplr-extension'
-import { keplrMobile } from '@interchain-kit/keplr-mobile'
-import QRCode from 'qrcode'
+import { assetLists, chains } from '@chain-registry/v2';
+import { BaseWallet, MobileWallet, WalletManager } from '@interchain-kit/core';
+import { keplrWallet } from '@interchain-kit/keplr-extension';
+import { KeplrWallet } from '@interchain-kit/keplr-extension/extension';
+import { KeplrMobile, keplrMobile } from '@interchain-kit/keplr-mobile';
+import QRCode from 'qrcode';
 
-const startConnectMobile = async () => {
-    try {
-        await keplrMobile.init()
-        const onApprove = async () => {
-            console.log('connected')
-            console.log(keplrMobile.session)
-            console.log(keplrMobile.getAccounts())
-            console.log(await keplrMobile.getAccount('juno-1'))
-        }
 
-        const onGenerateParingUri = async (uri: string) => {
+const chainNames = ['juno', 'cosmoshub', 'stargaze']
 
-            console.log(uri)
-            QRCode.toCanvas(document.getElementById('canvas'), uri, function (error) {
+const chainsToUse = chains.filter(c => chainNames.includes(c.chainName))
+const assetListsToUse = assetLists.filter(a => chainNames.includes(a.chainName))
+type WalletTypes = KeplrMobile | KeplrWallet
+const walletsToUse: WalletTypes[] = [keplrMobile, keplrWallet]
+
+
+
+const wm = new WalletManager(chainsToUse, assetListsToUse, walletsToUse)
+
+
+const startExtension = async () => {
+
+    await wm.init()
+
+    wm.selectWallet('keplr-extension')
+
+    wm.enableChains(chainNames)
+
+}
+
+
+
+
+
+const startMobile = async () => {
+
+    await wm.init()
+
+    wm.selectWallet('keplr-mobile')
+
+
+
+    const onGenerateParingUri = (uri: string) => {
+        const canvas = document.getElementById('canvas');
+        if (canvas) {
+            QRCode.toCanvas(canvas, uri, function (error: any) {
                 if (error) console.error(error)
                 console.log('success!');
-            })
+            });
+        }
+    }
+
+    const onApprove = async () => {
+
+        const app = document.getElementById('app')
+
+        if (app) {
+            app.innerHTML = `connected`
         }
 
-        await keplrMobile.connect(['juno-1', 'cosmoshub-4'], onApprove, onGenerateParingUri)
+        const wallet = wm.getSelectedWallet()
 
+        const accounts = await (wallet as MobileWallet).getAccounts()
 
-    } catch (error) {
-        console.log(error)
+        console.log(accounts)
     }
+
+    await wm.enableChains(chainNames, onApprove, onGenerateParingUri)
+
+
+
+    // wm.enableChains(['juno', 'cosmoshub', 'stargaze'])
+
+
 }
 
-const startConnectKeplrWallet = async () => {
-    try {
-        await keplrWallet.init()
-
-        const account = await keplrWallet.getAccount('juno-1')
-        console.log(account)
-
-        keplrWallet.getSimpleAccount('juno-1').then((account) => {
-            console.log(account)
-        })
-
-        const OfflineAminoSigner = keplrWallet.getOfflineSignerAmino('juno-1')
-
-        console.log(await OfflineAminoSigner.getAccounts())
-
-        await keplrWallet.disable('juno-1')
-    } catch (error) {
-        console.log(error)
-    }
-}
-
-
-startConnectKeplrWallet()
-// startConnectMobile()
+// startExtension()
+startMobile()
