@@ -1,6 +1,8 @@
 import { AccountData } from "@cosmjs/amino";
 import { DappEnv, OS } from "./common";
 import { BaseWallet } from "../base-wallet";
+import { connected } from "process";
+import { connect } from "http2";
 
 export interface Key {
   readonly name: string;
@@ -107,6 +109,8 @@ export interface SimpleAccount {
 }
 
 
-export class WalletList<T extends BaseWallet> {
-
+export const enum WalletState {
+  Connected = 'connected',
+  Disconnected = 'disconnected',
+  Connecting = 'connecting',
 }

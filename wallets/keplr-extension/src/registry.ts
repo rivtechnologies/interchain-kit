@@ -6,6 +6,7 @@ export const keplrExtensionInfo: Wallet = {
   windowKey: 'keplr',
   name: 'keplr-extension',
   prettyName: 'Keplr',
+  mode: 'extension',
   logo: ICON,
   keystoreChange: 'keplr_keystorechange',
   downloads: [

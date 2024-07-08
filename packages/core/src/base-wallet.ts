@@ -1,12 +1,21 @@
 import { AminoSignResponse, OfflineAminoSigner, StdSignature, StdSignDoc } from "@cosmjs/amino";
-import { BroadcastMode, DirectSignDoc, SignOptions, SimpleAccount, Wallet, WalletAccount } from "./types";
+import { BroadcastMode, DirectSignDoc, SignOptions, SimpleAccount, Wallet, WalletAccount, WalletState } from "./types";
 import { DirectSignResponse, OfflineDirectSigner } from "@cosmjs/proto-signing";
+import EventEmitter from "events";
 
 export abstract class BaseWallet {
 
   option?: Wallet
 
   client: any;
+
+  walletState: WalletState;
+
+  errorMessage: string;
+
+  events = new EventEmitter();
+
+  isExtensionInstalled: boolean = false;
 
   constructor(option?: Wallet) {
     this.option = option

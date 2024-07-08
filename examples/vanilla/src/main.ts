@@ -23,9 +23,11 @@ const startExtension = async () => {
 
     await wm.init()
 
-    wm.selectWallet('keplr-extension')
+    await wm.connect('keplr-extension')
 
-    wm.enableChains(chainNames)
+    const wallet = wm.currentWallet as KeplrWallet
+
+    console.log(await wallet?.getAccounts(['juno', 'cosmoshub', 'stargaze']))
 
 }
 
@@ -37,7 +39,7 @@ const startMobile = async () => {
 
     await wm.init()
 
-    wm.selectWallet('keplr-mobile')
+    wm.connect('keplr-mobile')
 
 
 
@@ -59,14 +61,14 @@ const startMobile = async () => {
             app.innerHTML = `connected`
         }
 
-        const wallet = wm.getSelectedWallet()
+        const wallet = wm.currentWallet as MobileWallet
 
-        const accounts = await (wallet as MobileWallet).getAccounts()
+        console.log(await wallet.getAccounts())
 
-        console.log(accounts)
+
     }
 
-    await wm.enableChains(chainNames, onApprove, onGenerateParingUri)
+    await wm.connect('keplr-mobile', onApprove, onGenerateParingUri)
 
 
 

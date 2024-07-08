@@ -18,7 +18,7 @@ export const getClientFromExtension = async (key: string | string[]) => {
     return undefined
   }
 
-  const keys = Array.isArray(key) ? key : key.split(',')
+  const keys = Array.isArray(key) ? key : key.split('.')
 
   const wallet = travelObject(window, keys)
 
