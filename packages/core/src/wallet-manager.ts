@@ -42,6 +42,7 @@ export class WalletManager {
       }
       wallet.walletState = WalletState.Connected
       this.currentWallet = wallet
+
     } catch (error: any) {
       wallet.walletState = WalletState.Disconnected
       wallet.errorMessage = error.message

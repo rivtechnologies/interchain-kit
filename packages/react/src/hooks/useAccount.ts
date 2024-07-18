@@ -1,31 +1,32 @@
 import { useEffect, useState } from "react"
-import { useWalletManager } from "./useWalletManager"
+import { useChain } from "./useChain"
+import { useCurrentWallet } from "./useCurrentWallet"
 
-export const useAccount = () => {
+export const useAccount = (chainName: string) => {
+    const chain = useChain(chainName)
 
-    const walletManager = useWalletManager()
-
-    const currentWallet = walletManager.getActiveWallet()
+    const currentWallet = useCurrentWallet()
 
     const [account, setAccount] = useState({})
 
     const getAccount = async () => {
-        const account = await currentWallet.getAccount(walletManager.chains.map(chain => chain.chainId)[0])
+        const account = await currentWallet.getAccount(chain.chainId)
         setAccount(account)
     }
 
+    useEffect(() => {
+        if (currentWallet) {
+            currentWallet.events.on('keystoreChange', getAccount)
+        }
+    }, [currentWallet])
 
     useEffect(() => {
         if (!currentWallet) {
             setAccount({})
             return
         }
-
-        currentWallet.events.on('keystoreChange', getAccount)
-
         getAccount()
-    }, [currentWallet])
-
+    }, [currentWallet, chainName, currentWallet?.walletState])
 
     return account
 }

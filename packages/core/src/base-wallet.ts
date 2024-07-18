@@ -15,8 +15,6 @@ export abstract class BaseWallet {
 
   events = new EventEmitter();
 
-  isExtensionInstalled: boolean = false;
-
   constructor(option?: Wallet) {
     this.option = option
   }
@@ -29,31 +27,21 @@ export abstract class BaseWallet {
 
   abstract getAccount(chainId: string): Promise<WalletAccount>
 
+  abstract getAccounts(chainIds: string[]): Promise<WalletAccount[]>
+
   abstract getSimpleAccount(chainId: string): Promise<SimpleAccount>
 
   abstract getOfflineSignerAmino(chainId: string): OfflineAminoSigner
 
   abstract getOfflineSignerDirect(chainId: string): OfflineDirectSigner
 
-  abstract signAmino(
-    chainId: string,
-    signer: string,
-    signDoc: StdSignDoc,
-    signOptions?: SignOptions
-  ): Promise<AminoSignResponse>
+  abstract signAmino(chainId: string, signer: string, signDoc: StdSignDoc, signOptions?: SignOptions): Promise<AminoSignResponse>
 
-  abstract signArbitrary(
-    chainId: string,
-    signer: string,
-    data: string | Uint8Array
-  ): Promise<StdSignature>
+  abstract signArbitrary(chainId: string, signer: string, data: string | Uint8Array): Promise<StdSignature>
 
-  abstract signDirect(
-    chainId: string,
-    signer: string,
-    signDoc: DirectSignDoc,
-    signOptions?: SignOptions
-  ): Promise<DirectSignResponse>
+  abstract signDirect(chainId: string, signer: string, signDoc: DirectSignDoc, signOptions?: SignOptions): Promise<DirectSignResponse>
 
   abstract sendTx(chainId: string, tx: Uint8Array, mode: BroadcastMode): Promise<Uint8Array>
+
+  abstract sign(chainId: string, message: string): Promise<any>
 }

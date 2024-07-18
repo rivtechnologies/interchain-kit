@@ -1,16 +1,32 @@
-import { useAccount, useWalletManager } from '@interchain-kit/react'
+import { useAccount, useChain, useCurrentWallet, useWalletManager } from '@interchain-kit/react'
 import { useState } from 'react'
 import { QRCodeSVG } from 'qrcode.react';
 import { BaseWallet, ExtensionWallet } from '../../../packages/core/dist';
 function App() {
 
+
   const walletManager = useWalletManager()
-  const account = useAccount()
 
   const [paringUri, setParingUri] = useState<string>("")
+  const [chainName, setChainName] = useState<string>("juno")
+
+  const account = useAccount(chainName)
+  const currentWallet = useCurrentWallet()
+  const chain = useChain(chainName)
 
   return (
     <div>
+      <select value={chainName} onChange={(e) => {
+        setChainName(e.target.value)
+      }}>
+        {walletManager.chains.map((chain) => {
+          return (
+            <option key={chain.chainId} value={chain.chainName}>
+              {chain.chainName}
+            </option>
+          )
+        })}
+      </select>
       <table border={1}>
         <tbody>{walletManager.wallets.map((wallet: BaseWallet) => {
           return <tr>
@@ -42,9 +58,11 @@ function App() {
       {paringUri && <QRCodeSVG size={256} value={paringUri} />}
 
 
-      <p>current active wallet: {walletManager.getActiveWallet()?.option?.prettyName}</p>
+      <p>current active wallet: {currentWallet?.option?.prettyName}</p>
 
       <pre>{JSON.stringify(account, null, 2)}</pre>
+
+      <pre>{JSON.stringify(chain, null, 4)}</pre>
 
     </div>
 

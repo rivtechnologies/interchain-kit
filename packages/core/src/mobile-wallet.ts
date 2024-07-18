@@ -5,7 +5,7 @@ import { OfflineDirectSigner, DirectSignResponse, Algo } from "@cosmjs/proto-sig
 import { WalletAccount, SignOptions, DirectSignDoc, BroadcastMode } from "./types";
 import { SignClient } from '@walletconnect/sign-client';
 import { ISignClient, SessionTypes } from '@walletconnect/types';
-
+import { Buffer } from 'buffer'
 
 export class MobileWallet extends BaseWallet {
 
@@ -15,8 +15,14 @@ export class MobileWallet extends BaseWallet {
 
   signClient: ISignClient
 
-  constructor(option: Wallet | undefined) {
-    super(option)
+  constructor(option?: Wallet) {
+    const defaultWalletConnectOption: Wallet = {
+      name: 'WalletConnect',
+      prettyName: 'Wallet Connect',
+      mode: 'wallet-connect',
+    }
+
+    super(option ? option : defaultWalletConnectOption)
   }
 
   override async init(): Promise<void> {
@@ -37,13 +43,8 @@ export class MobileWallet extends BaseWallet {
 
     const chainIdsWithNS = Array.isArray(chainIds) ? chainIds.map((chainId) => `cosmos:${chainId}`) : [`cosmos:${chainIds}`]
 
-    console.log(chainIdsWithNS)
-
     try {
       const { uri, approval } = await this.signClient.connect({
-        // Optionally: pass a known prior pairing (e.g. from `signClient.core.pairing.getPairings()`) to skip the `uri` step.
-        // pairingTopic: pairing?.topic,
-        // Provide the namespaces and chains (e.g. `eip155` for EVM-based chains) we want to use in this session.
         requiredNamespaces: {
           cosmos: {
             methods: [
@@ -67,7 +68,7 @@ export class MobileWallet extends BaseWallet {
       onApprove()
 
     } catch (error) {
-      console.log(error)
+      throw error
     }
   }
 
@@ -80,7 +81,29 @@ export class MobileWallet extends BaseWallet {
     await this.client.cleanupPendingPairings()
   }
 
-  getAccounts(): SimpleAccount[] {
+  getAccounts(): Promise<WalletAccount[]> {
+    const accounts: WalletAccount[] = []
+
+    const namespaces = this.session.namespaces
+
+    Object.entries(namespaces).forEach(([namespace, session]: [string, SessionTypes.BaseNamespace]) => {
+      session.accounts.forEach((account: string) => {
+        const [namespace, chainId, address] = account.split(':')
+        accounts.push({
+          address: address,
+          algo: 'secp256k1',
+          pubkey: null,
+          username: '',
+          isNanoLedger: null,
+          isSmartContract: null
+        })
+      })
+    })
+
+    return Promise.resolve(accounts)
+  }
+
+  override async getSimpleAccount(chainId: string): Promise<SimpleAccount> {
     const accounts: SimpleAccount[] = []
 
     const namespaces = this.session.namespaces
@@ -96,13 +119,7 @@ export class MobileWallet extends BaseWallet {
       })
     })
 
-    return accounts
-  }
-
-  override async getSimpleAccount(chainId: string): Promise<any> {
-    const accounts = this.getAccounts()
-    const account = accounts.find((account) => account.chainId === chainId)
-    return account
+    return Promise.resolve(accounts.find((account) => account.chainId === chainId))
   }
 
   override async getAccount(chainId: string): Promise<WalletAccount> {
@@ -182,6 +199,10 @@ export class MobileWallet extends BaseWallet {
   }
 
   sendTx(chainId: string, tx: Uint8Array, mode: BroadcastMode): Promise<Uint8Array> {
+    throw new Error("Method not implemented.");
+  }
+
+  sign(chainId: string, message: string): Promise<any> {
     throw new Error("Method not implemented.");
   }
 }

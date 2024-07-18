@@ -1,6 +1,6 @@
 import { useWalletManager } from "./useWalletManager"
 
-export const useActiveWallet = () => {
+export const useCurrentWallet = () => {
     const walletManager = useWalletManager()
     return walletManager.currentWallet
 }

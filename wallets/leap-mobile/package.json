@@ -29,5 +29,8 @@
     "test": "jest",
     "test:watch": "jest --watch"
   },
-  "keywords": []
+  "keywords": [],
+  "dependencies": {
+    "@interchain-kit/core": "^0.0.1"
+  }
 }

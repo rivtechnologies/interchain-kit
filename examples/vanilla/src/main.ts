@@ -70,6 +70,9 @@ const startMobile = async () => {
 
     await wm.connect('keplr-mobile', onApprove, onGenerateParingUri)
 
+    const uri = await (wm as unknown as MobileWallet).pairingUri
+
+    console.log(uri)
 
 
     // wm.enableChains(['juno', 'cosmoshub', 'stargaze'])

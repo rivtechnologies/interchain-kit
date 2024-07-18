@@ -7,7 +7,6 @@ import { BaseWallet } from "./base-wallet";
 
 
 export class ExtensionWallet extends BaseWallet {
-
   isExtensionInstalled: boolean = false;
 
   defaultSignOptions = {
@@ -139,5 +138,7 @@ export class ExtensionWallet extends BaseWallet {
     return this.client.sendTx(chainId, tx, mode);
   }
 
-
+  sign(chainId: string, message: string): Promise<any> {
+    throw new Error("Method not implemented.");
+  }
 }

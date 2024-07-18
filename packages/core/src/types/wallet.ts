@@ -1,9 +1,5 @@
-import { AccountData } from "@cosmjs/amino";
-import { DappEnv, OS } from "./common";
-import { BaseWallet } from "../base-wallet";
-import { connected } from "process";
-import { connect } from "http2";
 
+import { DappEnv, OS } from "./common";
 export interface Key {
   readonly name: string;
   readonly algo: string;
@@ -84,6 +80,14 @@ export interface SignOptions {
   readonly preferNoSetFee?: boolean;
   readonly preferNoSetMemo?: boolean;
   readonly disableBalanceCheck?: boolean;
+}
+
+export type Algo = "secp256k1" | "ed25519" | "sr25519";
+export interface AccountData {
+  /** A printable address (typically bech32 encoded) */
+  address: string;
+  algo: Algo;
+  pubkey: Uint8Array;
 }
 
 export interface WalletAccount extends AccountData {
