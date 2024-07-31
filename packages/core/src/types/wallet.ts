@@ -1,5 +1,6 @@
 
 import { DappEnv, OS } from "./common";
+import { EndpointOptions } from "./manager";
 export interface Key {
   readonly name: string;
   readonly algo: string;
@@ -63,6 +64,7 @@ export interface Wallet {
       name: string
     ) => string;
   };
+  endpoints?: EndpointOptions['endpoints']
 }
 
 export interface DirectSignDoc {

@@ -39,9 +39,9 @@ export abstract class BaseWallet {
 
   abstract signArbitrary(chainId: string, signer: string, data: string | Uint8Array): Promise<StdSignature>
 
+  abstract verifyArbitrary(chainId: string, signer: string, data: string | Uint8Array): Promise<boolean>
+
   abstract signDirect(chainId: string, signer: string, signDoc: DirectSignDoc, signOptions?: SignOptions): Promise<DirectSignResponse>
 
   abstract sendTx(chainId: string, tx: Uint8Array, mode: BroadcastMode): Promise<Uint8Array>
-
-  abstract sign(chainId: string, message: string): Promise<any>
 }

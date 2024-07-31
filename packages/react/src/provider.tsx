@@ -1,32 +1,38 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { createContext, useContext } from "react";
-import { BaseWallet, WalletManager } from '@interChain-kit/core'
+import { BaseWallet, SignerOptions, WalletManager, EndpointOptions } from '@interChain-kit/core'
 import { AssetList, Chain } from '@chain-registry/v2-types';
+import { WalletModalProvider } from './modal';
 
-type InterChainWalletContextType = {
+
+type InterchainWalletContextType = {
   walletManager: WalletManager
 }
 
-type InterChianWalletProviderProps = {
+type InterchianWalletProviderProps = {
   chains: Chain[]
   assetLists: AssetList[]
   wallets: BaseWallet[]
+  signerOptions: SignerOptions,
+  endpointOptions: EndpointOptions,
   children: React.ReactNode
 }
 
-const InterChainWalletContext = createContext<InterChainWalletContextType | null>(null);
+const InterChainWalletContext = createContext<InterchainWalletContextType | null>(null);
 
-export const InterChainProvider = ({
+export const ChainProvider = ({
   chains,
   assetLists,
   wallets,
+  signerOptions,
+  endpointOptions,
   children
-}: InterChianWalletProviderProps) => {
+}: InterchianWalletProviderProps) => {
 
-  const [_, forceRender] = useState(0)
+  const [_, forceRender] = useState({})
 
   const walletManager = useMemo(() => {
-    return new WalletManager(chains, assetLists, wallets, () => forceRender(prev => prev + 1))
+    return new WalletManager(chains, assetLists, wallets, signerOptions, endpointOptions, () => forceRender({}))
   }, [])
 
   useEffect(() => {
@@ -36,7 +42,9 @@ export const InterChainProvider = ({
 
   return (
     <InterChainWalletContext.Provider value={{ walletManager }}>
-      {children}
+      <WalletModalProvider>
+        {children}
+      </WalletModalProvider>
     </InterChainWalletContext.Provider>
   )
 }

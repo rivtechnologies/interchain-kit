@@ -102,6 +102,10 @@ export class LedgerWallet extends BaseWallet {
     throw new Error("Method not implemented.");
   }
 
+  verifyArbitrary(chainId: string, signer: string, data: string | Uint8Array): Promise<boolean> {
+    throw new Error("Method not implemented.");
+  }
+
   signDirect(chainId: string, signer: string, signDoc: DirectSignDoc, signOptions?: SignOptions): Promise<DirectSignResponse> {
     throw new Error("Method not implemented.");
   }
@@ -109,10 +113,5 @@ export class LedgerWallet extends BaseWallet {
   sendTx(chainId: string, tx: Uint8Array, mode: BroadcastMode): Promise<Uint8Array> {
     throw new Error("Method not implemented.");
   }
-  sign(chainId: string, message: string): Promise<any> {
-    if (!this.cosmos) {
-      throw new Error("Ledger transport not initialized");
-    }
-    return this.cosmos.sign(this.cosmosPath, message)
-  }
+
 }

@@ -7,7 +7,7 @@ import { SignClient } from '@walletconnect/sign-client';
 import { ISignClient, SessionTypes } from '@walletconnect/types';
 import { Buffer } from 'buffer'
 
-export class MobileWallet extends BaseWallet {
+export class WCWallet extends BaseWallet {
 
   pairingUri: string;
 
@@ -19,10 +19,10 @@ export class MobileWallet extends BaseWallet {
     const defaultWalletConnectOption: Wallet = {
       name: 'WalletConnect',
       prettyName: 'Wallet Connect',
-      mode: 'wallet-connect',
+      mode: 'wallet-connect'
     }
 
-    super(option ? option : defaultWalletConnectOption)
+    super({ ...defaultWalletConnectOption, ...option })
   }
 
   override async init(): Promise<void> {
@@ -172,6 +172,10 @@ export class MobileWallet extends BaseWallet {
   }
 
   signArbitrary(chainId: string, signer: string, data: string | Uint8Array): Promise<StdSignature> {
+    throw new Error("Method not implemented.");
+  }
+
+  verifyArbitrary(chainId: string, signer: string, data: string | Uint8Array): Promise<boolean> {
     throw new Error("Method not implemented.");
   }
 

@@ -1,12 +1,13 @@
 import { Algo, StdSignature, StdSignDoc } from "@cosmjs/amino";
 import { OfflineDirectSigner } from '@cosmjs/proto-signing';
-import { BroadcastMode, DirectSignDoc, Key, SignOptions, SignType, Wallet, WalletAccount } from "./types";
+import { BroadcastMode, DirectSignDoc, SignOptions, SignType, Wallet, WalletAccount } from "./types";
 import Long from 'long';
 import { clientNotExistError, getClientFromExtension } from './utils';
 import { BaseWallet } from "./base-wallet";
 
 
 export class ExtensionWallet extends BaseWallet {
+
   isExtensionInstalled: boolean = false;
 
   defaultSignOptions = {
@@ -117,6 +118,10 @@ export class ExtensionWallet extends BaseWallet {
     return this.client.signArbitrary(chainId, signer, data);
   }
 
+  async verifyArbitrary(chainId: string, signer: string, data: string | Uint8Array): Promise<boolean> {
+    return this.client.verifyArbitrary(chainId, signer, data);
+  }
+
   async signDirect(
     chainId: string,
     signer: string,
@@ -136,9 +141,5 @@ export class ExtensionWallet extends BaseWallet {
 
   async sendTx(chainId: string, tx: Uint8Array, mode: BroadcastMode) {
     return this.client.sendTx(chainId, tx, mode);
-  }
-
-  sign(chainId: string, message: string): Promise<any> {
-    throw new Error("Method not implemented.");
   }
 }
