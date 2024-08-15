@@ -1,4 +1,5 @@
 
+import { SignClientTypes } from "@walletconnect/types";
 import { DappEnv, OS } from "./common";
 import { EndpointOptions } from "./manager";
 export interface Key {
@@ -120,3 +121,41 @@ export const enum WalletState {
   Disconnected = 'disconnected',
   Connecting = 'connecting',
 }
+
+
+export const WcProviderEventType = {
+  chainChanged: (chainId: string) => { },
+  accountsChanged: (accounts: string[]) => { },
+};
+
+export const WcEventTypes = {
+  display_uri: (uri: string) => { },
+  session_ping: (payload: SignClientTypes.EventArguments['session_ping']) => { },
+  session_event: (
+    payload: SignClientTypes.EventArguments['session_event'],
+  ) => { },
+  session_update: (
+    payload: SignClientTypes.EventArguments['session_update'],
+  ) => { },
+  session_delete: (
+    payload: SignClientTypes.EventArguments['session_delete'],
+  ) => { },
+  session_proposal: (
+    payload: SignClientTypes.EventArguments['session_proposal'],
+  ) => { },
+  session_extend: (
+    payload: SignClientTypes.EventArguments['session_extend'],
+  ) => { },
+  session_expire: (
+    payload: SignClientTypes.EventArguments['session_expire'],
+  ) => { },
+  session_request: (
+    payload: SignClientTypes.EventArguments['session_request'],
+  ) => { },
+  session_request_sent: (
+    payload: SignClientTypes.EventArguments['session_request_sent'],
+  ) => { },
+  proposal_expire: (
+    payload: SignClientTypes.EventArguments['proposal_expire'],
+  ) => { },
+} as const;

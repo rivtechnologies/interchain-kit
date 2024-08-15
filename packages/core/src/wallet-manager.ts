@@ -55,8 +55,9 @@ export class WalletManager {
       if (wallet instanceof WCWallet) {
         await wallet.connect(chainIds, onApprove, onGenerateParingUri)
       } else {
-        await wallet.enable(chainIds)
+        await wallet.connect(chainIds)
       }
+
       wallet.walletState = WalletState.Connected
       this.activeWallet = wallet
 
@@ -70,9 +71,9 @@ export class WalletManager {
     const activeWallet = this.getActiveWallet()
 
     if (activeWallet instanceof WCWallet) {
-      // await activeWallet.disconnect()
+      await activeWallet.disconnect()
     } else {
-      await activeWallet.disable(this.chains.map(chain => chain.chainId))
+      await activeWallet.disconnect(this.chains.map(chain => chain.chainId))
     }
     activeWallet.walletState = WalletState.Disconnected
     this.activeWallet = null
@@ -122,19 +123,19 @@ export class WalletManager {
   }
 
   getPreferSignType(chainName: string) {
-    return this.signerOptions?.preferredSignType(chainName) || 'amino'
+    return this.signerOptions?.preferredSignType?.(chainName) || 'amino'
   }
 
   getCosmWasmSigningOptions(chainName: string): SigningCosmWasmClientOptions {
-    return this.signerOptions?.signingCosmwasm(chainName) || {}
+    return this.signerOptions?.signingCosmwasm?.(chainName) || {}
   }
 
   getStargateSigningOptions(chainName: string): StargateClientOptions {
-    return this.signerOptions?.signingStargate(chainName) || {}
+    return this.signerOptions?.signingStargate?.(chainName) || {}
   }
 
   getStargateOptiosn(chainName: string) {
-    return this.signerOptions.stargate(chainName) || {}
+    return this.signerOptions.stargate?.(chainName) || {}
   }
 
   async getOfflineSigner(wallet: BaseWallet, chainName: string) {
@@ -147,7 +148,7 @@ export class WalletManager {
     }
   }
 
-  async createClient(wallet: BaseWallet, chainName: ChainName) {
+  async createClientFactory(wallet: BaseWallet, chainName: ChainName): Promise<CosmJsSigner> {
     const rpcEndpoint = await this.getRpcEndpoint(wallet, chainName)
     const offlineSigner = await this.getOfflineSigner(wallet, chainName)
     const coswmSigningClientOptions = this.getCosmWasmSigningOptions(chainName)

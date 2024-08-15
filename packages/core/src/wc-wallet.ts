@@ -1,4 +1,4 @@
-import { SimpleAccount, Wallet } from './types/wallet';
+import { SimpleAccount, Wallet, WcEventTypes, WcProviderEventType } from './types/wallet';
 import { BaseWallet } from "./base-wallet";
 import { OfflineAminoSigner, StdSignDoc, AminoSignResponse, StdSignature } from "@cosmjs/amino";
 import { OfflineDirectSigner, DirectSignResponse, Algo } from "@cosmjs/proto-signing";
@@ -6,6 +6,7 @@ import { WalletAccount, SignOptions, DirectSignDoc, BroadcastMode } from "./type
 import { SignClient } from '@walletconnect/sign-client';
 import { ISignClient, SessionTypes } from '@walletconnect/types';
 import { Buffer } from 'buffer'
+import { ChainInfo } from '@keplr-wallet/types'
 
 export class WCWallet extends BaseWallet {
 
@@ -26,6 +27,7 @@ export class WCWallet extends BaseWallet {
   }
 
   override async init(): Promise<void> {
+    this.events.removeAllListeners()
     this.signClient = await SignClient.init({
       projectId: '15a12f05b38b78014b2bb06d77eecdc3',
       // optional parameters
@@ -54,8 +56,9 @@ export class WCWallet extends BaseWallet {
             ],
             chains: chainIdsWithNS,
             events: ['chainChanged', 'accountsChanged']
-          }
+          },
         }
+
       })
 
       this.pairingUri = uri
@@ -72,13 +75,9 @@ export class WCWallet extends BaseWallet {
     }
   }
 
-  enable(chainId: string | string[]): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-
-  async disable(): Promise<void> {
-    await this.client.disconnect()
-    await this.client.cleanupPendingPairings()
+  async disconnect(): Promise<void> {
+    this.session = null
+    this.pairingUri = null
   }
 
   getAccounts(): Promise<WalletAccount[]> {
@@ -208,5 +207,28 @@ export class WCWallet extends BaseWallet {
 
   sign(chainId: string, message: string): Promise<any> {
     throw new Error("Method not implemented.");
+  }
+
+  addSuggestChain(chainInfo: ChainInfo): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+
+  bindingEvent(): void {
+    this.events.removeAllListeners()
+    const events = [...Object.keys(WcEventTypes), ...Object.keys(WcProviderEventType)]
+    for (const event of events) {
+      this.client.on(event, (data: never) => {
+        this.events.emit(event, data)
+
+        if (event === 'accountsChanged') {
+          this.events.emit('keystoreChange',)
+        }
+
+      })
+    }
+  }
+
+  unbindingEvent(): void {
+    this.events.removeAllListeners()
   }
 }

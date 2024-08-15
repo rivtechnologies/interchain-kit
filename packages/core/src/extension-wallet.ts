@@ -4,6 +4,7 @@ import { BroadcastMode, DirectSignDoc, SignOptions, SignType, Wallet, WalletAcco
 import Long from 'long';
 import { clientNotExistError, getClientFromExtension } from './utils';
 import { BaseWallet } from "./base-wallet";
+import { ChainInfo } from '@keplr-wallet/types'
 
 
 export class ExtensionWallet extends BaseWallet {
@@ -16,7 +17,7 @@ export class ExtensionWallet extends BaseWallet {
     disableBalanceCheck: true,
   }
 
-  constructor(option: Wallet) {
+  constructor(option?: Wallet) {
     super(option)
   }
 
@@ -24,9 +25,12 @@ export class ExtensionWallet extends BaseWallet {
     try {
       this.client = await getClientFromExtension(this.option.windowKey)
       this.isExtensionInstalled = true
+
+      this.events.removeAllListeners()
       window.addEventListener(this.option.keystoreChange, (event) => {
         this.events.emit('keystoreChange', event)
       })
+
     } catch (error) {
       if (error === clientNotExistError.message) {
         this.isExtensionInstalled = false;
@@ -34,11 +38,11 @@ export class ExtensionWallet extends BaseWallet {
     }
   }
 
-  async enable(chainId: string | string[]) {
+  async connect(chainId: string | string[]) {
     await this.client.enable(chainId)
   }
 
-  async disable(chainId: string | string[]) {
+  async disconnect(chainId: string | string[]) {
     await this.client.disable(chainId)
   }
 
@@ -141,5 +145,22 @@ export class ExtensionWallet extends BaseWallet {
 
   async sendTx(chainId: string, tx: Uint8Array, mode: BroadcastMode) {
     return this.client.sendTx(chainId, tx, mode);
+  }
+
+  async addSuggestChain(chainInfo: ChainInfo): Promise<void> {
+    return this.client.experimentalSuggestChain(chainInfo);
+  }
+
+  async bindingEvent() {
+    this.events.removeAllListeners()
+    window.addEventListener(this.option.keystoreChange, (event) => {
+      this.events.emit('keystoreChange', event)
+    })
+  }
+
+  async unbindingEvent() {
+    window.removeEventListener(this.option.keystoreChange, (event) => {
+      this.events.emit('keystoreChange', event)
+    })
   }
 }

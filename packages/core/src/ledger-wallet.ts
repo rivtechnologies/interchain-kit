@@ -6,7 +6,7 @@ import Transport from "@ledgerhq/hw-transport";
 import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import { chains } from "@chain-registry/v2";
 import Cosmos from "@ledgerhq/hw-app-cosmos";
-
+import { ChainInfo } from '@keplr-wallet/types'
 
 export class LedgerWallet extends BaseWallet {
 
@@ -31,17 +31,15 @@ export class LedgerWallet extends BaseWallet {
     } catch (error) {
       this.hidSupported = false
     }
-
-
   }
 
-  async enable(chainId: string | string[]): Promise<void> {
+  async connect(chainId: string | string[]): Promise<void> {
     const transport = await TransportWebHID.create();
     this.cosmos = new Cosmos(transport)
     this.transport = transport;
   }
 
-  async disable(chainId: string | string[]): Promise<void> {
+  async disconnect(chainId: string | string[]): Promise<void> {
     if (this.transport) {
       await this.transport.close();
     }
@@ -111,6 +109,18 @@ export class LedgerWallet extends BaseWallet {
   }
 
   sendTx(chainId: string, tx: Uint8Array, mode: BroadcastMode): Promise<Uint8Array> {
+    throw new Error("Method not implemented.");
+  }
+
+  addSuggestChain(chainInfo: ChainInfo): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
+  bindingEvent(): void {
+    throw new Error("Method not implemented.");
+  }
+
+  unbindingEvent(): void {
     throw new Error("Method not implemented.");
   }
 
