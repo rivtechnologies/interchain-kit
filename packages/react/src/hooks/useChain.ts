@@ -12,16 +12,18 @@ export const useChain = (chainName: string): UseChainReturnType => {
   const chainToShow = walletManager.chains.find((c: Chain) => c.chainName === chainName)
   const assetList = walletManager.assetLists.find((a: AssetList) => a.chainName === chainName)
 
-  const account = useAccount(chainName)
-
   const activeWallet = useActiveWallet()
 
-  const [client, setClient] = useState<CosmJsSigner | null>(null)
+  const account = useAccount(chainName, activeWallet.option.name)
+
+  const [clientFactory, setClientFactory] = useState<CosmJsSigner | undefined>()
+
   useEffect(() => {
-    walletManager.createClient(activeWallet, chainName).then((client) => {
-      setClient(client)
+    walletManager.createClientFactory(activeWallet, chainName).then(clientFactory => {
+      setClientFactory(clientFactory)
     })
-  }, [activeWallet, chainName])
+  }, [chainName, activeWallet, account?.address])
+
 
   return {
     chain: chainToShow,
@@ -29,11 +31,11 @@ export const useChain = (chainName: string): UseChainReturnType => {
     address: account?.address,
     wallet: activeWallet,
     getRpcEndpoint: () => walletManager.getRpcEndpoint(activeWallet, chainName),
-    getStargateClient: () => client?.getStargateClient(),
-    getCosmwasmClient: () => client?.getCosmwasmClient(),
-    getSigningStargateClient: () => client?.getSigningStargateClient(),
-    getSigningCosmwasmClient: () => client?.getSigningCosmwasmClient(),
-    getClient: () => client?.getClient(),
-    getSigningClient: () => client?.getSigningClient(),
+    getClient: () => clientFactory.getClient(),
+    getSigningClient: () => clientFactory.getSigningClient(),
+    getCosmwasmClient: () => clientFactory.getCosmwasmClient(),
+    getSigningCosmwasmClient: () => clientFactory.getSigningCosmwasmClient(),
+    getSigningStargateClient: () => clientFactory.getSigningStargateClient(),
+    getStargateClient: () => clientFactory.getStargateClient(),
   }
 }

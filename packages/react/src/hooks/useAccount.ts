@@ -1,35 +1,34 @@
 import { useEffect, useState } from "react"
-import { useActiveWallet } from "./useActiveWallet"
 import { WalletAccount } from "@interChain-kit/core"
 import { useWalletManager } from './useWalletManager';
 
-export const useAccount = (chainName: string): WalletAccount | null => {
+export const useAccount = (chainName: string, walletName: string): WalletAccount | null => {
   const walletManager = useWalletManager()
 
-  const currentWallet = useActiveWallet()
+  const wallet = walletManager.wallets.find(w => w.option.name === walletName)
 
   const [account, setAccount] = useState<WalletAccount | null>(null)
 
   const chain = walletManager.chains.find(c => c.chainName === chainName)
 
   const getAccount = async () => {
-    const account = await currentWallet.getAccount(chain.chainId)
+    const account = await wallet.getAccount(chain.chainId)
     setAccount(account)
   }
 
   useEffect(() => {
-    if (currentWallet) {
-      currentWallet.events.on('keystoreChange', getAccount)
+    if (wallet) {
+      wallet.events.on('keystoreChange', getAccount)
     }
-  }, [currentWallet])
+  }, [wallet])
 
   useEffect(() => {
-    if (!currentWallet) {
+    if (!wallet) {
       setAccount(null)
       return
     }
     getAccount()
-  }, [currentWallet, chainName, currentWallet?.walletState])
+  }, [wallet, chainName, wallet?.walletState])
 
   return account
 }
