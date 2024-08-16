@@ -30,8 +30,10 @@ const BalanceTd = ({ address, wallet, chain }: BalanceProps) => {
   const getBalance = async () => {
     try {
       const client = await getClient()
-      const balance = await client.getBalance(address, chain.staking?.stakingTokens[0].denom as string)
-      setBalance(balance.amount)
+      const { balance } = await client.balance({ address, denom: chain.staking?.stakingTokens[0].denom as string })
+      if (balance) {
+        setBalance(balance.amount)
+      }
     } catch (error) {
       console.error(error)
     }
@@ -57,7 +59,7 @@ type SendTokenProps = {
   chain: Chain
 }
 const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
-  const { getSigningClient, getSigningCosmwasmClient } = useChainWallet(chain.chainName, wallet.option?.name as string)
+  const { getSigningClient, getSigningCosmwasmClient, getSigningStargateClient } = useChainWallet(chain.chainName, wallet.option?.name as string)
 
   const ref = useRef<HTMLInputElement>(null)
   const amountRef = useRef<HTMLInputElement>(null)
@@ -66,18 +68,27 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
     if (ref.current) {
       const recipientAddress = ref.current.value
       const denom = chain.staking?.stakingTokens[0].denom as string
-      const client = await getSigningCosmwasmClient()
+      const client = await getSigningStargateClient()
 
-      console.log({ denom, client, recipientAddress })
       const fee = {
         amount: coins(5000, denom),
         gas: "1000000",
       };
 
       try {
-        const tx = await client.sendTokens(address, recipientAddress, [{ denom: denom, amount: amountRef.current?.value as string }], fee, 'test')
+        const tx = await client.helpers.send(
+          address,
+          {
+            fromAddress: address,
+            toAddress: recipientAddress,
+            amount: [{ denom: denom, amount: amountRef.current?.value as string }],
+          },
+          fee,
+          'test')
+        // const tx = await client.sendTokens(address, recipientAddress, [{ denom: denom, amount: amountRef.current?.value as string }], fee, 'test')
         console.log(tx)
       } catch (error) {
+        console.log("xxxxx", error)
         console.error(error)
       }
     }
