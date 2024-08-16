@@ -1,11 +1,13 @@
-import { Algo, StdSignature, StdSignDoc } from "@cosmjs/amino";
-import { OfflineDirectSigner } from '@cosmjs/proto-signing';
+import { StdSignDoc } from '@interchainjs/types';
 import { BroadcastMode, DirectSignDoc, SignOptions, SignType, Wallet, WalletAccount } from "./types";
 import Long from 'long';
 import { clientNotExistError, getClientFromExtension } from './utils';
 import { BaseWallet } from "./base-wallet";
 import { ChainInfo } from '@keplr-wallet/types'
-
+import {
+  OfflineDirectSigner,
+} from '@interchainjs/cosmos/types/wallet';
+import { StdSignature } from 'interchainjs/types';
 
 export class ExtensionWallet extends BaseWallet {
 
@@ -61,7 +63,7 @@ export class ExtensionWallet extends BaseWallet {
     return {
       username: key.name,
       address: key.bech32Address,
-      algo: key.algo as Algo,
+      algo: key.algo,
       pubkey: key.pubKey,
       isNanoLedger: key.isNanoLedger,
     };
@@ -73,7 +75,7 @@ export class ExtensionWallet extends BaseWallet {
       return {
         username: key.name,
         address: key.bech32Address,
-        algo: key.algo as Algo,
+        algo: key.algo,
         pubkey: key.pubKey,
         isNanoLedger: key.isNanoLedger,
       };

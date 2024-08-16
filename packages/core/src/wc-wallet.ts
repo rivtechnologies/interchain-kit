@@ -1,12 +1,16 @@
 import { SimpleAccount, Wallet, WcEventTypes, WcProviderEventType } from './types/wallet';
 import { BaseWallet } from "./base-wallet";
-import { OfflineAminoSigner, StdSignDoc, AminoSignResponse, StdSignature } from "@cosmjs/amino";
-import { OfflineDirectSigner, DirectSignResponse, Algo } from "@cosmjs/proto-signing";
 import { WalletAccount, SignOptions, DirectSignDoc, BroadcastMode } from "./types";
 import { SignClient } from '@walletconnect/sign-client';
 import { ISignClient, SessionTypes } from '@walletconnect/types';
 import { Buffer } from 'buffer'
 import { ChainInfo } from '@keplr-wallet/types'
+import {
+  OfflineAminoSigner,
+  OfflineDirectSigner,
+} from '@interchainjs/cosmos/types/wallet';
+import { AminoSignResponse, StdSignature, DirectSignResponse } from '@interchainjs/cosmos/types/wallet';
+import { StdSignDoc } from '@interchainjs/types'
 
 export class WCWallet extends BaseWallet {
 
@@ -135,7 +139,7 @@ export class WCWallet extends BaseWallet {
 
     return {
       address,
-      algo: algo as Algo,
+      algo: algo,
       pubkey: new Uint8Array(Buffer.from(pubkey, 'base64')),
     }
   }
