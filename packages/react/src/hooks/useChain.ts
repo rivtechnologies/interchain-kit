@@ -5,7 +5,7 @@ import { useAccount } from "./useAccount";
 import { AssetList, Chain } from "@chain-registry/v2-types";
 import { useActiveWallet } from './useActiveWallet';
 import { useEffect, useState } from "react";
-import { CosmJsSigner } from "@interChain-kit/core";
+import { InterchainJsSigner } from "@interChain-kit/core";
 
 export const useChain = (chainName: string): UseChainReturnType => {
   const walletManager = useWalletManager()
@@ -16,7 +16,7 @@ export const useChain = (chainName: string): UseChainReturnType => {
 
   const account = useAccount(chainName, activeWallet.option.name)
 
-  const [clientFactory, setClientFactory] = useState<CosmJsSigner | undefined>()
+  const [clientFactory, setClientFactory] = useState<InterchainJsSigner | undefined>()
 
   useEffect(() => {
     walletManager.createClientFactory(activeWallet, chainName).then(clientFactory => {

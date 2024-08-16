@@ -2,9 +2,10 @@ import { AssetList, Chain } from "@chain-registry/v2-types"
 import { useWalletManager } from "./useWalletManager"
 import { useAccount } from "./useAccount"
 import { useEffect, useState } from "react"
-import { BaseWallet, ChainNotExist, CosmJsSigner, WalletNotExist } from "@interChain-kit/core"
+import { BaseWallet, ChainNotExist, InterchainJsSigner, WalletNotExist } from "@interChain-kit/core"
+import { UseChainReturnType } from "../types/chain"
 
-export const useChainWallet = (chainName: string, walletName: string) => {
+export const useChainWallet = (chainName: string, walletName: string): UseChainReturnType => {
   const walletManager = useWalletManager()
   const chainToShow = walletManager.chains.find((c: Chain) => c.chainName === chainName)
   const assetList = walletManager.assetLists.find((a: AssetList) => a.chainName === chainName)
@@ -12,7 +13,7 @@ export const useChainWallet = (chainName: string, walletName: string) => {
 
   const account = useAccount(chainName, walletName)
 
-  const [clientFactory, setClientFactory] = useState<CosmJsSigner | undefined>()
+  const [clientFactory, setClientFactory] = useState<InterchainJsSigner | undefined>()
 
   useEffect(() => {
     if (!wallet) {
