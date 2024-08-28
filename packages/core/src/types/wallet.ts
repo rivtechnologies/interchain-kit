@@ -85,7 +85,7 @@ export interface SignOptions {
   readonly disableBalanceCheck?: boolean;
 }
 
-export type Algo = "secp256k1" | "ed25519" | "sr25519";
+export type Algo = 'secp256k1' | 'ed25519' | 'sr25519';
 export interface AccountData {
   /** A printable address (typically bech32 encoded) */
   address: string;

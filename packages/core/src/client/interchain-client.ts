@@ -36,8 +36,17 @@ export class InterchainJsSigner extends BaseSigner<
   getCosmwasmClient(): Promise<void> {
     throw new Error('Method not implemented. Use interchain query instead');
   }
-  getSigningStargateClient(): Promise<StargateSigningClient> {
-    return StargateSigningClient.connectWithSigner(this.rpcEndpoint, this.offlineSigner, this.signerOptions)
+  getSigningStargateClient(prefix?: string): Promise<StargateSigningClient> {
+    const options = {
+      ...this.signerOptions,
+      prefix: prefix,
+      broadcast: {
+        checkTx: true,
+        deliverTx: false,
+        // useLegacyBroadcastTxCommit: true,
+      },
+    }
+    return StargateSigningClient.connectWithSigner(this.rpcEndpoint, this.offlineSigner, options)
   }
   getSigningCosmwasmClient(): Promise<CosmWasmSigningClient> {
     return CosmWasmSigningClient.connectWithSigner(this.rpcEndpoint, this.offlineSigner, this.signerOptions)

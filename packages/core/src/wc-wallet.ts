@@ -126,6 +126,9 @@ export class WCWallet extends BaseWallet {
   }
 
   override async getAccount(chainId: string): Promise<WalletAccount> {
+    if (!this.signClient) {
+      return;
+    }
     const accounts = await this.signClient.request({
       topic: this.session?.topic,
       request: {

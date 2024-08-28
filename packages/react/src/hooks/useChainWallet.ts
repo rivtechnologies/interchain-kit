@@ -38,7 +38,7 @@ export const useChainWallet = (chainName: string, walletName: string): UseChainR
     getSigningClient: async () => clientFactory.getSigningClient(),
     getCosmwasmClient: () => clientFactory.getCosmwasmClient(),
     getSigningCosmwasmClient: () => clientFactory.getSigningCosmwasmClient(),
-    getSigningStargateClient: () => clientFactory.getSigningStargateClient(),
+    getSigningStargateClient: () => clientFactory.getSigningStargateClient(chainToShow.bech32Prefix),
     getStargateClient: () => clientFactory.getStargateClient(),
   }
 }
