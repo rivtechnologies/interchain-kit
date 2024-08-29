@@ -36,7 +36,6 @@
     "@cosmjs/cosmwasm-stargate": "^0.32.4",
     "@cosmjs/proto-signing": "^0.32.3",
     "@cosmjs/stargate": "^0.32.4",
-    "@interchain-kit/core": "^0.0.1",
     "@interchainjs/cosmos-types": "^0.0.1-beta.7",
     "@ledgerhq/hw-app-cosmos": "^6.30.0",
     "@ledgerhq/hw-transport": "^6.31.0",
