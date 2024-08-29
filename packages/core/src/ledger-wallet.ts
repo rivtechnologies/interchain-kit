@@ -1,5 +1,4 @@
-import { OfflineAminoSigner, StdSignDoc, AminoSignResponse, StdSignature, Algo } from "@cosmjs/amino";
-import { OfflineDirectSigner, DirectSignResponse } from "@cosmjs/proto-signing";
+import { StdSignDoc } from '@interchainjs/types';
 import { BaseWallet } from "./base-wallet";
 import { WalletAccount, SimpleAccount, SignOptions, DirectSignDoc, BroadcastMode } from "./types";
 import Transport from "@ledgerhq/hw-transport";
@@ -7,6 +6,13 @@ import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import { chains } from "@chain-registry/v2";
 import Cosmos from "@ledgerhq/hw-app-cosmos";
 import { ChainInfo } from '@keplr-wallet/types'
+import {
+  OfflineAminoSigner,
+  OfflineDirectSigner,
+  DirectSignResponse,
+  AminoSignResponse,
+  StdSignature
+} from '@interchainjs/cosmos/types/wallet';
 
 export class LedgerWallet extends BaseWallet {
 
@@ -59,7 +65,7 @@ export class LedgerWallet extends BaseWallet {
       return {
         username: this.cosmosPath || '',
         address,
-        algo: 'secp256k1' as Algo,
+        algo: 'secp256k1',
         pubkey: new TextEncoder().encode(publicKey),
         isNanoLedger: true,
       };

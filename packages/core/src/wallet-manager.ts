@@ -1,12 +1,12 @@
-import { StargateClientOptions } from '@cosmjs/stargate';
+import { HttpEndpoint } from '@interchainjs/types';
 import { Chain, AssetList } from '@chain-registry/v2-types'
 import { BaseWallet } from './base-wallet'
 import { WCWallet } from './wc-wallet';
 import { ChainName, EndpointOptions, SignerOptions, WalletState } from './types'
 import { ChainNotExist, createObservable, getValidRpcEndpoint, isValidRpcEndpoint, WalletNotExist } from './utils'
-import { HttpEndpoint } from '@cosmjs/stargate';
-import { CosmJsSigner } from './client/cosmjs-client';
-import { SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
+import { InterchainJsSigner } from './client';
+import { OfflineSigner } from '@interchainjs/cosmos/types/wallet';
+import { SignerOptions as InterchainSignerOptions } from 'interchainjs/types';
 
 export class WalletManager {
   chains: Chain[] = []
@@ -126,19 +126,11 @@ export class WalletManager {
     return this.signerOptions?.preferredSignType?.(chainName) || 'amino'
   }
 
-  getCosmWasmSigningOptions(chainName: string): SigningCosmWasmClientOptions {
-    return this.signerOptions?.signingCosmwasm?.(chainName) || {}
+  getSignerOptions(chainName: string): InterchainSignerOptions {
+    return this.signerOptions?.signing?.(chainName) || {}
   }
 
-  getStargateSigningOptions(chainName: string): StargateClientOptions {
-    return this.signerOptions?.signingStargate?.(chainName) || {}
-  }
-
-  getStargateOptiosn(chainName: string) {
-    return this.signerOptions.stargate?.(chainName) || {}
-  }
-
-  async getOfflineSigner(wallet: BaseWallet, chainName: string) {
+  async getOfflineSigner(wallet: BaseWallet, chainName: string): Promise<OfflineSigner> {
     const chain = this.getChain(chainName)
     const signType = this.getPreferSignType(chainName)
     if (signType === 'direct') {
@@ -148,14 +140,11 @@ export class WalletManager {
     }
   }
 
-  async createClientFactory(wallet: BaseWallet, chainName: ChainName): Promise<CosmJsSigner> {
+  async createClientFactory(wallet: BaseWallet, chainName: ChainName): Promise<InterchainJsSigner> {
     const rpcEndpoint = await this.getRpcEndpoint(wallet, chainName)
     const offlineSigner = await this.getOfflineSigner(wallet, chainName)
-    const coswmSigningClientOptions = this.getCosmWasmSigningOptions(chainName)
-    const stargateSigningClientOptions = this.getStargateSigningOptions(chainName)
-    const stargateOptions = this.getStargateOptiosn(chainName)
-    return new CosmJsSigner(rpcEndpoint, offlineSigner, coswmSigningClientOptions, stargateSigningClientOptions, stargateOptions)
+    const signerOptions = await this.getSignerOptions(chainName)
+    return new InterchainJsSigner(rpcEndpoint, offlineSigner, signerOptions)
   }
-
 
 }

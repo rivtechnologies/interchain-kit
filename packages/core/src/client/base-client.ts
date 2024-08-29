@@ -9,6 +9,7 @@ export abstract class BaseSigner<
   abstract getStargateClient(): Promise<StargateClientType>
   abstract getCosmwasmClient(): Promise<CosmwasmClientType>
   abstract getSigningStargateClient(): Promise<SigningStargateClientType>
+  abstract getSigningStargateClient(prefix: string): Promise<SigningStargateClientType>
   abstract getSigningCosmwasmClient(): Promise<SigningCosmwasmClientType>
   abstract getClient(): Promise<ClientType>
   abstract getSigningClient(): Promise<SigningClientType>

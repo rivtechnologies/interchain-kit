@@ -20,6 +20,7 @@ import { starshipChain, starshipChain1 } from './utils/starship.ts'
 
 // const chainNames = ['osmosis', 'juno', 'cosmoshub', 'stargaze', 'noble']
 const chainNames = ['osmosistestnet']
+// const chainNames = ['cosmoshub']
 
 const walletConnect = new WCWallet()
 
@@ -43,6 +44,7 @@ const mock1Wallet = new MockWallet(wallet1Mnemonic, _chains, { mode: 'extension'
 const mock2Wallet = new MockWallet(wallet2Mnemonic, _chains, { mode: 'extension', prettyName: 'Mock2', name: 'mock2' })
 
 const _wallets: BaseWallet[] = [mock1Wallet, mock2Wallet, keplrWallet, walletConnect]
+
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

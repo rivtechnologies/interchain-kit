@@ -1,9 +1,12 @@
-
-import { AminoSignResponse, OfflineAminoSigner, StdSignature, StdSignDoc } from "@cosmjs/amino";
-import { BroadcastMode, DirectSignDoc, SignOptions, SignType, SimpleAccount, Wallet, WalletAccount, WalletState } from "./types";
-import { DirectSignResponse, OfflineDirectSigner } from "@cosmjs/proto-signing";
+import { StdSignDoc } from '@interchainjs/types';
+import { BroadcastMode, DirectSignDoc, SignOptions, SimpleAccount, Wallet, WalletAccount, WalletState } from "./types";
 import EventEmitter from "events";
 import { ChainInfo } from '@keplr-wallet/types'
+import {
+  OfflineAminoSigner,
+  OfflineDirectSigner,
+  AminoSignResponse, StdSignature, DirectSignResponse
+} from '@interchainjs/cosmos/types/wallet';
 export abstract class BaseWallet {
 
   option?: Wallet

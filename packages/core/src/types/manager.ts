@@ -1,14 +1,12 @@
+import { HttpEndpoint } from '@interchainjs/types';
 import { AssetList, Chain } from "@chain-registry/v2-types";
 import { ChainName } from './chain'
-import { HttpEndpoint, SigningStargateClientOptions, StargateClientOptions } from "@cosmjs/stargate";
-import { CosmWasmClient, SigningCosmWasmClientOptions } from "@cosmjs/cosmwasm-stargate";
 import { SignType } from "./common";
 import { BaseWallet } from "../base-wallet";
+import { SignerOptions as InterchainSignerOptions } from 'interchainjs/types';
 
 export interface SignerOptions {
-  stargate?: (chain: Chain | ChainName) => StargateClientOptions | undefined;
-  signingStargate?: (chain: Chain | ChainName) => SigningStargateClientOptions | undefined;
-  signingCosmwasm?: (chain: Chain | ChainName) => SigningCosmWasmClientOptions | undefined;
+  signing?: (chain: Chain | ChainName) => InterchainSignerOptions | undefined;
   preferredSignType?: (chain: Chain | ChainName) => SignType | undefined; // using `amino` if undefined
 }
 

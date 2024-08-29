@@ -1,6 +1,6 @@
 import { HttpEndpoint } from '@cosmjs/stargate';
 import { Chain, AssetList } from '@chain-registry/v2-types';
-import { BaseWallet, CosmJsSigner } from '@interChain-kit/core';
+import { BaseWallet, InterchainJsSigner } from '@interChain-kit/core';
 
 export type UseChainReturnType = {
   chain: Chain,
@@ -8,4 +8,4 @@ export type UseChainReturnType = {
   address: string,
   wallet: BaseWallet
   getRpcEndpoint: () => Promise<string | HttpEndpoint>,
-} & Omit<CosmJsSigner, 'rpcEndpoint' | 'offlineSigner' | 'signingCosmwasmOptions' | 'signingStargateOptions' | 'stargateOptions'>
+} & Omit<InterchainJsSigner, 'rpcEndpoint' | 'offlineSigner' | 'signerOptions'>
