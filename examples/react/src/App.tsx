@@ -1,134 +1,219 @@
-import { useAccount, useChain, useActiveWallet, useWalletManager, useWalletModal } from '@interchain-kit/react'
-import { useEffect, useState } from 'react'
-import { QRCodeSVG } from 'qrcode.react';
-import { BaseWallet, ExtensionWallet } from '../../../packages/core/dist';
-import { AssetList } from '@chain-registry/v2-types';
-import { assetLists } from '@chain-registry/v2';
+import { assetLists, chains } from '@chain-registry/v2'
+import { BaseWallet, WCWallet } from '@interchain-kit/core'
+import { useChainWallet, useWalletManager } from '@interchain-kit/react'
+import { useEffect, useRef, useState } from 'react'
+import { creditFromStarship, makeKeplrChainInfo } from './utils'
+import { Chain, Asset } from '@chain-registry/v2-types'
+import { coins } from '@cosmjs/amino';
+import { ChainInfo } from '@keplr-wallet/types'
+import QRCode from "react-qr-code";
 
-type BalanceTdProps = {
-  assetList: AssetList | undefined
-  getStargateClient: () => Promise<any>
-  account: any
+type BalanceProps = {
+  address: string
+  wallet: BaseWallet
+  chainName: string
+  chainId: string
+  chain: Chain
 }
 
-const BalanceTd = ({ assetList, getStargateClient, account }: BalanceTdProps) => {
+const BalanceTd = ({ address, wallet, chain }: BalanceProps) => {
 
-  if (assetList === undefined) {
-    return null
-  }
-
-
-  const [loading, setLoading] = useState(false)
-  const [balance, setBalance] = useState({ denom: '', amount: '' })
-
-  const fetchBalance = async (address: string, denom: string) => {
-    const client = await getStargateClient()
-
-    const balance = await client.getBalance(address, denom)
-
-    setBalance(balance)
-  }
-
-  const handleChange = async (e: any) => {
-    setLoading(true)
-    if (account.address === undefined) {
-      return
-    }
-
-    await fetchBalance(account.address, e.target.value)
-    setLoading(false)
-  }
-
-  return <td>
-    {loading && <span>loading...</span>}
-    <select onChange={handleChange}>{assetList.assets.map(a => <option value={a.base}>{a.symbol} - {a.name}</option>)}</select>
-    <div>denom: {balance?.denom}</div>
-    <div>amount: {balance?.amount}</div>
-  </td>
-}
-
-function App() {
-
-  const walletManager = useWalletManager()
-
-  const [paringUri, setParingUri] = useState<string>("")
-  const [chainName, setChainName] = useState<string>("juno")
-
-  const account = useAccount(chainName)
-  const currentWallet = useActiveWallet()
-  const { chain, getStargateClient } = useChain(chainName)
-
-  const { open, close } = useWalletModal()
-
-
+  const [balance, setBalance] = useState<string | undefined>('')
+  const { client } = useChainWallet(chain.chainName, wallet.option?.name as string)
 
   useEffect(() => {
-    console.log({ account })
-    if (account === null) {
-      open()
-    } else {
-      close()
+    if (address && wallet && chain) {
+      getBalance()
     }
-  }, [account])
+  }, [address, wallet, chain])
 
+  const getBalance = async () => {
+    try {
+      const { balance } = await client.balance({ address, denom: chain.staking?.stakingTokens[0].denom as string })
+      setBalance(balance?.amount)
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
-
-
+  const handleFaucet = async () => {
+    await creditFromStarship('http://localhost:8003/credit', address, chain.staking?.stakingTokens[0].denom as string)
+    await getBalance()
+  }
 
   return (
-    <div>
-      <select value={chainName} onChange={(e) => {
-        setChainName(e.target.value)
-      }}>
-        {walletManager.chains.map((chain) => {
-          return (
-            <option key={chain.chainId} value={chain.chainName}>
-              {chain.chainName}
-            </option>
-          )
-        })}
-      </select>
-      <table border={1}>
-        <tbody>{walletManager.wallets.map((wallet: BaseWallet) => {
-          return <tr>
-            <td>
-              <button onClick={() => {
-                if (wallet.option?.name) {
-                  walletManager.connect(wallet.option?.name, () => setParingUri(''), setParingUri)
-                }
-              }}>
-                connect {wallet.option?.prettyName}
-              </button>
-            </td>
-            <td>
-              <button onClick={() => {
-                if (wallet.option?.name) {
-                  walletManager.disconnect()
-                }
-              }}>
-                disconnect {wallet.option?.prettyName}
-              </button>
-            </td>
-            <td>wallet state: {wallet.walletState}</td>
-            <td>error message: {wallet.errorMessage}</td>
-            {wallet instanceof ExtensionWallet ? <td>extension installed: {JSON.stringify(wallet.isExtensionInstalled)}</td> : <td>xxx</td>}
-            <BalanceTd assetList={assetLists.find(a => a.chainName === chainName)} getStargateClient={getStargateClient} account={account} />
-          </tr>
-        })}</tbody>
-
-      </table>
-      {paringUri && <QRCodeSVG size={256} value={paringUri} />}
-
-
-      <p>current active wallet: {currentWallet?.option?.prettyName}</p>
-
-      <pre>{JSON.stringify(account, null, 2)}</pre>
-
-      <pre>{JSON.stringify(chain, null, 4)}</pre>
-
-    </div>
-
+    <td>
+      <div><button onClick={handleFaucet}>faucet from starship</button></div>
+      <div><button onClick={getBalance}>refresh balance</button></div>
+      <div><span>balance: </span><span>{balance}</span></div>
+    </td>
   )
 }
 
-export default App
+type SendTokenProps = {
+  wallet: BaseWallet,
+  address: string,
+  chain: Chain
+}
+const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
+  const { cosmWasmSigningClient } = useChainWallet(chain.chainName, wallet.option?.name as string)
+
+  const ref = useRef<HTMLInputElement>(null)
+  const amountRef = useRef<HTMLInputElement>(null)
+
+  const handleSendToken = async () => {
+    if (ref.current) {
+      const recipientAddress = ref.current.value
+      const denom = chain.staking?.stakingTokens[0].denom as string
+
+      const fee = {
+        amount: coins(25000, denom),
+        gas: "1000000",
+      };
+
+      try {
+        const tx = await cosmWasmSigningClient.helpers.send(address, { fromAddress: address, toAddress: recipientAddress, amount: [{ denom: denom, amount: amountRef.current?.value as string }] }, fee, 'test')
+        console.log(tx)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+  }
+
+  return (
+    <td>
+      <div>
+        <button onClick={handleSendToken}>Send Token to:</button>
+        <input ref={ref} />
+      </div>
+      <div>amount: <input ref={amountRef} /></div>
+    </td>
+  )
+}
+
+const ChainRow = ({ chain, wallet }: { chain: Chain, wallet: BaseWallet }) => {
+  const { address } = useChainWallet(chain.chainName, wallet.option?.name as string)
+  return (
+    <tr>
+      <td>{chain.chainName}</td>
+      <td>{chain.chainId}</td>
+      <td>{address}</td>
+      <BalanceTd address={address} chainId={chain.chainId} chainName={chain.chainName} wallet={wallet} chain={chain} />
+      <SendTokenTd address={address} wallet={wallet} chain={chain} />
+    </tr>
+  )
+}
+
+const WalletConnectTd = ({ wallet }: { wallet: BaseWallet }) => {
+
+  const walletManager = useWalletManager()
+
+  const chainIds = walletManager.chains.map(c => c.chainId)
+
+  const currentWallet = walletManager.wallets.find((w: BaseWallet) => w.option?.name === wallet.option?.name)
+
+  const [url, setUrl] = useState<string>('')
+
+  const [approved, setApproved] = useState<boolean>(false)
+
+  const connect = () => {
+    walletManager.connect(wallet.option?.name as string, () => setApproved(true), (uri: string) => {
+      console.log({ uri })
+      setUrl(uri)
+    })
+  }
+
+  const disconnect = () => {
+    const x = (currentWallet as WCWallet).signClient.session
+    console.log(x);
+    // console.log((currentWallet as WCWallet).signClient.core.pairing.getPairings())
+    (currentWallet as WCWallet).signClient.core.pairing.getPairings().forEach((pairing) => {
+      console.log(pairing);
+      (currentWallet as WCWallet).signClient.disconnect({ topic: pairing.topic, reason: { code: 6000, message: 'disconnect' } })
+    })
+    if (currentWallet) {
+      currentWallet.disconnect(chainIds)
+    }
+  }
+
+
+  return (
+    <td>
+      <button onClick={connect}>connect</button>
+      <button onClick={disconnect}>disconnect</button>
+      {currentWallet instanceof WCWallet && url !== '' && !approved && <QRCode value={url} />}
+      {wallet.errorMessage}
+    </td>
+  )
+}
+
+const E2ETest = () => {
+  const walletManager = useWalletManager()
+
+  const addChain = async () => {
+
+    const keplrExtension = walletManager.wallets.find(w => w.option?.name === 'keplr-extension')
+
+    const chain = chains.find(c => c.chainName === 'cosmoshub')
+    const assetList = assetLists.find(a => a.chainName === 'cosmoshub')
+
+    const chainInfo: ChainInfo = makeKeplrChainInfo(
+      chain as Chain,
+      assetList?.assets[0] as Asset,
+      'http://localhost:26653',
+      'http://localhost:1313',
+      'test-cosmoshub-4',
+      'cosmoshub')
+
+    keplrExtension?.addSuggestChain(chainInfo)
+  }
+
+  return (
+    <div>
+      <table style={{ width: '1000px' }}>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Pretty Name</th>
+            <th>Connect</th>
+            <th>Chain</th>
+          </tr>
+        </thead>
+        <tbody>
+          {walletManager.wallets.map(wallet => {
+            return (<tr>
+              <td>{wallet.option?.name}</td>
+              <td>{wallet.option?.prettyName}</td>
+              <WalletConnectTd wallet={wallet} />
+              <td>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>name</th>
+                      <th>chainId</th>
+                      <th>address</th>
+                      <th>faucet</th>
+                      <th>send token</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {walletManager.chains.map(chain => {
+                      return <ChainRow chain={chain} wallet={wallet} />
+                    })}
+                  </tbody>
+                </table>
+              </td>
+            </tr>)
+          })}
+        </tbody>
+
+      </table >
+      <button onClick={addChain}>add suggest chain</button>
+    </div>
+
+  )
+
+}
+
+
+export default E2ETest

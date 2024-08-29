@@ -12,7 +12,7 @@ import { okxWallet } from '@interchain-kit/okx-extension'
 import { coin98Wallet } from '@interchain-kit/coin98-extension'
 import { ledgerWallet } from '@interchain-kit/ledger'
 
-import E2ETest from './E2ETest.tsx'
+
 import { MockWallet } from '@interchain-kit/mock-wallet'
 import { starshipChain, starshipChain1 } from './utils/starship.ts'
 
@@ -49,26 +49,28 @@ const _wallets: BaseWallet[] = [mock1Wallet, mock2Wallet, keplrWallet, walletCon
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ChainProvider chains={_chains} wallets={_wallets} assetLists={_assetLists} signerOptions={{
-
-    }} endpointOptions={{
-      endpoints: {
-        // 'osmosis': {
-        //   rpc: ['http://localhost:26657'],
-        //   rest: ['http://localhost:1317']
-        // },
-        // 'cosmoshub': {
-        //   rpc: ['http://localhost:26653'],
-        //   rest: ['http://localhost:1313']
-        // }
-        // 'osmosistestnet': {
-        //   rpc: ['https://rpc.testnet.osmosis.zone'],
-        //   rest: ['https://lcd.testnet.osmosis.zone']
-        // }
-      }
-    }}>
-      {/* <App />` */}
-      <E2ETest />
+    <ChainProvider
+      chains={_chains}
+      wallets={_wallets}
+      assetLists={_assetLists}
+      signerOptions={{}}
+      endpointOptions={{
+        endpoints: {
+          // 'osmosis': {
+          //   rpc: ['http://localhost:26657'],
+          //   rest: ['http://localhost:1317']
+          // },
+          // 'cosmoshub': {
+          //   rpc: ['http://localhost:26653'],
+          //   rest: ['http://localhost:1313']
+          // }
+          // 'osmosistestnet': {
+          //   rpc: ['https://rpc.testnet.osmosis.zone'],
+          //   rest: ['https://lcd.testnet.osmosis.zone']
+          // }
+        }
+      }}>
+      <App />
     </ChainProvider>
   </React.StrictMode>,
 )
