@@ -1,9 +1,9 @@
 import { AssetList, Chain } from "@chain-registry/v2-types"
 import { useWalletManager } from "./useWalletManager"
 import { useAccount } from "./useAccount"
-import { useEffect, useState } from "react"
-import { BaseWallet, ChainNotExist, InterchainJsSigner, WalletNotExist } from "@interChain-kit/core"
+import { BaseWallet } from "@interChain-kit/core"
 import { UseChainReturnType } from "../types/chain"
+import { useInterchainClient } from "./useInterchainClient"
 
 export const useChainWallet = (chainName: string, walletName: string): UseChainReturnType => {
   const walletManager = useWalletManager()
@@ -13,32 +13,13 @@ export const useChainWallet = (chainName: string, walletName: string): UseChainR
 
   const account = useAccount(chainName, walletName)
 
-  const [clientFactory, setClientFactory] = useState<InterchainJsSigner | undefined>()
-
-  useEffect(() => {
-    if (!wallet) {
-      throw new WalletNotExist(walletName)
-    }
-    if (!chainToShow) {
-      throw new ChainNotExist(chainName)
-    }
-    walletManager.createClientFactory(wallet, chainName).then(clientFactory => {
-      setClientFactory(clientFactory)
-    })
-  }, [chainName, walletName, account?.address])
-
+  const interchainClient = useInterchainClient(chainName, walletName)
 
   return {
     chain: chainToShow,
     assetList,
     address: account?.address,
     wallet,
-    getRpcEndpoint: () => walletManager.getRpcEndpoint(wallet, chainName),
-    getClient: () => clientFactory.getClient(),
-    getSigningClient: async () => clientFactory.getSigningClient(),
-    getCosmwasmClient: () => clientFactory.getCosmwasmClient(),
-    getSigningCosmwasmClient: () => clientFactory.getSigningCosmwasmClient(),
-    getSigningStargateClient: () => clientFactory.getSigningStargateClient(chainToShow.bech32Prefix),
-    getStargateClient: () => clientFactory.getStargateClient(),
+    ...interchainClient
   }
 }

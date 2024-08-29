@@ -9,8 +9,8 @@ import { RpcQuery } from 'interchainjs/query/rpc';
 import { QueryImpl } from '@interchainjs/cosmos-types/service-ops';
 
 export class InterchainJsSigner extends BaseSigner<
-  void,
-  void,
+  undefined,
+  undefined,
   StargateSigningClient,
   CosmWasmSigningClient,
   QueryImpl,
@@ -30,13 +30,15 @@ export class InterchainJsSigner extends BaseSigner<
     this.signerOptions = signerOptions
   }
 
-  getStargateClient(): Promise<void> {
-    throw new Error('Method not implemented. Use interchain query instead');
+  getStargateClient(): Promise<undefined> {
+    console.log('Method not implemented. Use interchain query instead');
+    return undefined
   }
-  getCosmwasmClient(): Promise<void> {
-    throw new Error('Method not implemented. Use interchain query instead');
+  getCosmwasmClient(): Promise<undefined> {
+    console.log('Method not implemented. Use interchain query instead');
+    return undefined
   }
-  getSigningStargateClient(prefix?: string): Promise<StargateSigningClient> {
+  async getSigningStargateClient(prefix?: string): Promise<StargateSigningClient> {
     const options = {
       ...this.signerOptions,
       prefix: prefix,
@@ -48,15 +50,13 @@ export class InterchainJsSigner extends BaseSigner<
     }
     return StargateSigningClient.connectWithSigner(this.rpcEndpoint, this.offlineSigner, options)
   }
-  getSigningCosmwasmClient(): Promise<CosmWasmSigningClient> {
+  async getSigningCosmwasmClient(): Promise<CosmWasmSigningClient> {
     return CosmWasmSigningClient.connectWithSigner(this.rpcEndpoint, this.offlineSigner, this.signerOptions)
   }
-  getClient(): Promise<QueryImpl> {
-    const rpcQuery = new RpcQuery(this.rpcEndpoint)
-    return Promise.resolve(rpcQuery)
+  async getClient(): Promise<QueryImpl> {
+    return new RpcQuery(this.rpcEndpoint)
   }
-  getSigningClient(): Promise<SigningClient> {
+  async getSigningClient(): Promise<SigningClient> {
     return SigningClient.connectWithSigner(this.rpcEndpoint, this.offlineSigner, this.signerOptions)
   }
-
 }
