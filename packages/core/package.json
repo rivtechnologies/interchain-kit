@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/core",
-  "version": "0.0.1",
+  "version": "0.0.1-beta.1",
   "author": "cosmology-tech <developers@cosmology.zone>",
   "description": "cosmos-kit wallet connector core package",
   "main": "index.js",
@@ -36,7 +36,7 @@
     "@cosmjs/cosmwasm-stargate": "^0.32.4",
     "@cosmjs/proto-signing": "^0.32.3",
     "@cosmjs/stargate": "^0.32.4",
-    "@interchain-kit/core": "^0.0.1",
+    "@interchain-kit/core": "0.0.1-beta.1",
     "@ledgerhq/hw-app-cosmos": "^6.30.0",
     "@ledgerhq/hw-transport": "^6.31.0",
     "@ledgerhq/hw-transport-webhid": "^6.29.0",
