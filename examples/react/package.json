@@ -49,5 +49,6 @@
     "starshipjs": "^2.4.0",
     "typescript": "^5.2.2",
     "vite": "^5.3.1"
-  }
+  },
+  "gitHead": "ddbd4f20f3dee91a506ea462608fc4c1a88c5483"
 }

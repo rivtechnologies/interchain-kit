@@ -32,5 +32,6 @@
   "dependencies": {
     "@interchain-kit/core": "0.0.1-beta.1",
     "@keplr-wallet/provider-extension": "^0.12.102"
-  }
+  },
+  "gitHead": "ddbd4f20f3dee91a506ea462608fc4c1a88c5483"
 }

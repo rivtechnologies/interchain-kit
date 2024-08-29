@@ -22,5 +22,6 @@
       "allowBranch": "main",
       "message": "chore(release): publish"
     }
-  }
+  },
+  "useWorkspaces": true
 }

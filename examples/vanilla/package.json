@@ -24,5 +24,6 @@
     "qrcode": "^1.5.3",
     "vite-plugin-ngrok": "^1.0.0",
     "vite-plugin-node-polyfills": "^0.22.0"
-  }
+  },
+  "gitHead": "ddbd4f20f3dee91a506ea462608fc4c1a88c5483"
 }

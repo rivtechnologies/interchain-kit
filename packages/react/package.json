@@ -37,5 +37,6 @@
     "@types/react-dom": "^18.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
-  }
+  },
+  "gitHead": "ddbd4f20f3dee91a506ea462608fc4c1a88c5483"
 }
