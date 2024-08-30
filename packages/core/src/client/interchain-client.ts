@@ -7,6 +7,7 @@ import { HttpEndpoint } from '@interchainjs/types';
 import { SigningClient } from 'interchainjs/signing-client';
 import { RpcQuery } from 'interchainjs/query/rpc';
 import { QueryImpl } from '@interchainjs/cosmos-types/service-ops';
+import { SignType } from '../types';
 
 export class InterchainJsSigner extends BaseSigner<
   undefined,
@@ -19,15 +20,20 @@ export class InterchainJsSigner extends BaseSigner<
   rpcEndpoint: string | HttpEndpoint
   offlineSigner: OfflineSigner
   signerOptions: SignerOptions
+  preferredSignType: SignType
+
   constructor(
     rpcEndpoint: string | HttpEndpoint,
     offlineSigner: OfflineSigner,
     signerOptions: SignerOptions,
+    preferredSignType: SignType
   ) {
     super()
     this.rpcEndpoint = rpcEndpoint
     this.offlineSigner = offlineSigner
     this.signerOptions = signerOptions
+    this.preferredSignType = preferredSignType
+
   }
 
   getStargateClient(): Promise<undefined> {
@@ -39,8 +45,9 @@ export class InterchainJsSigner extends BaseSigner<
     return undefined
   }
   async getSigningStargateClient(prefix?: string): Promise<StargateSigningClient> {
-    const options = {
+    const options: SignerOptions = {
       ...this.signerOptions,
+      preferredSignType: this.preferredSignType,
       prefix: prefix,
       broadcast: {
         checkTx: true,

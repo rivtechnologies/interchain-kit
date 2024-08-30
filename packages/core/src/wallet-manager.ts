@@ -144,7 +144,8 @@ export class WalletManager {
     const rpcEndpoint = await this.getRpcEndpoint(wallet, chainName)
     const offlineSigner = await this.getOfflineSigner(wallet, chainName)
     const signerOptions = await this.getSignerOptions(chainName)
-    return new InterchainJsSigner(rpcEndpoint, offlineSigner, signerOptions)
+    const preferredSignType = await this.getPreferSignType(chainName)
+    return new InterchainJsSigner(rpcEndpoint, offlineSigner, signerOptions, preferredSignType)
   }
 
 }
