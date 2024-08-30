@@ -44,11 +44,10 @@
     "@walletconnect/sign-client": "^2.13.3",
     "@walletconnect/types": "^2.13.3",
     "buffer": "^6.0.3",
-    "interchainjs": "^0.0.1-beta.11",
+    "interchainjs": "^0.0.1-beta.12",
     "long": "^5.2.3"
   },
   "devDependencies": {
     "@keplr-wallet/types": "^0.12.102"
-  },
-  "gitHead": "ddbd4f20f3dee91a506ea462608fc4c1a88c5483"
+  }
 }
