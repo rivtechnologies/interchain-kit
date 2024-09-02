@@ -49,5 +49,6 @@
   },
   "devDependencies": {
     "@keplr-wallet/types": "^0.12.102"
-  }
+  },
+  "gitHead": "3442bcc9b89b71ef8c2afd68cdc12133a5b74966"
 }
