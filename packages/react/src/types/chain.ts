@@ -1,11 +1,22 @@
+import { HttpEndpoint } from '@interchainjs/types';
 import { CosmWasmSigningClient } from 'interchainjs/cosmwasm-stargate';
-import { StargateClient } from '@cosmjs/stargate';
 import { SigningClient } from 'interchainjs/signing-client';
 import { RpcQuery } from 'interchainjs/query/rpc';
 import { StargateSigningClient } from 'interchainjs/stargate';
-import { HttpEndpoint } from '@cosmjs/stargate';
 import { Chain, AssetList } from '@chain-registry/v2-types';
-import { BaseWallet } from '@interChain-kit/core';
+import { BaseWallet, WalletState } from '@interchain-kit/core';
+
+export type CosmosKitUseChainReturnType = {
+  connect: () => void
+  openView: () => void
+  closeView: () => void
+  getRpcEndpoint: () => Promise<string | HttpEndpoint>
+  status: WalletState
+  username: string
+  message: string
+  getSigningCosmWasmClient: () => Promise<CosmWasmSigningClient>
+  getSigningStargateClient: () => Promise<StargateSigningClient>
+}
 
 export type UseChainReturnType = {
   chain: Chain,
@@ -13,11 +24,10 @@ export type UseChainReturnType = {
   address: string,
   wallet: BaseWallet
   rpcEndpoint: string | HttpEndpoint
-  client: RpcQuery
+  queryClient: RpcQuery
   signingClient: SigningClient
-  stargateClient: StargateClient
-  stargateSigningClient: StargateSigningClient
-  cosmWasmSigningClient: CosmWasmSigningClient
+  signingStargateClient: StargateSigningClient
+  signingCosmWasmClient: CosmWasmSigningClient
   isLoading: boolean
   error: unknown
 }

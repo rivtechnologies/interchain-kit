@@ -26,3 +26,9 @@ export class NoActiveWallet extends Error {
     super('No active wallet');
   }
 }
+
+export class NoValidRpcEndpointFound extends Error {
+  constructor() {
+    super('No valid rpc endpoint found');
+  }
+}

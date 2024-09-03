@@ -1,6 +1,6 @@
+import { HttpEndpoint } from '@interchainjs/types';
 import { CosmWasmSigningClient } from 'interchainjs/cosmwasm-stargate';
 import { StargateSigningClient } from 'interchainjs/stargate';
-import { StargateClient, HttpEndpoint } from '@cosmjs/stargate';
 import { SigningClient } from 'interchainjs/signing-client';
 import { RpcQuery } from 'interchainjs/query/rpc';
 import { useEffect, useState } from "react";
@@ -11,10 +11,9 @@ import { useAccount } from './useAccount';
 export const useInterchainClient = (chainName: string, walletName: string) => {
   const [rpcEndpoint, setRpcEndpoint] = useState<string | HttpEndpoint | undefined>()
   const [signingClient, setSigningClient] = useState<SigningClient | null>(null)
-  const [client, setClient] = useState<RpcQuery | null>(null)
-  const [stargateSigningClient, setStargateSigningClient] = useState<StargateSigningClient | null>(null)
-  const [stargateClient, setStargateClient] = useState<StargateClient | undefined>()
-  const [cosmWasmSigningClient, setCosmWasmSigningClient] = useState<CosmWasmSigningClient | null>(null)
+  const [queryClient, setQueryClient] = useState<RpcQuery | null>(null)
+  const [signingStargateClient, setSigningStargateClient] = useState<StargateSigningClient | null>(null)
+  const [signingCosmWasmClient, setSigningCosmWasmClient] = useState<CosmWasmSigningClient | null>(null)
   const [error, setError] = useState<string | unknown | null>(null);
   const [isLoading, setIsLoading] = useState(false)
   const walletManager = useWalletManager()
@@ -37,20 +36,17 @@ export const useInterchainClient = (chainName: string, walletName: string) => {
 
       const clientFactory = await walletManager.createClientFactory(wallet, chainName)
 
-      const client = await clientFactory.getClient()
-      setClient(client)
+      const queryClient = await clientFactory.getClient()
+      setQueryClient(queryClient)
 
       const signingClient = await clientFactory.getSigningClient()
       setSigningClient(signingClient)
 
-      const stargateClient = await clientFactory.getStargateClient()
-      setStargateClient(stargateClient)
-
       const signingStargateClient = await clientFactory.getSigningStargateClient(chainToShow.bech32Prefix)
-      setStargateSigningClient(signingStargateClient)
+      setSigningStargateClient(signingStargateClient)
 
       const signingCosmwasmClient = await clientFactory.getSigningCosmwasmClient()
-      setCosmWasmSigningClient(signingCosmwasmClient)
+      setSigningCosmWasmClient(signingCosmwasmClient)
 
     } catch (error) {
       setError(error)
@@ -61,15 +57,14 @@ export const useInterchainClient = (chainName: string, walletName: string) => {
 
   useEffect(() => {
     initialize()
-  }, [chainName, walletName, account?.address])
+  }, [chainName, walletName, account])
 
   return {
     rpcEndpoint,
     signingClient,
-    client,
-    stargateSigningClient,
-    stargateClient,
-    cosmWasmSigningClient,
+    queryClient,
+    signingStargateClient,
+    signingCosmWasmClient,
     error,
     isLoading
   }

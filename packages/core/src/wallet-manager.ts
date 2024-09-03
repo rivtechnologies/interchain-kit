@@ -3,7 +3,7 @@ import { Chain, AssetList } from '@chain-registry/v2-types'
 import { BaseWallet } from './base-wallet'
 import { WCWallet } from './wc-wallet';
 import { ChainName, EndpointOptions, SignerOptions, WalletState } from './types'
-import { ChainNotExist, createObservable, getValidRpcEndpoint, isValidRpcEndpoint, WalletNotExist } from './utils'
+import { ChainNotExist, createObservable, getValidRpcEndpoint, isValidRpcEndpoint, NoValidRpcEndpointFound, WalletNotExist } from './utils'
 import { InterchainJsSigner } from './client';
 import { OfflineSigner } from '@interchainjs/cosmos/types/wallet';
 import { SignerOptions as InterchainSignerOptions } from 'interchainjs/types';
@@ -119,7 +119,13 @@ export class WalletManager {
       return chainRpcEndpoints[0]
     }
 
-    return getValidRpcEndpoint([...providerRpcEndpoints, ...walletRpcEndpoints, ...chainRpcEndpoints])
+    const validRpcEndpoint = await getValidRpcEndpoint([...providerRpcEndpoints, ...walletRpcEndpoints, ...chainRpcEndpoints])
+
+    if (validRpcEndpoint === '') {
+      throw new NoValidRpcEndpointFound()
+    }
+
+    return validRpcEndpoint
   }
 
   getPreferSignType(chainName: string) {
@@ -130,7 +136,7 @@ export class WalletManager {
     return this.signerOptions?.signing?.(chainName) || {}
   }
 
-  async getOfflineSigner(wallet: BaseWallet, chainName: string): Promise<OfflineSigner> {
+  getOfflineSigner(wallet: BaseWallet, chainName: string): OfflineSigner {
     const chain = this.getChain(chainName)
     const signType = this.getPreferSignType(chainName)
     if (signType === 'direct') {

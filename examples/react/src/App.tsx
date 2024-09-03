@@ -1,6 +1,6 @@
 import { assetLists, chains } from '@chain-registry/v2'
 import { BaseWallet, WCWallet } from '@interchain-kit/core'
-import { useChainWallet, useWalletManager } from '@interchain-kit/react'
+import { useChainWallet, useConfig, useWalletManager } from '@interchain-kit/react'
 import { useEffect, useRef, useState } from 'react'
 import { creditFromStarship, makeKeplrChainInfo } from './utils'
 import { Chain, Asset } from '@chain-registry/v2-types'
@@ -19,7 +19,7 @@ type BalanceProps = {
 const BalanceTd = ({ address, wallet, chain }: BalanceProps) => {
 
   const [balance, setBalance] = useState<string | undefined>('')
-  const { client } = useChainWallet(chain.chainName, wallet.option?.name as string)
+  const { queryClient } = useChainWallet(chain.chainName, wallet.option?.name as string)
 
   useEffect(() => {
     if (address && wallet && chain) {
@@ -29,7 +29,7 @@ const BalanceTd = ({ address, wallet, chain }: BalanceProps) => {
 
   const getBalance = async () => {
     try {
-      const { balance } = await client.balance({ address, denom: chain.staking?.stakingTokens[0].denom as string })
+      const { balance } = await queryClient.balance({ address, denom: chain.staking?.stakingTokens[0].denom as string })
       setBalance(balance?.amount)
     } catch (error) {
       console.error(error)
@@ -56,7 +56,7 @@ type SendTokenProps = {
   chain: Chain
 }
 const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
-  const { cosmWasmSigningClient } = useChainWallet(chain.chainName, wallet.option?.name as string)
+  const { signingStargateClient } = useChainWallet(chain.chainName, wallet.option?.name as string)
 
   const ref = useRef<HTMLInputElement>(null)
   const amountRef = useRef<HTMLInputElement>(null)
@@ -72,7 +72,7 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
       };
 
       try {
-        const tx = await cosmWasmSigningClient.helpers.send(address, { fromAddress: address, toAddress: recipientAddress, amount: [{ denom: denom, amount: amountRef.current?.value as string }] }, fee, 'test')
+        const tx = await signingStargateClient.helpers.send(address, { fromAddress: address, toAddress: recipientAddress, amount: [{ denom: denom, amount: amountRef.current?.value as string }] }, fee, 'test')
         console.log(tx)
       } catch (error) {
         console.error(error)
