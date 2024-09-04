@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-beta.7](https://github.com/cosmology-tech/interchain-kit/compare/@interchain-kit/vanilla-examples@0.0.1-beta.6...@interchain-kit/vanilla-examples@0.0.1-beta.7) (2024-09-04)
+
+**Note:** Version bump only for package @interchain-kit/vanilla-examples
+
 ## [0.0.1-beta.6](https://github.com/cosmology-tech/interchain-kit/compare/@interchain-kit/vanilla-examples@0.0.1-beta.6...@interchain-kit/vanilla-examples@0.0.1-beta.6) (2024-09-04)
 
 **Note:** Version bump only for package @interchain-kit/vanilla-examples
