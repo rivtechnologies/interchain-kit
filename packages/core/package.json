@@ -1,0 +1,54 @@
+{
+  "name": "@interchain-kit/core",
+  "version": "0.0.1-beta.7",
+  "author": "cosmology-tech <developers@cosmology.zone>",
+  "description": "cosmos-kit wallet connector core package",
+  "main": "index.js",
+  "module": "esm/index.js",
+  "types": "index.d.ts",
+  "homepage": "https://github.com/@interchain-kit/core",
+  "license": "SEE LICENSE IN LICENSE",
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/@interchain-kit/core"
+  },
+  "bugs": {
+    "url": "https://github.com/@interchain-kit/core/issues"
+  },
+  "scripts": {
+    "copy": "copyfiles -f ../../LICENSE README.md package.json dist",
+    "clean": "rimraf dist/**",
+    "prepare": "npm run build",
+    "build": "npm run clean; tsc; tsc -p tsconfig.esm.json; npm run copy",
+    "lint": "eslint . --fix",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "keywords": [],
+  "dependencies": {
+    "@chain-registry/v2": "^1.65.20",
+    "@chain-registry/v2-types": "^0.49.6",
+    "@cosmjs/amino": "^0.32.3",
+    "@cosmjs/cosmwasm-stargate": "^0.32.4",
+    "@cosmjs/proto-signing": "^0.32.3",
+    "@cosmjs/stargate": "^0.32.4",
+    "@interchainjs/cosmos-types": "^0.0.1-beta.7",
+    "@ledgerhq/hw-app-cosmos": "^6.30.0",
+    "@ledgerhq/hw-transport": "^6.31.0",
+    "@ledgerhq/hw-transport-webhid": "^6.29.0",
+    "@ledgerhq/hw-transport-webusb": "^6.29.0",
+    "@walletconnect/sign-client": "^2.13.3",
+    "@walletconnect/types": "^2.13.3",
+    "buffer": "^6.0.3",
+    "interchainjs": "^0.0.1-beta.12",
+    "long": "^5.2.3"
+  },
+  "devDependencies": {
+    "@keplr-wallet/types": "^0.12.102"
+  },
+  "gitHead": "84a7448891bef2688645da8009605786267de720"
+}

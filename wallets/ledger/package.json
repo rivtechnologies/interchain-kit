@@ -1,0 +1,37 @@
+{
+  "name": "@interchain-kit/ledger",
+  "version": "0.0.1-beta.7",
+  "author": "cosmology-tech <developers@cosmology.zone>",
+  "description": "cosmos-kit wallet connector",
+  "main": "index.js",
+  "module": "esm/index.js",
+  "types": "index.d.ts",
+  "homepage": "https://github.com/interchain-kit/ledger",
+  "license": "SEE LICENSE IN LICENSE",
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/interchain-kit/ledger"
+  },
+  "bugs": {
+    "url": "https://github.com/interchain-kit/ledger/issues"
+  },
+  "scripts": {
+    "copy": "copyfiles -f ../../LICENSE README.md package.json dist",
+    "clean": "rimraf dist/**",
+    "prepare": "npm run build",
+    "build": "npm run clean; tsc; tsc -p tsconfig.esm.json; npm run copy",
+    "build:dev": "npm run clean; tsc --declarationMap; tsc -p tsconfig.esm.json; npm run copy",
+    "lint": "eslint . --fix",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "keywords": [],
+  "dependencies": {
+    "@interchain-kit/core": "0.0.1-beta.7"
+  },
+  "gitHead": "84a7448891bef2688645da8009605786267de720"
+}

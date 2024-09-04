@@ -1,0 +1,29 @@
+{
+  "name": "@interchain-kit/vanilla-examples",
+  "author": "cosmology-tech <developers@cosmology.zone>",
+  "description": "cosmos-kit wallet connector core package",
+  "version": "0.0.1-beta.7",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0"
+  },
+  "dependencies": {
+    "@chain-registry/v2": "1.65.8",
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
+    "@interchain-kit/core": "0.0.1-beta.7",
+    "@interchain-kit/keplr-extension": "0.0.1-beta.7",
+    "@interchain-kit/keplr-mobile": "0.0.1-beta.7",
+    "@rollup/plugin-inject": "^5.0.5",
+    "@vitejs/plugin-vue": "^5.0.5",
+    "qrcode": "^1.5.3",
+    "vite-plugin-ngrok": "^1.0.0",
+    "vite-plugin-node-polyfills": "^0.22.0"
+  },
+  "gitHead": "84a7448891bef2688645da8009605786267de720"
+}
