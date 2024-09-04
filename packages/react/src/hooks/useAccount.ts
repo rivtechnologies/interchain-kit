@@ -12,8 +12,10 @@ export const useAccount = (chainName: string, walletName: string): WalletAccount
   const chain = walletManager.chains.find(c => c.chainName === chainName)
 
   const getAccount = async () => {
-    const account = await wallet.getAccount(chain.chainId)
-    setAccount(account)
+    if (wallet && chain && wallet.client) {
+      const account = await wallet.getAccount(chain.chainId)
+      setAccount(account)
+    }
   }
 
   useEffect(() => {

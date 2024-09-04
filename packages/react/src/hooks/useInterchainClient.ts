@@ -18,40 +18,36 @@ export const useInterchainClient = (chainName: string, walletName: string) => {
   const [isLoading, setIsLoading] = useState(false)
   const walletManager = useWalletManager()
   const account = useAccount(chainName, walletName)
+  const wallet = walletManager.wallets.find((w) => w.option.name === walletName)
+  const chainToShow = walletManager.chains.find((c: Chain) => c.chainName === chainName)
 
   const initialize = async () => {
-    const wallet = walletManager.wallets.find((w) => w.option.name === walletName)
-    const chainToShow = walletManager.chains.find((c: Chain) => c.chainName === chainName)
-    if (!wallet) {
-      throw new Error('Wallet not found')
-    }
-    if (!chainToShow) {
-      throw new Error('Chain not found')
-    }
-    try {
-      setIsLoading(true)
+    if (wallet && chainToShow) {
+      try {
+        setIsLoading(true)
 
-      const rpcEndpoint = await walletManager.getRpcEndpoint(wallet, chainName)
-      setRpcEndpoint(rpcEndpoint)
+        const rpcEndpoint = await walletManager.getRpcEndpoint(wallet, chainName)
+        setRpcEndpoint(rpcEndpoint)
 
-      const clientFactory = await walletManager.createClientFactory(wallet, chainName)
+        const clientFactory = await walletManager.createClientFactory(wallet, chainName)
 
-      const queryClient = await clientFactory.getClient()
-      setQueryClient(queryClient)
+        const queryClient = await clientFactory.getClient()
+        setQueryClient(queryClient)
 
-      const signingClient = await clientFactory.getSigningClient()
-      setSigningClient(signingClient)
+        const signingClient = await clientFactory.getSigningClient()
+        setSigningClient(signingClient)
 
-      const signingStargateClient = await clientFactory.getSigningStargateClient(chainToShow.bech32Prefix)
-      setSigningStargateClient(signingStargateClient)
+        const signingStargateClient = await clientFactory.getSigningStargateClient(chainToShow.bech32Prefix)
+        setSigningStargateClient(signingStargateClient)
 
-      const signingCosmwasmClient = await clientFactory.getSigningCosmwasmClient()
-      setSigningCosmWasmClient(signingCosmwasmClient)
+        const signingCosmwasmClient = await clientFactory.getSigningCosmwasmClient()
+        setSigningCosmWasmClient(signingCosmwasmClient)
 
-    } catch (error) {
-      setError(error)
-    } finally {
-      setIsLoading(false)
+      } catch (error) {
+        setError(error)
+      } finally {
+        setIsLoading(false)
+      }
     }
   }
 

@@ -12,12 +12,10 @@ export const useChain = (chainName: string): UseChainReturnType & CosmosKitUseCh
   const assetList = walletManager.assetLists.find((a: AssetList) => a.chainName === chainName)
 
   const activeWallet = useActiveWallet()
-  const account = useAccount(chainName, activeWallet.option.name)
-  const interchainClient = useInterchainClient(chainName, activeWallet.option.name)
+  const account = useAccount(chainName, activeWallet?.option?.name)
+  const interchainClient = useInterchainClient(chainName, activeWallet?.option?.name)
 
   const { open, close } = useWalletModal()
-
-  const clientFactory = walletManager.createClientFactory(activeWallet, chainName)
 
   const cosmosKitUserChainReturnType: CosmosKitUseChainReturnType = {
     connect: () => {
@@ -29,11 +27,11 @@ export const useChain = (chainName: string): UseChainReturnType & CosmosKitUseCh
     openView: open,
     closeView: close,
     getRpcEndpoint: () => walletManager.getRpcEndpoint(activeWallet, chainName),
-    status: activeWallet.walletState,
+    status: activeWallet?.walletState,
     username: account?.username,
-    message: activeWallet.errorMessage,
-    getSigningCosmWasmClient: () => clientFactory.then((c) => c.getSigningCosmwasmClient()),
-    getSigningStargateClient: () => clientFactory.then((c) => c.getSigningStargateClient())
+    message: activeWallet?.errorMessage,
+    getSigningCosmWasmClient: () => walletManager.createClientFactory(activeWallet, chainName).then((c) => c.getSigningCosmwasmClient()),
+    getSigningStargateClient: () => walletManager.createClientFactory(activeWallet, chainName).then((c) => c.getSigningStargateClient())
   }
 
   return {

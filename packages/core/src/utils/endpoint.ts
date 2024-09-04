@@ -13,7 +13,7 @@ export const isValidRpcEndpoint = async (endpoint: string | HttpEndpoint) => {
     const res = await checkRpcEndpoint(endpoint)
     return res.status === 200
   } catch (error) {
-    console.error(error)
+    // console.error(error)
     return false
   }
 }
@@ -28,7 +28,7 @@ export const getValidRpcEndpoint = async (endpoints: (string | HttpEndpoint)[]) 
         break
       }
     } catch (error) {
-      console.error(error)
+      // console.error(error)
     }
   }
   return rpc
@@ -47,7 +47,7 @@ export const isValidRestEndpoint = async (endpoint: string | HttpEndpoint) => {
     const res = await checkRestEndpoint(endpoint)
     return res.status === 200
   } catch (error) {
-    console.error(error)
+    // console.error(error)
     return false
   }
 }
@@ -62,7 +62,7 @@ export const getValidRestEndpoint = async (endpoints: (string | HttpEndpoint)[])
         break
       }
     } catch (error) {
-      console.error(error)
+      // console.error(error)
     }
   }
   return rest

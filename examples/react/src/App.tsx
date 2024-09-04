@@ -181,7 +181,7 @@ const E2ETest = () => {
         </thead>
         <tbody>
           {walletManager.wallets.map(wallet => {
-            return (<tr>
+            return (<tr key={wallet.option?.name}>
               <td>{wallet.option?.name}</td>
               <td>{wallet.option?.prettyName}</td>
               <WalletConnectTd wallet={wallet} />
@@ -198,7 +198,7 @@ const E2ETest = () => {
                   </thead>
                   <tbody>
                     {walletManager.chains.map(chain => {
-                      return <ChainRow chain={chain} wallet={wallet} />
+                      return <ChainRow chain={chain} wallet={wallet} key={chain.chainId} />
                     })}
                   </tbody>
                 </table>
