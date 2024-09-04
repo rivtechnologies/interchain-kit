@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-beta.6](https://github.com/interchain-kit/react/compare/@interchain-kit/react@0.0.1-beta.5...@interchain-kit/react@0.0.1-beta.6) (2024-09-04)
+
+**Note:** Version bump only for package @interchain-kit/react
+
 ## [0.0.1-beta.5](https://github.com/interchain-kit/react/compare/@interchain-kit/react@0.0.1-beta.4...@interchain-kit/react@0.0.1-beta.5) (2024-09-03)
 
 **Note:** Version bump only for package @interchain-kit/react
