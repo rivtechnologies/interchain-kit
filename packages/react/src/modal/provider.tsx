@@ -1,5 +1,4 @@
 import { createContext, useContext, useState } from "react";
-import { createPortal } from "react-dom";
 import { WalletModal } from "./modal";
 
 type WalletModalContextType = {
@@ -19,7 +18,7 @@ export const WalletModalProvider = ({ children }: { children: React.ReactNode })
   return (
     <WalletModalContext.Provider value={{ modalIsOpen, open, close }}>
       {children}
-      {modalIsOpen && createPortal(<WalletModal />, document.body)}
+      <WalletModal />
     </WalletModalContext.Provider>
   )
 }

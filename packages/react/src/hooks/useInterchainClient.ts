@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useWalletManager } from './useWalletManager';
 import { Chain } from '@chain-registry/v2-types';
 import { useAccount } from './useAccount';
+import { WalletState } from '@interChain-kit/core';
 
 export const useInterchainClient = (chainName: string, walletName: string) => {
   const [rpcEndpoint, setRpcEndpoint] = useState<string | HttpEndpoint | undefined>()
@@ -22,7 +23,7 @@ export const useInterchainClient = (chainName: string, walletName: string) => {
   const chainToShow = walletManager.chains.find((c: Chain) => c.chainName === chainName)
 
   const initialize = async () => {
-    if (wallet && chainToShow) {
+    if (wallet && chainToShow && wallet?.walletState === WalletState.Connected) {
       try {
         setIsLoading(true)
 
@@ -53,7 +54,7 @@ export const useInterchainClient = (chainName: string, walletName: string) => {
 
   useEffect(() => {
     initialize()
-  }, [chainName, walletName, account])
+  }, [chainName, walletName, account, wallet?.walletState])
 
   return {
     rpcEndpoint,

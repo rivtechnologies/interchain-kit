@@ -2,6 +2,9 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
+import "@interchain-ui/react/styles";
+import { BrowserRouter } from "react-router-dom";
+
 import { ChainProvider } from '@interchain-kit/react'
 
 import { assetLists, chains } from '@chain-registry/v2';
@@ -15,6 +18,7 @@ import { ledgerWallet } from '@interchain-kit/ledger'
 
 import { MockWallet } from '@interchain-kit/mock-wallet'
 import { starshipChain, starshipChain1 } from './utils/starship.ts'
+import { ThemeProvider } from '@interchain-ui/react';
 
 
 
@@ -43,34 +47,38 @@ const _assetLists = assetLists.filter(a => chainNames.includes(a.chainName))
 const mock1Wallet = new MockWallet(wallet1Mnemonic, _chains, { mode: 'extension', prettyName: 'Mock1', name: 'mock1' })
 const mock2Wallet = new MockWallet(wallet2Mnemonic, _chains, { mode: 'extension', prettyName: 'Mock2', name: 'mock2' })
 
-const _wallets: BaseWallet[] = [mock1Wallet, mock2Wallet, keplrWallet, walletConnect]
+const _wallets: BaseWallet[] = [mock1Wallet, mock2Wallet, keplrWallet, leapWallet, walletConnect]
 
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ChainProvider
-      chains={_chains}
-      wallets={_wallets}
-      assetLists={_assetLists}
-      signerOptions={{}}
-      endpointOptions={{
-        endpoints: {
-          // 'osmosis': {
-          //   rpc: ['http://localhost:26657'],
-          //   rest: ['http://localhost:1317']
-          // },
-          // 'cosmoshub': {
-          //   rpc: ['http://localhost:26653'],
-          //   rest: ['http://localhost:1313']
-          // }
-          // 'osmosistestnet': {
-          //   rpc: ['https://rpc.testnet.osmosis.zone'],
-          //   rest: ['https://lcd.testnet.osmosis.zone']
-          // }
-        }
-      }}>
-      <App />
-    </ChainProvider>
+    <ThemeProvider>
+      <ChainProvider
+        chains={_chains}
+        wallets={_wallets}
+        assetLists={_assetLists}
+        signerOptions={{}}
+        endpointOptions={{
+          endpoints: {
+            // 'osmosis': {
+            //   rpc: ['http://localhost:26657'],
+            //   rest: ['http://localhost:1317']
+            // },
+            // 'cosmoshub': {
+            //   rpc: ['http://localhost:26653'],
+            //   rest: ['http://localhost:1313']
+            // }
+            // 'osmosistestnet': {
+            //   rpc: ['https://rpc.testnet.osmosis.zone'],
+            //   rest: ['https://lcd.testnet.osmosis.zone']
+            // }
+          }
+        }}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ChainProvider>
+    </ThemeProvider>
   </React.StrictMode>,
 )

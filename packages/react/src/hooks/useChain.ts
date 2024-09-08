@@ -5,6 +5,7 @@ import { AssetList, Chain } from "@chain-registry/v2-types";
 import { useActiveWallet } from './useActiveWallet';
 import { useInterchainClient } from './useInterchainClient';
 import { useWalletModal } from "../modal";
+import { ChainNameNotExist } from "@interChain-kit/core";
 
 export const useChain = (chainName: string): UseChainReturnType & CosmosKitUseChainReturnType => {
   const walletManager = useWalletManager()
@@ -14,6 +15,10 @@ export const useChain = (chainName: string): UseChainReturnType & CosmosKitUseCh
   const activeWallet = useActiveWallet()
   const account = useAccount(chainName, activeWallet?.option?.name)
   const interchainClient = useInterchainClient(chainName, activeWallet?.option?.name)
+
+  if (!chainToShow) {
+    throw new ChainNameNotExist(chainName)
+  }
 
   const { open, close } = useWalletModal()
 

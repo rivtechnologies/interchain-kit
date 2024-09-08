@@ -22,6 +22,7 @@ export class MockWallet extends BaseWallet {
   }
 
   init(meta?: unknown): Promise<void> {
+    this.client = {}
     return Promise.resolve(undefined);
   }
 
@@ -40,11 +41,12 @@ export class MockWallet extends BaseWallet {
   }
 
   disconnect(chainId: string | string[]): Promise<void> {
-    throw new Error('Method not implemented.');
+    this.client = null
+    return Promise.resolve(undefined);
   }
 
   async getAccount(chainId: string): Promise<WalletAccount> {
-    const wallet = this.walletMap[chainId]
+    const wallet = this.animoSignerMap[chainId]
     const [firstAccount] = await wallet.getAccounts()
     return firstAccount
   }

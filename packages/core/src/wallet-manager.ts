@@ -12,7 +12,7 @@ export class WalletManager {
   chains: Chain[] = []
   assetLists: AssetList[] = []
   wallets: BaseWallet[] = []
-  activeWallet: BaseWallet | undefined
+  activeWalletName: string | undefined
   signerOptions: SignerOptions | undefined
   endpointOptions: EndpointOptions | undefined
   rpcEndpoint: Record<string, string | HttpEndpoint> = {}
@@ -49,8 +49,12 @@ export class WalletManager {
     }
 
     const chainIds: string[] = this.chains.map(chain => chain.chainId)
+
+    this.activeWalletName = walletName
+
     wallet.errorMessage = ''
     wallet.walletState = WalletState.Connecting
+
     try {
       if (wallet instanceof WCWallet) {
         await wallet.connect(chainIds, onApprove, onGenerateParingUri)
@@ -59,28 +63,31 @@ export class WalletManager {
       }
 
       wallet.walletState = WalletState.Connected
-      this.activeWallet = wallet
 
     } catch (error: any) {
-      wallet.walletState = WalletState.Disconnected
+      wallet.walletState = WalletState.Reject
       wallet.errorMessage = error.message
+      throw error
     }
   }
 
-  async disconnect() {
-    const activeWallet = this.getActiveWallet()
+  async disconnect(walletName: string) {
+    const wallet = this.wallets.find(wallet => wallet.option.name === walletName)
 
-    if (activeWallet instanceof WCWallet) {
-      await activeWallet.disconnect()
+    if (wallet instanceof WCWallet) {
+      await wallet.disconnect()
     } else {
-      await activeWallet.disconnect(this.chains.map(chain => chain.chainId))
+      await wallet.disconnect(this.chains.map(chain => chain.chainId))
     }
-    activeWallet.walletState = WalletState.Disconnected
-    this.activeWallet = null
+    wallet.walletState = WalletState.Disconnected
+
+    if (this.activeWalletName === walletName) {
+      this.activeWalletName = undefined
+    }
   }
 
   getActiveWallet() {
-    return this.activeWallet
+    return this.wallets.find(wallet => wallet.option.name === this.activeWalletName)
   }
 
   addChain(chain: Chain) {

@@ -7,10 +7,10 @@ export const useActiveWallet = () => {
   const { open } = useWalletModal()
 
   useEffect(() => {
-    if (!walletManager.activeWallet) {
+    if (!walletManager.activeWalletName) {
       open()
     }
-  }, [walletManager.activeWallet])
+  }, [walletManager.activeWalletName])
 
 
   return walletManager.getActiveWallet()
