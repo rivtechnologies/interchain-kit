@@ -890,95 +890,6 @@
   resolved "https://registry.npmjs.org/@hutson/parse-repository-url/-/parse-repository-url-3.0.2.tgz"
   integrity sha512-H9XAx3hc0BQHY6l+IFSWHDySypcXsvsuLhgYLUGywmJ5pswRVQJUHpOsobnLYp2ZUaUlKiKDrgWWhosOwAEM8Q==
 
-"@interchain-kit/coin98-extension@0.0.1-beta.7":
-  version "0.0.1-beta.7"
-  resolved "https://registry.yarnpkg.com/@interchain-kit/coin98-extension/-/coin98-extension-0.0.1-beta.7.tgz#d26cb4564e0e41e1a391175d315e08c826e59baa"
-  integrity sha512-/MTQIfTaZHMsUPXdG2bGHYQGHcbljayNeoHgyAIF6xHhTkdrOMDHk3hOOCskxYWi3SbyIkMvRik9PENreqNexg==
-  dependencies:
-    "@interchain-kit/core" "0.0.1-beta.7"
-
-"@interchain-kit/core@0.0.1-beta.7":
-  version "0.0.1-beta.7"
-  resolved "https://registry.yarnpkg.com/@interchain-kit/core/-/core-0.0.1-beta.7.tgz#898ba86eae2406104ba95a8a75ed0b906b8a6fda"
-  integrity sha512-AK0lchJGv1Vnt78EMyPD1y7VUXfia2qvR+WYpXWzyBfF+f5h11Za583oDvCjSV3UMC28R/mFbqxeW8ZEozAjLQ==
-  dependencies:
-    "@chain-registry/v2" "^1.65.20"
-    "@chain-registry/v2-types" "^0.49.6"
-    "@cosmjs/amino" "^0.32.3"
-    "@cosmjs/cosmwasm-stargate" "^0.32.4"
-    "@cosmjs/proto-signing" "^0.32.3"
-    "@cosmjs/stargate" "^0.32.4"
-    "@interchainjs/cosmos-types" "^0.0.1-beta.7"
-    "@ledgerhq/hw-app-cosmos" "^6.30.0"
-    "@ledgerhq/hw-transport" "^6.31.0"
-    "@ledgerhq/hw-transport-webhid" "^6.29.0"
-    "@ledgerhq/hw-transport-webusb" "^6.29.0"
-    "@walletconnect/sign-client" "^2.13.3"
-    "@walletconnect/types" "^2.13.3"
-    buffer "^6.0.3"
-    interchainjs "^0.0.1-beta.12"
-    long "^5.2.3"
-
-"@interchain-kit/keplr-extension@0.0.1-beta.7":
-  version "0.0.1-beta.7"
-  resolved "https://registry.yarnpkg.com/@interchain-kit/keplr-extension/-/keplr-extension-0.0.1-beta.7.tgz#cf079038588c9804c9a2dfcf807ae08f659bdf33"
-  integrity sha512-vIxLOTVNZrkojXXW25AMjEHwn9ArYWWsisjyzqngXdcBRk6ohtt4CNrTxbBxg88ZYmbNyE2QpSX+jkiWymdiAQ==
-  dependencies:
-    "@interchain-kit/core" "0.0.1-beta.7"
-    "@keplr-wallet/provider-extension" "^0.12.102"
-
-"@interchain-kit/keplr-mobile@0.0.1-beta.7":
-  version "0.0.1-beta.7"
-  resolved "https://registry.yarnpkg.com/@interchain-kit/keplr-mobile/-/keplr-mobile-0.0.1-beta.7.tgz#43cf94c0d570eb7c45001d7108b8a3ead22af69f"
-  integrity sha512-zkQ5hL57fxVvYlP5Oq26C5m6xKom7SISJX1nKJUB6SiEE8Un85dOQQ4PKePtSwyb3n0AqnbhL/B6JiShBnlyUw==
-  dependencies:
-    "@interchain-kit/core" "0.0.1-beta.7"
-
-"@interchain-kit/leap-extension@0.0.1-beta.7":
-  version "0.0.1-beta.7"
-  resolved "https://registry.yarnpkg.com/@interchain-kit/leap-extension/-/leap-extension-0.0.1-beta.7.tgz#50c762a269b1a16223d23a52966ea5b59f151d44"
-  integrity sha512-ETxXQx/BG7O988mSqXOmT8eg9r7tiVoaRpyJvhEa9SQE93gOaGw+2YcFFLN4Bayb3vgcXeBtPl/l8NILgCLo3g==
-  dependencies:
-    "@interchain-kit/core" "0.0.1-beta.7"
-
-"@interchain-kit/leap-mobile@0.0.1-beta.7":
-  version "0.0.1-beta.7"
-  resolved "https://registry.yarnpkg.com/@interchain-kit/leap-mobile/-/leap-mobile-0.0.1-beta.7.tgz#9c6b7eb9bc93109a73a5fd9d00af638d01b6017a"
-  integrity sha512-qmRwbgHNqGkLGatciKdomWZrmCK5EJhdvHJl37SDJ44nlXUOnXuI19XQIco22j98Oh3he7taw80fvwy7xHaIvw==
-  dependencies:
-    "@interchain-kit/core" "0.0.1-beta.7"
-
-"@interchain-kit/ledger@0.0.1-beta.7":
-  version "0.0.1-beta.7"
-  resolved "https://registry.yarnpkg.com/@interchain-kit/ledger/-/ledger-0.0.1-beta.7.tgz#e2259995ac6aaa8f322033fc5ec62f3ff3579978"
-  integrity sha512-MRHIPhGVmSWW/ZYRKwnopolPmZ6t8dG1NUkcBEbitY59pF4sPTvbhyZhrwnATjXZd4rjdHe+mZvvrqAQXVYdcw==
-  dependencies:
-    "@interchain-kit/core" "0.0.1-beta.7"
-
-"@interchain-kit/mock-wallet@0.0.1-beta.7":
-  version "0.0.1-beta.7"
-  resolved "https://registry.yarnpkg.com/@interchain-kit/mock-wallet/-/mock-wallet-0.0.1-beta.7.tgz#e48caba2156707386fc5a25dfc4299174c3568c7"
-  integrity sha512-yF/B/SH5YW/33kbfTmRZ+aXlJ6VOBYsrhTkIP3bf5Rv+LY16TMmKtCnWcaqdwagWJOMOOFTt5vG3JQYNdByleA==
-  dependencies:
-    "@interchain-kit/core" "0.0.1-beta.7"
-
-"@interchain-kit/okx-extension@0.0.1-beta.7":
-  version "0.0.1-beta.7"
-  resolved "https://registry.yarnpkg.com/@interchain-kit/okx-extension/-/okx-extension-0.0.1-beta.7.tgz#bbf825c19a00ab4e8fdf061869f6425108a7dcf2"
-  integrity sha512-cqwwITnqIbCFsQnR4AVDax/jkWzQHV7uvjVuzzAKdKGyAFEFphH/deu32FLM53Mg8K8fcLm7FcbvTzbp4VD5fA==
-
-"@interchain-kit/react@0.0.1-beta.7":
-  version "0.0.1-beta.7"
-  resolved "https://registry.yarnpkg.com/@interchain-kit/react/-/react-0.0.1-beta.7.tgz#13a4e0e92f9ec4b0dff048933683716cde4d142b"
-  integrity sha512-xL1tqacItCXKhpMTBrZ1TI+YYYMoLVKdZa1xDnAGz9mvfGwFx5+JYKpL89ZP+BwsctEFGrtk4GXvewQEtxmRaw==
-  dependencies:
-    "@chain-registry/v2-types" "^0.49.6"
-    "@interchain-kit/core" "0.0.1-beta.7"
-    "@types/react" "^18.3.3"
-    "@types/react-dom" "^18.3.0"
-    react "^18.3.1"
-    react-dom "^18.3.1"
-
 "@interchain-ui/react@^1.23.31":
   version "1.23.31"
   resolved "https://registry.yarnpkg.com/@interchain-ui/react/-/react-1.23.31.tgz#13a94a0af64f5ce359eb266dbb773e641773e2b2"
@@ -9613,7 +9524,7 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
-prettier@^2.8.0:
+prettier@2.8.8:
   version "2.8.8"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.8.tgz#e8c5d7e98a4305ffe3de2e1fc4aca1a71c28b1da"
   integrity sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==
