@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { createContext, useContext } from "react";
 import { BaseWallet, SignerOptions, WalletManager, EndpointOptions } from '@interChain-kit/core'
 import { AssetList, Chain } from '@chain-registry/v2-types';
-import { WalletModalProvider } from './modal';
+import { WalletModal, WalletModalProvider } from './modal';
 
 
 type InterchainWalletContextType = {

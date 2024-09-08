@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { WalletAccount } from "@interChain-kit/core"
+import { WalletAccount, WalletState } from "@interChain-kit/core"
 import { useWalletManager } from './useWalletManager';
 
 export const useAccount = (chainName: string, walletName: string): WalletAccount | null => {
@@ -12,9 +12,14 @@ export const useAccount = (chainName: string, walletName: string): WalletAccount
   const chain = walletManager.chains.find(c => c.chainName === chainName)
 
   const getAccount = async () => {
-    if (wallet && chain && wallet.client) {
-      const account = await wallet.getAccount(chain.chainId)
-      setAccount(account)
+    if (wallet && chain) {
+      if (wallet.walletState === WalletState.Connected) {
+        const account = await wallet.getAccount(chain.chainId)
+        setAccount(account)
+      }
+      if (wallet.walletState === WalletState.Disconnected) {
+        setAccount(null)
+      }
     }
   }
 
@@ -25,10 +30,6 @@ export const useAccount = (chainName: string, walletName: string): WalletAccount
   }, [wallet])
 
   useEffect(() => {
-    if (!wallet) {
-      setAccount(null)
-      return
-    }
     getAccount()
   }, [wallet, chainName, wallet?.walletState])
 
