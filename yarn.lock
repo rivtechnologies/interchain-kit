@@ -6984,7 +6984,7 @@ inquirerer@^1.9.0:
 
 interchainjs@^0.0.1-beta.12:
   version "0.0.1-beta.12"
-  resolved "https://registry.npmjs.org/interchainjs/-/interchainjs-0.0.1-beta.12.tgz"
+  resolved "https://registry.yarnpkg.com/interchainjs/-/interchainjs-0.0.1-beta.12.tgz#c81c2c924e8d8ea112b1cc8d8710a94b0e6a5f36"
   integrity sha512-XjDm/YxEEIw2IJZjM9PnO5NrUZ0Ua2VV8ajm84wPZFiSCLVNp3vMiwno7Mav47Zf2EWw9puvC+SYvmnC3cI+Ug==
   dependencies:
     "@interchainjs/cosmos" "^0.0.1-beta.11"
