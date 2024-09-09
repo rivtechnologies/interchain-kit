@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-beta.9](https://github.com/interchain-kit/okx-extension/compare/@interchain-kit/okx-extension@0.0.1-beta.8...@interchain-kit/okx-extension@0.0.1-beta.9) (2024-09-09)
+
+**Note:** Version bump only for package @interchain-kit/okx-extension
+
 ## [0.0.1-beta.8](https://github.com/interchain-kit/okx-extension/compare/@interchain-kit/okx-extension@0.0.1-beta.7...@interchain-kit/okx-extension@0.0.1-beta.8) (2024-09-08)
 
 **Note:** Version bump only for package @interchain-kit/okx-extension
