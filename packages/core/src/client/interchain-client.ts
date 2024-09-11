@@ -1,6 +1,5 @@
-import { BaseSigner } from './base-client';
-import { StargateSigningClient } from 'interchainjs/stargate'
-import { CosmWasmSigningClient } from 'interchainjs/cosmwasm-stargate'
+import { CosmosSigningClient } from 'interchainjs/cosmos'
+import { CosmWasmSigningClient } from 'interchainjs/cosmwasm'
 import { OfflineSigner } from '@interchainjs/cosmos/types/wallet';
 import { SignerOptions } from "interchainjs/types/";
 import { HttpEndpoint } from '@interchainjs/types';
@@ -8,15 +7,9 @@ import { SigningClient } from 'interchainjs/signing-client';
 import { RpcQuery } from 'interchainjs/query/rpc';
 import { QueryImpl } from '@interchainjs/cosmos-types/service-ops';
 import { SignType } from '../types';
+import { InjSigningClient } from '@interchainjs/injective/signing-client';
 
-export class InterchainJsSigner extends BaseSigner<
-  undefined,
-  undefined,
-  StargateSigningClient,
-  CosmWasmSigningClient,
-  QueryImpl,
-  SigningClient
-> {
+export class InterchainJsSigner {
   rpcEndpoint: string | HttpEndpoint
   offlineSigner: OfflineSigner
   signerOptions: SignerOptions
@@ -28,14 +21,13 @@ export class InterchainJsSigner extends BaseSigner<
     signerOptions: SignerOptions,
     preferredSignType: SignType
   ) {
-    super()
     this.rpcEndpoint = rpcEndpoint
     this.offlineSigner = offlineSigner
     this.signerOptions = signerOptions
     this.preferredSignType = preferredSignType
-
   }
 
+  //query
   getStargateClient(): Promise<undefined> {
     console.log('Method not implemented. Use interchain query instead');
     return undefined
@@ -44,7 +36,12 @@ export class InterchainJsSigner extends BaseSigner<
     console.log('Method not implemented. Use interchain query instead');
     return undefined
   }
-  async getSigningStargateClient(prefix?: string): Promise<StargateSigningClient> {
+  async getClient(): Promise<QueryImpl> {
+    return new RpcQuery(this.rpcEndpoint)
+  }
+
+  //signing
+  async getSigningCosmosClient(prefix?: string): Promise<CosmosSigningClient> {
     const options: SignerOptions = {
       ...this.signerOptions,
       preferredSignType: this.preferredSignType,
@@ -55,14 +52,36 @@ export class InterchainJsSigner extends BaseSigner<
         // useLegacyBroadcastTxCommit: true,
       },
     }
-    return StargateSigningClient.connectWithSigner(this.rpcEndpoint, this.offlineSigner, options)
+    return CosmosSigningClient.connectWithSigner(this.rpcEndpoint, this.offlineSigner, options)
   }
-  async getSigningCosmwasmClient(): Promise<CosmWasmSigningClient> {
-    return CosmWasmSigningClient.connectWithSigner(this.rpcEndpoint, this.offlineSigner, this.signerOptions)
+
+  async getSigningCosmwasmClient(prefix?: string): Promise<CosmWasmSigningClient> {
+    const options: SignerOptions = {
+      ...this.signerOptions,
+      preferredSignType: this.preferredSignType,
+      prefix: prefix,
+      broadcast: {
+        checkTx: true,
+        deliverTx: false,
+        // useLegacyBroadcastTxCommit: true,
+      },
+    }
+    return CosmWasmSigningClient.connectWithSigner(this.rpcEndpoint, this.offlineSigner, options)
   }
-  async getClient(): Promise<QueryImpl> {
-    return new RpcQuery(this.rpcEndpoint)
+
+  async getSigningInjectiveClient(prefix?: string): Promise<InjSigningClient> {
+    const options: SignerOptions = {
+      ...this.signerOptions,
+      preferredSignType: this.preferredSignType,
+      prefix: prefix,
+      broadcast: {
+        checkTx: true,
+        deliverTx: false,
+      },
+    }
+    return InjSigningClient.connectWithSigner(this.rpcEndpoint, this.offlineSigner, options)
   }
+
   async getSigningClient(): Promise<SigningClient> {
     return SigningClient.connectWithSigner(this.rpcEndpoint, this.offlineSigner, this.signerOptions)
   }
