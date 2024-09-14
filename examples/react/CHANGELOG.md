@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-beta.13](https://github.com/cosmology-tech/interchain-kit/compare/@interchain-kit/react-examples@0.0.1-beta.12...@interchain-kit/react-examples@0.0.1-beta.13) (2024-09-14)
+
+**Note:** Version bump only for package @interchain-kit/react-examples
+
 ## [0.0.1-beta.12](https://github.com/cosmology-tech/interchain-kit/compare/@interchain-kit/react-examples@0.0.1-beta.9...@interchain-kit/react-examples@0.0.1-beta.12) (2024-09-11)
 
 **Note:** Version bump only for package @interchain-kit/react-examples
