@@ -56,11 +56,7 @@ export class WalletManager {
     wallet.walletState = WalletState.Connecting
 
     try {
-      if (wallet instanceof WCWallet) {
-        await wallet.connect(chainIds, onApprove, onGenerateParingUri)
-      } else {
-        await wallet.connect(chainIds)
-      }
+      await wallet.connect(chainIds)
 
       wallet.walletState = WalletState.Connected
 
@@ -158,6 +154,12 @@ export class WalletManager {
     const offlineSigner = await this.getOfflineSigner(wallet, chainName)
     const signerOptions = await this.getSignerOptions(chainName)
     const preferredSignType = await this.getPreferSignType(chainName)
+    console.log({
+      rpcEndpoint,
+      offlineSigner,
+      signerOptions,
+      preferredSignType
+    })
     return new InterchainJsSigner(rpcEndpoint, offlineSigner, signerOptions, preferredSignType)
   }
 

@@ -1,9 +1,9 @@
 import { ConnectModal } from "@interchain-ui/react"
-import { ConnectedContent, ConnectedHeader, ConnectingContent, ConnectingHeader, RejectContent, RejectHeader, WalletListContent, WalletListHeader } from "./views"
+import { ConnectedContent, ConnectedHeader, ConnectingContent, ConnectingHeader, QRCodeContent, QRCodeHeader, RejectContent, RejectHeader, WalletListContent, WalletListHeader } from "./views"
 import { useWalletModal } from "./provider"
 import { useActiveWallet } from "../hooks"
 import { useEffect, useState } from "react"
-import { WalletState } from "@interChain-kit/core"
+import { WalletState, WCWallet } from "@interChain-kit/core"
 
 const defaultModalView = {
   header: <WalletListHeader />, content: <WalletListContent />
@@ -20,6 +20,9 @@ export const WalletModal = () => {
 
   useEffect(() => {
     switch (true) {
+      case activeWallet instanceof WCWallet && !activeWallet.session:
+        setModalView({ header: <QRCodeHeader />, content: <QRCodeContent /> })
+        break
       case activeWallet?.walletState === WalletState.Connecting:
         setModalView({ header: <ConnectingHeader onBack={gotoWalletList} />, content: <ConnectingContent /> })
         break
