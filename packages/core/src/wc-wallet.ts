@@ -1,8 +1,8 @@
-import { SimpleAccount, Wallet, WcEventTypes, WcProviderEventType } from './types/wallet';
+import { AccountData, Algo, SimpleAccount, Wallet, WcEventTypes, WcProviderEventType } from './types/wallet';
 import { BaseWallet } from "./base-wallet";
 import { WalletAccount, SignOptions, DirectSignDoc, BroadcastMode } from "./types";
 import { SignClient } from '@walletconnect/sign-client';
-import { ISignClient, SessionTypes } from '@walletconnect/types';
+import { ISignClient, PairingTypes, SessionTypes, SignClientTypes } from '@walletconnect/types';
 import { Buffer } from 'buffer'
 import { ChainInfo } from '@keplr-wallet/types'
 import {
@@ -18,7 +18,7 @@ export class WCWallet extends BaseWallet {
 
   session: SessionTypes.Struct;
 
-  signClient: ISignClient
+  signClient: InstanceType<typeof SignClient>;
 
   constructor(option?: Wallet) {
     const defaultWalletConnectOption: Wallet = {
@@ -43,9 +43,26 @@ export class WCWallet extends BaseWallet {
         icons: ['https://walletconnect.com/walletconnect-logo.png']
       }
     })
+    this.bindingEvent()
   }
 
-  async connect(chainIds: string | string[], onApprove?: () => void, onGenerateParingUri?: (uri: string) => void) {
+  getAllPairings(): PairingTypes.Struct[] {
+    return this.signClient.core.pairing.getPairings()
+  }
+
+  removePairing() {
+    const pairings = this.getAllPairings()
+    for (const pairing of pairings) {
+      // this.signClient.core.pairing.disconnect({ topic: pairing.topic })
+      this.signClient.core.pairing.pairings.delete(pairing.topic, {
+        code: 7001,
+        message: 'disconnect'
+      })
+    }
+  }
+
+  async connect(chainIds: string | string[]) {
+    this.removePairing()
 
     const chainIdsWithNS = Array.isArray(chainIds) ? chainIds.map((chainId) => `cosmos:${chainId}`) : [`cosmos:${chainIds}`]
 
@@ -67,12 +84,10 @@ export class WCWallet extends BaseWallet {
 
       this.pairingUri = uri
 
-      onGenerateParingUri(uri)
-
       const session = await approval()
       this.session = session
 
-      onApprove()
+      this.pairingUri = null
 
     } catch (error) {
       throw error
@@ -80,6 +95,7 @@ export class WCWallet extends BaseWallet {
   }
 
   async disconnect(): Promise<void> {
+    this.removePairing()
     this.session = null
     this.pairingUri = null
   }
@@ -142,7 +158,7 @@ export class WCWallet extends BaseWallet {
 
     return {
       address,
-      algo: algo,
+      algo: algo as Algo,
       pubkey: new Uint8Array(Buffer.from(pubkey, 'base64')),
     }
   }
@@ -152,7 +168,7 @@ export class WCWallet extends BaseWallet {
       getAccounts: async () => [await this.getAccount(chainId)],
       signAmino: (signerAddress: string, signDoc: StdSignDoc) =>
         this.signAmino(chainId, signerAddress, signDoc),
-    } as OfflineAminoSigner;
+    }
   }
 
   getOfflineSignerDirect(chainId: string): OfflineDirectSigner {
@@ -160,21 +176,26 @@ export class WCWallet extends BaseWallet {
       getAccounts: async () => [await this.getAccount(chainId)],
       signDirect: (signerAddress: string, signDoc: DirectSignDoc) =>
         this.signDirect(chainId, signerAddress, signDoc),
-    } as OfflineDirectSigner;
+    }
   }
 
   override async signAmino(chainId: string, signer: string, signDoc: StdSignDoc, signOptions?: SignOptions): Promise<AminoSignResponse> {
-    return this.signClient.request({
-      topic: this.session.topic,
-      chainId: `cosmos:${chainId}`,
-      request: {
-        method: 'cosmos_signAmino',
-        params: {
-          signerAddress: signer,
-          signDoc,
+    try {
+      const result = await this.signClient.request({
+        topic: this.session.topic,
+        chainId: `cosmos:${chainId}`,
+        request: {
+          method: 'cosmos_signAmino',
+          params: {
+            signerAddress: signer,
+            signDoc,
+          },
         },
-      },
-    });
+      });
+      return result as AminoSignResponse
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   signArbitrary(chainId: string, signer: string, data: string | Uint8Array): Promise<StdSignature> {
@@ -223,19 +244,25 @@ export class WCWallet extends BaseWallet {
   bindingEvent(): void {
     this.events.removeAllListeners()
     const events = [...Object.keys(WcEventTypes), ...Object.keys(WcProviderEventType)]
-    for (const event of events) {
-      this.client.on(event, (data: never) => {
-        this.events.emit(event, data)
+    // for (const event of events) {
+    //   this.signClient.core.on(event, (data: never) => {
+    //     this.events.emit(event, data)
 
-        if (event === 'accountsChanged') {
-          this.events.emit('keystoreChange',)
-        }
+    //     if (event === 'accountsChanged') {
+    //       this.events.emit('keystoreChange')
+    //     }
 
-      })
-    }
+    //   })
+    // }
+
+    this.signClient.events.on('session_event', (data: SignClientTypes.EventArguments['session_event']) => {
+      console.log('session_event_trigger', data)
+      this.events.emit('keystoreChange')
+    })
   }
 
   unbindingEvent(): void {
+    this.signClient.events.removeAllListeners('session_event')
     this.events.removeAllListeners()
   }
 }

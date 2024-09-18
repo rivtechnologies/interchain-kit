@@ -1,7 +1,7 @@
 import { useChain, useWalletModal } from "@interchain-kit/react"
 
 export default function ActiveWallet() {
-  const { address } = useChain('osmosistestnet')
+  const { address } = useChain('cosmoshub')
   const { open } = useWalletModal()
   return (
     <>
