@@ -47,6 +47,9 @@ import { assetLists, chains } from '@chain-registry/v2';
 import { keplrWallet } from '@interchain-kit/keplr-extension';
 import { WalletManager } from '@interchain-kit/core';
 
+const chainName = 'cosmoshub'
+const walletName = 'keplr-extension'
+
 const _chains = chains.filter(c => c.chainName === chainName)
 const _assetLists = assetLists.filter(c => c.chainName === chainName)
 const _wallets = [keplrWallet]
