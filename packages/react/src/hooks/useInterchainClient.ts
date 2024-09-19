@@ -54,6 +54,7 @@ export const useInterchainClient = (chainName: string, walletName: string) => {
 
       } catch (error) {
         setError(error)
+        console.log("create client error", error)
       } finally {
         setIsLoading(false)
       }
