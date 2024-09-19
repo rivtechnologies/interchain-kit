@@ -5,20 +5,48 @@
     cosmos-kit wallet connector core package
 </p>
 
-## install
+## Install
+---
 
+Using npm:
 ```sh
-npm install core
+npm install @interchain-kit/core
 ```
-## Table of contents
 
-- [core](#core)
-  - [Install](#install)
-  - [Table of contents](#table-of-contents)
-- [Developing](#developing)
-- [Credits](#credits)
+Using yarn;
+```
+yarn add @interchain-kit/core 
+```
+## Usage
+---
+```js
+import { assetLists, chains } from '@chain-registry/v2';
+import { keplrWallet } from '@interchain-kit/keplr-extension';
+import { WalletManager } from '@interchain-kit/core';
+
+const chainName = 'cosmoshub'
+const walletName = 'keplr-extension'
+
+const _chains = chains.filter(c => c.chainName === chainName)
+const _assetLists = assetLists.filter(c => c.chainName === chainName)
+const _wallets = [keplrWallet]
+
+const wm = await WalletManager.create(_chains, _assetLists, _wallets)
+
+const queryClient = await wm.getQueryClient(walletName, chainName)
+
+const account = await wm.getAccount(walletName, chainName)
+
+const { balance } = await queryClient.balance({ address: account.address, denom: 'uosmo' })
+
+console.log(`i have ${balance?.amount}${balance?.denom} in ${chainName}`)
+
+//i have 26589633uosmo in osmosis
+```
+
 
 ## Developing
+---
 
 When first cloning the repo:
 

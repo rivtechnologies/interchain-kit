@@ -6,7 +6,7 @@ import { HttpEndpoint } from '@interchainjs/types';
 import { SigningClient } from 'interchainjs/signing-client';
 import { RpcQuery } from 'interchainjs/query/rpc';
 import { QueryImpl } from '@interchainjs/cosmos-types/service-ops';
-import { SignType } from '../types';
+import { CreateClientReturnType, SignType } from '../types';
 import { InjSigningClient } from '@interchainjs/injective/signing-client';
 
 export class InterchainJsSigner {
@@ -36,7 +36,7 @@ export class InterchainJsSigner {
     console.log('Method not implemented. Use interchain query instead');
     return undefined
   }
-  async getClient(): Promise<QueryImpl> {
+  async getQueryClient(): Promise<QueryImpl> {
     return new RpcQuery(this.rpcEndpoint)
   }
 
@@ -55,7 +55,7 @@ export class InterchainJsSigner {
     return CosmosSigningClient.connectWithSigner(this.rpcEndpoint, this.offlineSigner, options)
   }
 
-  async getSigningCosmwasmClient(prefix?: string): Promise<CosmWasmSigningClient> {
+  async getSigningCosmWasmClient(prefix?: string): Promise<CosmWasmSigningClient> {
     const options: SignerOptions = {
       ...this.signerOptions,
       preferredSignType: this.preferredSignType,
@@ -84,5 +84,33 @@ export class InterchainJsSigner {
 
   async getSigningClient(): Promise<SigningClient> {
     return SigningClient.connectWithSigner(this.rpcEndpoint, this.offlineSigner, this.signerOptions)
+  }
+
+  static async connect(
+    rpcEndpoint: string | HttpEndpoint,
+    offlineSigner: OfflineSigner,
+    signerOptions: SignerOptions,
+    preferredSignType: SignType
+  ): Promise<CreateClientReturnType> {
+
+    const interchainJsSigner = new InterchainJsSigner(
+      rpcEndpoint,
+      offlineSigner,
+      signerOptions,
+      preferredSignType
+    )
+
+    return {
+      queryClient: await interchainJsSigner.getQueryClient(),
+      signingClient: await interchainJsSigner.getSigningClient(),
+      cosmosSigningClient: await interchainJsSigner.getSigningCosmosClient(),
+      cosmWasmSigningClient: await interchainJsSigner.getSigningCosmWasmClient(),
+      injectiveSigningClient: await interchainJsSigner.getSigningInjectiveClient(),
+      getQueryClient: interchainJsSigner.getQueryClient,
+      getSigningClient: interchainJsSigner.getSigningClient,
+      getSigningCosmosClient: interchainJsSigner.getSigningCosmosClient,
+      getSigningCosmWasmClient: interchainJsSigner.getSigningCosmWasmClient,
+      getSigningInjectiveClient: interchainJsSigner.getSigningInjectiveClient
+    }
   }
 }
