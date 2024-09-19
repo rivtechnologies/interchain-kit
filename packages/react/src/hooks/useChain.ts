@@ -35,8 +35,8 @@ export const useChain = (chainName: string): UseChainReturnType & CosmosKitUseCh
     status: activeWallet?.walletState,
     username: account?.username,
     message: activeWallet?.errorMessage,
-    getSigningCosmWasmClient: () => walletManager.createClientFactory(activeWallet, chainName).then((c) => c.getSigningCosmwasmClient()),
-    getSigningCosmosClient: () => walletManager.createClientFactory(activeWallet, chainName).then((c) => c.getSigningCosmosClient())
+    getSigningCosmWasmClient: () => walletManager.getClient(activeWallet.option.name, chainName).then(c => c.getSigningCosmWasmClient()),
+    getSigningCosmosClient: () => walletManager.getClient(activeWallet.option.name, chainName).then((c) => c.getSigningCosmosClient())
   }
 
   return {

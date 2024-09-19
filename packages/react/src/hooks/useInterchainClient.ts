@@ -35,21 +35,19 @@ export const useInterchainClient = (chainName: string, walletName: string) => {
         const rpcEndpoint = await walletManager.getRpcEndpoint(wallet, chainName)
         setRpcEndpoint(rpcEndpoint)
 
-        const clientFactory = await walletManager.createClientFactory(wallet, chainName)
-
-        const queryClient = await clientFactory.getClient()
+        const queryClient = await walletManager.getQueryClient(walletName, chainName)
         setQueryClient(queryClient)
 
-        const signingClient = await clientFactory.getSigningClient()
+        const signingClient = await walletManager.getSigningClient(walletName, chainName)
         setSigningClient(signingClient)
 
-        const signingStargateClient = await clientFactory.getSigningCosmosClient(chainToShow.bech32Prefix)
+        const signingStargateClient = await walletManager.getSigningCosmosClient(walletName, chainName)
         setSigningCosmosClient(signingStargateClient)
 
-        const signingCosmwasmClient = await clientFactory.getSigningCosmwasmClient(chainToShow.bech32Prefix)
+        const signingCosmwasmClient = await walletManager.getSigningCosmwasmClient(walletName, chainName)
         setSigningCosmWasmClient(signingCosmwasmClient)
 
-        const signingInjectiveClient = await clientFactory.getSigningInjectiveClient(chainToShow.bech32Prefix)
+        const signingInjectiveClient = await walletManager.getSigningInjectiveClient(walletName, chainName)
         setSigningInjectiveClient(signingInjectiveClient)
 
       } catch (error) {
