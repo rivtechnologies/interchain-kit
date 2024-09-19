@@ -40,7 +40,7 @@ export class WalletManager {
     await Promise.all(this.wallets.map(async (wallet) => wallet.init()))
   }
 
-  async connect(walletName: string, onApprove?: () => void, onGenerateParingUri?: (uri: string) => void) {
+  async connect(walletName: string) {
 
     const wallet = this.wallets.find(wallet => wallet.option.name === walletName)
 
