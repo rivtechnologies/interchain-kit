@@ -6,7 +6,6 @@
 </p>
 
 ## Install
----
 
 Using npm:
 ```sh
@@ -18,7 +17,6 @@ Using yarn;
 yarn add @interchain-kit/core 
 ```
 ## Usage
----
 ```js
 import { assetLists, chains } from '@chain-registry/v2';
 import { keplrWallet } from '@interchain-kit/keplr-extension';
@@ -46,7 +44,6 @@ console.log(`i have ${balance?.amount}${balance?.denom} in ${chainName}`)
 
 
 ## Developing
----
 
 When first cloning the repo:
 
