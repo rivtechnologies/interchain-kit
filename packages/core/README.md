@@ -43,36 +43,40 @@ console.log(`i have ${balance?.amount}${balance?.denom} in ${chainName}`)
 ```
 ### Signing
 ```js
-  const _chains = chains.filter(c => c.chainName === chainName)
-  const _assetLists = assetLists.filter(c => c.chainName === chainName)
-  const _wallets = [keplrWallet]
+import { assetLists, chains } from '@chain-registry/v2';
+import { keplrWallet } from '@interchain-kit/keplr-extension';
+import { WalletManager } from '@interchain-kit/core';
 
-  const wm = await WalletManager.create(_chains, _assetLists, _wallets)
+const _chains = chains.filter(c => c.chainName === chainName)
+const _assetLists = assetLists.filter(c => c.chainName === chainName)
+const _wallets = [keplrWallet]
 
-  const cosmosSigningClient = await wm.getSigningCosmosClient(walletName, chainName)
+const wm = await WalletManager.create(_chains, _assetLists, _wallets)
 
-  const signerAccount = await wm.getAccount(walletName, chainName)
+const cosmosSigningClient = await wm.getSigningCosmosClient(walletName, chainName)
 
-  const receiveAddress = 'osmo1zx6zx6zx6zx6zx6zx6z6zx6xz6zx6zx6'
+const signerAccount = await wm.getAccount(walletName, chainName)
 
-  const fee = {
-      amount: [
-          {
-              denom: 'uosmo',
-              amount: '2500',
-          },
-      ],
-      gas: '550000',
-  };
+const receiveAddress = 'osmo1zx6zx6zx6zx6zx6zx6z6zx6xz6zx6zx6'
 
-  const token = {
-      amount: '1000',
-      denom: 'uosmo',
-  };
+const fee = {
+    amount: [
+        {
+            denom: 'uosmo',
+            amount: '2500',
+        },
+    ],
+    gas: '550000',
+};
 
-  const message = { fromAddress: signerAccount.address, toAddress: receiveAddress, amount: [token] }
+const token = {
+    amount: '1000',
+    denom: 'uosmo',
+};
 
-  await cosmosSigningClient.helpers.send(signerAccount.address, message, fee, 'hello world')
+const message = { fromAddress: signerAccount.address, toAddress: receiveAddress, amount: [token] }
+
+await cosmosSigningClient.helpers.send(signerAccount.address, message, fee, 'hello world')
 ```
 
 
