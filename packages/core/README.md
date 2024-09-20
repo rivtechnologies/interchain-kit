@@ -118,6 +118,24 @@ No developer or entity involved in creating this software will be liable for any
 ## Overview
 
 ```mermaid
+flowchart LR
+
+    D(Chain Registry - Chain) --- F(Wallet Manager)
+    E(Chain Registry - Asset) --- F(Wallet Manager)
+
+    A(Keplr Wallet Extension) --- AA(Keplr Wallet Class) --- F(Wallet Manager)
+    B(Leap Wallet Extension) --- BB(Leap Wallet Class) --- F(Wallet Manager)
+    C(Wallet Connect Extension) --- CC(Wallet Connect Class) --- F(Wallet Manager)
+
+
+    F(Wallet Manager) --- G(Query Client)
+    F(Wallet Manager) --- H(Transaction Client)
+
+```
+
+
+
+```mermaid
 classDiagram
     class InterChainWallet{
         <<abstract>>
