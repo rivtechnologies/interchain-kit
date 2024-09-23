@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-beta.16](https://github.com/interchain-kit/coin98-extension/compare/@interchain-kit/coin98-extension@0.0.1-beta.15...@interchain-kit/coin98-extension@0.0.1-beta.16) (2024-09-23)
+
+**Note:** Version bump only for package @interchain-kit/coin98-extension
+
 ## [0.0.1-beta.15](https://github.com/interchain-kit/coin98-extension/compare/@interchain-kit/coin98-extension@0.0.1-beta.14...@interchain-kit/coin98-extension@0.0.1-beta.15) (2024-09-19)
 
 **Note:** Version bump only for package @interchain-kit/coin98-extension
