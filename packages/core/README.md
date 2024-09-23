@@ -82,7 +82,6 @@ const message = { fromAddress: signerAccount.address, toAddress: receiveAddress,
 await cosmosSigningClient.helpers.send(signerAccount.address, message, fee, 'hello world')
 ```
 
-
 ## Developing
 
 When first cloning the repo:
@@ -118,7 +117,7 @@ No developer or entity involved in creating this software will be liable for any
 ## Overview
 
 ```mermaid
-flowchart LR
+flowchart TD
 
     D(Chain Registry - Chain) --- F(Wallet Manager)
     E(Chain Registry - Asset) --- F(Wallet Manager)
@@ -134,34 +133,46 @@ flowchart LR
 ```
 
 
-
+## UML
 ```mermaid
 classDiagram
-    class InterChainWallet{
+    class BaseWallet{
         <<abstract>>
-        - walletInstance
-        +init()
-        +getCosmosNetworkAminoSigner(chainId)
-        +getCosmosNetworkDirectSigner(chainId)
-        +getEthermintNetworkAminoSigner(chainId)
-        +getEthermintNetworkDirectSigner(chainId)
-        +getEthermintNetworkEIP712Signer(chainId)
-        +getEthereumNetworkAminoSigner(chainId)
-        +getEthereumNetworkDirectSigner(chainId)
-        +getSigner(chainId)
+        +init(meta?: unknown)
 
-        +signCosmosAmino(chainId,signer,signDoc,signOption)
-        +signCosmosDirect(chainId,signer,signDoc,signOption)
-        +signEthermintAmino(chainId,signer,signDoc,signOption)
-        +signEthermintDriect(chainId,signer,signDoc,signOption)
-        +signEthermintEIP712(chainId,signer,signDoc,signOption)
-        +signEthereumAmino(chainId,signer,signDoc,signOption)
-        +signEthereumDirect(chainId,signer,signDoc,signOption)
-        +signArbitrary(chainId,signer,data)
+        +connect(chainId: string | string[])
+
+        +disconnect(chainId: string | string[])
+
+        +getAccount(chainId: string)
+
+        +getAccounts(chainIds: string[])
+
+        +getSimpleAccount(chainId: string) 
+
+        +getOfflineSignerAmino(chainId: string)
+
+        +getOfflineSignerDirect(chainId: string)
+
+        +signAmino(chainId: string, signer: string, signDoc: StdSignDoc, signOptions?: SignOptions)
+
+        +signArbitrary(chainId: string, signer: string, data: string | Uint8Array)
+
+        +verifyArbitrary(chainId: string, signer: string, data: string | Uint8Array)
+
+        +signDirect(chainId: string, signer: string, signDoc: DirectSignDoc, signOptions?: SignOptions)
+
+        +sendTx(chainId: string, tx: Uint8Array, mode: BroadcastMode): Promise<Uint8Array>
+
+        +addSuggestChain(chainInfo: ChainInfo)
+
+        +bindingEvent()
+
+        +unbindingEvent()
     }
 
-    InterChainWallet <|-- ExtensionWallet
-    InterChainWallet <|-- MobileWallet
+    BaseWallet <|-- ExtensionWallet
+    BaseWallet <|-- MobileWallet
 
     class ExtensionWallet {
 
