@@ -11,6 +11,7 @@ import {
 } from '@interchainjs/cosmos/types/wallet';
 import { AminoSignResponse, StdSignature, DirectSignResponse } from '@interchainjs/cosmos/types/wallet';
 import { StdSignDoc } from '@interchainjs/types'
+import { WalletConnectIcon } from './constant';
 
 export class WCWallet extends BaseWallet {
 
@@ -24,7 +25,8 @@ export class WCWallet extends BaseWallet {
     const defaultWalletConnectOption: Wallet = {
       name: 'WalletConnect',
       prettyName: 'Wallet Connect',
-      mode: 'wallet-connect'
+      mode: 'wallet-connect',
+      logo: WalletConnectIcon
     }
 
     super({ ...defaultWalletConnectOption, ...option })
