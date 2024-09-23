@@ -82,7 +82,6 @@ const message = { fromAddress: signerAccount.address, toAddress: receiveAddress,
 await cosmosSigningClient.helpers.send(signerAccount.address, message, fee, 'hello world')
 ```
 
-
 ## Developing
 
 When first cloning the repo:
@@ -118,32 +117,62 @@ No developer or entity involved in creating this software will be liable for any
 ## Overview
 
 ```mermaid
-classDiagram
-    class InterChainWallet{
-        <<abstract>>
-        - walletInstance
-        +init()
-        +getCosmosNetworkAminoSigner(chainId)
-        +getCosmosNetworkDirectSigner(chainId)
-        +getEthermintNetworkAminoSigner(chainId)
-        +getEthermintNetworkDirectSigner(chainId)
-        +getEthermintNetworkEIP712Signer(chainId)
-        +getEthereumNetworkAminoSigner(chainId)
-        +getEthereumNetworkDirectSigner(chainId)
-        +getSigner(chainId)
+flowchart TD
 
-        +signCosmosAmino(chainId,signer,signDoc,signOption)
-        +signCosmosDirect(chainId,signer,signDoc,signOption)
-        +signEthermintAmino(chainId,signer,signDoc,signOption)
-        +signEthermintDriect(chainId,signer,signDoc,signOption)
-        +signEthermintEIP712(chainId,signer,signDoc,signOption)
-        +signEthereumAmino(chainId,signer,signDoc,signOption)
-        +signEthereumDirect(chainId,signer,signDoc,signOption)
-        +signArbitrary(chainId,signer,data)
+    D(Chain Registry - Chain) --- F(Wallet Manager)
+    E(Chain Registry - Asset) --- F(Wallet Manager)
+
+    A(Keplr Wallet Extension) --- AA(Keplr Wallet Class) --- F(Wallet Manager)
+    B(Leap Wallet Extension) --- BB(Leap Wallet Class) --- F(Wallet Manager)
+    C(Wallet Connect Extension) --- CC(Wallet Connect Class) --- F(Wallet Manager)
+
+
+    F(Wallet Manager) --- G(Query Client)
+    F(Wallet Manager) --- H(Transaction Client)
+
+```
+
+
+## UML
+```mermaid
+classDiagram
+    class BaseWallet{
+        <<abstract>>
+        +init(meta?: unknown)
+
+        +connect(chainId: string | string[])
+
+        +disconnect(chainId: string | string[])
+
+        +getAccount(chainId: string)
+
+        +getAccounts(chainIds: string[])
+
+        +getSimpleAccount(chainId: string) 
+
+        +getOfflineSignerAmino(chainId: string)
+
+        +getOfflineSignerDirect(chainId: string)
+
+        +signAmino(chainId: string, signer: string, signDoc: StdSignDoc, signOptions?: SignOptions)
+
+        +signArbitrary(chainId: string, signer: string, data: string | Uint8Array)
+
+        +verifyArbitrary(chainId: string, signer: string, data: string | Uint8Array)
+
+        +signDirect(chainId: string, signer: string, signDoc: DirectSignDoc, signOptions?: SignOptions)
+
+        +sendTx(chainId: string, tx: Uint8Array, mode: BroadcastMode): Promise<Uint8Array>
+
+        +addSuggestChain(chainInfo: ChainInfo)
+
+        +bindingEvent()
+
+        +unbindingEvent()
     }
 
-    InterChainWallet <|-- ExtensionWallet
-    InterChainWallet <|-- MobileWallet
+    BaseWallet <|-- ExtensionWallet
+    BaseWallet <|-- MobileWallet
 
     class ExtensionWallet {
 
