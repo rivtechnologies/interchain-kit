@@ -209,6 +209,7 @@ const E2ETest = () => {
             <th>Name</th>
             <th>Pretty Name</th>
             <th>Connect</th>
+            <th>State</th>
             <th>Chain</th>
           </tr>
         </thead>
@@ -219,6 +220,7 @@ const E2ETest = () => {
                 <td>{wallet.option?.name}</td>
                 <td>{wallet.option?.prettyName}</td>
                 <WalletConnectTd wallet={wallet} />
+                <td>{wallet.walletState}</td>
                 <td>
                   <table>
                     <thead>

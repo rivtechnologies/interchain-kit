@@ -116,7 +116,7 @@ export interface SimpleAccount {
 }
 
 
-export const enum WalletState {
+export enum WalletState {
   Disconnected = "Disconnected",
   Connecting = "Connecting",
   Connected = "Connected",
