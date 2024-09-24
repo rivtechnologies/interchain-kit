@@ -32,7 +32,7 @@ export const WalletModal = () => {
 
   useEffect(() => {
     switch (true) {
-      case activeWallet instanceof WCWallet && !activeWallet.session:
+      case activeWallet?.option?.mode === "wallet-connect":
         setModalView({ header: <QRCodeHeader />, content: <QRCodeContent /> });
         break;
       case activeWallet?.walletState === WalletState.Connecting:
