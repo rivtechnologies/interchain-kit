@@ -55,11 +55,11 @@ export class WCWallet extends BaseWallet {
   removePairing() {
     const pairings = this.getAllPairings()
     for (const pairing of pairings) {
-      // this.signClient.core.pairing.disconnect({ topic: pairing.topic })
-      this.signClient.core.pairing.pairings.delete(pairing.topic, {
-        code: 7001,
-        message: 'disconnect'
-      })
+      this.signClient.core.pairing.disconnect({ topic: pairing.topic })
+      // this.signClient.core.pairing.pairings.delete(pairing.topic, {
+      //   code: 7001,
+      //   message: 'disconnect'
+      // })
     }
   }
 

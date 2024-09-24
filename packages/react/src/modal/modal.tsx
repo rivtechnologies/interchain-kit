@@ -1,49 +1,71 @@
-import { ConnectModal } from "@interchain-ui/react"
-import { ConnectedContent, ConnectedHeader, ConnectingContent, ConnectingHeader, QRCodeContent, QRCodeHeader, RejectContent, RejectHeader, WalletListContent, WalletListHeader } from "./views"
-import { useWalletModal } from "./provider"
-import { useActiveWallet } from "../hooks"
-import { useEffect, useState } from "react"
-import { WalletState, WCWallet } from "@interChain-kit/core"
+import { ConnectModal } from "@interchain-ui/react";
+import {
+  ConnectedContent,
+  ConnectedHeader,
+  ConnectingContent,
+  ConnectingHeader,
+  QRCodeContent,
+  QRCodeHeader,
+  RejectContent,
+  RejectHeader,
+  WalletListContent,
+  WalletListHeader,
+} from "./views";
+import { useWalletModal } from "./provider";
+import { useActiveWallet } from "../hooks";
+import { useEffect, useState } from "react";
+import { WalletState, WCWallet } from "@interChain-kit/core";
 
 const defaultModalView = {
-  header: <WalletListHeader />, content: <WalletListContent />
-}
+  header: <WalletListHeader />,
+  content: <WalletListContent />,
+};
 
 export const WalletModal = () => {
-  const { modalIsOpen, open, close } = useWalletModal()
+  const { modalIsOpen, open, close } = useWalletModal();
 
-  const activeWallet = useActiveWallet()
+  const activeWallet = useActiveWallet();
 
-  const [modalView, setModalView] = useState(defaultModalView)
+  const [modalView, setModalView] = useState(defaultModalView);
 
-  const gotoWalletList = () => setModalView(defaultModalView)
+  const gotoWalletList = () => setModalView(defaultModalView);
 
   useEffect(() => {
     switch (true) {
       case activeWallet instanceof WCWallet && !activeWallet.session:
-        setModalView({ header: <QRCodeHeader />, content: <QRCodeContent /> })
-        break
+        setModalView({ header: <QRCodeHeader />, content: <QRCodeContent /> });
+        break;
       case activeWallet?.walletState === WalletState.Connecting:
-        setModalView({ header: <ConnectingHeader onBack={gotoWalletList} />, content: <ConnectingContent /> })
-        break
+        setModalView({
+          header: <ConnectingHeader onBack={gotoWalletList} />,
+          content: <ConnectingContent />,
+        });
+        break;
       case activeWallet?.walletState === WalletState.Connected:
-        setModalView({ header: <ConnectedHeader onBack={gotoWalletList} />, content: <ConnectedContent /> })
-        break
+        setModalView({
+          header: <ConnectedHeader onBack={gotoWalletList} />,
+          content: <ConnectedContent />,
+        });
+        break;
       case activeWallet?.walletState === WalletState.Reject:
-        setModalView({ header: <RejectHeader onBack={gotoWalletList} />, content: <RejectContent /> })
-        break
+        setModalView({
+          header: <RejectHeader onBack={gotoWalletList} />,
+          content: <RejectContent />,
+        });
+        break;
       default:
-        setModalView(defaultModalView)
+        setModalView(defaultModalView);
     }
-  }, [activeWallet, activeWallet?.walletState])
+  }, [activeWallet, activeWallet?.walletState]);
 
   return (
     <ConnectModal
       isOpen={modalIsOpen}
       header={modalView.header}
       onOpen={open}
-      onClose={close}>
+      onClose={close}
+    >
       {modalView.content}
     </ConnectModal>
-  )
-}
+  );
+};
