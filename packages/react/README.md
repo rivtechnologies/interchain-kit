@@ -1,22 +1,137 @@
-# react
-
 <p align="center">
   <img src="https://user-images.githubusercontent.com/545047/188804067-28e67e5e-0214-4449-ab04-2e0c564a6885.svg" width="80"><br />
-    interchain-kit wallet connector react package
+    @interchain-kit/react
 </p>
 
-## install
-
+## Install
+Using npm:
 ```sh
-npm install react
+npm install @interchain-kit/react
 ```
-## Table of contents
+Using yarn:
+```sh
+yarn add @interchain-kit/react
+```
 
-- [react](#react)
-  - [Install](#install)
-  - [Table of contents](#table-of-contents)
-- [Developing](#developing)
-- [Credits](#credits)
+## Usage
+### Setup
+```js
+import { ChainProvider, useChain } from "@interchain-kit/react";
+import { assetLists, chains } from "@chain-registry/v2";
+import { keplrWallet } from "@interchain-kit/keplr-extension";
+import { ThemeProvider } from "@interchain-ui/react";
+import "@interchain-ui/react/styles";
+
+const chainName = 'cosmoshub'
+
+const Show = () => {
+  const {address} = useChain(chainName);
+  // will show cosmoshub address from what you selected wallet in modal
+  return <div>{address}</div>;
+};
+
+function App() {
+  return (
+    <ThemeProvider>
+      <ChainProvider
+        chains={chains.filter((c) => c.chainName === chainName)}
+        assetLists={assetLists.filter((c) => c.chainName === chainName)}
+        wallets={[keplrWallet]}
+        signerOptions={{}}
+        endpointOptions={{}}
+      >
+        <Show />
+      </ChainProvider>
+    </ThemeProvider>
+  );
+}
+
+export default App;
+```
+
+### useChain
+```js
+
+const chainName = 'cosmoshub'
+const { chain, assetList, address, wallet, queryClient, signingClient } = useChain(chainName)
+
+console.log(wallet) //keprl extension wallet info
+console.log(chain) // chain info for cosmoshub
+console.log(assetList) // assets info for cosmoshub
+console.log(address) // address for cosmoshub in keplr-extension wallet
+
+//query
+const { balance } = await queryClient.balance({
+  address,
+  denom: 'uosmo'
+})
+console.log(balance)
+// { amount: 23423, denom: 'uosmos' }
+
+```
+
+## useChainWallet
+```js
+import { keplrWallet } from "@interchain-kit/keplr-extension";
+import { leapWallet } from "@interchain-kit/leap-extension";
+
+const Show = () => {
+  const juno = useChainWallet('juno', 'keplr-extension')
+  const stargaze = useChainWallet('stargaze', 'leap-extension')
+  console.log(juno.address) // juno1xxxxxxx in keplr extension wallet
+  console.log(stargaze.addresss) // stargaze1xxxxxx in leap extension wallet
+};
+
+const chainNames 
+
+function App() {
+  return (
+    <ThemeProvider>
+      <ChainProvider
+        chains={chains.filter((c) => c.chainName === chainName)}
+        assetLists={assetLists.filter((c) => c.chainName === chainName)}
+        wallets={[keplrWallet, leapWallet]}
+        signerOptions={{}}
+        endpointOptions={{}}
+      >
+        <Show />
+      </ChainProvider>
+    </ThemeProvider>
+  );
+}
+
+export default App;
+```
+
+### useActiveWallet
+```js
+const wallet = useActiveWallet()
+
+console.log(wallet) // current connected wallet
+
+```
+
+### useAccount
+```js
+const account = useAccount('cosmoshub', 'keplr-extension')
+
+console.log(account.address) // cosmoshub address in keplr-extension wallet
+
+```
+
+### useOfflineSigner
+```js
+const offlineSigner = useOfflineSigner('cosmoshub', 'keplr-extension')
+
+console.log(offlineSigner) // cosmoshub offlineSigner in keplr-extension wallet 
+```
+
+### useChains
+
+```js
+WIP
+```
+
 
 ## Developing
 
