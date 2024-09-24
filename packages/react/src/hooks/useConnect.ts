@@ -1,5 +1,5 @@
 import { WalletState } from '@interChain-kit/core';
-import { useInterChainWalletContext } from '../provider';
+import { useInterchainWalletContext } from '../provider';
 import { useActiveWallet } from './useActiveWallet';
 import { useAccount } from './useAccount';
 export const useConnect = () => {

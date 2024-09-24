@@ -1,10 +1,7 @@
 import { ConnectModalHead, ConnectModalQRCode } from "@interchain-ui/react";
-import {
-  useActiveWallet,
-  useWalletManager,
-  useWalletModal,
-} from "@interchain-kit/react";
 import { WCWallet } from "@interChain-kit/core";
+import { useActiveWallet, useWalletManager } from "../../hooks";
+import { useWalletModal } from "../provider";
 
 export const QRCodeHeader = () => {
   const activeWallet = useActiveWallet();
