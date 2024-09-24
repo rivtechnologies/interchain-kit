@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/leap-mobile",
-  "version": "0.0.1-beta.19",
+  "version": "0.0.1-beta.20",
   "author": "Cosmology <developers@cosmology.zone>",
   "description": "cosmos-kit wallet connector",
   "main": "index.js",
@@ -31,7 +31,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@interchain-kit/core": "0.0.1-beta.19"
+    "@interchain-kit/core": "0.0.1-beta.20"
   },
   "gitHead": "97afc8e566a6ef1d6c266ec463f377bbd5c4b093"
 }
