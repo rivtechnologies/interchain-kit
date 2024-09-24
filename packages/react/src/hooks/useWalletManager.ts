@@ -1,8 +1,8 @@
 import { WalletManager } from '@interchain-kit/core';
 
-import { useInterChainWalletContext } from "../provider"
+import { useInterchainWalletContext } from "../provider"
 
 export const useWalletManager = (): WalletManager => {
-  const { walletManager } = useInterChainWalletContext()
+  const { walletManager } = useInterchainWalletContext()
   return walletManager
 }

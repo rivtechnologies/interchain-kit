@@ -37,7 +37,11 @@ export class WalletManager {
     this.signerOptions = signerOptions
     this.endpointOptions = endpointOptions
 
+    return createObservable(this, onUpdate)
+  }
 
+  async init() {
+    await Promise.all(this.wallets.map(async (wallet) => wallet.init()))
   }
 
   static async create(
@@ -47,20 +51,10 @@ export class WalletManager {
     signerOptions?: SignerOptions,
     endpointOptions?: EndpointOptions,
     onUpdate?: () => void
-  ): Promise<WalletManager> {
-
-    await Promise.all(wallets.map(async (wallet) => wallet.init()))
-
-    const wm = new WalletManager(
-      chain,
-      assetLists,
-      wallets,
-      signerOptions,
-      endpointOptions,
-      onUpdate
-    )
-
-    return createObservable(wm, onUpdate)
+  ) {
+    const wm = new WalletManager(chain, assetLists, wallets, signerOptions, endpointOptions, onUpdate)
+    await wm.init()
+    return wm
   }
 
   async connect(walletName: string, onApprove?: () => void, onGenerateParingUri?: (uri: string) => void) {

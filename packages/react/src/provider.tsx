@@ -13,7 +13,7 @@ type InterchainWalletContextType = {
   walletManager: WalletManager;
 };
 
-type InterchianWalletProviderProps = {
+type InterchainWalletProviderProps = {
   chains: Chain[];
   assetLists: AssetList[];
   wallets: BaseWallet[];
@@ -22,7 +22,7 @@ type InterchianWalletProviderProps = {
   children: React.ReactNode;
 };
 
-const InterChainWalletContext =
+const InterchainWalletContext =
   createContext<InterchainWalletContextType | null>(null);
 
 export const ChainProvider = ({
@@ -32,13 +32,11 @@ export const ChainProvider = ({
   signerOptions,
   endpointOptions,
   children,
-}: InterchianWalletProviderProps) => {
+}: InterchainWalletProviderProps) => {
   const [_, forceRender] = useState({});
 
-  const [wm, setWM] = useState<WalletManager>();
-
-  const init = async () => {
-    const wm = await WalletManager.create(
+  const walletManager = useMemo(() => {
+    return new WalletManager(
       chains,
       assetLists,
       wallets,
@@ -46,22 +44,21 @@ export const ChainProvider = ({
       endpointOptions,
       () => forceRender({})
     );
-    setWM(wm);
-  };
+  }, []);
 
   useEffect(() => {
-    init();
+    walletManager.init();
   }, []);
 
   return (
-    <InterChainWalletContext.Provider value={{ walletManager: wm }}>
+    <InterchainWalletContext.Provider value={{ walletManager }}>
       <WalletModalProvider>{children}</WalletModalProvider>
-    </InterChainWalletContext.Provider>
+    </InterchainWalletContext.Provider>
   );
 };
 
-export const useInterChainWalletContext = () => {
-  const context = useContext(InterChainWalletContext);
+export const useInterchainWalletContext = () => {
+  const context = useContext(InterchainWalletContext);
   if (!context) {
     throw new Error(
       "useInterChainWalletContext must be used within a InterChainProvider"
