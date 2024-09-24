@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-beta.17](https://github.com/interchain-kit/ledger/compare/@interchain-kit/ledger@0.0.1-beta.16...@interchain-kit/ledger@0.0.1-beta.17) (2024-09-24)
+
+**Note:** Version bump only for package @interchain-kit/ledger
+
 ## [0.0.1-beta.16](https://github.com/interchain-kit/ledger/compare/@interchain-kit/ledger@0.0.1-beta.15...@interchain-kit/ledger@0.0.1-beta.16) (2024-09-23)
 
 **Note:** Version bump only for package @interchain-kit/ledger
