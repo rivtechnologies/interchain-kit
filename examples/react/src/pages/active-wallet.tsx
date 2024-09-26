@@ -1,12 +1,14 @@
-import { useChain, useWalletModal } from "@interchain-kit/react"
+import { useChain, useWalletModal } from "@interchain-kit/react";
 
 export default function ActiveWallet() {
-  const { address } = useChain('cosmoshub')
-  const { open } = useWalletModal()
+  const { address, wallet } = useChain("cosmoshub");
+  const { open } = useWalletModal();
   return (
     <>
       <button onClick={open}>open wallets modal</button>
-      <div>{address}</div>
+      <p>{wallet?.walletState}</p>
+      <p>{wallet?.option?.prettyName}</p>
+      <p>{address}</p>
     </>
-  )
+  );
 }

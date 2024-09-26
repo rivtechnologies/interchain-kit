@@ -93,10 +93,6 @@ export class WalletManager {
       await wallet.disconnect(this.chains.map(chain => chain.chainId))
     }
     wallet.walletState = WalletState.Disconnected
-
-    if (this.activeWalletName === walletName) {
-      this.activeWalletName = undefined
-    }
   }
 
   getActiveWallet() {
