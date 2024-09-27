@@ -4,6 +4,7 @@ import { useAccount } from "./useAccount"
 import { BaseWallet } from "@interChain-kit/core"
 import { UseChainReturnType } from "../types/chain"
 import { useInterchainClient } from "./useInterchainClient"
+import { getChainLogoUrl } from "../utils"
 
 export const useChainWallet = (chainName: string, walletName: string): UseChainReturnType => {
   const walletManager = useWalletManager()
@@ -16,6 +17,7 @@ export const useChainWallet = (chainName: string, walletName: string): UseChainR
   const interchainClient = useInterchainClient(chainName, walletName)
 
   return {
+    logoUrl: getChainLogoUrl(assetList),
     chain: chainToShow,
     assetList,
     address: account?.address,

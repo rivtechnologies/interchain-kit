@@ -19,6 +19,7 @@ export type CosmosKitUseChainReturnType = {
 }
 
 export type UseChainReturnType = {
+  logoUrl: string | undefined,
   chain: Chain,
   assetList: AssetList,
   address: string,

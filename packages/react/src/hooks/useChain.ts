@@ -6,6 +6,7 @@ import { useActiveWallet } from './useActiveWallet';
 import { useInterchainClient } from './useInterchainClient';
 import { useWalletModal } from "../modal";
 import { ChainNameNotExist } from "@interChain-kit/core";
+import { getChainLogoUrl } from "../utils";
 
 export const useChain = (chainName: string): UseChainReturnType & CosmosKitUseChainReturnType => {
   const walletManager = useWalletManager()
@@ -40,6 +41,7 @@ export const useChain = (chainName: string): UseChainReturnType & CosmosKitUseCh
   }
 
   return {
+    logoUrl: getChainLogoUrl(assetList),
     chain: chainToShow,
     assetList,
     address: account?.address,
