@@ -16,7 +16,7 @@ export class WalletManager {
   chains: Chain[] = []
   assetLists: AssetList[] = []
   wallets: BaseWallet[] = []
-  activeWalletName: string | undefined
+  currentWalletName: string | undefined
   signerOptions: SignerOptions | undefined
   endpointOptions: EndpointOptions | undefined
   rpcEndpoint: Record<string, string | HttpEndpoint> = {}
@@ -67,7 +67,7 @@ export class WalletManager {
 
     const chainIds: string[] = this.chains.map(chain => chain.chainId)
 
-    this.activeWalletName = walletName
+    this.currentWalletName = walletName
 
     wallet.errorMessage = ''
     wallet.walletState = WalletState.Connecting
@@ -95,8 +95,8 @@ export class WalletManager {
     wallet.walletState = WalletState.Disconnected
   }
 
-  getActiveWallet() {
-    return this.wallets.find(wallet => wallet.option.name === this.activeWalletName)
+  getCurrentWallet() {
+    return this.wallets.find(wallet => wallet.option.name === this.currentWalletName)
   }
 
   addChain(chain: Chain) {
