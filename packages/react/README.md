@@ -57,7 +57,7 @@ import { ChainProvider, useChain } from "@interchain-kit/react";
 import { keplrWallet } from "@interchain-kit/keplr-extension";
 import { ThemeProvider } from "@interchain-ui/react";
 import "@interchain-ui/react/styles";
-import { chains as mainnetChains, assetLists as mainnetAssetLists } from '@chain-registry/v2/mainnet'
+import { chains, assetLists } from '@chain-registry/v2/mainnet'
  
 
 const Show = () => {
@@ -70,8 +70,8 @@ function App() {
   return (
     <ThemeProvider>
       <ChainProvider
-        chains={mainnetChains}
-        assetLists={mainnetAssetLists}
+        chains={chains}
+        assetLists={assetLists}
         wallets={[keplrWallet]}
         signerOptions={{}}
         endpointOptions={{}}
