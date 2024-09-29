@@ -41,6 +41,7 @@ export class WalletManager {
   }
 
   async init() {
+    await this.initRpcEndpoint()
     await Promise.all(this.wallets.map(async (wallet) => wallet.init()))
   }
 
@@ -118,31 +119,46 @@ export class WalletManager {
   }
 
   getRpcEndpoint = async (wallet: BaseWallet, chainName: string) => {
+    const cacheKey = `${chainName}`
+    const cachedRpcEndpoint = this.rpcEndpoint[cacheKey]
+    if (cachedRpcEndpoint) {
+      return cachedRpcEndpoint
+    }
+
     const chain = this.getChainByName(chainName)
 
     const providerRpcEndpoints = this.endpointOptions?.endpoints?.[chain.chainName]?.rpc || []
-    const walletRpcEndpoints = wallet?.option?.endpoints?.[chain.chainName]?.rpc || []
+    // const walletRpcEndpoints = wallet?.option?.endpoints?.[chain.chainName]?.rpc || []
     const chainRpcEndpoints = chain.apis.rpc.map(url => url.address)
 
     if (providerRpcEndpoints?.[0] && await isValidRpcEndpoint(providerRpcEndpoints[0])) {
-      return providerRpcEndpoints[0]
+      this.rpcEndpoint[cacheKey] = providerRpcEndpoints[0]
     }
 
-    if (walletRpcEndpoints?.[0] && await isValidRpcEndpoint(providerRpcEndpoints[0])) {
-      return walletRpcEndpoints[0]
-    }
+    // if (walletRpcEndpoints?.[0] && await isValidRpcEndpoint(providerRpcEndpoints[0])) {
+    //   this.rpcEndpoint[cacheKey] = walletRpcEndpoints[0]
+    // }
 
     if (chainRpcEndpoints[0] && await isValidRpcEndpoint(chainRpcEndpoints[0])) {
-      return chainRpcEndpoints[0]
+      this.rpcEndpoint[cacheKey] = chainRpcEndpoints[0]
     }
 
-    const validRpcEndpoint = await getValidRpcEndpoint([...providerRpcEndpoints, ...walletRpcEndpoints, ...chainRpcEndpoints])
+    const validRpcEndpoint = await getValidRpcEndpoint([...providerRpcEndpoints, ...chainRpcEndpoints])
 
     if (validRpcEndpoint === '') {
       throw new NoValidRpcEndpointFound()
     }
 
+    this.rpcEndpoint[cacheKey] = validRpcEndpoint
     return validRpcEndpoint
+  }
+
+  initRpcEndpoint = async () => {
+    const promises = []
+    for (const chain of this.chains) {
+      promises.push(this.getRpcEndpoint(null, chain.chainName))
+    }
+    await Promise.all(promises)
   }
 
   getPreferSignType(chainName: string) {
