@@ -26,3 +26,8 @@ export interface Config {
   signerOptions: SignerOptions;
   endpointOptions: EndpointOptions
 }
+
+export enum WalletManagerState {
+  Initializing = 'Initializing',
+  Initialized = 'Initialized',
+}
