@@ -131,16 +131,10 @@ export class WalletManager {
     // const walletRpcEndpoints = wallet?.option?.endpoints?.[chain.chainName]?.rpc || []
     const chainRpcEndpoints = chain.apis.rpc.map(url => url.address)
 
-    if (providerRpcEndpoints?.[0] && await isValidRpcEndpoint(providerRpcEndpoints[0])) {
+
+    if (providerRpcEndpoints?.[0]) {
       this.rpcEndpoint[cacheKey] = providerRpcEndpoints[0]
-    }
-
-    // if (walletRpcEndpoints?.[0] && await isValidRpcEndpoint(providerRpcEndpoints[0])) {
-    //   this.rpcEndpoint[cacheKey] = walletRpcEndpoints[0]
-    // }
-
-    if (chainRpcEndpoints[0] && await isValidRpcEndpoint(chainRpcEndpoints[0])) {
-      this.rpcEndpoint[cacheKey] = chainRpcEndpoints[0]
+      return this.rpcEndpoint[cacheKey]
     }
 
     const validRpcEndpoint = await getValidRpcEndpoint([...providerRpcEndpoints, ...chainRpcEndpoints])
