@@ -3,8 +3,8 @@ import { HttpEndpoint } from '@interchainjs/types';
 import { Chain, AssetList } from '@chain-registry/v2-types'
 import { BaseWallet } from './base-wallet'
 import { WCWallet } from './wc-wallet';
-import { ChainName, EndpointOptions, SignerOptions, WalletState } from './types'
-import { ChainNameNotExist, createObservable, getValidRpcEndpoint, isValidRpcEndpoint, NoValidRpcEndpointFound, WalletNotExist } from './utils'
+import { ChainName, EndpointOptions, SignerOptions, WalletManagerState, WalletState } from './types'
+import { ChainNameNotExist, createObservable, getValidRpcEndpoint, getWalletNameFromLocalStorage, isValidRpcEndpoint, NoValidRpcEndpointFound, removeWalletNameFromLocalStorage, setWalletNameToLocalStorage, WalletNotExist } from './utils'
 import { OfflineSigner } from '@interchainjs/cosmos/types/wallet';
 import { SignerOptions as InterchainSignerOptions } from 'interchainjs/types';
 import { RpcQuery } from 'interchainjs/query/rpc';
@@ -21,6 +21,7 @@ export class WalletManager {
   endpointOptions: EndpointOptions | undefined
   rpcEndpoint: Record<string, string | HttpEndpoint> = {}
   restEndpoint: Record<string, string | HttpEndpoint> = {}
+  state: WalletManagerState = WalletManagerState.Initializing
 
   constructor(
     chain: Chain[],
@@ -41,8 +42,16 @@ export class WalletManager {
   }
 
   async init() {
-    await this.initRpcEndpoint()
+    this.state = WalletManagerState.Initializing
+
     await Promise.all(this.wallets.map(async (wallet) => wallet.init()))
+
+    const loggedWallet = getWalletNameFromLocalStorage()
+    if (loggedWallet) {
+      await this.connect(loggedWallet)
+    }
+
+    this.state = WalletManagerState.Initialized
   }
 
   static async create(
@@ -78,6 +87,8 @@ export class WalletManager {
 
       wallet.walletState = WalletState.Connected
 
+      setWalletNameToLocalStorage(walletName)
+
     } catch (error: any) {
       wallet.walletState = WalletState.Reject
       wallet.errorMessage = error.message
@@ -94,6 +105,7 @@ export class WalletManager {
       await wallet.disconnect(this.chains.map(chain => chain.chainId))
     }
     wallet.walletState = WalletState.Disconnected
+    removeWalletNameFromLocalStorage()
   }
 
   getCurrentWallet() {
