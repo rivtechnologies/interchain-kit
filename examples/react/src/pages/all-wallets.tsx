@@ -22,16 +22,22 @@ type BalanceProps = {
 
 const BalanceTd = ({ address, wallet, chain }: BalanceProps) => {
   const [balance, setBalance] = useState<string | undefined>("");
-  const { queryClient } = useChainWallet(
+  const { queryClient, isLoading } = useChainWallet(
     chain.chainName,
     wallet.option?.name as string
   );
 
   useEffect(() => {
-    if (address && wallet && chain && wallet.walletState === "Connected") {
+    if (
+      address &&
+      wallet &&
+      chain &&
+      wallet.walletState === "Connected" &&
+      !isLoading
+    ) {
       getBalance();
     }
-  }, [address, wallet, chain]);
+  }, [address, wallet, chain, isLoading]);
 
   const getBalance = async () => {
     try {
@@ -53,6 +59,10 @@ const BalanceTd = ({ address, wallet, chain }: BalanceProps) => {
     );
     await getBalance();
   };
+
+  if (isLoading) {
+    return <td>loading...</td>;
+  }
 
   return (
     <td>
