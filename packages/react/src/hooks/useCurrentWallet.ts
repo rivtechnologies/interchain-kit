@@ -8,9 +8,7 @@ export const useCurrentWallet = () => {
   const { open } = useWalletModal()
 
   useEffect(() => {
-    console.log(walletManager.currentWalletName, walletManager.state)
     if (!walletManager.currentWalletName && walletManager.state === WalletManagerState.Initialized) {
-      console.log('do i open this ?')
       open()
     }
   }, [walletManager.currentWalletName, walletManager.state])
