@@ -8,6 +8,7 @@ import { BaseWallet, WalletState } from '@interchain-kit/core';
 
 export type CosmosKitUseChainReturnType = {
   connect: () => void
+  disconnect: () => void
   openView: () => void
   closeView: () => void
   getRpcEndpoint: () => Promise<string | HttpEndpoint>

@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react'
 import { useChain } from '@interchain-kit/react'
-import { Button } from '@interchain-ui/react';
+import { HttpEndpoint } from "@cosmjs/stargate"
 
 const UseChain = () => {
   const [chainName, setChainName] = useState("osmosis");
-  const {logoUrl, address, status, username, openView, getRpcEndpoint } = useChain(chainName);
+  const [rpcEndpoint, setRpcEndpoint] = useState<HttpEndpoint|string>('')
+  const {logoUrl, address, status, username, wallet, openView, getRpcEndpoint, disconnect } = useChain(chainName);
 
   useEffect(() => {
     if (getRpcEndpoint) {
-      getRpcEndpoint().then(res => {
-        console.log('rpc:', res)
+      getRpcEndpoint().then(endpoint => {
+        setRpcEndpoint(endpoint)
       })
     }
   }, [getRpcEndpoint])
@@ -19,6 +20,12 @@ const UseChain = () => {
         console.log(logoUrl)
       }
     }, [logoUrl])
+
+    const clickDisconnect = () => {
+      disconnect()
+    }
+
+    console.log('wallet', wallet)
 
     return (
       <div className="space-y-4 mx-auto max-w-3xl mt-20">
@@ -34,19 +41,29 @@ const UseChain = () => {
           <option value="cosmoshub">Cosmos Hub</option>
         </select>
         <div className="flex items-center">
-          logo: <img className="w-[20px] h-[20px]" src={logoUrl} alt="logoUrl" />
+          <span className="font-bold">logo:</span> <img className="w-[20px] h-[20px]" src={logoUrl} alt="logoUrl" />
         </div>
         <div>
-        rpcEndpoint:
+          <span className="font-bold">rpcEndpoint: { rpcEndpoint }</span>
         </div>
         <div>
-        wallet status: { status }
+          <span className="font-bold">current wallet: </span>{wallet?.option?.prettyName}
         </div>
         <div>
-        username: {username}
+          <span className="font-bold">wallet status: </span>
+          { status === 'Connected' ? <span className="text-green-900">Connected</span> : status}
+          { status === 'Connected' ? (
+              <span className="text-red-600 underline cursor-pointer ml-5" onClick={clickDisconnect}>disconnect</span>
+            ) : (
+              <span className="text-blue-600 underline cursor-pointer ml-5" onClick={openView}>connect</span>
+            ) 
+          }
+        </div>
+        <div>
+          <span className="font-bold">username: </span>{username}
         </div>
         <div className="flex items-center">
-          account address: { address || <Button onClick={openView}>connect to wallet</Button> }
+          <span className="font-bold">account address: </span>{ address }
         </div>
       </div>
     )
