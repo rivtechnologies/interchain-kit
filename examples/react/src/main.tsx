@@ -22,7 +22,7 @@ import { MockWallet } from "@interchain-kit/mock-wallet";
 import { starshipChain, starshipChain1 } from "./utils/starship.ts";
 import { ThemeProvider } from "@interchain-ui/react";
 
-const chainNames = ["osmosis", "juno", "cosmoshub", "stargaze", "noble"];
+const chainNames = ["osmosistestnet", "osmosis", "juno", "cosmoshub", "stargaze", "noble"];
 // const chainNames = ["osmosistestnet"];
 // const chainNames = ["cosmoshub"];
 
