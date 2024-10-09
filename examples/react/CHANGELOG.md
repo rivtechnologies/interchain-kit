@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-beta.26](https://github.com/cosmology-tech/interchain-kit/compare/@interchain-kit/react-examples@0.0.1-beta.25...@interchain-kit/react-examples@0.0.1-beta.26) (2024-10-09)
+
+### Features
+
+- add cosmostation, station, galaxystation wallet supports. ([7536d32](https://github.com/cosmology-tech/interchain-kit/commit/7536d3299cf319b93d92bd07fa940d6efc1c44f2))
+
 ## [0.0.1-beta.25](https://github.com/cosmology-tech/interchain-kit/compare/@interchain-kit/react-examples@0.0.1-beta.24...@interchain-kit/react-examples@0.0.1-beta.25) (2024-10-08)
 
 **Note:** Version bump only for package @interchain-kit/react-examples
