@@ -21,7 +21,8 @@
     "build": "lerna run build --stream",
     "lint": "lerna run lint --parallel",
     "symlink": "symlink-workspace --logLevel error",
-    "postinstall": "yarn symlink"
+    "postinstall": "yarn symlink",
+    "dev": "node scripts/dev.js && npx lerna run dev --parallel"
   },
   "devDependencies": {
     "@types/jest": "^29.5.11",

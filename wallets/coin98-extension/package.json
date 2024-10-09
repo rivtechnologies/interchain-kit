@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/coin98-extension",
-  "version": "0.0.1-beta.24",
+  "version": "0.0.1-beta.25",
   "author": "cosmology-tech <developers@cosmology.zone>",
   "description": "cosmos-kit wallet connector",
   "main": "index.js",
@@ -27,11 +27,12 @@
     "build:dev": "npm run clean; tsc --declarationMap; tsc -p tsconfig.esm.json; npm run copy",
     "lint": "eslint . --fix",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "dev": "tsc -w --preserveWatchOutput -p tsconfig.esm.json"
   },
   "keywords": [],
   "dependencies": {
-    "@interchain-kit/core": "0.0.1-beta.24"
+    "@interchain-kit/core": "0.0.1-beta.25"
   },
-  "gitHead": "0c66e771b9fb5e32d4f13f0e62ce65542ecbaeff"
+  "gitHead": "c7a2a3412de480cdbd02773d12fed15fe4c281d2"
 }
