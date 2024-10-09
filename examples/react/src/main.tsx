@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
-import "@interchain-ui/react/styles";
+// import "@interchain-ui/react/styles";
 import { BrowserRouter } from "react-router-dom";
 
 import { ChainProvider } from "@interchain-kit/react";
@@ -12,8 +12,8 @@ import { BaseWallet, WCWallet } from "@interchain-kit/core";
 import { keplrWallet } from "@interchain-kit/keplr-extension";
 import { leapWallet } from "@interchain-kit/leap-extension";
 import { cosmostationWallet } from "@interchain-kit/cosmostation-extension";
-import { stationWallet } from "@interchain-kit/station-extension"
-import { galaxyStationWallet } from "@interchain-kit/galaxy-station-extension"
+import { stationWallet } from "@interchain-kit/station-extension";
+import { galaxyStationWallet } from "@interchain-kit/galaxy-station-extension";
 import { okxWallet } from "@interchain-kit/okx-extension";
 import { coin98Wallet } from "@interchain-kit/coin98-extension";
 import { ledgerWallet } from "@interchain-kit/ledger";

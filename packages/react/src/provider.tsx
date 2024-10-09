@@ -8,6 +8,7 @@ import {
 } from "@interchain-kit/core";
 import { AssetList, Chain } from "@chain-registry/v2-types";
 import { WalletModal, WalletModalProvider } from "./modal";
+import "@interchain-ui/react/styles";
 
 type InterchainWalletContextType = {
   walletManager: WalletManager;
