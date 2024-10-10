@@ -11,7 +11,7 @@ Using npm:
 npm install @interchain-kit/core
 ```
 
-Using yarn;
+Using yarn:
 ```
 yarn add @interchain-kit/core 
 ```
@@ -114,102 +114,3 @@ AS DESCRIBED IN THE LICENSES, THE SOFTWARE IS PROVIDED “AS IS”, AT YOUR OWN 
 
 No developer or entity involved in creating this software will be liable for any claims or damages whatsoever associated with your use, inability to use, or your interaction with other users of the code, including any direct, indirect, incidental, special, exemplary, punitive or consequential damages, or loss of profits, cryptocurrencies, tokens, or anything else of value.
 
-## Overview
-
-```mermaid
-flowchart TD
-
-    D(Chain Registry - Chain) --- F(Wallet Manager)
-    E(Chain Registry - Asset) --- F(Wallet Manager)
-
-    A(Keplr Wallet Extension) --- AA(Keplr Wallet Class) --- F(Wallet Manager)
-    B(Leap Wallet Extension) --- BB(Leap Wallet Class) --- F(Wallet Manager)
-    C(Wallet Connect Extension) --- CC(Wallet Connect Class) --- F(Wallet Manager)
-
-
-    F(Wallet Manager) --- G(Query Client)
-    F(Wallet Manager) --- H(Transaction Client)
-
-```
-
-
-## UML
-```mermaid
-classDiagram
-    class BaseWallet{
-        <<abstract>>
-        +init(meta?: unknown)
-
-        +connect(chainId: string | string[])
-
-        +disconnect(chainId: string | string[])
-
-        +getAccount(chainId: string)
-
-        +getAccounts(chainIds: string[])
-
-        +getSimpleAccount(chainId: string) 
-
-        +getOfflineSignerAmino(chainId: string)
-
-        +getOfflineSignerDirect(chainId: string)
-
-        +signAmino(chainId: string, signer: string, signDoc: StdSignDoc, signOptions?: SignOptions)
-
-        +signArbitrary(chainId: string, signer: string, data: string | Uint8Array)
-
-        +verifyArbitrary(chainId: string, signer: string, data: string | Uint8Array)
-
-        +signDirect(chainId: string, signer: string, signDoc: DirectSignDoc, signOptions?: SignOptions)
-
-        +sendTx(chainId: string, tx: Uint8Array, mode: BroadcastMode): Promise<Uint8Array>
-
-        +addSuggestChain(chainInfo: ChainInfo)
-
-        +bindingEvent()
-
-        +unbindingEvent()
-    }
-
-    BaseWallet <|-- ExtensionWallet
-    BaseWallet <|-- MobileWallet
-
-    class ExtensionWallet {
-
-    }
-    class MobileWallet {
-      +ISignClient singClient
-    }
-
-    ExtensionWallet <|-- KeplrExtensionWallet
-    ExtensionWallet <|-- LeapExtensionWallet
-
-    MobileWallet <|-- KeplrMobileWallet
-    MobileWallet <|-- LeapMobileWallet
-
-    class KeplrExtensionWallet {
-
-    }
-    class KeplrMobileWallet {
-  
-    }
-
-    class LeapExtensionWallet {
-
-    }
-    class LeapMobileWallet {
-  
-    }
-
-    class CosmosSigner {
-      <<interface>>
-    }
-    class EthereumSinger {
-      <<interface>>
-    }
-    class EthermintSIgner {
-      <<interface>>
-    }
-
-
-```

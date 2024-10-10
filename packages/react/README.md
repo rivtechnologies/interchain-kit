@@ -106,7 +106,7 @@ console.log(balance)
 
 ```
 
-## useChainWallet
+### useChainWallet
 ```js
 import { keplrWallet } from "@interchain-kit/keplr-extension";
 import { leapWallet } from "@interchain-kit/leap-extension";
