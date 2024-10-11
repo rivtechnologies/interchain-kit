@@ -1,12 +1,12 @@
 {
-  "name": "@interchain-kit/cosmostation-extension",
-  "version": "0.0.1-beta.26",
+  "name": "@interchain-kit/vue",
+  "version": "0.0.1",
   "author": "cosmology-tech <developers@cosmology.zone>",
-  "description": "cosmos-kit wallet connector",
+  "description": "interchain-kit for vue",
   "main": "index.js",
   "module": "esm/index.js",
   "types": "index.d.ts",
-  "homepage": "https://github.com/interchain-kit/cosmostation-extension",
+  "homepage": "https://github.com/interchain-kit/vue",
   "license": "SEE LICENSE IN LICENSE",
   "publishConfig": {
     "access": "public",
@@ -14,10 +14,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/interchain-kit/cosmostation-extension"
+    "url": "https://github.com/interchain-kit/vue"
   },
   "bugs": {
-    "url": "https://github.com/interchain-kit/cosmostation-extension/issues"
+    "url": "https://github.com/interchain-kit/vue/issues"
   },
   "scripts": {
     "copy": "copyfiles -f ../../LICENSE README.md package.json dist",
@@ -30,9 +30,5 @@
     "test:watch": "jest --watch",
     "dev": "tsc -w --preserveWatchOutput -p tsconfig.esm.json"
   },
-  "keywords": [],
-  "dependencies": {
-    "@interchain-kit/core": "0.0.1-beta.22"
-  },
-  "gitHead": "3f531ca46617882f4c3c8f0ea431155223236570"
+  "keywords": []
 }
