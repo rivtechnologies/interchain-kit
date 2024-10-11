@@ -104,7 +104,10 @@ const UseChainWallet = () => {
         { status === 'Connected' ? (
             <span className="text-red-600 underline cursor-pointer ml-5" onClick={clickDisconnect}>disconnect</span>
           ) : (
-            <span className="text-blue-600 underline cursor-pointer ml-5" onClick={openView}>connect</span>
+            <>
+              <span className="text-red-600">Disconnected</span>
+              <span className="text-blue-600 underline cursor-pointer ml-5" onClick={openView}>connect</span>
+            </>
           ) 
         }
       </div>
