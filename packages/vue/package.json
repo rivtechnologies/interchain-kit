@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "author": "cosmology-tech <developers@cosmology.zone>",
   "description": "interchain-kit for vue",
-  "main": "index.js",
-  "module": "esm/index.js",
+  "main": "index.umd.js",
+  "module": "index.es.js",
   "types": "index.d.ts",
   "homepage": "https://github.com/interchain-kit/vue",
   "license": "SEE LICENSE IN LICENSE",
@@ -23,7 +23,7 @@
     "copy": "copyfiles -f ../../LICENSE README.md package.json dist",
     "clean": "rimraf dist/**",
     "prepare": "npm run build",
-    "build": "npm run clean; tsc; tsc -p tsconfig.esm.json; npm run copy",
+    "build": "vite build && npm run copy",
     "build:dev": "npm run clean; tsc --declarationMap; tsc -p tsconfig.esm.json; npm run copy",
     "lint": "eslint . --fix",
     "test": "jest",
@@ -37,6 +37,13 @@
     "@interchain-ui/vue": "^1.3.2",
     "@interchainjs/cosmos-types": "0.0.1-beta.9",
     "@interchainjs/injective": "0.0.1-beta.13",
+    "@types/node": "^22.7.5",
+    "@vue/compiler-sfc": "^3.5.12",
     "interchainjs": "0.0.1-beta.14"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "vite-plugin-dts": "^4.2.4",
+    "vue-tsc": "^2.1.6"
   }
 }
