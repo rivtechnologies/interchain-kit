@@ -1,6 +1,3 @@
-export * from './modal.vue';
-import MyComponent from './modal.vue';
+import Provider from './provider.vue';
 
-export { MyComponent }
-
-export default {};
+export { Provider }

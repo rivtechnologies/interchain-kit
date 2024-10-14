@@ -1,18 +1,15 @@
 <script setup lang="ts">
-import { useWalletManager, useChain } from '@interchain-kit/vue'
-// import HelloWorld from './components/HelloWorld.vue'
-
-const walletManager = useWalletManager();
-console.log('wal', walletManager, useChain);
-
+import { useChain } from '@interchain-kit/vue';
 // const {logoUrl, address, status, username, wallet, openView, getRpcEndpoint, disconnect } = useChain('osmosis');
-// console.log(logoUrl)
+const { connect, wallet } = useChain('osmosis');
 
+console.log('wallet', wallet)
 </script>
 
 <template>
   <div>
-    ss
+    this is app.vue
+    <button @click="connect">connect</button>
   </div>
 </template>
 

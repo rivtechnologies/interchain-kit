@@ -20,7 +20,7 @@ export const WALLET_MANAGER_KEY = Symbol('walletManagerKey');
 
 export const walletManagerPlugin: Plugin = {
   install(app: App, config: InterchainWalletProviderProps) {
-    const { chains, assetLists, wallets, signerOptions,endpointOptions } = config;
+    const { chains, assetLists, wallets, signerOptions, endpointOptions } = config;
     const walletManager = new WalletManager(
       chains,
       assetLists,
@@ -28,6 +28,7 @@ export const walletManagerPlugin: Plugin = {
       signerOptions,
       endpointOptions,
     );
+    walletManager.init();
     app.provide(WALLET_MANAGER_KEY, walletManager);
   }
 };

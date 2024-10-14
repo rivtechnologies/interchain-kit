@@ -7,7 +7,7 @@ import { leapWallet } from '@interchain-kit/leap-extension';
 import { walletManagerPlugin } from '@interchain-kit/vue';
 import { createApp } from 'vue';
 
-import App from './App.vue';
+import App from './AppWrapper.vue';
 
 const app = createApp(App);
 
