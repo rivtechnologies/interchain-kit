@@ -31,8 +31,9 @@
   },
   "keywords": [],
   "dependencies": {
-    "@chain-registry/v2": "^1.65.20",
-    "@chain-registry/v2-types": "^0.49.6",
+    "@chain-registry/v2": "^1.71.1",
+    "@chain-registry/v2-keplr": "^0.0.2",
+    "@chain-registry/v2-types": "^0.53.0",
     "@cosmjs/amino": "^0.32.3",
     "@cosmjs/cosmwasm-stargate": "^0.32.4",
     "@cosmjs/proto-signing": "^0.32.3",
