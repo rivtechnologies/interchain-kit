@@ -31,5 +31,5 @@
     "dev": "tsc -w --preserveWatchOutput -p tsconfig.esm.json"
   },
   "keywords": [],
-  "gitHead": "3f531ca46617882f4c3c8f0ea431155223236570"
+  "gitHead": "af71854ddd46303972013955e68509a441d47421"
 }
