@@ -7,7 +7,7 @@ export default defineConfig({
     plugins: [
         vue(),
         dts({
-            insertTypesEntry: true, // 生成 index.d.ts
+            insertTypesEntry: true,
         }),
     ],
     build: {
@@ -15,10 +15,10 @@ export default defineConfig({
             entry: 'src/index.ts',
             name: '@interchain-kit/vue',
             fileName: (format) => `index.${format}.js`,
-            formats: ['es', 'umd'], // 这里指定生成的格式，可以根据需求修改
+            formats: ['es', 'umd'],
         },
         rollupOptions: {
-            external: ['vue', '@interchain-kit/core'], // 不打包 Vue
+            external: ['vue', '@interchain-kit/core'],
         },
     },
     resolve: {

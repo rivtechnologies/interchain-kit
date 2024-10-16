@@ -1,3 +1,2 @@
-import Provider from './provider.vue';
 
-export { Provider }
+export { default as Modal } from './modal.vue'

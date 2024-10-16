@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useWalletManager } from '../hooks'
+import { useWalletManager } from '../composables'
 
 const visible = ref(false);
 const wallets = ref({
@@ -42,6 +42,7 @@ const close = () => {
 };
 
 const walletClick = (wallet: any) => {
+  console.log('wallet.name', wallet.name)
   walletManager.connect(wallet.name)
 }
 
