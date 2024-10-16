@@ -5,14 +5,16 @@ import { RpcQuery } from 'interchainjs/query/rpc';
 import { CosmosSigningClient } from 'interchainjs/cosmos';
 import { Chain, AssetList } from '@chain-registry/v2-types';
 import { BaseWallet, WalletState } from '@interchain-kit/core';
+import { ComputedRef } from 'vue';
 
 export type CosmosKitUseChainReturnType = {
   connect: () => void
+  disconnect: () => void
   openView: () => void
   closeView: () => void
   getRpcEndpoint: () => Promise<string | HttpEndpoint>
   status: WalletState
-  username: string
+  username: ComputedRef<string>
   message: string
   getSigningCosmWasmClient: () => Promise<CosmWasmSigningClient>
   getSigningCosmosClient: () => Promise<CosmosSigningClient>
@@ -22,7 +24,7 @@ export type UseChainReturnType = {
   logoUrl: string | undefined,
   chain: Chain,
   assetList: AssetList,
-  address: string,
+  address: ComputedRef<string>,
   wallet: BaseWallet
   rpcEndpoint: string | HttpEndpoint
   queryClient: RpcQuery

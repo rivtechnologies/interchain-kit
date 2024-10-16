@@ -11,7 +11,7 @@ const _wallets: BaseWallet[] = [
   leapWallet,
 ];
 
-const chainNames = ['osmosis', 'juno', 'cosmoshub', 'stargaze', 'noble'];
+const chainNames = ['osmosistestnet', 'osmosis', 'juno', 'cosmoshub', 'stargaze', 'noble'];
 const _chains = chains.filter((c) => chainNames.includes(c.chainName));
 const _assetLists = assetLists.filter((a) => chainNames.includes(a.chainName));
 
