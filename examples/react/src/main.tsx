@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
-// import "@interchain-ui/react/styles";
+import "@interchain-ui/react/styles";
 import { BrowserRouter } from "react-router-dom";
 
 import { ChainProvider } from "@interchain-kit/react";
@@ -22,7 +22,14 @@ import { MockWallet } from "@interchain-kit/mock-wallet";
 import { starshipChain, starshipChain1 } from "./utils/starship.ts";
 import { ThemeProvider } from "@interchain-ui/react";
 
-const chainNames = ["osmosistestnet", "osmosis", "juno", "cosmoshub", "stargaze", "noble"];
+const chainNames = [
+  "osmosistestnet",
+  "osmosis",
+  "juno",
+  "cosmoshub",
+  "stargaze",
+  "noble",
+];
 // const chainNames = ["osmosistestnet"];
 // const chainNames = ["cosmoshub"];
 

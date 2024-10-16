@@ -67,10 +67,14 @@ const BalanceTd = ({ address, wallet, chain }: BalanceProps) => {
   return (
     <td>
       <div>
-        <button onClick={handleFaucet}>faucet from starship</button>
+        <button className="bg-blue-100 p-1 m-1" onClick={handleFaucet}>
+          faucet from starship
+        </button>
       </div>
       <div>
-        <button onClick={getBalance}>refresh balance</button>
+        <button className="bg-blue-100 p-1 m-1" onClick={getBalance}>
+          refresh balance
+        </button>
       </div>
       <div>
         <span>balance: </span>
@@ -127,7 +131,9 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
   return (
     <td>
       <div>
-        <button onClick={handleSendToken}>Send Token to:</button>
+        <button className="bg-blue-100 p-1 m-1" onClick={handleSendToken}>
+          Send Token to:
+        </button>
         <input ref={ref} />
       </div>
       <div>
@@ -180,8 +186,12 @@ const WalletConnectTd = ({ wallet }: { wallet: BaseWallet }) => {
 
   return (
     <td>
-      <button onClick={connect}>connect</button>
-      <button onClick={disconnect}>disconnect</button>
+      <button className="bg-blue-100 p-1 m-1" onClick={connect}>
+        connect
+      </button>
+      <button className="bg-blue-100 p-1 m-1" onClick={disconnect}>
+        disconnect
+      </button>
       {currentWallet instanceof WCWallet && uri && <QRCode value={uri} />}
       {wallet.errorMessage}
     </td>
@@ -260,7 +270,9 @@ const E2ETest = () => {
           })}
         </tbody>
       </table>
-      <button onClick={addChain}>add suggest chain</button>
+      <button className="bg-blue-100 p-1 m-1" onClick={addChain}>
+        add suggest chain
+      </button>
     </div>
   );
 };

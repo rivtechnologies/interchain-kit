@@ -118,7 +118,7 @@ export class WalletManager {
       await wallet.disconnect(this.chains.map(chain => chain.chainId))
     }
     wallet.walletState = WalletState.Disconnected
-    this.currentWalletName = ''
+
     removeWalletNameFromLocalStorage()
   }
 
