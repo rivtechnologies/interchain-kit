@@ -1,6 +1,6 @@
 {
   "name": "interchain-kit",
-  "version": "0.0.1-beta.26",
+  "version": "0.0.1-beta.27",
   "author": "Cosmology Developers <developers@cosmology.zone>",
   "description": "Universal wallet connector for the interchain",
   "main": "index.js",
@@ -29,5 +29,5 @@
     "test:watch": "jest --watch"
   },
   "keywords": [],
-  "gitHead": "3f531ca46617882f4c3c8f0ea431155223236570"
+  "gitHead": "af71854ddd46303972013955e68509a441d47421"
 }

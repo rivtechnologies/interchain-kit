@@ -6,8 +6,8 @@ import { useCurrentWallet } from './useCurrentWallet';
 import { useInterchainClient } from './useInterchainClient';
 import { useWalletModal } from "../modal";
 import { ChainNameNotExist } from "@interchain-kit/core";
-import { getChainLogoUrl } from "../utils";
 import { useCallback } from "react";
+
 
 export const useChain = (chainName: string): UseChainReturnType & CosmosKitUseChainReturnType => {
   const walletManager = useWalletManager()
@@ -24,7 +24,7 @@ export const useChain = (chainName: string): UseChainReturnType & CosmosKitUseCh
 
   const { open, close } = useWalletModal()
 
-  const getRpcEndpoint = useCallback(async() => {
+  const getRpcEndpoint = useCallback(async () => {
     return await walletManager.getRpcEndpoint(currentWallet, chainName);
   }, [walletManager, currentWallet, chainName]);
 
@@ -51,7 +51,7 @@ export const useChain = (chainName: string): UseChainReturnType & CosmosKitUseCh
   }
 
   return {
-    logoUrl: getChainLogoUrl(assetList),
+    logoUrl: walletManager.getChainLogoUrl(chainName),
     chain: chainToShow,
     assetList,
     address: account?.address,

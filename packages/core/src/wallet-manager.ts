@@ -11,6 +11,7 @@ import { RpcQuery } from 'interchainjs/query/rpc';
 import { SigningClient } from 'interchainjs/signing-client';
 import { CosmosSigningClient } from 'interchainjs/cosmos';
 import { CosmWasmSigningClient } from 'interchainjs/cosmwasm';
+import { chainRegistryChainToKeplr } from '@chain-registry/v2-keplr';
 
 export class WalletManager {
   chains: Chain[] = []
@@ -81,9 +82,22 @@ export class WalletManager {
     wallet.walletState = WalletState.Connecting
 
     try {
-      await wallet.connect(chainIds)
-      this.currentWalletName = walletName
+      await Promise.all(this.chains.map(async chain => {
+        try {
+          await wallet.connect(chain.chainId)
+        } catch (error) {
+          try {
+            if ((error as any).message === `There is no chain info for ${chain.chainId}`) {
+              const chainInfo = chainRegistryChainToKeplr(chain, this.assetLists)
+              await wallet.addSuggestChain(chainInfo)
+            }
+          } catch (error) {
+            throw error
+          }
+        }
+      }))
 
+      this.currentWalletName = walletName
       wallet.walletState = WalletState.Connected
 
       setWalletNameToLocalStorage(walletName)
@@ -116,9 +130,9 @@ export class WalletManager {
     this.chains.push(chain)
   }
 
-  getChainLogo(chainName: ChainName) {
+  getChainLogoUrl(chainName: ChainName) {
     const assetList = this.assetLists.find(assetList => assetList.chainName === chainName)
-    return assetList.assets[0].logoURIs.png || assetList.assets[0].logoURIs.svg || undefined
+    return assetList?.assets?.[0].logoURIs?.png || assetList?.assets?.[0].logoURIs?.svg || undefined
   }
 
   getWalletByName(walletName: string): BaseWallet {
