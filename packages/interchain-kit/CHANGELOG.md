@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-beta.28](https://github.com/cosmology-tech/interchain-kit/compare/interchain-kit@0.0.1-beta.27...interchain-kit@0.0.1-beta.28) (2024-10-16)
+
+**Note:** Version bump only for package interchain-kit
+
 ## [0.0.1-beta.27](https://github.com/cosmology-tech/interchain-kit/compare/interchain-kit@0.0.1-beta.26...interchain-kit@0.0.1-beta.27) (2024-10-15)
 
 **Note:** Version bump only for package interchain-kit
