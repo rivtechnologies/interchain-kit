@@ -78,8 +78,6 @@ export class WalletManager {
 
     const chainIds: string[] = this.chains.map(chain => chain.chainId)
 
-    this.currentWalletName = walletName
-
     wallet.errorMessage = ''
     wallet.walletState = WalletState.Connecting
 
@@ -99,6 +97,7 @@ export class WalletManager {
         }
       }))
 
+      this.currentWalletName = walletName
       wallet.walletState = WalletState.Connected
 
       setWalletNameToLocalStorage(walletName)
@@ -119,6 +118,7 @@ export class WalletManager {
       await wallet.disconnect(this.chains.map(chain => chain.chainId))
     }
     wallet.walletState = WalletState.Disconnected
+
     removeWalletNameFromLocalStorage()
   }
 
