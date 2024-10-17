@@ -23,7 +23,7 @@ export const useChain = (chainName: Ref<string>): UseChainReturnType & CosmosKit
   const _setValuesByChainName = () => {
     chainToShow.value = walletManager.chains.find((c: Chain) => c.chainName === chainName.value);
     assetList.value = walletManager.assetLists.find((a: AssetList) => a.chainName === chainName.value)
-
+    logoUrl.value = walletManager.getChainLogoUrl(chainName.value)
     getRpcEndpoint.value = async () => {
       return await walletManager.getRpcEndpoint(currentWallet, chainName.value);
     }
@@ -34,12 +34,7 @@ export const useChain = (chainName: Ref<string>): UseChainReturnType & CosmosKit
   watch(chainName, () => {
     _setValuesByChainName()
   })
-
-  watch(assetList, () => {
-    logoUrl.value = walletManager.getChainLogoUrl(assetList.value)
-  })
   _setValuesByChainName()
-  logoUrl.value = walletManager.getChainLogoUrl(assetList.value)
 
   const open = inject<() => void>(OPEN_MODAL_KEY);
   const close = inject<() => void>(CLOSE_MODAL_KEY);
