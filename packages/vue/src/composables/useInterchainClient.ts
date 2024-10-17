@@ -10,7 +10,7 @@ import { useAccount } from './useAccount'
 import { WalletState } from '@interchain-kit/core'
 import { InjSigningClient } from '@interchainjs/injective/signing-client'
 
-export function useInterchainClient(chainName: Ref<string>, walletName: Ref<string>) {
+export function useInterchainClient(chainName: string, walletName: string) {
 	const rpcEndpoint = ref<string | HttpEndpoint | undefined>()
 	const queryClient = ref<RpcQuery | null>(null)
 	const signingClient = ref<SigningClient | null>(null)

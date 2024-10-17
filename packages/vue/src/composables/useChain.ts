@@ -6,6 +6,7 @@ import { useCurrentWallet } from './useCurrentWallet';
 import { useAccount } from './useAccount';
 import { OPEN_MODAL_KEY, CLOSE_MODAL_KEY } from '../utils';
 import { CosmosKitUseChainReturnType, UseChainReturnType } from '../types/chain';
+import { useInterchainClient } from './useInterchainClient';
 
 export const useChain = (chainName: string): UseChainReturnType & CosmosKitUseChainReturnType => {
   const walletManager = useWalletManager();
@@ -16,6 +17,7 @@ export const useChain = (chainName: string): UseChainReturnType & CosmosKitUseCh
   const close = inject<() => void>(CLOSE_MODAL_KEY);
   const currentWallet = useCurrentWallet()
   const account = useAccount(chainName, currentWallet?.option?.name)
+  const interchainClient = useInterchainClient(chainName, currentWallet?.option?.name)
 
   const getRpcEndpoint = async () => {
     return await walletManager.getRpcEndpoint(currentWallet, chainName);
@@ -43,7 +45,6 @@ export const useChain = (chainName: string): UseChainReturnType & CosmosKitUseCh
     getSigningCosmosClient: () => walletManager.getSigningCosmosClient(currentWallet.option.name, chainName),
   }
 
-  console.log('acc', account, account?.value?.address)
   return {
     logoUrl: getChainLogoUrl(assetList),
     chain: chainToShow,
@@ -51,6 +52,6 @@ export const useChain = (chainName: string): UseChainReturnType & CosmosKitUseCh
     wallet: currentWallet,
     address: computed(() => account.value?.address),
     ...cosmosKitUserChainReturnType,
-    // ...interchainClient
+    ...interchainClient
   };
 };
