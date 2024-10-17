@@ -1,6 +1,5 @@
 import { useWalletManager } from './useWalletManager';
 import { AssetList, Chain } from "@chain-registry/v2-types";
-import { getChainLogoUrl } from "../utils";
 import { inject, computed, Ref, ref, watch } from 'vue'
 import { useCurrentWallet } from './useCurrentWallet';
 import { useAccount } from './useAccount';
@@ -9,7 +8,6 @@ import { CosmosKitUseChainReturnType, UseChainReturnType } from '../types/chain'
 import { useInterchainClient } from './useInterchainClient';
 
 export const useChain = (chainName: Ref<string>): UseChainReturnType & CosmosKitUseChainReturnType => {
-  console.log('useChain', chainName.value)
   const walletManager = useWalletManager();
   const chainToShow = ref()
   const assetList = ref()
@@ -22,7 +20,7 @@ export const useChain = (chainName: Ref<string>): UseChainReturnType & CosmosKit
   const logoUrl = ref('')
   const account = useAccount(chainName, walletName)
 
-  const setPropertiesByChainName = () => {
+  const _setValuesByChainName = () => {
     chainToShow.value = walletManager.chains.find((c: Chain) => c.chainName === chainName.value);
     assetList.value = walletManager.assetLists.find((a: AssetList) => a.chainName === chainName.value)
 
@@ -34,14 +32,14 @@ export const useChain = (chainName: Ref<string>): UseChainReturnType & CosmosKit
   }
 
   watch(chainName, () => {
-    setPropertiesByChainName()
+    _setValuesByChainName()
   })
 
   watch(assetList, () => {
-    logoUrl.value = getChainLogoUrl(assetList.value)
+    logoUrl.value = walletManager.getChainLogoUrl(assetList.value)
   })
-  setPropertiesByChainName()
-  logoUrl.value = getChainLogoUrl(assetList.value)
+  _setValuesByChainName()
+  logoUrl.value = walletManager.getChainLogoUrl(assetList.value)
 
   const open = inject<() => void>(OPEN_MODAL_KEY);
   const close = inject<() => void>(CLOSE_MODAL_KEY);
@@ -67,10 +65,6 @@ export const useChain = (chainName: Ref<string>): UseChainReturnType & CosmosKit
     getSigningCosmWasmClient,
     getSigningCosmosClient,
   }
-
-  watch(account, (newAcc) => {
-    console.log('newAcc', newAcc)
-  })
 
   const useChainReturnType: UseChainReturnType = {
     logoUrl,
