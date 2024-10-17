@@ -1,15 +1,14 @@
 import { WalletAccount, WalletState } from "@interchain-kit/core"
-import { onMounted, ref, Ref } from "vue"
+import { ref, Ref, watch } from "vue"
 import { useWalletManager } from "./useWalletManager"
 
-export const useAccount = (chainName: string, walletName: string): Ref<WalletAccount | null> => {
+export const useAccount = (chainName: Ref<string>, walletName: Ref<string>): Ref<WalletAccount | null> => {
 	let account = ref<WalletAccount | null>(null)
 	const walletManager = useWalletManager()
 
-	const wallet = walletManager.wallets.find(w => w.option.name === walletName)
-	const chain = walletManager.chains.find(c => c.chainName === chainName);
-
 	const getAccount = async () => {
+		const wallet = walletManager.wallets.find(w => w.option.name === walletName.value)
+		const chain = walletManager.chains.find(c => c.chainName === chainName.value);
 		if (wallet && chain) {
 			if (wallet.walletState === WalletState.Connected) {
 				const act = await wallet.getAccount(chain.chainId) as WalletAccount
@@ -24,12 +23,8 @@ export const useAccount = (chainName: string, walletName: string): Ref<WalletAcc
 		}
 	}
 
+	watch([chainName, walletName], getAccount)
 	getAccount()
-	// onMounted(() => {
-	//     console.log('onMounted', wallet)
-	//     if (wallet) {
-	//         wallet.events.on('keystoreChange', getAccount);
-	//     }
-	// })
+
 	return account
 }

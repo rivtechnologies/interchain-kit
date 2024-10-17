@@ -13,18 +13,18 @@ export type CosmosKitUseChainReturnType = {
   disconnect: () => void
   openView: () => void
   closeView: () => void
-  getRpcEndpoint: () => Promise<string | HttpEndpoint>
+  getRpcEndpoint: Ref<() => Promise<string | HttpEndpoint>>
   status: WalletState
   username: ComputedRef<string>
   message: string
-  getSigningCosmWasmClient: () => Promise<CosmWasmSigningClient>
-  getSigningCosmosClient: () => Promise<CosmosSigningClient>
+  getSigningCosmWasmClient: Ref<() => Promise<CosmWasmSigningClient>>
+  getSigningCosmosClient: Ref<() => Promise<CosmosSigningClient>>
 }
 
 export type UseChainReturnType = {
-  logoUrl: string | undefined
-  chain: Chain
-  assetList: AssetList
+  logoUrl: Ref<string | undefined>
+  chain: Ref<Chain>
+  assetList: Ref<AssetList>
   address: ComputedRef<string>
   wallet: BaseWallet
   rpcEndpoint: Ref<string | HttpEndpoint>

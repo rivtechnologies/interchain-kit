@@ -2,33 +2,36 @@
 import { ref, watch } from 'vue'
 import { useChain } from '@interchain-kit/vue';
 import { coins } from "@cosmjs/amino";
+
 const chainName = ref('osmosistestnet')
 const { 
   logoUrl, openView, disconnect, wallet, address, 
   status, username, message, chain, getSigningCosmosClient, rpcEndpoint,
-  queryClient
-} = useChain(chainName.value);
+  queryClient,
+} = useChain(chainName);
+
 const recipientAddress = ref('')
 const amount = ref('')
 const isSending = ref(false)
 const balance = ref('0')
-console.log('wallet', wallet)
 
 watch(queryClient, async(client) => {
   if (client) {
     const {balance: bc} =  await queryClient.value.balance({
       address: address.value,
-      denom: chain.staking?.stakingTokens[0].denom as string,
+      denom: chain.value.staking?.stakingTokens[0].denom as string,
     })
+    console.log('bc', bc)
     if (bc?.amount) {
       balance.value = bc.amount
+    } else {
+      balance.value = '0'
     }
   }
 })
 
 const handleSendToken = async() => {
-  console.log(amount.value, recipientAddress.value)
-  const denom = chain.staking?.stakingTokens[0].denom as string;
+  const denom = chain.value.staking?.stakingTokens[0].denom as string;
 
   const fee = {
     amount: coins(25000, denom),
@@ -37,7 +40,7 @@ const handleSendToken = async() => {
 
   try {
     isSending.value = true
-    let signingCosmosClient = await getSigningCosmosClient()
+    let signingCosmosClient = await getSigningCosmosClient.value()
     const tx = await signingCosmosClient.helpers.send(
       address.value,
       {
@@ -64,7 +67,7 @@ const handleSendToken = async() => {
 <template>
   <div>
     <select
-      :v-model="chainName"
+      v-model="chainName"
       className="h-9 px-3 mr-4 border rounded-md shadow-sm"
     >
       <option value="osmosistestnet">Osmosis Testnet</option>
