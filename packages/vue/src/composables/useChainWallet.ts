@@ -17,7 +17,7 @@ export const useChainWallet = (chainName: Ref<string>, walletName: Ref<string>):
 	const interchainClient = useInterchainClient(chainName, walletName)
 
 	const _setValues = () => {
-		logoUrl.value = walletManager.getChainLogoUrl(assetList.value)
+		logoUrl.value = walletManager.getChainLogoUrl(chainName.value)
 		chainToShow.value = walletManager.chains.find((c: Chain) => c.chainName === chainName.value);
 		assetList.value = walletManager.assetLists.find((a: AssetList) => a.chainName === chainName.value)
 	}
