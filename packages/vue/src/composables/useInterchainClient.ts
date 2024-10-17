@@ -14,29 +14,29 @@ export function useInterchainClient(chainName: string, walletName: string) {
 	const rpcEndpoint = ref<string | HttpEndpoint | undefined>()
 	const queryClient = ref<RpcQuery | null>(null)
 	const signingClient = ref<SigningClient | null>(null)
-	const signingCosmosClient = ref<CosmosSigningClient | null>(null)
-	const signingCosmWasmClient = ref<CosmWasmSigningClient | null>(null)
-	const signingInjectiveClient = ref<InjSigningClient | null>(null)
+	const signingCosmosClient = ref<CosmosSigningClient | null>()
+	const signingCosmWasmClient = ref<CosmWasmSigningClient | null>()
+	const signingInjectiveClient = ref<InjSigningClient | null>()
 	const error = ref<string | unknown | null>(null)
 	const isLoading = ref(false)
 
 	const walletManager = useWalletManager()
-	const account = useAccount(chainName, walletName)
+	// const account = useAccount(chainName, walletName)
 
 	const initialize = async () => {
-		const wallet = walletManager.wallets.find((w) => w.option.name === walletName.value)
-		const chainToShow = walletManager.chains.find((c: Chain) => c.chainName === chainName.value)
+		const wallet = walletManager.wallets.find((w) => w.option.name === walletName)
+		const chainToShow = walletManager.chains.find((c: Chain) => c.chainName === chainName)
 
 		if (wallet && chainToShow && wallet?.walletState === WalletState.Connected) {
 			try {
 				isLoading.value = true
 
-				rpcEndpoint.value = await walletManager.getRpcEndpoint(wallet, chainName.value)
-				queryClient.value = await walletManager.getQueryClient(walletName.value, chainName.value)
-				signingClient.value = await walletManager.getSigningClient(walletName.value, chainName.value)
-				signingCosmosClient.value = await walletManager.getSigningCosmosClient(walletName.value, chainName.value)
-				signingCosmWasmClient.value = await walletManager.getSigningCosmwasmClient(walletName.value, chainName.value)
-				signingInjectiveClient.value = await walletManager.getSigningInjectiveClient(walletName.value, chainName.value)
+				rpcEndpoint.value = await walletManager.getRpcEndpoint(wallet, chainName)
+				queryClient.value = await walletManager.getQueryClient(walletName, chainName)
+				signingClient.value = await walletManager.getSigningClient(walletName, chainName)
+				signingCosmosClient.value = await walletManager.getSigningCosmosClient(walletName, chainName)
+				signingCosmWasmClient.value = await walletManager.getSigningCosmwasmClient(walletName, chainName)
+				signingInjectiveClient.value = await walletManager.getSigningInjectiveClient(walletName, chainName)
 
 			} catch (err) {
 				error.value = err
@@ -47,16 +47,17 @@ export function useInterchainClient(chainName: string, walletName: string) {
 		}
 	}
 
-	watch([chainName, walletName, account], initialize)
+	// watch([chainName, walletName, account], initialize)
+	initialize()
 
 	return {
 		rpcEndpoint,
-		signingClient: computed(() => chainName.value === 'injective' ? signingInjectiveClient.value : signingClient.value),
 		queryClient,
+		signingClient: chainName === 'injective' ? signingInjectiveClient : signingInjectiveClient,
 		signingCosmosClient,
 		signingCosmWasmClient,
 		signingInjectiveClient,
+		isLoading,
 		error,
-		isLoading
 	}
 }

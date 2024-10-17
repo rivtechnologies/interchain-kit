@@ -45,13 +45,17 @@ export const useChain = (chainName: string): UseChainReturnType & CosmosKitUseCh
     getSigningCosmosClient: () => walletManager.getSigningCosmosClient(currentWallet.option.name, chainName),
   }
 
-  return {
+  const useChainReturnType: UseChainReturnType = {
     logoUrl: getChainLogoUrl(assetList),
     chain: chainToShow,
     assetList,
-    wallet: currentWallet,
     address: computed(() => account.value?.address),
-    ...cosmosKitUserChainReturnType,
+    wallet: currentWallet,
     ...interchainClient
+  }
+
+  return {
+    ...cosmosKitUserChainReturnType,
+    ...useChainReturnType
   };
 };
