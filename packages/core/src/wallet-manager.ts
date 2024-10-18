@@ -87,7 +87,10 @@ export class WalletManager {
           await wallet.connect(chain.chainId)
         } catch (error) {
           try {
-            if ((error as any).message === `There is no chain info for ${chain.chainId}`) {
+            if (
+              (error as any).message === `There is no chain info for ${chain.chainId}` ||
+              (error as any).message === `There is no modular chain info for ${chain.chainId}`
+            ) {
               const chainInfo = chainRegistryChainToKeplr(chain, this.assetLists)
               await wallet.addSuggestChain(chainInfo)
             }
