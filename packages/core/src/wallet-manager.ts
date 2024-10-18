@@ -247,22 +247,30 @@ export class WalletManager {
     }
   }
 
+  isWalletConnected = (walletName: string) => {
+    return this.getWalletByName(walletName)?.walletState === WalletState.Connected
+  }
+
   async getSigningClient(walletName: string, chainName: ChainName): Promise<SigningClient> {
+    if (!this.isWalletConnected(walletName)) return null
     const { rpcEndpoint, offlineSigner, options } = await this.getInterchainSignerOptions(walletName, chainName)
     return SigningClient.connectWithSigner(rpcEndpoint, offlineSigner, options)
   }
 
   async getSigningCosmosClient(walletName: string, chainName: ChainName): Promise<CosmosSigningClient> {
+    if (!this.isWalletConnected(walletName)) return null
     const { rpcEndpoint, offlineSigner, options } = await this.getInterchainSignerOptions(walletName, chainName)
     return CosmosSigningClient.connectWithSigner(rpcEndpoint, offlineSigner, options)
   }
 
   async getSigningCosmwasmClient(walletName: string, chainName: ChainName,): Promise<CosmWasmSigningClient> {
+    if (!this.isWalletConnected(walletName)) return null
     const { rpcEndpoint, offlineSigner, options } = await this.getInterchainSignerOptions(walletName, chainName)
     return CosmWasmSigningClient.connectWithSigner(rpcEndpoint, offlineSigner, options)
   }
 
   async getSigningInjectiveClient(walletName: string, chainName: ChainName): Promise<InjSigningClient> {
+    if (!this.isWalletConnected(walletName)) return null
     const { rpcEndpoint, offlineSigner, options } = await this.getInterchainSignerOptions(walletName, chainName)
     return InjSigningClient.connectWithSigner(rpcEndpoint, offlineSigner, options)
   }
