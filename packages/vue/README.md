@@ -16,7 +16,7 @@ yarn add @interchain-kit/vue
 ## Usage
 ### Setup
 #### import chain registry info that you need
-```js
+```vue
 <script setup lang="ts">
 import { ChainProvider } from '@interchain-kit/vue'
 import { keplrWallet } from '@interchain-kit/keplr-extension';
@@ -46,7 +46,7 @@ import { chain as osmosisTestChain, assetList as osmosisTestAssetList } from "@c
 
 #### or import all chain registry
 `App.ts`
-```js
+```ts
 <script setup lang="ts">
 import { ChainProvider } from '@interchain-kit/vue';
 import { keplrWallet } from '@interchain-kit/keplr-extension';
@@ -70,12 +70,12 @@ import Show from './views/show.vue';
 </style>
 ```
 `show.vue`
-```js
+```vue
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useChain } from '@interchain-kit/vue';
 
-const chainName = ref('osmosistestnet')
+const chainName = ref('osmosis')
 const { address } = useChain(chainName);
 </script>
 
@@ -90,12 +90,12 @@ const { address } = useChain(chainName);
 ```
 
 ### useChain
-```js
+```vue
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useChain } from '@interchain-kit/vue';
 
-const chainName = ref('osmosistestnet')
+const chainName = ref('osmosis')
 const { chain, assetList, address, wallet, queryClient, signingClient } = useChain(chainName)
 const balance = ref('0')
 
@@ -122,13 +122,11 @@ watch(queryClient, async(client) => {
 
 <style scoped>
 </style>
-
-
 ```
 
 ### useChainWallet
 `App.ts`
-```js
+```ts
 <script setup lang="ts">
 import { ChainProvider } from '@interchain-kit/vue'
 import { keplrWallet } from '@interchain-kit/keplr-extension';
@@ -156,7 +154,7 @@ const chainNames = ['juno', 'stargaze']
 
 ```
 `show.vue`
-```js
+```vue
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useChainWallet, useWalletManager } from '@interchain-kit/vue';
@@ -194,7 +192,7 @@ const connectLeap = async() => {
 ```
 
 ### useCurrentWallet
-```js
+```ts
 const wallet = useCurrentWallet()
 
 console.log(wallet) // current connected wallet
@@ -202,7 +200,7 @@ console.log(wallet) // current connected wallet
 ```
 
 ### useAccount
-```js
+```ts
 const chainName = ref('cosmoshub')
 const walletName = ref('keplr-extension')
 const account = useAccount(chainName, walletName)
@@ -212,10 +210,12 @@ console.log(account.value.address) // cosmoshub address in keplr-extension walle
 ```
 
 ### useOfflineSigner
-```js
-const offlineSigner = useOfflineSigner('cosmoshub', 'keplr-extension')
+```ts
+const chainName = ref('cosmoshub')
+const walletName = ref('keplr-extension')
+const offlineSigner = useOfflineSigner(chainName, walletName)
 
-console.log(offlineSigner) // cosmoshub offlineSigner in keplr-extension wallet 
+console.log(offlineSigner.value) // cosmoshub offlineSigner in keplr-extension wallet 
 ```
 
 ### useChains
