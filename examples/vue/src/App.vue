@@ -1,36 +1,25 @@
 <script setup lang="ts">
 import { ChainProvider } from '@interchain-kit/vue'
-// import App from './App.vue'
-import { assetLists, chains } from '@chain-registry/v2';
-import { BaseWallet, WCWallet } from '@interchain-kit/core';
 import { keplrWallet } from '@interchain-kit/keplr-extension';
 import { leapWallet } from '@interchain-kit/leap-extension';
 import { RouterView } from 'vue-router';
-const _wallets: BaseWallet[] = [
-  keplrWallet,
-  leapWallet,
-];
-
-const chainNames = ['osmosistestnet', 'osmosis', 'juno', 'cosmoshub', 'stargaze', 'noble'];
-const _chains = chains.filter((c) => chainNames.includes(c.chainName));
-const _assetLists = assetLists.filter((a) => chainNames.includes(a.chainName));
-
+import { chain as junoChain, assetList as junoAssetList } from "@chain-registry/v2/mainnet/juno";
+import { chain as osmosisChain,assetList as osmosisAssetList } from "@chain-registry/v2/mainnet/osmosis";
+import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from "@chain-registry/v2/mainnet/cosmoshub";
+import { chain as osmosisTestChain, assetList as osmosisTestAssetList } from "@chain-registry/v2/testnet/osmosistestnet"
 </script>
 
 <template>
   <ChainProvider
-    :wallets="_wallets"
-    :chains="_chains"
-    :asset-lists="_assetLists"
+    :wallets="[keplrWallet, leapWallet]"
+    :chains="[osmosisChain, junoChain, cosmoshubChain, osmosisTestChain]"
+    :asset-lists="[osmosisAssetList, junoAssetList, cosmoshubAssetList, osmosisTestAssetList]"
     :signer-options="{}"
-    :endpoint-options="{
-      endpoints: {}
-    }"
+    :endpoint-options="{}"
   >
     <router-view />
   </ChainProvider>
 </template>
 
 <style scoped>
-
 </style>

@@ -14,7 +14,5 @@ export const useOfflineSigner = (chainName: Ref<string>, walletName: Ref<string>
 	watch([chainName, walletName], _setValues)
 	_setValues()
 
-	return {
-		offlineSigner
-	}
+	return offlineSigner
 }

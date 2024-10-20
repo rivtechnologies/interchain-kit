@@ -16,10 +16,6 @@ const amount = ref('')
 const isSending = ref(false)
 const balance = ref('0')
 
-watch(logoUrl, url => {
-  console.log(url)
-})
-
 watch(queryClient, async(client) => {
   if (client) {
     const {balance: bc} =  await queryClient.value.balance({
