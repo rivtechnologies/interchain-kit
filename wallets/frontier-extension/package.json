@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/frontier-extension",
-  "version": "0.0.1-beta.28",
+  "version": "0.0.1-beta.29",
   "author": "cosmology-tech <developers@cosmology.zone>",
   "description": "cosmos-kit wallet connector",
   "main": "index.js",

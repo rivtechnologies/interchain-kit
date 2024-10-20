@@ -134,10 +134,11 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
         <button className="bg-blue-100 p-1 m-1" onClick={handleSendToken}>
           Send Token to:
         </button>
-        <input ref={ref} />
+        <input className="border-red-300 border-2 rounded-sm" ref={ref} />
       </div>
       <div>
-        amount: <input ref={amountRef} />
+        amount:{" "}
+        <input className="border-red-300 border-2 rounded-sm" ref={amountRef} />
       </div>
     </td>
   );

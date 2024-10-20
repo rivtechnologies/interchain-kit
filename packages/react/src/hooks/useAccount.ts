@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react"
-import { WalletAccount, WalletState } from "@interchain-kit/core"
+import { WalletAccount, WalletManager, WalletManagerState, WalletState } from "@interchain-kit/core"
 import { useWalletManager } from './useWalletManager';
 
 export const useAccount = (chainName: string, walletName: string): WalletAccount | null => {
@@ -31,10 +31,10 @@ export const useAccount = (chainName: string, walletName: string): WalletAccount
   }
 
   useEffect(() => {
-    if (wallet) {
+    if (wallet && walletManager.state === WalletManagerState.Initialized) {
       wallet.events.on('keystoreChange', getAccount)
     }
-  }, [wallet])
+  }, [wallet, walletManager.state])
 
   useEffect(() => {
     getAccount()
