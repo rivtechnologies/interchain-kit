@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-beta.33](https://github.com/interchain-kit/galaxy-station-extension/compare/@interchain-kit/galaxy-station-extension@0.0.1-beta.32...@interchain-kit/galaxy-station-extension@0.0.1-beta.33) (2024-10-21)
+
+**Note:** Version bump only for package @interchain-kit/galaxy-station-extension
+
 ## [0.0.1-beta.32](https://github.com/interchain-kit/galaxy-station-extension/compare/@interchain-kit/galaxy-station-extension@0.0.1-beta.31...@interchain-kit/galaxy-station-extension@0.0.1-beta.32) (2024-10-21)
 
 **Note:** Version bump only for package @interchain-kit/galaxy-station-extension
