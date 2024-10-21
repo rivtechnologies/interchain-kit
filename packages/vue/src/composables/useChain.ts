@@ -6,6 +6,7 @@ import { useAccount } from './useAccount';
 import { OPEN_MODAL_KEY, CLOSE_MODAL_KEY } from '../utils';
 import { CosmosKitUseChainReturnType, UseChainReturnType } from '../types/chain';
 import { useInterchainClient } from './useInterchainClient';
+import { WalletState } from "@interchain-kit/core"
 
 export const useChain = (chainName: Ref<string>): UseChainReturnType & CosmosKitUseChainReturnType => {
   const walletManager = useWalletManager();
@@ -45,7 +46,7 @@ export const useChain = (chainName: Ref<string>): UseChainReturnType & CosmosKit
 
   const cosmosKitUserChainReturnType: CosmosKitUseChainReturnType = {
     connect: () => {
-      if (currentWallet) {
+      if (currentWallet?.walletState === WalletState.Connected) {
         return
       }
       open()

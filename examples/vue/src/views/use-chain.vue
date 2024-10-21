@@ -5,7 +5,7 @@ import { coins } from "@cosmjs/amino";
 
 const chainName = ref('osmosistestnet')
 const { 
-  logoUrl, openView, disconnect, wallet, address, 
+  logoUrl, openView, connect, disconnect, wallet, address, 
   status, username, message, chain, getSigningCosmosClient, rpcEndpoint,
   queryClient,
 } = useChain(chainName);
@@ -20,12 +20,11 @@ watch(logoUrl, url => {
 })
 
 watch(queryClient, async(client) => {
-  if (client) {
+  if (client && address.value) {
     const {balance: bc} =  await queryClient.value.balance({
       address: address.value,
       denom: chain.value.staking?.stakingTokens[0].denom as string,
     })
-    console.log('bc', bc)
     if (bc?.amount) {
       balance.value = bc.amount
     } else {
@@ -87,8 +86,9 @@ const handleSendToken = async() => {
     <div>walletStatus: {{ status  }}</div>
     <div>username: {{ username }}</div>
     <div>message: {{ message }}</div>
-    <button @click="openView">connect</button>
-    <button @click="disconnect">disconnect</button>
+    <button @click="openView">openView</button>
+    <button v-if="status !== 'Connected'" @click="connect">connect</button>
+    <button v-if="status === 'Connected'" @click="disconnect">disconnect</button>
     <div>
       <div>amount: <input v-model="amount" type="text" /></div>
       <div>recipient address: <input v-model="recipientAddress" type="text" style="width: 400px;" /></div>

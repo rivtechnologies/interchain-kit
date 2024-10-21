@@ -1,18 +1,46 @@
 <!-- Modal.vue -->
 <template>
-  <div v-if="visible" class="modal-overlay" @click.self="close">
-    <ul class="modal">
-      <li v-for="(wallet, i) in wallets" @click="walletClick(wallet)">
-        {{ wallet.prettyName }}
-      </li>
-    </ul>
+  <div v-if="visible" @click.self="close">
+    <Modal :is-open="true" @close="">
+      <ConnectModalHead
+        title="Select your wallet"
+        :hasCloseButton="true"
+        :hasBackButton="hasBack"
+        @back="onBack"
+        @close="close"
+      />
+      <ConnectModalQrcode v-if="hasBack" v-bind="qrCodeProps" />
+      <ConnectModalWalletList
+        v-else
+        :wallets="wallets"
+        @wallet-item-click="walletClick"
+      />
+    </Modal>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useWalletManager } from '../composables'
+import {
+  Box,
+  Modal,
+  Button,
+  ConnectModalQrcode,
+  ConnectModalHead,
+  ConnectModalWalletList,
+  ConnectModalStatus
+} from "@interchain-ui/vue";
 
+const qrCodeProps = {
+  status: "Done",
+  link: "wc:43529f434fbce35ebc8df08786f70e78f652b7ad45ba1834e5914d8b0dd1e96d@2?relay-protocol=irn&symKey=056b788f4ba347fa65ed0cad68baae3bca1bb5c22d3efc225c7af9e08ad9ddd2",
+  description: "Open Keplr Mobile App to Scan",
+  onRefresh: "ƒ onRefresh() {}",
+  qrCodeSize: 230,
+};
+
+const hasBack = ref(false)
 const visible = ref(false);
 const wallets = ref({
 })
@@ -21,6 +49,7 @@ const walletManager = useWalletManager();
 
 onMounted(() => {
   const res = walletManager.wallets.map((w) => {
+    console.log('w', w)
     return ({
       name: w.option.name,
       prettyName: w.option.prettyName,
@@ -38,37 +67,27 @@ const open = () => {
 };
 
 const close = () => {
+  console.log('close')
   visible.value = false;
 };
 
-const walletClick = (wallet: any) => {
-  console.log('wallet.name', wallet.name)
-  walletManager.connect(wallet.name)
+const walletClick = async(wallet: any) => {
+  await walletManager.connect(wallet?.option.name)
+  close()
+}
+
+const onBack = () => {
+  hasBack.value = false
+}
+const onNext = () => {
+  hasBack.value = true
 }
 
 defineExpose({
   open,
   close
 })
-
 </script>
 
 <style>
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal {
-  background: white;
-  padding: 20px;
-  border-radius: 5px;
-}
 </style>

@@ -1,6 +1,7 @@
 import './style.css';
 import { createApp } from 'vue';
 import router from './router'
+import "@interchain-ui/vue/style.css";
 
 import App from './App.vue';
 

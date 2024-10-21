@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ThemeProvider } from '@interchain-ui/vue'
 import { ChainProvider } from '@interchain-kit/vue'
 import { keplrWallet } from '@interchain-kit/keplr-extension';
 import { leapWallet } from '@interchain-kit/leap-extension';
@@ -10,15 +11,17 @@ import { chain as osmosisTestChain, assetList as osmosisTestAssetList } from "@c
 </script>
 
 <template>
-  <ChainProvider
-    :wallets="[keplrWallet, leapWallet]"
-    :chains="[osmosisChain, junoChain, cosmoshubChain, osmosisTestChain]"
-    :asset-lists="[osmosisAssetList, junoAssetList, cosmoshubAssetList, osmosisTestAssetList]"
-    :signer-options="{}"
-    :endpoint-options="{}"
-  >
-    <router-view />
-  </ChainProvider>
+  <ThemeProvider>
+    <ChainProvider
+      :wallets="[keplrWallet, leapWallet]"
+      :chains="[osmosisChain, junoChain, cosmoshubChain, osmosisTestChain]"
+      :asset-lists="[osmosisAssetList, junoAssetList, cosmoshubAssetList, osmosisTestAssetList]"
+      :signer-options="{}"
+      :endpoint-options="{}"
+    >
+      <router-view />
+    </ChainProvider>
+  </ThemeProvider>
 </template>
 
 <style scoped>
