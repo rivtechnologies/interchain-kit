@@ -223,12 +223,12 @@ export class WalletManager {
     const offlineSigner = this.getOfflineSigner(wallet, chainName)
     const signerOptions = this.getSignerOptions(chainName)
     const options: InterchainSignerOptions = {
-      ...signerOptions,
       prefix: chain.bech32Prefix,
       broadcast: {
         checkTx: true,
         deliverTx: false,
       },
+      ...signerOptions,
     }
     return {
       rpcEndpoint,
