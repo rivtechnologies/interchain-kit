@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/react",
-  "version": "0.0.1-beta.30",
+  "version": "0.0.1-beta.31",
   "author": "cosmology-tech <developers@cosmology.zone>",
   "description": "interchain-kit wallet connector react package",
   "main": "index.js",
@@ -33,13 +33,13 @@
   "keywords": [],
   "dependencies": {
     "@chain-registry/v2-types": "^0.53.0",
-    "@interchain-kit/core": "0.0.1-beta.30",
+    "@interchain-kit/core": "0.0.1-beta.31",
     "@interchain-ui/react": "1.24.0",
-    "@interchainjs/cosmos-types": "0.0.1-beta.9",
-    "@interchainjs/injective": "0.0.1-beta.13",
+    "@interchainjs/cosmos-types": "0.0.1-beta.13",
+    "@interchainjs/injective": "0.0.1-beta.18",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "interchainjs": "0.0.1-beta.14",
+    "interchainjs": "0.0.1-beta.19",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
