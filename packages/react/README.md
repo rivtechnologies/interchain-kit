@@ -108,6 +108,8 @@ console.log(balance)
 
 ### useChainWallet
 ```js
+import { chain as junoChain, assetList as junoAssetList } from "@chain-registry/v2/mainnet/juno";
+import { chain as stargazeChain,assetList as stargazeAssetList } from "@chain-registry/v2/mainnet/stargaze";
 import { keplrWallet } from "@interchain-kit/keplr-extension";
 import { leapWallet } from "@interchain-kit/leap-extension";
 
@@ -124,8 +126,8 @@ function App() {
   return (
     <ThemeProvider>
       <ChainProvider
-        chains={chains.filter((c) => c.chainName === chainName)}
-        assetLists={assetLists.filter((c) => c.chainName === chainName)}
+        chains={[junoChain, stargazeChain]}
+        assetLists={[junoAssetList, stargazeAssetList]}
         wallets={[keplrWallet, leapWallet]}
         signerOptions={{}}
         endpointOptions={{}}
