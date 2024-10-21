@@ -8,7 +8,7 @@ export const useCurrentWallet = () => {
 
 	watch(walletManager, () => {
 		currentWallet.value = walletManager.getCurrentWallet()
-		console.log('walletManager changed', currentWallet.value.walletState)
+		console.log('[walletManager changed]', currentWallet.value?.option?.name, currentWallet.value?.walletState)
 	})
 	currentWallet.value = walletManager.getCurrentWallet()
 

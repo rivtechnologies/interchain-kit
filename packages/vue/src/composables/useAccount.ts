@@ -1,5 +1,5 @@
-import { WalletAccount, WalletState } from "@interchain-kit/core"
-import { ref, Ref, watch } from "vue"
+import { WalletAccount, WalletState, WalletManagerState } from "@interchain-kit/core"
+import { onMounted, ref, Ref, watch } from "vue"
 import { useWalletManager } from "./useWalletManager"
 
 export const useAccount = (chainName: Ref<string>, walletName: Ref<string>): Ref<WalletAccount | null> => {
@@ -22,6 +22,12 @@ export const useAccount = (chainName: Ref<string>, walletName: Ref<string>): Ref
 			account.value = null
 		}
 	}
+
+	onMounted(() => {
+		walletManager.wallets.forEach(wallet => {
+			wallet.events.on('keystoreChange', getAccount)
+		})
+	})
 
 	watch([chainName, walletName], getAccount)
 	getAccount()

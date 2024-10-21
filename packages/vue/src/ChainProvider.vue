@@ -18,8 +18,6 @@ type InterchainWalletProviderProps = {
   endpointOptions: EndpointOptions;
 };
 
-const forceRenderKey = ref<number>(0);
-
 const props = defineProps<InterchainWalletProviderProps>();
 
 const modalRef = ref(null);
@@ -36,15 +34,15 @@ provide(CLOSE_MODAL_KEY, closeModal);
 
 const { chains, assetLists, wallets, signerOptions, endpointOptions } = props;
 
+// Make the walletManager instance reactive 
+// so that changes to any property of walletManager will immediately update currentWallet.
+// without needing to rerender the whole app like in React.
 const walletManager = reactive(new WalletManager(
   chains,
   assetLists,
   wallets,
   signerOptions,
   endpointOptions,
-  // () => {
-  //   forceRenderKey.value += 1
-  // }
 ));
 walletManager.init();
 
