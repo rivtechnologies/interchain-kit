@@ -14,9 +14,9 @@ export type CosmosKitUseChainReturnType = {
   openView: () => void
   closeView: () => void
   getRpcEndpoint: Ref<() => Promise<string | HttpEndpoint>>
-  status: WalletState
+  status: ComputedRef<WalletState>
   username: ComputedRef<string>
-  message: string
+  message: ComputedRef<string>
   getSigningCosmWasmClient: Ref<() => Promise<CosmWasmSigningClient>>
   getSigningCosmosClient: Ref<() => Promise<CosmosSigningClient>>
 }
@@ -26,7 +26,7 @@ export type UseChainReturnType = {
   chain: Ref<Chain>
   assetList: Ref<AssetList>
   address: ComputedRef<string>
-  wallet: BaseWallet
+  wallet: Ref<BaseWallet>
   rpcEndpoint: Ref<string | HttpEndpoint>
   queryClient: Ref<RpcQuery>
   signingClient: Ref<SigningClient | InjSigningClient | null>

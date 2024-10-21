@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, provide, defineProps } from 'vue'
+import { ref, provide, defineProps, reactive } from 'vue'
 import { Modal } from './modal'
 import { AssetList, Chain } from "@chain-registry/v2-types";
 import {
@@ -36,16 +36,16 @@ provide(CLOSE_MODAL_KEY, closeModal);
 
 const { chains, assetLists, wallets, signerOptions, endpointOptions } = props;
 
-const walletManager = new WalletManager(
+const walletManager = reactive(new WalletManager(
   chains,
   assetLists,
   wallets,
   signerOptions,
   endpointOptions,
-  () => {
-    forceRenderKey.value += 1
-  }
-);
+  // () => {
+  //   forceRenderKey.value += 1
+  // }
+));
 walletManager.init();
 
 // injected globally
@@ -55,7 +55,7 @@ provide(WALLET_MANAGER_KEY, walletManager)
 
 <template>
   <div>
-    <slot :key="forceRenderKey"></slot>
+    <slot></slot>
     <Modal ref="modalRef" />
   </div>
 </template>

@@ -16,20 +16,19 @@ export const useChain = (chainName: Ref<string>): UseChainReturnType & CosmosKit
   const getSigningCosmWasmClient = ref()
   const getSigningCosmosClient = ref()
   const currentWallet = useCurrentWallet()
-  const walletName = ref(currentWallet?.option?.name)
+  const walletName = computed(() => currentWallet.value?.option?.name)
   const interchainClient = useInterchainClient(chainName, walletName)
   const logoUrl = ref('')
   const account = useAccount(chainName, walletName)
-
   const _setValuesByChainName = () => {
     chainToShow.value = walletManager.chains.find((c: Chain) => c.chainName === chainName.value);
     assetList.value = walletManager.assetLists.find((a: AssetList) => a.chainName === chainName.value)
     logoUrl.value = walletManager.getChainLogoUrl(chainName.value)
     getRpcEndpoint.value = async () => {
-      return await walletManager.getRpcEndpoint(currentWallet, chainName.value);
+      return await walletManager.getRpcEndpoint(currentWallet.value, chainName.value);
     }
-    getSigningCosmWasmClient.value = () => walletManager.getSigningCosmwasmClient(currentWallet.option.name, chainName.value)
-    getSigningCosmosClient.value = () => walletManager.getSigningCosmosClient(currentWallet.option.name, chainName.value)
+    getSigningCosmWasmClient.value = () => walletManager.getSigningCosmwasmClient(currentWallet.value.option.name, chainName.value)
+    getSigningCosmosClient.value = () => walletManager.getSigningCosmosClient(currentWallet.value.option.name, chainName.value)
   }
 
   watch(chainName, () => {
@@ -41,12 +40,12 @@ export const useChain = (chainName: Ref<string>): UseChainReturnType & CosmosKit
   const close = inject<() => void>(CLOSE_MODAL_KEY);
 
   const disconnect = () => {
-    walletManager.disconnect(currentWallet?.option?.name)
+    walletManager.disconnect(currentWallet.value?.option?.name)
   }
 
   const cosmosKitUserChainReturnType: CosmosKitUseChainReturnType = {
     connect: () => {
-      if (currentWallet?.walletState === WalletState.Connected) {
+      if (currentWallet.value?.walletState === WalletState.Connected) {
         return
       }
       open()
@@ -55,9 +54,9 @@ export const useChain = (chainName: Ref<string>): UseChainReturnType & CosmosKit
     openView: open,
     closeView: close,
     getRpcEndpoint,
-    status: currentWallet?.walletState,
+    status: computed(() => currentWallet.value?.walletState),
     username: computed(() => account.value?.username),
-    message: currentWallet?.errorMessage,
+    message: computed(() => currentWallet.value?.errorMessage),
     getSigningCosmWasmClient,
     getSigningCosmosClient,
   }

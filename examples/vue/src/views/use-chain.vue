@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useChain } from '@interchain-kit/vue';
 import { coins } from "@cosmjs/amino";
 
@@ -15,12 +15,8 @@ const amount = ref('')
 const isSending = ref(false)
 const balance = ref('0')
 
-watch(logoUrl, url => {
-  console.log(url)
-})
-
-watch(queryClient, async(client) => {
-  if (client && address.value) {
+const getBalance = async() => {
+  if (queryClient.value && address.value) {
     const {balance: bc} =  await queryClient.value.balance({
       address: address.value,
       denom: chain.value.staking?.stakingTokens[0].denom as string,
@@ -31,7 +27,7 @@ watch(queryClient, async(client) => {
       balance.value = '0'
     }
   }
-})
+}
 
 const handleSendToken = async() => {
   const denom = chain.value.staking?.stakingTokens[0].denom as string;
@@ -82,7 +78,7 @@ const handleSendToken = async() => {
     logo: <img :src="logoUrl" alt="" style="width: 30px;" />
     <div>rpcEndpoint: {{ rpcEndpoint }}</div>
     <div>address: {{ address }}</div>
-    <div>balance: {{ balance }}</div>
+    <div>balance: {{ balance }} <button @click="getBalance">getBalance</button></div>
     <div>walletStatus: {{ status  }}</div>
     <div>username: {{ username }}</div>
     <div>message: {{ message }}</div>

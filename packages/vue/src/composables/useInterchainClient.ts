@@ -25,11 +25,9 @@ export function useInterchainClient(chainName: Ref<string>, walletName: Ref<stri
 	const initialize = async () => {
 		const wallet = walletManager.wallets.find((w) => w.option.name === walletName.value)
 		const chainToShow = walletManager.chains.find((c: Chain) => c.chainName === chainName.value)
-
 		if (wallet && chainToShow && wallet?.walletState === WalletState.Connected) {
 			try {
 				isLoading.value = true
-
 				rpcEndpoint.value = await walletManager.getRpcEndpoint(wallet, chainName.value)
 				queryClient.value = await walletManager.getQueryClient(walletName.value, chainName.value)
 				signingClient.value = await walletManager.getSigningClient(walletName.value, chainName.value)

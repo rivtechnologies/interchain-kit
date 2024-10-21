@@ -49,7 +49,6 @@ const walletManager = useWalletManager();
 
 onMounted(() => {
   const res = walletManager.wallets.map((w) => {
-    console.log('w', w)
     return ({
       name: w.option.name,
       prettyName: w.option.prettyName,
