@@ -6,8 +6,8 @@ import { BaseWallet } from "./base-wallet";
 import { ChainInfo } from '@keplr-wallet/types'
 import {
   OfflineDirectSigner,
+  StdSignature,
 } from '@interchainjs/cosmos/types/wallet';
-import { StdSignature } from 'interchainjs/types';
 
 export class ExtensionWallet extends BaseWallet {
 

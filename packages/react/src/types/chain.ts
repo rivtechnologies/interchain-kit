@@ -1,8 +1,5 @@
 import { HttpEndpoint } from '@interchainjs/types';
-import { CosmWasmSigningClient } from 'interchainjs/cosmwasm';
-import { SigningClient } from 'interchainjs/signing-client';
-import { RpcQuery } from 'interchainjs/query/rpc';
-import { CosmosSigningClient } from 'interchainjs/cosmos';
+import { SigningClient } from '@interchainjs/cosmos/signing-client';
 import { Chain, AssetList } from '@chain-registry/v2-types';
 import { BaseWallet, WalletState } from '@interchain-kit/core';
 
@@ -15,8 +12,6 @@ export type CosmosKitUseChainReturnType = {
   status: WalletState
   username: string
   message: string
-  getSigningCosmWasmClient: () => Promise<CosmWasmSigningClient>
-  getSigningCosmosClient: () => Promise<CosmosSigningClient>
 }
 
 export type UseChainReturnType = {
@@ -26,10 +21,7 @@ export type UseChainReturnType = {
   address: string,
   wallet: BaseWallet
   rpcEndpoint: string | HttpEndpoint
-  queryClient: RpcQuery
   signingClient: SigningClient
-  signingCosmosClient: CosmosSigningClient
-  signingCosmWasmClient: CosmWasmSigningClient
   isLoading: boolean
   error: unknown
 }

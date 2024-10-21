@@ -45,9 +45,7 @@ export const useChain = (chainName: string): UseChainReturnType & CosmosKitUseCh
     getRpcEndpoint,
     status: currentWallet?.walletState,
     username: account?.username,
-    message: currentWallet?.errorMessage,
-    getSigningCosmWasmClient: () => walletManager.getSigningCosmwasmClient(currentWallet.option.name, chainName),
-    getSigningCosmosClient: () => walletManager.getSigningCosmosClient(currentWallet.option.name, chainName),
+    message: currentWallet?.errorMessage
   }
 
   return {

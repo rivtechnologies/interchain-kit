@@ -6,10 +6,8 @@ import { ChainName, EndpointOptions, SignerOptions, WalletManagerState, WalletSt
 import { ChainNameNotExist, createObservable, getValidRpcEndpoint, getWalletNameFromLocalStorage, NoValidRpcEndpointFound, removeWalletNameFromLocalStorage, setWalletNameToLocalStorage, WalletNotExist } from './utils'
 import { AminoGeneralOfflineSigner, DirectGeneralOfflineSigner, ICosmosGeneralOfflineSigner } from '@interchainjs/cosmos/types/wallet';
 import { SignerOptions as InterchainSignerOptions } from '@interchainjs/cosmos/types/signing-client';
-import { QueryImpl } from 'interchainjs/service-ops';
 import { SigningClient } from '@interchainjs/cosmos/signing-client'
 import { chainRegistryChainToKeplr } from '@chain-registry/v2-keplr';
-import { createQueryRpc, } from '@interchainjs/cosmos/utils';
 
 export class WalletManager {
   chains: Chain[] = []
@@ -216,14 +214,6 @@ export class WalletManager {
     }
 
     return wallet.getAccount(chain.chainId)
-  }
-
-  async getQueryClient(walletName: string, chainName: ChainName) {
-    const wallet = this.getWalletByName(walletName)
-    const rpc = await this.getRpcEndpoint(wallet, chainName)
-    const queryClient = new QueryImpl();
-    queryClient.init(createQueryRpc(rpc));
-    return queryClient
   }
 
   async getInterchainSignerOptions(walletName: string, chainName: string) {
