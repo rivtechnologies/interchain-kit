@@ -90,7 +90,7 @@ type SendTokenProps = {
   chain: Chain;
 };
 const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
-  const { signingCosmosClient, signingCosmWasmClient } = useChainWallet(
+  const { signingClient } = useChainWallet(
     chain.chainName,
     wallet.option?.name as string
   );

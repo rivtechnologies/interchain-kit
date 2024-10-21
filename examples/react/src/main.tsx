@@ -24,11 +24,11 @@ import { ThemeProvider } from "@interchain-ui/react";
 
 const chainNames = [
   "osmosistestnet",
-  "osmosis",
-  "juno",
-  "cosmoshub",
-  "stargaze",
-  "noble",
+  // "osmosis",
+  // "juno",
+  // "cosmoshub",
+  // "stargaze",
+  // "noble",
 ];
 // const chainNames = ["osmosistestnet"];
 // const chainNames = ["cosmoshub"];
@@ -63,14 +63,14 @@ const mock2Wallet = new MockWallet(wallet2Mnemonic, _chains, {
 });
 
 const _wallets: BaseWallet[] = [
-  mock1Wallet,
-  mock2Wallet,
+  // mock1Wallet,
+  // mock2Wallet,
   keplrWallet,
   leapWallet,
-  cosmostationWallet,
-  stationWallet,
-  galaxyStationWallet,
-  walletConnect,
+  // cosmostationWallet,
+  // stationWallet,
+  // galaxyStationWallet,
+  // walletConnect,
 ];
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
