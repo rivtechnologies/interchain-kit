@@ -24,5 +24,6 @@ export type UseChainReturnType = {
   signingClient: SigningClient
   isLoading: boolean
   error: unknown
-}
+} & CosmosKitUseChainReturnType
 
+export type UseChainWalletReturnType = Omit<CosmosKitUseChainReturnType, 'openView' | 'closeView'> & UseChainReturnType
