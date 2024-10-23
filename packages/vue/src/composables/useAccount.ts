@@ -9,6 +9,9 @@ export const useAccount = (chainName: Ref<string>, walletName: Ref<string>): Ref
 	const getAccount = async () => {
 		const wallet = walletManager.wallets.find(w => w.option.name === walletName.value)
 		const chain = walletManager.chains.find(c => c.chainName === chainName.value);
+		if (!chain) {
+			console.error(`[useAccount] error: the chain ${chainName.value} was not found, please check if it was registered in ChainProvider`)
+		}
 		if (wallet && chain) {
 			if (wallet.walletState === WalletState.Connected) {
 				const act = await wallet.getAccount(chain.chainId) as WalletAccount
@@ -29,7 +32,7 @@ export const useAccount = (chainName: Ref<string>, walletName: Ref<string>): Ref
 		})
 	})
 
-	watch([chainName, walletName], getAccount)
+	watch([chainName, walletName, walletManager], getAccount)
 	getAccount()
 
 	return account

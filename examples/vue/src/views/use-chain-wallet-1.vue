@@ -6,9 +6,9 @@ const junoChainName = ref('juno')
 const keplrWalletName = ref('keplr-extension')
 const juno = useChainWallet(junoChainName, keplrWalletName);
 
-const stargazeChainName = ref('stargaze')
+const cosmoshubChainName = ref('cosmoshub')
 const leapWalletName = ref('leap-extension')
-const stargaze = useChainWallet(stargazeChainName, leapWalletName);
+const cosmoshub = useChainWallet(cosmoshubChainName, leapWalletName);
 
 const walletManager = useWalletManager()
 	
@@ -24,8 +24,8 @@ const connectLeap = async() => {
   <div>
 		<button @click="connectKeplr">connect keplr</button>
 		<button @click="connectLeap">connect leap</button>
-    <div>juno address: {{ juno.address }}</div>
-		<div>stargaze address: {{ stargaze.address }}</div>
+		<div>juno address: {{ juno.address }}</div>
+		<div>cosmoshub address: {{ cosmoshub.address }}</div>
   </div>
 </template>
 

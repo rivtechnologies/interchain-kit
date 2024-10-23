@@ -66,7 +66,6 @@ const open = () => {
 };
 
 const close = () => {
-  console.log('close')
   visible.value = false;
 };
 
