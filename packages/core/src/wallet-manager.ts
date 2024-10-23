@@ -72,8 +72,6 @@ export class WalletManager {
       throw new WalletNotExist(walletName)
     }
 
-    const chainIds: string[] = this.chains.map(chain => chain.chainId)
-
     wallet.errorMessage = ''
     wallet.walletState = WalletState.Connecting
 
@@ -82,15 +80,13 @@ export class WalletManager {
         try {
           await wallet.connect(chain.chainId)
         } catch (error) {
-          try {
-            if (
-              (error as any).message === `There is no chain info for ${chain.chainId}` ||
-              (error as any).message === `There is no modular chain info for ${chain.chainId}`
-            ) {
-              const chainInfo = chainRegistryChainToKeplr(chain, this.assetLists)
-              await wallet.addSuggestChain(chainInfo)
-            }
-          } catch (error) {
+          if (
+            (error as any).message === `There is no chain info for ${chain.chainId}` ||
+            (error as any).message === `There is no modular chain info for ${chain.chainId}`
+          ) {
+            const chainInfo = chainRegistryChainToKeplr(chain, this.assetLists)
+            await wallet.addSuggestChain(chainInfo)
+          } else {
             throw error
           }
         }
