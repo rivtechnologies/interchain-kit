@@ -4,7 +4,7 @@ import { useAccount } from "./useAccount"
 import { BaseWallet, ChainNotExist, WalletNotExist, WalletState } from "@interchain-kit/core"
 import { UseChainWalletReturnType } from "../types/chain"
 import { useInterchainClient } from "./useInterchainClient"
-import { useCallback, useEffect } from "react"
+import { useCallback } from "react"
 
 export const useChainWallet = (chainName: string, walletName: string): UseChainWalletReturnType => {
   const walletManager = useWalletManager()
@@ -42,10 +42,6 @@ export const useChainWallet = (chainName: string, walletName: string): UseChainW
 
   const getRpcEndpoint = useCallback(async () => {
     return walletManager.getRpcEndpoint(wallet, chainName)
-  }, [])
-
-  useEffect(() => {
-    connect()
   }, [])
 
   return {
