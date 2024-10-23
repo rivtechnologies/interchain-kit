@@ -26,4 +26,4 @@ export type UseChainReturnType = {
   error: unknown
 } & CosmosKitUseChainReturnType
 
-export type UseChainWalletReturnType = Omit<CosmosKitUseChainReturnType, 'openView' | 'closeView'> & UseChainReturnType
+export type UseChainWalletReturnType = Omit<UseChainReturnType, 'openView' | 'closeView'>  

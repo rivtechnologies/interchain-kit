@@ -870,7 +870,7 @@
   dependencies:
     "@ethersproject/bignumber" "^5.7.0"
 
-"@ethersproject/hash@^5.7.0":
+"@ethersproject/hash@5.7.0", "@ethersproject/hash@^5.7.0":
   version "5.7.0"
   resolved "https://registry.yarnpkg.com/@ethersproject/hash/-/hash-5.7.0.tgz#eb7aca84a588508369562e16e514b539ba5240a7"
   integrity sha512-qX5WrQfnah1EFnO5zJv1v46a8HW0+E5xuBBDTwMFZLuVTx0tbU2kkx15NqdjxecrLGatQN9FGQKpb1FKdHCt+g==
@@ -941,7 +941,7 @@
     "@ethersproject/constants" "^5.7.0"
     "@ethersproject/logger" "^5.7.0"
 
-"@ethersproject/transactions@^5.7.0":
+"@ethersproject/transactions@5.7.0", "@ethersproject/transactions@^5.7.0":
   version "5.7.0"
   resolved "https://registry.yarnpkg.com/@ethersproject/transactions/-/transactions-5.7.0.tgz#91318fc24063e057885a6af13fdb703e1f993d3b"
   integrity sha512-kmcNicCp1lp8qanMTC3RIikGgoJ80ztTyvtsFvCYpSCfkjhD0jZ2LOrnbcuxuToLIUYYf+4XwD1rP+B/erDIhQ==
@@ -1211,16 +1211,24 @@
     "@noble/hashes" "^1.3.1"
     ethers "^6.5.1"
 
-"@interchainjs/auth@^0.0.1-beta.12":
-  version "0.0.1-beta.12"
-  resolved "https://registry.yarnpkg.com/@interchainjs/auth/-/auth-0.0.1-beta.12.tgz#03754d00befbfc22ed1ee57dd3ca46d33f293565"
-  integrity sha512-72W69qkWp9PqPObJ9FLu4+EPSY0XfSd+UNa0Vs+SkQyZ9Hvw/BbHLPo4G2N7bXeEinytMF3BUeEm4/QneupOhw==
+"@interchainjs/auth@^0.0.1-beta.16":
+  version "0.0.1-beta.16"
+  resolved "https://registry.yarnpkg.com/@interchainjs/auth/-/auth-0.0.1-beta.16.tgz#06387a899c6021ac4b157851b394a158ee5bb062"
+  integrity sha512-62kaKiHQ65AHVjsrGZ6znoRXaz7nKq0FK673ZNkTAzCUVzrn2j8x+Ei+NcZsFxSZtnsKK2ST9ynyUuR5ely0Og==
   dependencies:
-    "@interchainjs/types" "^0.0.1-beta.11"
-    "@interchainjs/utils" "^0.0.1-beta.11"
+    "@interchainjs/types" "^0.0.1-beta.15"
+    "@interchainjs/utils" "^0.0.1-beta.15"
     "@noble/curves" "^1.1.0"
     "@noble/hashes" "^1.3.1"
     ethers "^6.5.1"
+
+"@interchainjs/cosmos-types@0.0.1-beta.16", "@interchainjs/cosmos-types@^0.0.1-beta.16":
+  version "0.0.1-beta.16"
+  resolved "https://registry.yarnpkg.com/@interchainjs/cosmos-types/-/cosmos-types-0.0.1-beta.16.tgz#412f24ec535594b292f15360da973922159847dc"
+  integrity sha512-thnt36yKpZnh3sVWv6b0bceFg6RmpEBN6Nt2qQhJSlJ4yUgMb5OwN8meP4KYoAGV6aDQRLNoD2Qe4bXtHQhH8A==
+  dependencies:
+    "@interchainjs/types" "^0.0.1-beta.15"
+    "@interchainjs/utils" "^0.0.1-beta.15"
 
 "@interchainjs/cosmos-types@0.0.1-beta.9", "@interchainjs/cosmos-types@^0.0.1-beta.9":
   version "0.0.1-beta.9"
@@ -1230,13 +1238,20 @@
     "@interchainjs/types" "^0.0.1-beta.9"
     "@interchainjs/utils" "^0.0.1-beta.9"
 
-"@interchainjs/cosmos-types@^0.0.1-beta.11":
-  version "0.0.1-beta.11"
-  resolved "https://registry.yarnpkg.com/@interchainjs/cosmos-types/-/cosmos-types-0.0.1-beta.11.tgz#6b91fd8b1e723deedd1503907802ca5cb8b3e88f"
-  integrity sha512-eeDQaLpE/CSOiYnBUTtnsWjwrr62SxnSzbTFxmV+jA1LsZ0r+h+ayqPOV0fYkNWNt3e97E4KiDXbs2qkB5NnDg==
+"@interchainjs/cosmos@0.0.1-beta.19", "@interchainjs/cosmos@^0.0.1-beta.19":
+  version "0.0.1-beta.19"
+  resolved "https://registry.yarnpkg.com/@interchainjs/cosmos/-/cosmos-0.0.1-beta.19.tgz#feaedd121ce4641220dd11663b73e2d6b068f550"
+  integrity sha512-ioYwSmlhyqnKDHDUm/wbWe0psLRVsplTa75vvsjJPrrIvUusx0FEcngNidaeMBcHht0EV3Nw9xTAXB2M3sVD5A==
   dependencies:
-    "@interchainjs/types" "^0.0.1-beta.11"
-    "@interchainjs/utils" "^0.0.1-beta.11"
+    "@chain-registry/v2" "^1.65.6"
+    "@chain-registry/v2-types" "^0.49.6"
+    "@interchainjs/auth" "^0.0.1-beta.16"
+    "@interchainjs/cosmos-types" "^0.0.1-beta.16"
+    "@interchainjs/types" "^0.0.1-beta.15"
+    "@interchainjs/utils" "^0.0.1-beta.15"
+    "@noble/curves" "^1.1.0"
+    "@noble/hashes" "^1.3.1"
+    decimal.js "^10.4.3"
 
 "@interchainjs/cosmos@^0.0.1-beta.12":
   version "0.0.1-beta.12"
@@ -1249,21 +1264,6 @@
     "@interchainjs/cosmos-types" "^0.0.1-beta.9"
     "@interchainjs/types" "^0.0.1-beta.9"
     "@interchainjs/utils" "^0.0.1-beta.9"
-    "@noble/curves" "^1.1.0"
-    "@noble/hashes" "^1.3.1"
-    decimal.js "^10.4.3"
-
-"@interchainjs/cosmos@^0.0.1-beta.14":
-  version "0.0.1-beta.14"
-  resolved "https://registry.yarnpkg.com/@interchainjs/cosmos/-/cosmos-0.0.1-beta.14.tgz#c35662e808c1a2803161ba40b9db47cf2f3fca4e"
-  integrity sha512-GWz6+BYxv7cl3gfSRkpO5yF/xg+DeYrFz/XPI1RUxeGYl+qq4AzjVh3Z3A27Z9zhuMDDVVV9J4+8DJZYqkNawQ==
-  dependencies:
-    "@chain-registry/v2" "^1.65.6"
-    "@chain-registry/v2-types" "^0.49.6"
-    "@interchainjs/auth" "^0.0.1-beta.12"
-    "@interchainjs/cosmos-types" "^0.0.1-beta.11"
-    "@interchainjs/types" "^0.0.1-beta.11"
-    "@interchainjs/utils" "^0.0.1-beta.11"
     "@noble/curves" "^1.1.0"
     "@noble/hashes" "^1.3.1"
     decimal.js "^10.4.3"
@@ -1294,10 +1294,10 @@
     decimal.js "^10.4.3"
     interchainjs "^0.0.1-beta.14"
 
-"@interchainjs/types@^0.0.1-beta.11":
-  version "0.0.1-beta.11"
-  resolved "https://registry.yarnpkg.com/@interchainjs/types/-/types-0.0.1-beta.11.tgz#ab8fe0cf1e1427e995c2b83307b793b88a1ae6cb"
-  integrity sha512-1fd40Z4Dv0hZvzDZYzGIAJRyURtIpJl+hjsA8qGFdGnUc1hwFAMX+VMQxyikhyt2o1R0YjNaootxL1Jx0th21A==
+"@interchainjs/types@^0.0.1-beta.15":
+  version "0.0.1-beta.15"
+  resolved "https://registry.yarnpkg.com/@interchainjs/types/-/types-0.0.1-beta.15.tgz#17ff04e2910f902749f7267028728dd7bef3f6de"
+  integrity sha512-7kfCLz7e5m8zD06Zz+miVFdwLp8cUgceMJ17ctqqH6zwNiBO0577Cy/2ZftNqUW7R3DHhesWlaumoDs5v8hfmw==
   dependencies:
     decimal.js "^10.4.3"
 
@@ -1308,12 +1308,12 @@
   dependencies:
     decimal.js "^10.4.3"
 
-"@interchainjs/utils@^0.0.1-beta.11":
-  version "0.0.1-beta.11"
-  resolved "https://registry.yarnpkg.com/@interchainjs/utils/-/utils-0.0.1-beta.11.tgz#73955dc15680e9d10d790ba496bb05f7edd68d8c"
-  integrity sha512-T3BGZDGyblK3EAvKUdpTNS7RTd+rKGX3TkCbfgK1F+CiWF+qjDGqd71Ik/+9xSq0fH+IZeYjdkjZPhU1zEYuIA==
+"@interchainjs/utils@^0.0.1-beta.15":
+  version "0.0.1-beta.15"
+  resolved "https://registry.yarnpkg.com/@interchainjs/utils/-/utils-0.0.1-beta.15.tgz#8976a58ed89f154430a9462337453318da2f4000"
+  integrity sha512-j/OelV+lKOTMhM54SnBEgZIsYqjdk1NBavFkd8G2t8yvHmKvA6msWeA8Ppg5scwOvWV7buXrwL293+tNpzveDw==
   dependencies:
-    "@interchainjs/types" "^0.0.1-beta.11"
+    "@interchainjs/types" "^0.0.1-beta.15"
     bech32 "^2.0.0"
 
 "@interchainjs/utils@^0.0.1-beta.9":
@@ -4311,6 +4311,29 @@
     lodash.isequal "4.5.0"
     uint8arrays "3.1.0"
 
+"@walletconnect/core@2.17.1":
+  version "2.17.1"
+  resolved "https://registry.yarnpkg.com/@walletconnect/core/-/core-2.17.1.tgz#8ee51d630068e4450014fe62a76af895ab1d349d"
+  integrity sha512-SMgJR5hEyEE/tENIuvlEb4aB9tmMXPzQ38Y61VgYBmwAFEhOHtpt8EDfnfRWqEhMyXuBXG4K70Yh8c67Yry+Xw==
+  dependencies:
+    "@walletconnect/heartbeat" "1.2.2"
+    "@walletconnect/jsonrpc-provider" "1.0.14"
+    "@walletconnect/jsonrpc-types" "1.0.4"
+    "@walletconnect/jsonrpc-utils" "1.0.8"
+    "@walletconnect/jsonrpc-ws-connection" "1.0.14"
+    "@walletconnect/keyvaluestorage" "1.1.1"
+    "@walletconnect/logger" "2.1.2"
+    "@walletconnect/relay-api" "1.0.11"
+    "@walletconnect/relay-auth" "1.0.4"
+    "@walletconnect/safe-json" "1.0.2"
+    "@walletconnect/time" "1.0.2"
+    "@walletconnect/types" "2.17.1"
+    "@walletconnect/utils" "2.17.1"
+    "@walletconnect/window-getters" "1.0.1"
+    events "3.3.0"
+    lodash.isequal "4.5.0"
+    uint8arrays "3.1.0"
+
 "@walletconnect/environment@^1.0.1":
   version "1.0.1"
   resolved "https://registry.npmjs.org/@walletconnect/environment/-/environment-1.0.1.tgz"
@@ -4429,6 +4452,21 @@
     "@walletconnect/utils" "2.16.1"
     events "3.3.0"
 
+"@walletconnect/sign-client@^2.17.1":
+  version "2.17.1"
+  resolved "https://registry.yarnpkg.com/@walletconnect/sign-client/-/sign-client-2.17.1.tgz#0777536427eba1b725c111ecc08eb301e05a8c55"
+  integrity sha512-6rLw6YNy0smslH9wrFTbNiYrGsL3DrOsS5FcuU4gIN6oh8pGYOFZ5FiSyTTroc5tngOk3/Sd7dlGY9S7O4nveg==
+  dependencies:
+    "@walletconnect/core" "2.17.1"
+    "@walletconnect/events" "1.0.1"
+    "@walletconnect/heartbeat" "1.2.2"
+    "@walletconnect/jsonrpc-utils" "1.0.8"
+    "@walletconnect/logger" "2.1.2"
+    "@walletconnect/time" "1.0.2"
+    "@walletconnect/types" "2.17.1"
+    "@walletconnect/utils" "2.17.1"
+    events "3.3.0"
+
 "@walletconnect/time@1.0.2", "@walletconnect/time@^1.0.2":
   version "1.0.2"
   resolved "https://registry.npmjs.org/@walletconnect/time/-/time-1.0.2.tgz"
@@ -4460,6 +4498,18 @@
     "@walletconnect/logger" "2.1.2"
     events "3.3.0"
 
+"@walletconnect/types@2.17.1", "@walletconnect/types@^2.17.1":
+  version "2.17.1"
+  resolved "https://registry.yarnpkg.com/@walletconnect/types/-/types-2.17.1.tgz#425dedbe5853231252d081f61448c55ecd341c96"
+  integrity sha512-aiUeBE3EZZTsZBv5Cju3D0PWAsZCMks1g3hzQs9oNtrbuLL6pKKU0/zpKwk4vGywszxPvC3U0tBCku9LLsH/0A==
+  dependencies:
+    "@walletconnect/events" "1.0.1"
+    "@walletconnect/heartbeat" "1.2.2"
+    "@walletconnect/jsonrpc-types" "1.0.4"
+    "@walletconnect/keyvaluestorage" "1.1.1"
+    "@walletconnect/logger" "2.1.2"
+    events "3.3.0"
+
 "@walletconnect/utils@2.16.1":
   version "2.16.1"
   resolved "https://registry.yarnpkg.com/@walletconnect/utils/-/utils-2.16.1.tgz#2099cc2bd16b0edc32022f64aa2c2c323b45d1d4"
@@ -4479,6 +4529,32 @@
     "@walletconnect/window-metadata" "1.0.1"
     detect-browser "5.3.0"
     elliptic "^6.5.7"
+    query-string "7.1.3"
+    uint8arrays "3.1.0"
+
+"@walletconnect/utils@2.17.1":
+  version "2.17.1"
+  resolved "https://registry.yarnpkg.com/@walletconnect/utils/-/utils-2.17.1.tgz#fc57ffb89fc101fa1bf015de016ea01091d10ae0"
+  integrity sha512-KL7pPwq7qUC+zcTmvxGqIyYanfHgBQ+PFd0TEblg88jM7EjuDLhjyyjtkhyE/2q7QgR7OanIK7pCpilhWvBsBQ==
+  dependencies:
+    "@ethersproject/hash" "5.7.0"
+    "@ethersproject/transactions" "5.7.0"
+    "@stablelib/chacha20poly1305" "1.0.1"
+    "@stablelib/hkdf" "1.0.1"
+    "@stablelib/random" "1.0.2"
+    "@stablelib/sha256" "1.0.1"
+    "@stablelib/x25519" "1.0.3"
+    "@walletconnect/jsonrpc-utils" "1.0.8"
+    "@walletconnect/keyvaluestorage" "1.1.1"
+    "@walletconnect/relay-api" "1.0.11"
+    "@walletconnect/relay-auth" "1.0.4"
+    "@walletconnect/safe-json" "1.0.2"
+    "@walletconnect/time" "1.0.2"
+    "@walletconnect/types" "2.17.1"
+    "@walletconnect/window-getters" "1.0.1"
+    "@walletconnect/window-metadata" "1.0.1"
+    detect-browser "5.3.0"
+    elliptic "6.5.7"
     query-string "7.1.3"
     uint8arrays "3.1.0"
 
@@ -6196,7 +6272,7 @@ elliptic@6.5.4:
     minimalistic-assert "^1.0.1"
     minimalistic-crypto-utils "^1.0.1"
 
-elliptic@^6.4.0, elliptic@^6.5.7:
+elliptic@6.5.7, elliptic@^6.4.0, elliptic@^6.5.7:
   version "6.5.7"
   resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.5.7.tgz#8ec4da2cb2939926a1b9a73619d768207e647c8b"
   integrity sha512-ESVCtTwiA+XhY3wyh24QqRGBoP3rEdDUl3EDUUo9tft074fi19IrdpH7hLCMMP3CIj7jb3W96rn8lt/BqIlt5Q==
@@ -7543,15 +7619,15 @@ interchainjs@0.0.1-beta.14, interchainjs@^0.0.1-beta.14:
     "@noble/hashes" "^1.3.1"
     decimal.js "^10.4.3"
 
-interchainjs@^0.0.1-beta.16:
-  version "0.0.1-beta.16"
-  resolved "https://registry.yarnpkg.com/interchainjs/-/interchainjs-0.0.1-beta.16.tgz#5b2c1fc99983f0e2905a0a4271b1a3f88f11a5fc"
-  integrity sha512-NTVgD7k/fWoTqr10VaClLPsSy+BR6G4/SPe96vcDbmJ/YjF9Ty9367kTfEOU3U5p+wn74P64pxMDzOZoXe0v1A==
+interchainjs@0.0.1-beta.26:
+  version "0.0.1-beta.26"
+  resolved "https://registry.yarnpkg.com/interchainjs/-/interchainjs-0.0.1-beta.26.tgz#4c5c0911017fcb566ead6b974bc1c5535db0b1eb"
+  integrity sha512-DkKEKotfcOrZqGmyOMnk/sXfjEeKkd4gelgPb7TIyWHDb4/fsDlhU9B/0yUYhV8p/zpPnzmyd2CPsWsZYTyJeQ==
   dependencies:
-    "@interchainjs/cosmos" "^0.0.1-beta.14"
-    "@interchainjs/cosmos-types" "^0.0.1-beta.11"
-    "@interchainjs/types" "^0.0.1-beta.11"
-    "@interchainjs/utils" "^0.0.1-beta.11"
+    "@interchainjs/cosmos" "^0.0.1-beta.19"
+    "@interchainjs/cosmos-types" "^0.0.1-beta.16"
+    "@interchainjs/types" "^0.0.1-beta.15"
+    "@interchainjs/utils" "^0.0.1-beta.15"
     "@noble/hashes" "^1.3.1"
     decimal.js "^10.4.3"
 

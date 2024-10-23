@@ -1,10 +1,10 @@
 import { HttpEndpoint } from '@interchainjs/types';
-import { SigningClient } from '@interchainjs/cosmos/signing-client';
 import { useEffect, useState } from "react";
 import { useWalletManager } from './useWalletManager';
 import { Chain } from '@chain-registry/v2-types';
 import { useAccount } from './useAccount';
 import { WalletState } from '@interchain-kit/core';
+import { SigningClient } from '../types';
 
 export const useInterchainClient = (chainName: string, walletName: string) => {
   const [rpcEndpoint, setRpcEndpoint] = useState<string | HttpEndpoint | undefined>()
