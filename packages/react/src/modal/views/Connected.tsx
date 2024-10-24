@@ -10,7 +10,7 @@ export const ConnectedHeader = ({ onBack }: { onBack: () => void }) => {
   const { close } = useWalletModal();
   return (
     <ConnectModalHead
-      title={currentWallet?.option?.prettyName || ""}
+      title={currentWallet?.info?.prettyName || ""}
       hasBackButton={true}
       onClose={close}
       onBack={onBack}
@@ -24,7 +24,7 @@ export const ConnectedContent = () => {
   const walletManager = useWalletManager();
   const account = useAccount(
     walletManager.chains[0].chainName,
-    currentWallet?.option?.name
+    currentWallet?.info?.name
   );
   const { close } = useWalletModal();
   if (!currentWallet) {
@@ -48,7 +48,7 @@ export const ConnectedContent = () => {
         address: account?.address,
       }}
       onDisconnect={async () => {
-        await walletManager.disconnect(currentWallet?.option?.name as string);
+        await walletManager.disconnect(currentWallet?.info?.name as string);
         close();
       }}
     />

@@ -9,7 +9,7 @@ import {
 } from '@interchainjs/cosmos/types/wallet';
 export abstract class BaseWallet {
 
-  option?: Wallet
+  info?: Wallet
 
   client: any;
 
@@ -19,8 +19,8 @@ export abstract class BaseWallet {
 
   events = new EventEmitter();
 
-  constructor(option?: Wallet) {
-    this.option = option
+  constructor(info?: Wallet) {
+    this.info = info
   }
 
   abstract init(meta?: unknown): Promise<void>

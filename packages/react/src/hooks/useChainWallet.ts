@@ -10,7 +10,7 @@ export const useChainWallet = (chainName: string, walletName: string): UseChainW
   const walletManager = useWalletManager()
   const chainToShow = walletManager.chains.find((c: Chain) => c.chainName === chainName)
   const assetList = walletManager.assetLists.find((a: AssetList) => a.chainName === chainName)
-  const wallet = walletManager.wallets.find((w: BaseWallet) => w.option.name === walletName)
+  const wallet = walletManager.wallets.find((w: BaseWallet) => w.info.name === walletName)
 
   const account = useAccount(chainName, walletName)
 
@@ -30,13 +30,13 @@ export const useChainWallet = (chainName: string, walletName: string): UseChainW
     }
 
     if (wallet.walletState !== WalletState.Connected) {
-      walletManager.connect(wallet.option.name)
+      walletManager.connect(wallet.info.name)
     }
   }, [chainName, walletName])
 
   const disconnect = useCallback(() => {
     if (wallet.walletState === WalletState.Connected) {
-      walletManager.disconnect(wallet.option.name)
+      walletManager.disconnect(wallet.info.name)
     }
   }, [chainName, walletName])
 

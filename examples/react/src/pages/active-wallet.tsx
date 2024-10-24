@@ -7,10 +7,10 @@ export default function ActiveWallet() {
     <>
       <button onClick={open}>open wallets modal</button>
       <p>{wallet?.walletState}</p>
-      <p>{wallet?.option?.prettyName}</p>
+      <p>{wallet?.info?.prettyName}</p>
 
       <p>{address}</p>
-      <img src={wallet?.option?.logo?.toString()} style={{ width: "100px" }} />
+      <img src={wallet?.info?.logo?.toString()} style={{ width: "100px" }} />
       <img src={logoUrl} style={{ width: "100px" }}></img>
     </>
   );

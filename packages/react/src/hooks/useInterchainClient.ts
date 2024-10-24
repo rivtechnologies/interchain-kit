@@ -15,7 +15,7 @@ export const useInterchainClient = (chainName: string, walletName: string) => {
   const [isLoading, setIsLoading] = useState(false)
   const walletManager = useWalletManager()
   const account = useAccount(chainName, walletName)
-  const wallet = walletManager.wallets.find((w) => w.option.name === walletName)
+  const wallet = walletManager.wallets.find((w) => w.info.name === walletName)
   const chainToShow = walletManager.chains.find((c: Chain) => c.chainName === chainName)
 
   const initialize = async () => {

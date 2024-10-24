@@ -47,7 +47,7 @@ const UseChain = () => {
         <span className="font-bold">rpcEndpoint: { rpcEndpoint }</span>
       </div>
       <div>
-        <span className="font-bold">current wallet: </span>{wallet?.option?.prettyName}
+        <span className="font-bold">current wallet: </span>{wallet?.info?.prettyName}
       </div>
       <div>
         <span className="font-bold">wallet status: </span>

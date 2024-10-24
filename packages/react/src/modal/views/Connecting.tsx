@@ -9,13 +9,13 @@ export const ConnectingHeader = ({ onBack }: { onBack: () => void }) => {
   if (!currentWallet) return null;
   return (
     <ConnectModalHead
-      title={currentWallet.option.prettyName}
+      title={currentWallet.info.prettyName}
       hasBackButton={true}
       onClose={close}
       onBack={onBack}
       closeButtonProps={{
         onClick: async () => {
-          await walletManager.disconnect(currentWallet.option.name);
+          await walletManager.disconnect(currentWallet.info.name);
           close();
         },
       }}
@@ -26,7 +26,7 @@ export const ConnectingHeader = ({ onBack }: { onBack: () => void }) => {
 export const ConnectingContent = () => {
   const currentWallet = useCurrentWallet();
   const {
-    option: { prettyName, mode },
+    info: { prettyName, mode },
   } = currentWallet;
 
   let title = "Requesting Connection";
@@ -40,9 +40,9 @@ export const ConnectingContent = () => {
   return (
     <ConnectModalStatus
       wallet={{
-        name: currentWallet.option.name,
-        prettyName: currentWallet.option.prettyName,
-        logo: currentWallet.option.logo as string,
+        name: currentWallet.info.name,
+        prettyName: currentWallet.info.prettyName,
+        logo: currentWallet.info.logo as string,
         mobileDisabled: true,
       }}
       status="Connecting"

@@ -24,7 +24,7 @@ const BalanceTd = ({ address, wallet, chain }: BalanceProps) => {
   const [balance, setBalance] = useState<string | undefined>("");
   const { queryClient, isLoading } = useChainWallet(
     chain.chainName,
-    wallet.option?.name as string
+    wallet.info?.name as string
   );
 
   useEffect(() => {
@@ -92,7 +92,7 @@ type SendTokenProps = {
 const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
   const { signingClient } = useChainWallet(
     chain.chainName,
-    wallet.option?.name as string
+    wallet.info?.name as string
   );
 
   const ref = useRef<HTMLInputElement>(null);
@@ -147,7 +147,7 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
 const ChainRow = ({ chain, wallet }: { chain: Chain; wallet: BaseWallet }) => {
   const { address } = useChainWallet(
     chain.chainName,
-    wallet.option?.name as string
+    wallet.info?.name as string
   );
   return (
     <tr>
@@ -172,15 +172,15 @@ const WalletConnectTd = ({ wallet }: { wallet: BaseWallet }) => {
   const chainIds = walletManager.chains.map((c) => c.chainId);
 
   const currentWallet = walletManager.wallets.find(
-    (w: BaseWallet) => w.option?.name === wallet.option?.name
+    (w: BaseWallet) => w.info?.name === wallet.info?.name
   );
 
   const connect = () => {
-    walletManager.connect(wallet.option?.name as string);
+    walletManager.connect(wallet.info?.name as string);
   };
 
   const disconnect = () => {
-    walletManager.disconnect(wallet.option?.name as string);
+    walletManager.disconnect(wallet.info?.name as string);
   };
 
   const uri = (currentWallet as WCWallet).pairingUri || "";
@@ -204,7 +204,7 @@ const E2ETest = () => {
 
   const addChain = async () => {
     const keplrExtension = walletManager.wallets.find(
-      (w) => w.option?.name === "keplr-extension"
+      (w) => w.info?.name === "keplr-extension"
     );
 
     const chain = chains.find((c) => c.chainName === "cosmoshub");
@@ -237,9 +237,9 @@ const E2ETest = () => {
         <tbody>
           {walletManager.wallets.map((wallet) => {
             return (
-              <tr key={wallet.option?.name}>
-                <td>{wallet.option?.name}</td>
-                <td>{wallet.option?.prettyName}</td>
+              <tr key={wallet.info?.name}>
+                <td>{wallet.info?.name}</td>
+                <td>{wallet.info?.prettyName}</td>
                 <WalletConnectTd wallet={wallet} />
                 <td>{wallet.walletState}</td>
                 <td>

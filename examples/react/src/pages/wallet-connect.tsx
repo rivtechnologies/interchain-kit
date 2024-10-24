@@ -36,7 +36,7 @@ const WalletConnect = () => {
 
   return (
     <div>
-      <p>current wallet: {currentWallet?.option?.name}</p>
+      <p>current wallet: {currentWallet?.info?.name}</p>
       <pre>{JSON.stringify(currentWallet?.session?.peer, null, 4)}</pre>
       <p>address: {address}</p>
       <p>topic: {currentWallet?.session?.topic}</p>
@@ -49,7 +49,7 @@ const WalletConnect = () => {
       </button>
       <button
         onClick={() =>
-          walletManager.disconnect(currentWallet?.option?.name as string)
+          walletManager.disconnect(currentWallet?.info?.name as string)
         }
       >
         disconnect

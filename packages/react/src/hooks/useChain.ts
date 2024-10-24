@@ -15,8 +15,8 @@ export const useChain = (chainName: string): UseChainReturnType => {
   const assetList = walletManager.assetLists.find((a: AssetList) => a.chainName === chainName)
 
   const currentWallet = useCurrentWallet()
-  const account = useAccount(chainName, currentWallet?.option?.name)
-  const interchainClient = useInterchainClient(chainName, currentWallet?.option?.name)
+  const account = useAccount(chainName, currentWallet?.info?.name)
+  const interchainClient = useInterchainClient(chainName, currentWallet?.info?.name)
 
   if (!chainToShow) {
     throw new ChainNameNotExist(chainName)
@@ -29,7 +29,7 @@ export const useChain = (chainName: string): UseChainReturnType => {
   }, [walletManager, currentWallet, chainName]);
 
   const disconnect = useCallback(() => {
-    walletManager.disconnect(currentWallet?.option?.name);
+    walletManager.disconnect(currentWallet?.info?.name);
   }, [walletManager, currentWallet]);
 
   const cosmosKitUserChainReturnType: CosmosKitUseChainReturnType = {

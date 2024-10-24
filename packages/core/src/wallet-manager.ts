@@ -66,7 +66,7 @@ export class WalletManager {
 
   async connect(walletName: string) {
 
-    const wallet = this.wallets.find(wallet => wallet.option.name === walletName)
+    const wallet = this.wallets.find(wallet => wallet.info.name === walletName)
 
     if (!wallet) {
       throw new WalletNotExist(walletName)
@@ -105,7 +105,7 @@ export class WalletManager {
   }
 
   async disconnect(walletName: string) {
-    const wallet = this.wallets.find(wallet => wallet.option.name === walletName)
+    const wallet = this.wallets.find(wallet => wallet.info.name === walletName)
 
     if (wallet instanceof WCWallet) {
       await wallet.disconnect()
@@ -118,7 +118,7 @@ export class WalletManager {
   }
 
   getCurrentWallet() {
-    return this.wallets.find(wallet => wallet.option.name === this.currentWalletName)
+    return this.wallets.find(wallet => wallet.info.name === this.currentWalletName)
   }
 
   addChain(chain: Chain) {
@@ -131,7 +131,7 @@ export class WalletManager {
   }
 
   getWalletByName(walletName: string): BaseWallet {
-    return this.wallets.find(wallet => wallet.option.name === walletName)
+    return this.wallets.find(wallet => wallet.info.name === walletName)
   }
 
   getChainByName(chainName: string): Chain {
@@ -149,7 +149,7 @@ export class WalletManager {
     const chain = this.getChainByName(chainName)
 
     const providerRpcEndpoints = this.endpointOptions?.endpoints?.[chain.chainName]?.rpc || []
-    // const walletRpcEndpoints = wallet?.option?.endpoints?.[chain.chainName]?.rpc || []
+    // const walletRpcEndpoints = wallet?.info?.endpoints?.[chain.chainName]?.rpc || []
     const chainRpcEndpoints = chain.apis.rpc.map(url => url.address)
 
 
@@ -199,7 +199,7 @@ export class WalletManager {
   async getAccount(walletName: string, chainName: ChainName) {
 
     const chain = this.chains.find(c => c.chainName === chainName)
-    const wallet = this.wallets.find(w => w.option.name === walletName)
+    const wallet = this.wallets.find(w => w.info.name === walletName)
 
     if (!chain) {
       throw new ChainNameNotExist(chainName)

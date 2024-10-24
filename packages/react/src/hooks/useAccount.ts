@@ -6,7 +6,7 @@ export const useAccount = (chainName: string, walletName: string): WalletAccount
   const walletManager = useWalletManager()
 
   const wallet = useMemo(() => {
-    return walletManager.wallets.find(w => w.option.name === walletName)
+    return walletManager.wallets.find(w => w.info.name === walletName)
   }, [walletManager, walletName]);
 
   const [account, setAccount] = useState<WalletAccount | null>(null)
