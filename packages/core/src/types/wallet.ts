@@ -120,7 +120,7 @@ export enum WalletState {
   Disconnected = "Disconnected",
   Connecting = "Connecting",
   Connected = "Connected",
-  Reject = "Reject",
+  Rejected = "Rejected",
 }
 
 

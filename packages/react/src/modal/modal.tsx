@@ -50,7 +50,7 @@ export const WalletModal = () => {
           content: <ConnectedContent />,
         });
         break;
-      case currentWallet?.walletState === WalletState.Reject:
+      case currentWallet?.walletState === WalletState.Rejected:
         setModalView({
           header: <RejectHeader onBack={gotoWalletList} />,
           content: <RejectContent />,
