@@ -15,12 +15,13 @@ yarn add @interchain-kit/vue
 
 ## Usage
 ### Setup
-#### import css for `@interchain-ui/vue`
+#### import `@interchain-ui/vue` stylesheet.
 `main.ts`
 ```ts
 import "@interchain-ui/vue/style.css";
 ```
 #### import chain registry info that you need
+`App.ts`
 ```vue
 <script setup lang="ts">
 import { ChainProvider } from '@interchain-kit/vue'
