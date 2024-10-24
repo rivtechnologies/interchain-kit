@@ -3,24 +3,36 @@
   <div v-if="visible" @click.self="close">
     <Modal :is-open="true" @close="">
       <ConnectModalHead
-        title="Select your wallet"
+        :title="title"
         :hasCloseButton="true"
         :hasBackButton="hasBack"
         @back="onBack"
         @close="close"
       />
-      <ConnectModalQrcode v-if="hasBack" v-bind="qrCodeProps" />
+      <!----<ConnectModalQrcode v-if="hasBack" v-bind="qrCodeProps" />-->
       <ConnectModalWalletList
-        v-else
+        v-if="!isConnecting"
         :wallets="wallets"
         @wallet-item-click="walletClick"
+      />
+      <ConnectModalStatus 
+        v-else
+        :wallet="{
+          name: connectingWallet.option?.name,
+          prettyName: connectingWallet.option?.prettyName,
+          logo: connectingWallet.option?.logo as string,
+          mobileDisable: true
+        }"
+        :status="'Connecting'"
+        :content-header="'Requesting Connection'"
+        :content-desc="contentDesc"
       />
     </Modal>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { useWalletManager } from '../composables'
 import {
   Box,
@@ -44,8 +56,14 @@ const hasBack = ref(false)
 const visible = ref(false);
 const wallets = ref({
 })
+const isConnecting = ref(false)
+const connectingWallet = ref<any>({})
 
 const walletManager = useWalletManager();
+
+watch(walletManager, (wm) => {
+  console.log('change!!')
+})
 
 onMounted(() => {
   const res = walletManager.wallets.map((w) => {
@@ -61,6 +79,17 @@ onMounted(() => {
   wallets.value = res
 })
 
+const title = computed(() => {
+  let titleStr = 'Select your wallet'
+  if (isConnecting) {
+    titleStr = 'Requesting Connection'
+  }
+  return titleStr
+})
+const contentDesc = computed(() => {
+  return `Open the ${connectingWallet.value?.option?.prettyName} browser extension to connect your wallet.`
+})
+
 const open = () => {
   visible.value = true;
 };
@@ -70,6 +99,8 @@ const close = () => {
 };
 
 const walletClick = async(wallet: any) => {
+  isConnecting.value = true
+  connectingWallet.value = wallet
   await walletManager.connect(wallet?.option.name)
   close()
 }
