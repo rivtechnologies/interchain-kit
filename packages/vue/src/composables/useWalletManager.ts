@@ -1,5 +1,6 @@
-import { inject, Reactive } from 'vue';
 import { WalletManager } from '@interchain-kit/core';
+import { inject, Reactive } from 'vue';
+
 import { WALLET_MANAGER_KEY } from '../utils';
 
 export const useWalletManager = (): Reactive<WalletManager> => {

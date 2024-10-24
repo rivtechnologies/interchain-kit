@@ -68,10 +68,6 @@ const account = ref()
 
 const walletManager = useWalletManager();
 
-watch(walletManager, (wm) => {
-  console.log('change!!')
-})
-
 onMounted(() => {
   const res = walletManager.wallets.map((w) => {
     return ({
@@ -148,10 +144,10 @@ const walletClick = async(wallet: any) => {
   connectingWallet.value = wallet
   try {
     await walletManager.connect(wallet?.option.name)
-    // close()
-    connectStatus.value = WalletState.Connected
-    errorMessage.value = ''
-    setAccount()
+    close()
+    // connectStatus.value = WalletState.Connected
+    // errorMessage.value = ''
+    // setAccount()
   } catch(e: any) {
     connectStatus.value = WalletState.Rejected
     console.error('[wallet connecting error]', e.message)

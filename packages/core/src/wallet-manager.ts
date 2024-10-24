@@ -102,7 +102,7 @@ export class WalletManager {
       setWalletNameToLocalStorage(walletName)
 
     } catch (error: any) {
-      wallet.walletState = WalletState.Reject
+      wallet.walletState = WalletState.Rejected
       wallet.errorMessage = error.message
       throw error
     }

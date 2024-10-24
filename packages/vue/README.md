@@ -15,6 +15,11 @@ yarn add @interchain-kit/vue
 
 ## Usage
 ### Setup
+#### import css for `@interchain-ui/vue`
+`main.ts`
+```ts
+import "@interchain-ui/vue/style.css";
+```
 #### import chain registry info that you need
 ```vue
 <script setup lang="ts">
@@ -46,7 +51,7 @@ import { chain as osmosisTestChain, assetList as osmosisTestAssetList } from "@c
 
 #### or import all chain registry
 `App.ts`
-```ts
+```vue
 <script setup lang="ts">
 import { ChainProvider } from '@interchain-kit/vue';
 import { keplrWallet } from '@interchain-kit/keplr-extension';
@@ -92,31 +97,29 @@ const { address } = useChain(chainName);
 ### useChain
 ```vue
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useChain } from '@interchain-kit/vue';
 
-const chainName = ref('osmosis')
+const chainName = ref('osmosistestnet')
 const { chain, assetList, address, wallet, queryClient, signingClient } = useChain(chainName)
 const balance = ref('0')
 
-watch(queryClient, async(client) => {
-  if (client) {
-    const {balance: bc} =  await queryClient.value.balance({
-      address: address.value,
-      denom: 'uosmo',
-    })
-    balance.value = bc?.amount || '0'
-  }
-})
+const getBalance = async() => {
+  const {balance: bc} =  await queryClient.value.balance({
+    address: address.value,
+    denom: 'uosmo',
+  })
+  balance.value = bc?.amount || '0'
+}
 </script>
 
 <template>
   <div>
-    <div>chain: {{ chain.prettyName }}</div>
-    <div>assetList: {{ assetList?.assets?.length }}</div>
-    <div>address: {{ address }}</div>
-    <div>wallet: {{ wallet?.option?.prettyName }}</div>
-    <div>balance: {{ balance }}</div>
+		<div>chain: {{ chain.prettyName }}</div>
+		<div>assetList: {{ assetList?.assets?.length }}</div>
+		<div>address: {{ address }}</div>
+		<div>wallet: {{ wallet?.option?.prettyName }}</div>
+    <div>balance: {{ balance }}</div> <button @click="getBalance">getBalance</button>
   </div>
 </template>
 
@@ -126,7 +129,7 @@ watch(queryClient, async(client) => {
 
 ### useChainWallet
 `App.ts`
-```ts
+```vue
 <script setup lang="ts">
 import { ChainProvider } from '@interchain-kit/vue'
 import { keplrWallet } from '@interchain-kit/keplr-extension';
@@ -188,7 +191,6 @@ const connectLeap = async() => {
 
 <style scoped>
 </style>
-
 ```
 
 ### useCurrentWallet
@@ -220,15 +222,21 @@ console.log(offlineSigner.value) // cosmoshub offlineSigner in keplr-extension w
 
 ### useChains
 
-```js
+```ts
 WIP
 ```
 
 
 ## Developing
 
+When first cloning the repo, under project root directory:
+```bash
+yarn
 ```
-WIP
+Change directory to `packages/vue`
+```
+# build the prod packages. When devs would like to navigate to the source code, this will only navigate from references to their definitions (.d.ts files) between packages.
+yarn build
 ```
 
 ## Related
@@ -245,7 +253,7 @@ Checkout these related projects:
 
 ## Credits
 
-🛠 Built by Cosmology — if you like our tools, please consider delegating to [our validator ⚛️](https://cosmology.zone/validator)
+🛠 Built by Cosmology — if you like our tools, please consider delegating to [our validator ⚛️](https://cosmology.zone/validator)
 
 
 ## Disclaimer

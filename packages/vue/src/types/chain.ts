@@ -1,11 +1,11 @@
-import { HttpEndpoint } from '@interchainjs/types';
-import { CosmWasmSigningClient } from 'interchainjs/cosmwasm';
-import { InjSigningClient } from '@interchainjs/injective/signing-client';
-import { SigningClient } from 'interchainjs/signing-client';
-import { RpcQuery } from 'interchainjs/query/rpc';
-import { CosmosSigningClient } from 'interchainjs/cosmos';
-import { Chain, AssetList } from '@chain-registry/v2-types';
+import { AssetList,Chain } from '@chain-registry/v2-types';
 import { BaseWallet, WalletState } from '@interchain-kit/core';
+import { InjSigningClient } from '@interchainjs/injective/signing-client';
+import { HttpEndpoint } from '@interchainjs/types';
+import { CosmosSigningClient } from 'interchainjs/cosmos';
+import { CosmWasmSigningClient } from 'interchainjs/cosmwasm';
+import { RpcQuery } from 'interchainjs/query/rpc';
+import { SigningClient } from 'interchainjs/signing-client';
 import { ComputedRef, Ref } from 'vue';
 
 export type CosmosKitUseChainReturnType = {

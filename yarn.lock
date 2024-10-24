@@ -1218,31 +1218,6 @@
     interchainjs "0.0.1-beta.14"
     long "^5.2.3"
 
-"@interchain-kit/core@0.0.1-beta.28":
-  version "0.0.1-beta.28"
-  resolved "https://registry.yarnpkg.com/@interchain-kit/core/-/core-0.0.1-beta.28.tgz#a8b73d8a4bd5753a0ba4a32c75982d48753a62d6"
-  integrity sha512-AhslC4fklg8Wn+VRGPieIJNP1XZgbKHIMlJPgC1B5Yr6JUUVHSLJ5ne9m/suUXqYg0Qh1m4XF+HSOMmJK1q1TQ==
-  dependencies:
-    "@chain-registry/v2" "^1.71.1"
-    "@chain-registry/v2-keplr" "^0.0.2"
-    "@chain-registry/v2-types" "^0.53.0"
-    "@cosmjs/amino" "^0.32.3"
-    "@cosmjs/cosmwasm-stargate" "^0.32.4"
-    "@cosmjs/proto-signing" "^0.32.3"
-    "@cosmjs/stargate" "^0.32.4"
-    "@interchainjs/cosmos-types" "0.0.1-beta.9"
-    "@interchainjs/injective" "0.0.1-beta.13"
-    "@ledgerhq/hw-app-cosmos" "^6.30.0"
-    "@ledgerhq/hw-transport" "^6.31.0"
-    "@ledgerhq/hw-transport-webhid" "^6.29.0"
-    "@ledgerhq/hw-transport-webusb" "^6.29.0"
-    "@walletconnect/sign-client" "^2.16.1"
-    "@walletconnect/types" "2.13.3"
-    axios "^1.7.7"
-    buffer "^6.0.3"
-    interchainjs "0.0.1-beta.14"
-    long "^5.2.3"
-
 "@interchain-ui/react@1.24.0":
   version "1.24.0"
   resolved "https://registry.yarnpkg.com/@interchain-ui/react/-/react-1.24.0.tgz#a18b31c7dab820aa88dc3ef407423526f8e76052"

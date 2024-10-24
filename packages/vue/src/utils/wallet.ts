@@ -1,4 +1,4 @@
-import { BaseWallet } from "@interchain-kit/core"
+import { BaseWallet } from '@interchain-kit/core';
 
 export const getWalletInfo = (wallet: BaseWallet) => {
   return {
@@ -6,5 +6,5 @@ export const getWalletInfo = (wallet: BaseWallet) => {
     prettyName: wallet.option.prettyName,
     logo: wallet.option.logo as string,
     mobileDisabled: true,
-  }
-}
+  };
+};

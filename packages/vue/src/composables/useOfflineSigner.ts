@@ -1,18 +1,19 @@
 import { OfflineSigner } from '@interchainjs/cosmos/types/wallet';
-import { useWalletManager } from "./useWalletManager"
-import { Ref, ref, watch } from 'vue'
+import { Ref, ref, watch } from 'vue';
+
+import { useWalletManager } from './useWalletManager';
 
 export const useOfflineSigner = (chainName: Ref<string>, walletName: Ref<string>) => {
-	const walletManager = useWalletManager()
-	const offlineSigner = ref<OfflineSigner>()
+  const walletManager = useWalletManager();
+  const offlineSigner = ref<OfflineSigner>();
 
-	const _setValues = () => {
-		const wallet = walletManager.wallets.find((w) => w.option.name === walletName.value)
+  const _setValues = () => {
+    const wallet = walletManager.wallets.find((w) => w.option.name === walletName.value);
 
-		offlineSigner.value = walletManager.getOfflineSigner(wallet, chainName.value)
-	}
-	watch([chainName, walletName], _setValues)
-	_setValues()
+    offlineSigner.value = walletManager.getOfflineSigner(wallet, chainName.value);
+  };
+  watch([chainName, walletName, walletManager], _setValues);
+  _setValues();
 
-	return offlineSigner
-}
+  return offlineSigner;
+};
