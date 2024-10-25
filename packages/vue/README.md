@@ -116,10 +116,10 @@ const getBalance = async() => {
 
 <template>
   <div>
-		<div>chain: {{ chain.prettyName }}</div>
-		<div>assetList: {{ assetList?.assets?.length }}</div>
-		<div>address: {{ address }}</div>
-		<div>wallet: {{ wallet?.option?.prettyName }}</div>
+    <div>chain: {{ chain.prettyName }}</div>
+    <div>assetList: {{ assetList?.assets?.length }}</div>
+    <div>address: {{ address }}</div>
+    <div>wallet: {{ wallet?.option?.prettyName }}</div>
     <div>balance: {{ balance }}</div> <button @click="getBalance">getBalance</button>
   </div>
 </template>
@@ -174,10 +174,10 @@ const stargaze = useChainWallet(stargazeChainName, leapWalletName);
 const walletManager = useWalletManager()
 	
 const connectKeplr = async() => {
-    await walletManager.connect('keplr-extension')
+  await walletManager.connect('keplr-extension')
 }
 const connectLeap = async() => {
-    await walletManager.connect('leap-extension')
+  await walletManager.connect('leap-extension')
 }
 </script>
 
@@ -199,7 +199,6 @@ const connectLeap = async() => {
 const wallet = useCurrentWallet()
 
 console.log(wallet.value) // current connected wallet
-
 ```
 
 ### useAccount
@@ -209,7 +208,6 @@ const walletName = ref('keplr-extension')
 const account = useAccount(chainName, walletName)
 
 console.log(account.value.address) // cosmoshub address in keplr-extension wallet
-
 ```
 
 ### useOfflineSigner
@@ -227,15 +225,11 @@ console.log(offlineSigner.value) // cosmoshub offlineSigner in keplr-extension w
 WIP
 ```
 
-
 ## Developing
 
-When first cloning the repo, under project root directory:
+When first cloning the repo, under project root directory run:
 ```bash
 yarn
-```
-Change directory to `packages/vue`
-```
 # build the prod packages. When devs would like to navigate to the source code, this will only navigate from references to their definitions (.d.ts files) between packages.
 yarn build
 ```

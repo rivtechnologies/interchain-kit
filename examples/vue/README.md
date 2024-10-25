@@ -90,7 +90,7 @@ const { address } = useChain(chainName);
 ```
 
 ### useChain
-```js
+```vue
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useChain } from '@interchain-kit/vue';
