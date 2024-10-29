@@ -5,7 +5,7 @@ import { AssetList, Chain } from "@chain-registry/v2-types";
 import { useCurrentWallet } from './useCurrentWallet';
 import { useInterchainClient } from './useInterchainClient';
 import { useWalletModal } from "../modal";
-import { ChainNameNotExist } from "@interchain-kit/core";
+import { ChainNameNotExist, WalletState } from "@interchain-kit/core";
 import { useCallback } from "react";
 
 
@@ -34,7 +34,7 @@ export const useChain = (chainName: string): UseChainReturnType => {
 
   const cosmosKitUserChainReturnType: CosmosKitUseChainReturnType = {
     connect: () => {
-      if (currentWallet) {
+      if (currentWallet?.walletState === WalletState.Connected) {
         return
       }
       open()

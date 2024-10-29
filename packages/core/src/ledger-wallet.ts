@@ -1,6 +1,6 @@
 import { StdSignDoc } from '@interchainjs/types';
 import { BaseWallet } from "./base-wallet";
-import { WalletAccount, SimpleAccount, SignOptions, DirectSignDoc, BroadcastMode } from "./types";
+import { WalletAccount, SimpleAccount, SignOptions, DirectSignDoc, BroadcastMode, Wallet } from "./types";
 import Transport from "@ledgerhq/hw-transport";
 import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import { chains } from "@chain-registry/v2";
@@ -13,6 +13,7 @@ import {
   AminoSignResponse,
   StdSignature
 } from '@interchainjs/cosmos/types/wallet';
+import { LedgerConnectIcon } from './constant';
 
 export class LedgerWallet extends BaseWallet {
 
@@ -22,10 +23,21 @@ export class LedgerWallet extends BaseWallet {
   chainIdToBech32Prefix: Record<string, string> = {}
   hidSupported: boolean = false
 
+  constructor(info?: Wallet) {
+
+    const defaultWalletConnectInfo: Wallet = {
+      name: 'LedgerWallet',
+      prettyName: 'Ledger Connect',
+      mode: 'ledger',
+      logo: LedgerConnectIcon
+    }
+
+    super({ ...defaultWalletConnectInfo, ...info })
+  }
+
   async init(meta?: unknown): Promise<void> {
 
     this.cosmosPath = '44\'/118\'/0\'/0/0';
-
 
     chains.forEach(c => {
       this.chainIdToBech32Prefix[c.chainId] = c.bech32Prefix;
@@ -40,9 +52,12 @@ export class LedgerWallet extends BaseWallet {
   }
 
   async connect(chainId: string | string[]): Promise<void> {
-    const transport = await TransportWebHID.create();
-    this.cosmos = new Cosmos(transport)
-    this.transport = transport;
+    try {
+      this.transport = await TransportWebHID.create()
+      this.cosmos = new Cosmos(this.transport)
+    } catch (error) {
+      this.errorMessage = (error as any).message;
+    }
   }
 
   async disconnect(chainId: string | string[]): Promise<void> {
@@ -61,7 +76,7 @@ export class LedgerWallet extends BaseWallet {
     }
 
     try {
-      const { address, publicKey } = await this.cosmos.getAddress(this.cosmosPath, prefix)
+      const { publicKey, address } = await this.cosmos.getAddress(this.cosmosPath, prefix);
       return {
         username: this.cosmosPath || '',
         address,
@@ -70,10 +85,16 @@ export class LedgerWallet extends BaseWallet {
         isNanoLedger: true,
       };
     } catch (error) {
+      if ((error as any).message.includes("Ledger Device is busy")) {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            const account = this.getAccount(chainId)
+            resolve(account)
+          }, 500)
+        })
+      }
       this.errorMessage = (error as any).message;
     }
-
-
   }
 
   getAccounts(chainIds: string[]): Promise<WalletAccount[]> {
@@ -91,15 +112,34 @@ export class LedgerWallet extends BaseWallet {
   }
 
   getOfflineSignerAmino(chainId: string): OfflineAminoSigner {
-    throw new Error("Method not implemented.");
+    return {
+      getAccounts: async () => [await this.getAccount(chainId)],
+      signAmino: async (signer, signDoc) => this.signAmino(chainId, signer, signDoc, {}),
+    }
   }
 
   getOfflineSignerDirect(chainId: string): OfflineDirectSigner {
     throw new Error("Method not implemented.");
   }
 
-  signAmino(chainId: string, signer: string, signDoc: StdSignDoc, signOptions?: SignOptions): Promise<AminoSignResponse> {
-    throw new Error("Method not implemented.");
+  async signAmino(chainId: string, signer: string, signDoc: StdSignDoc, signOptions?: SignOptions): Promise<AminoSignResponse> {
+    const response = await this.cosmos.sign(this.cosmosPath, JSON.stringify(signDoc));
+    if (response.return_code !== 0x9000) {
+      throw new Error("Failed to sign transaction on Ledger device");
+    }
+
+    const account = await this.getAccount(chainId);
+
+    return {
+      signed: signDoc,
+      signature: {
+        pub_key: {
+          type: "tendermint/PubKeySecp256k1",
+          value: Buffer.from(account.pubkey).toString("base64"),
+        },
+        signature: Buffer.from(response.signature).toString("base64"),
+      },
+    };
   }
 
   signArbitrary(chainId: string, signer: string, data: string | Uint8Array): Promise<StdSignature> {

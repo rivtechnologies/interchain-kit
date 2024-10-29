@@ -16,7 +16,7 @@ import { stationWallet } from "@interchain-kit/station-extension";
 import { galaxyStationWallet } from "@interchain-kit/galaxy-station-extension";
 import { okxWallet } from "@interchain-kit/okx-extension";
 import { coin98Wallet } from "@interchain-kit/coin98-extension";
-import { ledgerWallet } from "@interchain-kit/ledger";
+import { Ledger, ledgerWallet } from "@interchain-kit/ledger";
 
 import { MockWallet } from "@interchain-kit/mock-wallet";
 import { starshipChain, starshipChain1 } from "./utils/starship.ts";
@@ -34,6 +34,8 @@ const chainNames = [
 // const chainNames = ["cosmoshub"];
 
 const walletConnect = new WCWallet();
+
+const ledgerConnect = new Ledger();
 
 const wallet1Mnemonic =
   "among machine material tide surround boy ramp nuclear body hover among address";
@@ -65,12 +67,13 @@ const mock2Wallet = new MockWallet(wallet2Mnemonic, _chains, {
 const _wallets: BaseWallet[] = [
   // mock1Wallet,
   // mock2Wallet,
-  keplrWallet,
-  leapWallet,
+  // keplrWallet,
+  // leapWallet,
   // cosmostationWallet,
   // stationWallet,
   // galaxyStationWallet,
   // walletConnect,
+  ledgerConnect,
 ];
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
