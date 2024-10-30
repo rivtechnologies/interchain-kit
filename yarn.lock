@@ -1278,10 +1278,10 @@
     react-stately "^3.31.1"
     zustand "^4.5.4"
 
-"@interchain-ui/vue@1.3.5", "@interchain-ui/vue@^1.3.5":
-  version "1.3.5"
-  resolved "https://registry.yarnpkg.com/@interchain-ui/vue/-/vue-1.3.5.tgz#cba6cf000e108f02f4f78822d809aab9fc50d4e7"
-  integrity sha512-PxtLBAZYdmdoAugbXwOJTZfKlajoBSP/OuoYUY6FtKfmGtWLTYP3uvme4nCRyyXBUQZ+BM+ZFuZpaVCRBG4ZfA==
+"@interchain-ui/vue@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@interchain-ui/vue/-/vue-1.4.0.tgz#4778c1c83b04ea30e45478c27d5a4aa665dc22f4"
+  integrity sha512-xzPg9cS/1O5aXlCpt+VXSHJb0eMs+xcfmFeYHnPJDbmmiBshuXaxWHPKNBXwfc3Am6dj01h7+Kp3VfIZOFWFWQ==
   dependencies:
     "@ark-ui/vue" "^3.13.0"
     "@floating-ui/dom" "^1.6.10"

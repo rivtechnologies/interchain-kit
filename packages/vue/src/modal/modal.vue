@@ -6,7 +6,7 @@
       :hasCloseButton="true"
       :hasBackButton="hasBack"
       @back="_reset"
-      @close="close"
+      :closeButtonProps="closeButtonProps"
     />
     <!----<ConnectModalQrcode v-if="hasBack" v-bind="qrCodeProps" />-->
     <ConnectModalWalletList
@@ -138,6 +138,10 @@ const close = () => {
   // reset
   _reset()
 };
+
+const closeButtonProps = {
+  onClick: close
+}
 
 const walletClick = async(wallet: any) => {
   connectStatus.value = WalletState.Connecting
