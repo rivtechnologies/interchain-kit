@@ -35,10 +35,10 @@
     "@chain-registry/v2-types": "^0.53.0",
     "@interchain-kit/core": "0.0.1-beta.33",
     "@interchain-ui/react": "1.24.0",
-    "@interchainjs/cosmos-types": "0.0.1-beta.16",
+    "@interchainjs/cosmos-types": "0.0.1-beta.17",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "interchainjs": "0.0.1-beta.26",
+    "interchainjs": "0.0.1-beta.27",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
