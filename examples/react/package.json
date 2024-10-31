@@ -18,8 +18,8 @@
     }
   },
   "dependencies": {
-    "@chain-registry/v2": "^1.65.15",
-    "@chain-registry/v2-types": "^0.49.15",
+    "@chain-registry/v2": "^1.71.16",
+    "@chain-registry/v2-types": "^0.53.0",
     "@cosmjs/crypto": "^0.32.4",
     "@cosmjs/proto-signing": "^0.32.4",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",

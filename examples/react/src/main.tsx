@@ -72,8 +72,8 @@ const _wallets: BaseWallet[] = [
   // cosmostationWallet,
   // stationWallet,
   // galaxyStationWallet,
-  // walletConnect,
-  ledgerConnect,
+  walletConnect,
+  // ledgerConnect,
 ];
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

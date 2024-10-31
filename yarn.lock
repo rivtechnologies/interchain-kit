@@ -383,11 +383,6 @@
     "@types/semver" "^7.5.8"
     semver "^7.5.0"
 
-"@chain-registry/v2-types@^0.49.15":
-  version "0.49.15"
-  resolved "https://registry.npmjs.org/@chain-registry/v2-types/-/v2-types-0.49.15.tgz"
-  integrity sha512-joBt2TP/X4HyHCz8hp+uKvkmRxamPlMcpQr55WK9drsSqJTvT/DkcrAWzAbJ3YhXX8ZD7henf6KWFgcpl4cPKA==
-
 "@chain-registry/v2-types@^0.49.20":
   version "0.49.20"
   resolved "https://registry.npmjs.org/@chain-registry/v2-types/-/v2-types-0.49.20.tgz"
@@ -420,13 +415,6 @@
   dependencies:
     "@chain-registry/v2-types" "^0.49.8"
 
-"@chain-registry/v2@^1.65.15":
-  version "1.65.15"
-  resolved "https://registry.npmjs.org/@chain-registry/v2/-/v2-1.65.15.tgz"
-  integrity sha512-04xSK8UkFFh+2WjzDSus79dZBNX6E0wKjg/7y0AcQxUTLm8ZUkSMRhSadqgkj9WkDdph9lc8DgcXsr1GouCJjw==
-  dependencies:
-    "@chain-registry/v2-types" "^0.49.15"
-
 "@chain-registry/v2@^1.65.20":
   version "1.65.20"
   resolved "https://registry.npmjs.org/@chain-registry/v2/-/v2-1.65.20.tgz"
@@ -445,6 +433,13 @@
   version "1.71.1"
   resolved "https://registry.yarnpkg.com/@chain-registry/v2/-/v2-1.71.1.tgz#6ab219e4203d51785933811f2a90bacc071da002"
   integrity sha512-1CH9Qr+jCIaaBAUrCzAMqBIIBxtyx+KgH/FGog41iNr1Wo1A13nxmkryg7NhZ6aQBw4smVDRVIrO2SzaQk4HdA==
+  dependencies:
+    "@chain-registry/v2-types" "^0.53.0"
+
+"@chain-registry/v2@^1.71.16":
+  version "1.71.16"
+  resolved "https://registry.yarnpkg.com/@chain-registry/v2/-/v2-1.71.16.tgz#1b61512a17569fa660c1509f082e11c9e1b3bc8f"
+  integrity sha512-xD8YogsZD9rFxIAzVWQCwxDH1kDyhuxQsWpjlKIn1u6A/Ra3gIZElBgpcPiE4mYXhnvYXlDF8h842ikIm1egow==
   dependencies:
     "@chain-registry/v2-types" "^0.53.0"
 
@@ -1200,6 +1195,17 @@
     react-stately "^3.31.1"
     zustand "^4.5.4"
 
+"@interchainjs/auth@0.0.1-alpha.31":
+  version "0.0.1-alpha.31"
+  resolved "https://registry.yarnpkg.com/@interchainjs/auth/-/auth-0.0.1-alpha.31.tgz#233ab8135881bdfac4d8bd1ace520d8834f26b00"
+  integrity sha512-j1YSla8djM3ASiMTKbdDehoOkNeqwqzjTz3+0wkAsImE+LfrMp5mWoUJdaBH6wdgaJR/k2xDsv4+4sxgrPhl9A==
+  dependencies:
+    "@interchainjs/types" "0.0.1-alpha.31"
+    "@interchainjs/utils" "0.0.1-alpha.31"
+    "@noble/curves" "^1.1.0"
+    "@noble/hashes" "^1.3.1"
+    ethers "^6.5.1"
+
 "@interchainjs/auth@^0.0.1-beta.10":
   version "0.0.1-beta.10"
   resolved "https://registry.yarnpkg.com/@interchainjs/auth/-/auth-0.0.1-beta.10.tgz#870aa326e445e86a44763addf2c1307a8d56613a"
@@ -1222,10 +1228,18 @@
     "@noble/hashes" "^1.3.1"
     ethers "^6.5.1"
 
-"@interchainjs/cosmos-types@0.0.1-beta.16", "@interchainjs/cosmos-types@^0.0.1-beta.16":
-  version "0.0.1-beta.16"
-  resolved "https://registry.yarnpkg.com/@interchainjs/cosmos-types/-/cosmos-types-0.0.1-beta.16.tgz#412f24ec535594b292f15360da973922159847dc"
-  integrity sha512-thnt36yKpZnh3sVWv6b0bceFg6RmpEBN6Nt2qQhJSlJ4yUgMb5OwN8meP4KYoAGV6aDQRLNoD2Qe4bXtHQhH8A==
+"@interchainjs/cosmos-types@0.0.1-alpha.31":
+  version "0.0.1-alpha.31"
+  resolved "https://registry.yarnpkg.com/@interchainjs/cosmos-types/-/cosmos-types-0.0.1-alpha.31.tgz#9632988dc311c66e13b89c8f78c0f6fda23a2940"
+  integrity sha512-Oqwfkqq4tbohnGrC8ae5n0zZTl41Ht1v+kkk89I/V8y44ZL6GL/2xz6izSf7qc2B/BXRY9ASakygAdZjABIFDA==
+  dependencies:
+    "@interchainjs/types" "0.0.1-alpha.31"
+    "@interchainjs/utils" "0.0.1-alpha.31"
+
+"@interchainjs/cosmos-types@0.0.1-beta.17", "@interchainjs/cosmos-types@^0.0.1-beta.17":
+  version "0.0.1-beta.17"
+  resolved "https://registry.yarnpkg.com/@interchainjs/cosmos-types/-/cosmos-types-0.0.1-beta.17.tgz#8105b8be6083213a1d29a847cd936fd3e5c9017d"
+  integrity sha512-hgSSRRgSuvjg6ehkSsvjtXL1o+4sVJrAUgGXiGyyAE7BkdD8YJStYOuuikUXPb0wBY14qS77tguMK2AjLwL6Mg==
   dependencies:
     "@interchainjs/types" "^0.0.1-beta.15"
     "@interchainjs/utils" "^0.0.1-beta.15"
@@ -1238,15 +1252,30 @@
     "@interchainjs/types" "^0.0.1-beta.9"
     "@interchainjs/utils" "^0.0.1-beta.9"
 
-"@interchainjs/cosmos@0.0.1-beta.19", "@interchainjs/cosmos@^0.0.1-beta.19":
-  version "0.0.1-beta.19"
-  resolved "https://registry.yarnpkg.com/@interchainjs/cosmos/-/cosmos-0.0.1-beta.19.tgz#feaedd121ce4641220dd11663b73e2d6b068f550"
-  integrity sha512-ioYwSmlhyqnKDHDUm/wbWe0psLRVsplTa75vvsjJPrrIvUusx0FEcngNidaeMBcHht0EV3Nw9xTAXB2M3sVD5A==
+"@interchainjs/cosmos@0.0.1-alpha.31":
+  version "0.0.1-alpha.31"
+  resolved "https://registry.yarnpkg.com/@interchainjs/cosmos/-/cosmos-0.0.1-alpha.31.tgz#49a2a693a4f3500b7c16d8476d8ebe4e1b83707b"
+  integrity sha512-hcVoPchcFROQaSw184YIeh8b9ppCh5nyZuu9tMZrLnsisfB3wm66SoovDqKIYU+ia2/glNKKQ8JJaEa6YyAQRg==
+  dependencies:
+    "@chain-registry/v2" "^1.65.6"
+    "@chain-registry/v2-types" "^0.49.6"
+    "@interchainjs/auth" "0.0.1-alpha.31"
+    "@interchainjs/cosmos-types" "0.0.1-alpha.31"
+    "@interchainjs/types" "0.0.1-alpha.31"
+    "@interchainjs/utils" "0.0.1-alpha.31"
+    "@noble/curves" "^1.1.0"
+    "@noble/hashes" "^1.3.1"
+    decimal.js "^10.4.3"
+
+"@interchainjs/cosmos@0.0.1-beta.20", "@interchainjs/cosmos@^0.0.1-beta.20":
+  version "0.0.1-beta.20"
+  resolved "https://registry.yarnpkg.com/@interchainjs/cosmos/-/cosmos-0.0.1-beta.20.tgz#c855d384c52b4ec4afbe9576d63a655931858638"
+  integrity sha512-ya6UEekkODXozFKCLmlacJkEi7+AsUkQ0wH62qSN76g8YXumO0HeZNEYMv07pvjRmObesjF/iF24BX0sZqY6Mg==
   dependencies:
     "@chain-registry/v2" "^1.65.6"
     "@chain-registry/v2-types" "^0.49.6"
     "@interchainjs/auth" "^0.0.1-beta.16"
-    "@interchainjs/cosmos-types" "^0.0.1-beta.16"
+    "@interchainjs/cosmos-types" "^0.0.1-beta.17"
     "@interchainjs/types" "^0.0.1-beta.15"
     "@interchainjs/utils" "^0.0.1-beta.15"
     "@noble/curves" "^1.1.0"
@@ -1294,6 +1323,13 @@
     decimal.js "^10.4.3"
     interchainjs "^0.0.1-beta.14"
 
+"@interchainjs/types@0.0.1-alpha.31":
+  version "0.0.1-alpha.31"
+  resolved "https://registry.yarnpkg.com/@interchainjs/types/-/types-0.0.1-alpha.31.tgz#d31ca008e1af09c398fbb2af72a7f97e5f346f47"
+  integrity sha512-AvzxXvMy6EX330eCijoBfIPvjCavz7GafZEOjrYxldNkcrDISYftbWujpHUX9cH4lJM1t5wRmixn5e4C7uURmw==
+  dependencies:
+    decimal.js "^10.4.3"
+
 "@interchainjs/types@^0.0.1-beta.15":
   version "0.0.1-beta.15"
   resolved "https://registry.yarnpkg.com/@interchainjs/types/-/types-0.0.1-beta.15.tgz#17ff04e2910f902749f7267028728dd7bef3f6de"
@@ -1307,6 +1343,14 @@
   integrity sha512-/cASSQb5npnYPu55nYqSw5leSkCkNSWTsUeCg8PzOvkDFYjSkRh3UIjYEenFRtkJXRIMqrfkfpzjMXQ6WU/tug==
   dependencies:
     decimal.js "^10.4.3"
+
+"@interchainjs/utils@0.0.1-alpha.31":
+  version "0.0.1-alpha.31"
+  resolved "https://registry.yarnpkg.com/@interchainjs/utils/-/utils-0.0.1-alpha.31.tgz#5972f3cfa4d7da62eca6a0141ea0a90e6b2f56fc"
+  integrity sha512-ktvXZMBH9ApeyZ0sBM64ApfuTV3QphPJj7BPti+ta5Y2TnVSZfZ95rVPCA/jF+Hl6EdJebCHxGT3uENe2OSVdA==
+  dependencies:
+    "@interchainjs/types" "0.0.1-alpha.31"
+    bech32 "^2.0.0"
 
 "@interchainjs/utils@^0.0.1-beta.15":
   version "0.0.1-beta.15"
@@ -7607,6 +7651,18 @@ inquirerer@^1.9.0:
     js-yaml "^4.1.0"
     minimist "^1.2.8"
 
+interchainjs@0.0.1-alpha.31:
+  version "0.0.1-alpha.31"
+  resolved "https://registry.yarnpkg.com/interchainjs/-/interchainjs-0.0.1-alpha.31.tgz#d36fefb5fecdafd92b4b959a15966fbe7b2db0b3"
+  integrity sha512-JHndMvubwwqBgdC3v76J6BRNIWm0b9e0dXCP9ye4qv79RWBtDR0oIX00sr7OtTUy6Sxa4n8Fll5+02l3257ldA==
+  dependencies:
+    "@interchainjs/cosmos" "0.0.1-alpha.31"
+    "@interchainjs/cosmos-types" "0.0.1-alpha.31"
+    "@interchainjs/types" "0.0.1-alpha.31"
+    "@interchainjs/utils" "0.0.1-alpha.31"
+    "@noble/hashes" "^1.3.1"
+    decimal.js "^10.4.3"
+
 interchainjs@0.0.1-beta.14, interchainjs@^0.0.1-beta.14:
   version "0.0.1-beta.14"
   resolved "https://registry.yarnpkg.com/interchainjs/-/interchainjs-0.0.1-beta.14.tgz#e50cbd517f1ece662355d437eee3b1a8ae9c9176"
@@ -7619,13 +7675,13 @@ interchainjs@0.0.1-beta.14, interchainjs@^0.0.1-beta.14:
     "@noble/hashes" "^1.3.1"
     decimal.js "^10.4.3"
 
-interchainjs@0.0.1-beta.26:
-  version "0.0.1-beta.26"
-  resolved "https://registry.yarnpkg.com/interchainjs/-/interchainjs-0.0.1-beta.26.tgz#4c5c0911017fcb566ead6b974bc1c5535db0b1eb"
-  integrity sha512-DkKEKotfcOrZqGmyOMnk/sXfjEeKkd4gelgPb7TIyWHDb4/fsDlhU9B/0yUYhV8p/zpPnzmyd2CPsWsZYTyJeQ==
+interchainjs@0.0.1-beta.27:
+  version "0.0.1-beta.27"
+  resolved "https://registry.yarnpkg.com/interchainjs/-/interchainjs-0.0.1-beta.27.tgz#423b496ebfccf255bec2131e5a7f2019cafe85df"
+  integrity sha512-I9H5zUNZ+aYFjz1AP9yJgV6I/CzLmBYWuFH0DQVaSwLIdrJe+pOHCg1MyoNElBrBn4vXuERoz0MqfCsLbHbAiQ==
   dependencies:
-    "@interchainjs/cosmos" "^0.0.1-beta.19"
-    "@interchainjs/cosmos-types" "^0.0.1-beta.16"
+    "@interchainjs/cosmos" "^0.0.1-beta.20"
+    "@interchainjs/cosmos-types" "^0.0.1-beta.17"
     "@interchainjs/types" "^0.0.1-beta.15"
     "@interchainjs/utils" "^0.0.1-beta.15"
     "@noble/hashes" "^1.3.1"

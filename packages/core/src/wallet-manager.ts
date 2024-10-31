@@ -72,27 +72,33 @@ export class WalletManager {
       throw new WalletNotExist(walletName)
     }
 
+    this.currentWalletName = walletName
     wallet.errorMessage = ''
     wallet.walletState = WalletState.Connecting
 
     try {
-      await Promise.all(this.chains.map(async chain => {
-        try {
-          await wallet.connect(chain.chainId)
-        } catch (error) {
-          if (
-            (error as any).message === `There is no chain info for ${chain.chainId}` ||
-            (error as any).message === `There is no modular chain info for ${chain.chainId}`
-          ) {
-            const chainInfo = chainRegistryChainToKeplr(chain, this.assetLists)
-            await wallet.addSuggestChain(chainInfo)
-          } else {
-            throw error
-          }
-        }
-      }))
 
-      this.currentWalletName = walletName
+
+      if (wallet.info.mode === 'extension') {
+        await Promise.all(this.chains.map(async chain => {
+          try {
+            await wallet.connect(chain.chainId)
+          } catch (error) {
+            if (
+              (error as any).message === `There is no chain info for ${chain.chainId}` ||
+              (error as any).message === `There is no modular chain info for ${chain.chainId}`
+            ) {
+              const chainInfo = chainRegistryChainToKeplr(chain, this.assetLists)
+              await wallet.addSuggestChain(chainInfo)
+            } else {
+              throw error
+            }
+          }
+        }))
+      } else {
+        await wallet.connect(this.chains.map(chain => chain.chainId))
+      }
+
       wallet.walletState = WalletState.Connected
 
       setWalletNameToLocalStorage(walletName)
