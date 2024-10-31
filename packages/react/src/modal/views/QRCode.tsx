@@ -9,11 +9,11 @@ export const QRCodeHeader = ({ onBack }: { onBack: () => void }) => {
   const { close } = useWalletModal();
   return (
     <ConnectModalHead
-      title={currentWallet?.option?.prettyName || ""}
+      title={currentWallet?.info?.prettyName || ""}
       hasBackButton={true}
       onClose={() => void 0}
       onBack={async () => {
-        await walletManager.disconnect(currentWallet?.option?.name || "");
+        await walletManager.disconnect(currentWallet?.info?.name || "");
         onBack();
       }}
       closeButtonProps={{ onClick: close }}
@@ -32,7 +32,7 @@ export const QRCodeContent = () => {
       description={"Open App to connect"}
       errorTitle={"errorTitle"}
       errorDesc={currentWallet.errorMessage || ""}
-      onRefresh={() => walletManager.connect(currentWallet?.option?.name || "")}
+      onRefresh={() => walletManager.connect(currentWallet?.info?.name || "")}
     />
   );
 };

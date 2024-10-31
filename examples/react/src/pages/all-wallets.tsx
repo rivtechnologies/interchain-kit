@@ -1,16 +1,14 @@
 import { assetLists, chains } from "@chain-registry/v2";
-import { BaseWallet, WalletState, WCWallet } from "@interchain-kit/core";
-import {
-  useChainWallet,
-  useConfig,
-  useWalletManager,
-} from "@interchain-kit/react";
-import { useEffect, useRef, useState } from "react";
-import { creditFromStarship, makeKeplrChainInfo } from "../utils";
+import { BaseWallet, WCWallet } from "@interchain-kit/core";
+import { useChainWallet, useWalletManager } from "@interchain-kit/react";
+import { useRef, useState } from "react";
+import { makeKeplrChainInfo } from "../utils";
 import { Chain, Asset } from "@chain-registry/v2-types";
 import { coins } from "@cosmjs/amino";
 import { ChainInfo } from "@keplr-wallet/types";
+import { createGetBalance } from "interchainjs/cosmos/bank/v1beta1/query.rpc.func";
 import QRCode from "react-qr-code";
+import { createSend } from "interchainjs/cosmos/bank/v1beta1/tx.rpc.func";
 
 type BalanceProps = {
   address: string;
@@ -21,43 +19,23 @@ type BalanceProps = {
 };
 
 const BalanceTd = ({ address, wallet, chain }: BalanceProps) => {
-  const [balance, setBalance] = useState<string | undefined>("");
-  const { queryClient, isLoading } = useChainWallet(
+  const { rpcEndpoint } = useChainWallet(
     chain.chainName,
-    wallet.option?.name as string
+    wallet.info?.name as string
   );
 
-  useEffect(() => {
-    if (
-      address &&
-      wallet &&
-      chain &&
-      wallet.walletState === "Connected" &&
-      !isLoading
-    ) {
-      getBalance();
-    }
-  }, [address, wallet, chain, isLoading]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [balance, setBalance] = useState<any>();
 
-  const getBalance = async () => {
-    try {
-      const { balance } = await queryClient.balance({
-        address,
-        denom: chain.staking?.stakingTokens[0].denom as string,
-      });
-      setBalance(balance?.amount);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleFaucet = async () => {
-    await creditFromStarship(
-      "http://localhost:8003/credit",
+  const handleBalanceQuery = async () => {
+    setIsLoading(true);
+    const balanceQuery = createGetBalance(rpcEndpoint as string);
+    const balance = await balanceQuery({
       address,
-      chain.staking?.stakingTokens[0].denom as string
-    );
-    await getBalance();
+      denom: chain.staking?.stakingTokens[0].denom as string,
+    });
+    setBalance(balance);
+    setIsLoading(false);
   };
 
   if (isLoading) {
@@ -67,18 +45,13 @@ const BalanceTd = ({ address, wallet, chain }: BalanceProps) => {
   return (
     <td>
       <div>
-        <button className="bg-blue-100 p-1 m-1" onClick={handleFaucet}>
-          faucet from starship
-        </button>
-      </div>
-      <div>
-        <button className="bg-blue-100 p-1 m-1" onClick={getBalance}>
+        <button className="bg-blue-100 p-1 m-1" onClick={handleBalanceQuery}>
           refresh balance
         </button>
       </div>
       <div>
         <span>balance: </span>
-        <span>{balance}</span>
+        <span>{balance?.balance?.amount}</span>
       </div>
     </td>
   );
@@ -90,15 +63,17 @@ type SendTokenProps = {
   chain: Chain;
 };
 const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
-  const { signingCosmosClient, signingCosmWasmClient } = useChainWallet(
-    chain.chainName,
-    wallet.option?.name as string
-  );
-
   const ref = useRef<HTMLInputElement>(null);
   const amountRef = useRef<HTMLInputElement>(null);
 
+  const { signingClient } = useChainWallet(
+    chain.chainName,
+    wallet.info?.name as string
+  );
+
   const handleSendToken = async () => {
+    const txSend = createSend(signingClient);
+
     if (ref.current) {
       const recipientAddress = ref.current.value;
       const denom = chain.staking?.stakingTokens[0].denom as string;
@@ -109,7 +84,7 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
       };
 
       try {
-        const tx = await signingCosmosClient.helpers.send(
+        const tx = await txSend(
           address,
           {
             fromAddress: address,
@@ -147,7 +122,7 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
 const ChainRow = ({ chain, wallet }: { chain: Chain; wallet: BaseWallet }) => {
   const { address } = useChainWallet(
     chain.chainName,
-    wallet.option?.name as string
+    wallet.info?.name as string
   );
   return (
     <tr>
@@ -172,15 +147,15 @@ const WalletConnectTd = ({ wallet }: { wallet: BaseWallet }) => {
   const chainIds = walletManager.chains.map((c) => c.chainId);
 
   const currentWallet = walletManager.wallets.find(
-    (w: BaseWallet) => w.option?.name === wallet.option?.name
+    (w: BaseWallet) => w.info?.name === wallet.info?.name
   );
 
   const connect = () => {
-    walletManager.connect(wallet.option?.name as string);
+    walletManager.connect(wallet.info?.name as string);
   };
 
   const disconnect = () => {
-    walletManager.disconnect(wallet.option?.name as string);
+    walletManager.disconnect(wallet.info?.name as string);
   };
 
   const uri = (currentWallet as WCWallet).pairingUri || "";
@@ -204,7 +179,7 @@ const E2ETest = () => {
 
   const addChain = async () => {
     const keplrExtension = walletManager.wallets.find(
-      (w) => w.option?.name === "keplr-extension"
+      (w) => w.info?.name === "keplr-extension"
     );
 
     const chain = chains.find((c) => c.chainName === "cosmoshub");
@@ -237,9 +212,9 @@ const E2ETest = () => {
         <tbody>
           {walletManager.wallets.map((wallet) => {
             return (
-              <tr key={wallet.option?.name}>
-                <td>{wallet.option?.name}</td>
-                <td>{wallet.option?.prettyName}</td>
+              <tr key={wallet.info?.name}>
+                <td>{wallet.info?.name}</td>
+                <td>{wallet.info?.prettyName}</td>
                 <WalletConnectTd wallet={wallet} />
                 <td>{wallet.walletState}</td>
                 <td>

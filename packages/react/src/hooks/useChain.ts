@@ -9,14 +9,14 @@ import { ChainNameNotExist, WalletState } from "@interchain-kit/core";
 import { useCallback } from "react";
 
 
-export const useChain = (chainName: string): UseChainReturnType & CosmosKitUseChainReturnType => {
+export const useChain = (chainName: string): UseChainReturnType => {
   const walletManager = useWalletManager()
   const chainToShow = walletManager.chains.find((c: Chain) => c.chainName === chainName)
   const assetList = walletManager.assetLists.find((a: AssetList) => a.chainName === chainName)
 
   const currentWallet = useCurrentWallet()
-  const account = useAccount(chainName, currentWallet?.option?.name)
-  const interchainClient = useInterchainClient(chainName, currentWallet?.option?.name)
+  const account = useAccount(chainName, currentWallet?.info?.name)
+  const interchainClient = useInterchainClient(chainName, currentWallet?.info?.name)
 
   if (!chainToShow) {
     throw new ChainNameNotExist(chainName)
@@ -29,7 +29,7 @@ export const useChain = (chainName: string): UseChainReturnType & CosmosKitUseCh
   }, [walletManager, currentWallet, chainName]);
 
   const disconnect = useCallback(() => {
-    walletManager.disconnect(currentWallet?.option?.name);
+    walletManager.disconnect(currentWallet?.info?.name);
   }, [walletManager, currentWallet]);
 
   const cosmosKitUserChainReturnType: CosmosKitUseChainReturnType = {
@@ -45,9 +45,7 @@ export const useChain = (chainName: string): UseChainReturnType & CosmosKitUseCh
     getRpcEndpoint,
     status: currentWallet?.walletState,
     username: account?.username,
-    message: currentWallet?.errorMessage,
-    getSigningCosmWasmClient: () => walletManager.getSigningCosmwasmClient(currentWallet.option.name, chainName),
-    getSigningCosmosClient: () => walletManager.getSigningCosmosClient(currentWallet.option.name, chainName),
+    message: currentWallet?.errorMessage
   }
 
   return {

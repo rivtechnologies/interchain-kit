@@ -6,8 +6,8 @@ import { BaseWallet } from "./base-wallet";
 import { ChainInfo } from '@keplr-wallet/types'
 import {
   OfflineDirectSigner,
+  StdSignature,
 } from '@interchainjs/cosmos/types/wallet';
-import { StdSignature } from 'interchainjs/types';
 
 export class ExtensionWallet extends BaseWallet {
 
@@ -25,11 +25,11 @@ export class ExtensionWallet extends BaseWallet {
 
   async init() {
     try {
-      this.client = await getClientFromExtension(this.option.windowKey)
+      this.client = await getClientFromExtension(this.info.windowKey)
       this.isExtensionInstalled = true
 
       this.events.removeAllListeners()
-      window.addEventListener(this.option.keystoreChange, (event) => {
+      window.addEventListener(this.info.keystoreChange, (event) => {
         this.events.emit('keystoreChange', event)
       })
 
@@ -155,13 +155,13 @@ export class ExtensionWallet extends BaseWallet {
 
   async bindingEvent() {
     this.events.removeAllListeners()
-    window.addEventListener(this.option.keystoreChange, (event) => {
+    window.addEventListener(this.info.keystoreChange, (event) => {
       this.events.emit('keystoreChange', event)
     })
   }
 
   async unbindingEvent() {
-    window.removeEventListener(this.option.keystoreChange, (event) => {
+    window.removeEventListener(this.info.keystoreChange, (event) => {
       this.events.emit('keystoreChange', event)
     })
   }

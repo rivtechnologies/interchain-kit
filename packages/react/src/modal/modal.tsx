@@ -32,7 +32,7 @@ export const WalletModal = () => {
 
   useEffect(() => {
     switch (true) {
-      case currentWallet?.option?.mode === "wallet-connect":
+      case currentWallet?.info?.mode === "wallet-connect":
         setModalView({
           header: <QRCodeHeader onBack={gotoWalletList} />,
           content: <QRCodeContent />,

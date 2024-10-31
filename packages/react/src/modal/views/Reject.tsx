@@ -8,7 +8,7 @@ export const RejectHeader = ({ onBack }: { onBack: () => void }) => {
   const currentWallet = useCurrentWallet();
   return (
     <ConnectModalHead
-      title={currentWallet.option.prettyName}
+      title={currentWallet.info.prettyName}
       hasBackButton={true}
       onClose={close}
       onBack={onBack}
@@ -33,7 +33,7 @@ export const RejectContent = () => {
         currentWallet.errorMessage || "Connection permission is denied."
       }
       onConnect={() =>
-        walletManager.connect(currentWallet.option.name).then(close)
+        walletManager.connect(currentWallet.info.name).then(close)
       }
     />
   );

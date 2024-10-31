@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/okx-extension",
-  "version": "0.0.1-beta.29",
+  "version": "0.0.1-beta.33",
   "author": "Cosmology <developers@cosmology.zone>",
   "description": "cosmos-kit wallet connector",
   "main": "index.js",
@@ -31,5 +31,5 @@
     "dev": "tsc -w --preserveWatchOutput -p tsconfig.esm.json"
   },
   "keywords": [],
-  "gitHead": "df9c668389f1e71958793839ade9b9c4b68000de"
+  "gitHead": "98e09a4c98adaec764d6aaab001de745642b4ca8"
 }

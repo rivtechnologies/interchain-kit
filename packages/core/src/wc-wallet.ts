@@ -1,8 +1,8 @@
-import { AccountData, Algo, SimpleAccount, Wallet, WcEventTypes, WcProviderEventType } from './types/wallet';
+import { Algo, SimpleAccount, Wallet, WcEventTypes, WcProviderEventType } from './types/wallet';
 import { BaseWallet } from "./base-wallet";
 import { WalletAccount, SignOptions, DirectSignDoc, BroadcastMode } from "./types";
 import { SignClient } from '@walletconnect/sign-client';
-import { ISignClient, PairingTypes, SessionTypes, SignClientTypes } from '@walletconnect/types';
+import { PairingTypes, SessionTypes, SignClientTypes } from '@walletconnect/types';
 import { Buffer } from 'buffer'
 import { ChainInfo } from '@keplr-wallet/types'
 import {
