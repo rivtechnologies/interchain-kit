@@ -67,12 +67,12 @@ const mock2Wallet = new MockWallet(wallet2Mnemonic, _chains, {
 const _wallets: BaseWallet[] = [
   // mock1Wallet,
   // mock2Wallet,
-  // keplrWallet,
+  keplrWallet,
   // leapWallet,
   // cosmostationWallet,
   // stationWallet,
   // galaxyStationWallet,
-  walletConnect,
+  // walletConnect,
   // ledgerConnect,
 ];
 

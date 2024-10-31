@@ -19,7 +19,7 @@ type BalanceProps = {
 };
 
 const BalanceTd = ({ address, wallet, chain }: BalanceProps) => {
-  const { rpcEndpoint } = useChainWallet(
+  const { rpcEndpoint, isLoading: isChainWalletLoading } = useChainWallet(
     chain.chainName,
     wallet.info?.name as string
   );
@@ -38,7 +38,7 @@ const BalanceTd = ({ address, wallet, chain }: BalanceProps) => {
     setIsLoading(false);
   };
 
-  if (isLoading) {
+  if (isLoading || isChainWalletLoading) {
     return <td>loading...</td>;
   }
 
