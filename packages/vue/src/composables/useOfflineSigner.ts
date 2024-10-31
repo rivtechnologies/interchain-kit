@@ -8,7 +8,7 @@ export const useOfflineSigner = (chainName: Ref<string>, walletName: Ref<string>
   const offlineSigner = ref<OfflineSigner>();
 
   const _setValues = () => {
-    const wallet = walletManager.wallets.find((w) => w.option.name === walletName.value);
+    const wallet = walletManager.wallets.find((w) => w.info.name === walletName.value);
 
     offlineSigner.value = walletManager.getOfflineSigner(wallet, chainName.value);
   };

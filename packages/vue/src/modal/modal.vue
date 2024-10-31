@@ -17,9 +17,9 @@
     <ConnectModalStatus 
       v-else
       :wallet="{
-        name: connectingWallet.option?.name,
-        prettyName: connectingWallet.option?.prettyName,
-        logo: connectingWallet.option?.logo as string,
+        name: connectingWallet.info?.name,
+        prettyName: connectingWallet.info?.prettyName,
+        logo: connectingWallet.info?.logo as string,
         mobileDisable: true
       }"
       :connected-info="connectedInfo"
@@ -71,9 +71,9 @@ const walletManager = useWalletManager();
 onMounted(() => {
   const res = walletManager.wallets.map((w) => {
     return ({
-      name: w.option.name,
-      prettyName: w.option.prettyName,
-      logo: w.option.logo as string,
+      name: w.info.name,
+      prettyName: w.info.prettyName,
+      logo: w.info.logo as string,
       mobileDisabled: true,
       shape: 'list' as 'list',
       originalWallet: w
@@ -88,7 +88,7 @@ const title = computed(() => {
   } else if (
     [WalletState.Connecting, WalletState.Rejected, WalletState.Connected].includes(connectStatus.value)
     && connectingWallet.value) {
-    return connectingWallet.value.option?.prettyName
+    return connectingWallet.value.info?.prettyName
   }
 })
 const contentHeader = computed(() => {
@@ -100,7 +100,7 @@ const contentHeader = computed(() => {
 })
 const contentDesc = computed(() => {
   if (connectStatus.value === WalletState.Connecting) {
-    return `Open the ${connectingWallet.value?.option?.prettyName} browser extension to connect your wallet.`
+    return `Open the ${connectingWallet.value?.info?.prettyName} browser extension to connect your wallet.`
   } else if (connectStatus.value === WalletState.Rejected) {
     return errorMessage.value || 'Connection permission is denied.'
   }
@@ -147,7 +147,7 @@ const walletClick = async(wallet: any) => {
   connectStatus.value = WalletState.Connecting
   connectingWallet.value = wallet
   try {
-    await walletManager.connect(wallet?.option.name)
+    await walletManager.connect(wallet?.info.name)
     close()
     // connectStatus.value = WalletState.Connected
     // errorMessage.value = ''
@@ -161,7 +161,7 @@ const walletClick = async(wallet: any) => {
 
 const disconnect = async(wallet: any) => {
   try {
-    await walletManager.disconnect(wallet?.option?.name as string);
+    await walletManager.disconnect(wallet?.info?.name as string);
     close()
   } catch(e: any) {
     console.log('[wallet disconnecting error]', e.message)

@@ -1,64 +1,53 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useChain } from '@interchain-kit/vue';
+import { createGetBalance } from "interchainjs/cosmos/bank/v1beta1/query.rpc.func";
+import { createSend } from "interchainjs/cosmos/bank/v1beta1/tx.rpc.func";
 import { coins } from "@cosmjs/amino";
-
+ 
 const chainName = ref('osmosistestnet')
 const { 
   logoUrl, openView, connect, disconnect, wallet, address, 
-  status, username, message, chain, getSigningCosmosClient, rpcEndpoint,
-  queryClient,
+  status, username, message, chain, rpcEndpoint, signingClient
 } = useChain(chainName);
 
 const recipientAddress = ref('')
 const amount = ref('')
 const isSending = ref(false)
-const balance = ref('0')
+const balance = ref()
 
-const getBalance = async() => {
-  if (queryClient.value && address.value) {
-    const {balance: bc} =  await queryClient.value.balance({
-      address: address.value,
-      denom: chain.value.staking?.stakingTokens[0].denom as string,
-    })
-    if (bc?.amount) {
-      balance.value = bc.amount
-    } else {
-      balance.value = '0'
-    }
-  }
+const handleBalanceQuery = async() => {
+  const balanceQuery = createGetBalance(rpcEndpoint.value as string);
+  const { balance: bc } = await balanceQuery({
+    address: address.value,
+    denom: chain.value.staking?.stakingTokens[0].denom as string,
+  });
+  balance.value = bc?.amount
 }
 
 const handleSendToken = async() => {
   const denom = chain.value.staking?.stakingTokens[0].denom as string;
-
+  const txSend = createSend(signingClient.value);
   const fee = {
     amount: coins(25000, denom),
     gas: "1000000",
   };
-
   try {
-    isSending.value = true
-    let signingCosmosClient = await getSigningCosmosClient.value()
-    const tx = await signingCosmosClient.helpers.send(
+    const tx = await txSend(
       address.value,
       {
         fromAddress: address.value,
         toAddress: recipientAddress.value,
         amount: [
-          { denom, amount: amount.value },
+          { denom: denom, amount: amount.value },
         ],
       },
       fee,
       "test"
     );
-    console.log('tx', tx);
-    alert('Transaction was successful!')
-    amount.value = ''
+    console.log(tx);
   } catch (error) {
     console.error(error);
-  } finally {
-    isSending.value = false
   }
 }
 </script>
@@ -78,7 +67,7 @@ const handleSendToken = async() => {
     logo: <img :src="logoUrl" alt="" style="width: 30px;" />
     <div>rpcEndpoint: {{ rpcEndpoint }}</div>
     <div>address: {{ address }}</div>
-    <div>balance: {{ balance }} <button @click="getBalance">getBalance</button></div>
+    <div>balance: {{ balance }} <button @click="handleBalanceQuery">getBalance</button></div>
     <div>walletStatus: {{ status  }}</div>
     <div>username: {{ username }}</div>
     <div>message: {{ message }}</div>
