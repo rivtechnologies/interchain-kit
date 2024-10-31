@@ -4,18 +4,20 @@ import { ChainProvider } from '@interchain-kit/vue'
 import { keplrWallet } from '@interchain-kit/keplr-extension';
 import { leapWallet } from '@interchain-kit/leap-extension';
 import { RouterView } from 'vue-router';
+import { BaseWallet, WCWallet } from "@interchain-kit/core";
 import { chain as junoChain, assetList as junoAssetList } from "@chain-registry/v2/mainnet/juno";
 import { chain as osmosisChain,assetList as osmosisAssetList } from "@chain-registry/v2/mainnet/osmosis";
 import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from "@chain-registry/v2/mainnet/cosmoshub";
-import { chain as osmosisTestChain, assetList as osmosisTestAssetList } from "@chain-registry/v2/testnet/osmosistestnet"
+// import { chain as osmosisTestChain, assetList as osmosisTestAssetList } from "@chain-registry/v2/testnet/osmosistestnet"
+const walletConnect = new WCWallet();
 </script>
 
 <template>
   <ThemeProvider>
     <ChainProvider
-      :wallets="[keplrWallet, leapWallet]"
-      :chains="[osmosisChain, junoChain, cosmoshubChain, osmosisTestChain]"
-      :asset-lists="[osmosisAssetList, junoAssetList, cosmoshubAssetList, osmosisTestAssetList]"
+      :wallets="[keplrWallet, leapWallet, walletConnect]"
+      :chains="[osmosisChain, junoChain, cosmoshubChain]"
+      :asset-lists="[osmosisAssetList, junoAssetList, cosmoshubAssetList]"
       :signer-options="{}"
       :endpoint-options="{}"
     >

@@ -1,4 +1,3 @@
-import { Chain } from '@chain-registry/v2-types';
 import { WalletState } from '@interchain-kit/core';
 import { HttpEndpoint } from '@interchainjs/types';
 import { SigningClient } from '../types';
@@ -36,15 +35,15 @@ export function useInterchainClient(chainName: Ref<string>, walletName: Ref<stri
 
 	watch([chainName, wallet, walletManager], initialize);
 	watch(wallet, (newWt, oldWt) => {
-		if (newWt && oldWt) {
-			oldWt.events.off('keystoreChange', initialize)
-			newWt.events.on('keystoreChange', initialize)
+		if (newWt) {
+			oldWt?.events.off('keystoreChange', initialize)
+			newWt?.events.on('keystoreChange', initialize)
 		}
 	})
 	initialize();
 
 	onMounted(() => {
-		wallet.value.events.on('keystoreChange', initialize)
+		wallet.value?.events.on('keystoreChange', initialize)
 	})
 
 	return {

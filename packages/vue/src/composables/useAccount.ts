@@ -37,15 +37,15 @@ export const useAccount = (chainName: Ref<string>, walletName: Ref<string>): Ref
 
   watch([wallet, chain, walletManager], getAccount);
   watch(wallet, (newWt, oldWt) => {
-    if (newWt && oldWt) {
-      oldWt.events.off('keystoreChange', getAccount)
-      newWt.events.on('keystoreChange', getAccount)
+    if (newWt) {
+      oldWt?.events.off('keystoreChange', getAccount)
+      newWt?.events.on('keystoreChange', getAccount)
     }
   })
   getAccount();
 
   onMounted(() => {
-    wallet.value.events.on('keystoreChange', getAccount)
+    wallet.value?.events.on('keystoreChange', getAccount)
   })
 
   return account;

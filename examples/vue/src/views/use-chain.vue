@@ -5,7 +5,7 @@ import { createGetBalance } from "interchainjs/cosmos/bank/v1beta1/query.rpc.fun
 import { createSend } from "interchainjs/cosmos/bank/v1beta1/tx.rpc.func";
 import { coins } from "@cosmjs/amino";
  
-const chainName = ref('osmosistestnet')
+const chainName = ref('osmosis')
 const { 
   logoUrl, openView, connect, disconnect, wallet, address, 
   status, username, message, chain, rpcEndpoint, signingClient
@@ -58,7 +58,7 @@ const handleSendToken = async() => {
       v-model="chainName"
       className="h-9 px-3 mr-4 border rounded-md shadow-sm"
     >
-      <option value="osmosistestnet">Osmosis Testnet</option>
+      <!-- <option value="osmosistestnet">Osmosis Testnet</option> -->
       <option value="juno">Juno</option>
       <option value="osmosis">Osmosis</option>
       <option value="stargaze">Stargaze</option>
