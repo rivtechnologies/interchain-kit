@@ -8,11 +8,18 @@
       @back="isList=true"
       :closeButtonProps="closeButtonProps"
     />
-    <ConnectModalQrcode v-if="currentWallet?.info?.mode === 'wallet-connect'" v-bind="qrCodeProps" />
     <ConnectModalWalletList
-      v-else-if="isList"
+      v-if="isList"
       :wallets="wallets"
       @wallet-item-click="walletClick"
+    />
+    <ConnectModalQrcode 
+      v-else-if="currentWallet?.info?.mode === 'wallet-connect'" 
+      :status="currentWallet?.pairingUri ? 'Done' : 'Pending'"
+      :link="currentWallet?.pairingUri"
+      description="Open App to connect"
+      @onRefresh="onRefresh"
+      qrCodeSize="230"
     />
     <ConnectModalStatus 
       v-else
@@ -33,9 +40,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, computed, reactive } from 'vue'
+import { ref, onMounted, watch, computed, Ref } from 'vue'
 import { useCurrentWallet, useWalletManager } from '../composables'
-import { WalletState, } from '@interchain-kit/core';
+import { BaseWallet, WalletState, WCWallet, } from '@interchain-kit/core';
 import {
   Box,
   Modal,
@@ -54,20 +61,8 @@ const isList = ref(true)
 // Rejected
 const errorMessage = ref('')
 const walletManager = useWalletManager();
-const currentWallet = useCurrentWallet();
-
-console.log('cw>', currentWallet)
-watch(currentWallet, (cw) => {
-  console.log('cw', cw)
-})
-
-const qrCodeProps = reactive({
-  status: "Pending",
-  link: "",
-  description: "Open App to connect",
-  onRefresh: () => walletManager.connect(currentWallet.value?.info?.name),
-  qrCodeSize: 230,
-});
+const currentWallet = useCurrentWallet() as Ref<WCWallet>;
+const onRefresh = () => walletManager.connect(currentWallet.value?.info?.name)
 
 onMounted(() => {
   const res = walletManager.wallets.map((w) => {
