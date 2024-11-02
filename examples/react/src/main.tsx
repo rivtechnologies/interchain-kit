@@ -23,7 +23,7 @@ import { starshipChain, starshipChain1 } from "./utils/starship.ts";
 import { ThemeProvider } from "@interchain-ui/react";
 
 const chainNames = [
-  "osmosistestnet",
+  // "osmosistestnet",
   "osmosis",
   "juno",
   "cosmoshub",
