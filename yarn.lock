@@ -521,6 +521,11 @@
   dependencies:
     "@chain-registry/v2-types" "^0.53.0"
 
+"@chenfengyuan/vue-qrcode@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@chenfengyuan/vue-qrcode/-/vue-qrcode-2.0.0.tgz#8cd01f6fc528d471680ebe812ec47c830aea7e63"
+  integrity sha512-33Cfr0zjbc3Dd8d5b1IgzXRAgXH0c2Gv19VI4snS25V/x9Z41eg769tC+Us1x+vqgQQhgD5YUjLnkpkrQfeMSw==
+
 "@confio/ics23@^0.6.8":
   version "0.6.8"
   resolved "https://registry.npmjs.org/@confio/ics23/-/ics23-0.6.8.tgz"
@@ -1303,6 +1308,7 @@
     rainbow-sprinkles "^0.17.3"
     vue-final-modal "^4.5.4"
     zustand "^4.5.5"
+
 "@interchainjs/auth@0.0.1-alpha.31":
   version "0.0.1-alpha.31"
   resolved "https://registry.yarnpkg.com/@interchainjs/auth/-/auth-0.0.1-alpha.31.tgz#233ab8135881bdfac4d8bd1ace520d8834f26b00"
@@ -4174,6 +4180,18 @@
   integrity sha512-UoKGxQ3r5kYI9dALKJapMmuK+1zWM/H17Z1+iwnNmzcJRnfFuevZs375TA5rW31pu4BS4NoSy1fRsexDXfWn5w==
   dependencies:
     tslib "^2.4.0"
+
+"@tanstack/query-core@5.59.16":
+  version "5.59.16"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.59.16.tgz#aa4616e8a9c12afeef4cfbf3ed0f55f404d66e67"
+  integrity sha512-crHn+G3ltqb5JG0oUv6q+PMz1m1YkjpASrXTU+sYWW9pLk0t2GybUHNRqYPZWhxgjPaVGC4yp92gSFEJgYEsPw==
+
+"@tanstack/react-query@^5.59.16":
+  version "5.59.16"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.59.16.tgz#1e701c6e6681965c04aa426df9da54b8edc6db1b"
+  integrity sha512-MuyWheG47h6ERd4PKQ6V8gDyBu3ThNG22e1fRVwvq6ap3EqsFhyuxCAwhNP/03m/mLg+DAb0upgbPaX6VB+CkQ==
+  dependencies:
+    "@tanstack/query-core" "5.59.16"
 
 "@tanstack/react-virtual@^3.10.5":
   version "3.10.8"
