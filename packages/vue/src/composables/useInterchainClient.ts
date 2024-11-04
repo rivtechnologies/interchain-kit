@@ -5,8 +5,9 @@ import { Ref, ref, watch, computed } from 'vue';
 
 import { useWalletManager } from './useWalletManager';
 import { onMounted } from 'vue';
+import { UseInterchainClientReturnType } from '../types/chain';
 
-export function useInterchainClient(chainName: Ref<string>, walletName: Ref<string>) {
+export function useInterchainClient(chainName: Ref<string>, walletName: Ref<string>): UseInterchainClientReturnType {
 	const rpcEndpoint = ref<string | HttpEndpoint>('');
 	const signingClient = ref<SigningClient>();
 	const error = ref<string | unknown | null>(null);

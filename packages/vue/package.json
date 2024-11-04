@@ -29,7 +29,8 @@
   "dependencies": {
     "@chain-registry/v2-types": "^0.53.0",
     "@interchain-kit/core": "0.0.1-beta.35",
-    "@interchain-ui/vue": "^1.4.0",
+    "@interchain-ui/vue": "^1.4.1",
+    "@interchainjs/cosmos": "0.0.1-beta.34",
     "@interchainjs/cosmos-types": "0.0.1-beta.17",
     "@types/node": "^22.7.5",
     "@vue/compiler-sfc": "^3.5.12",

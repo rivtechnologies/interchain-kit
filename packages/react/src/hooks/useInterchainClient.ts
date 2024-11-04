@@ -5,8 +5,9 @@ import { Chain } from '@chain-registry/v2-types';
 import { useAccount } from './useAccount';
 import { WalletState } from '@interchain-kit/core';
 import { SigningClient } from '../types';
+import { UseInterchainClientReturnType } from '../types/chain';
 
-export const useInterchainClient = (chainName: string, walletName: string) => {
+export const useInterchainClient = (chainName: string, walletName: string): UseInterchainClientReturnType => {
   const [rpcEndpoint, setRpcEndpoint] = useState<string | HttpEndpoint | undefined>()
   //signing
   const [signingClient, setSigningClient] = useState<SigningClient | null>(null)
