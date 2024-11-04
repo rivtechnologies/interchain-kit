@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/galaxy-station-extension",
-  "version": "0.0.1-beta.34",
+  "version": "0.0.1-beta.35",
   "author": "cosmology-tech <developers@cosmology.zone>",
   "description": "cosmos-kit wallet connector",
   "main": "index.js",
