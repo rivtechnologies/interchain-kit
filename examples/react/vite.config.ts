@@ -23,7 +23,8 @@ export default defineConfig({
   resolve: {
     alias: {
       "node-fetch": "node-fetch/lib/index.js",
-      "stream": "stream-browserify"
+      "stream": "stream-browserify",
+      "crypto": "crypto-browserify",
     }
   }
 })

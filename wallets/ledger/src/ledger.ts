@@ -1,6 +1,4 @@
-import { StdSignDoc } from '@interchainjs/types';
-import { BaseWallet } from "./base-wallet";
-import { WalletAccount, SimpleAccount, SignOptions, DirectSignDoc, BroadcastMode, Wallet } from "./types";
+import { BaseWallet, SignOptions, Wallet, WalletAccount, DirectSignDoc, BroadcastMode } from "@interchain-kit/core";
 import Transport from "@ledgerhq/hw-transport";
 import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import { chains } from "@chain-registry/v2";
@@ -13,33 +11,32 @@ import {
   AminoSignResponse,
   StdSignature
 } from '@interchainjs/cosmos/types/wallet';
-import { LedgerConnectIcon } from './constant';
+
+import CosmosApp from '@zondax/ledger-cosmos-js'
+import { Buffer } from 'buffer'
+import { SimpleAccount } from "@interchain-kit/core";
+import { StdSignDoc } from '@interchainjs/types';
+import { convertDerToFixed64, sortedObject } from "./utils";
+import { Chain } from "@chain-registry/v2-types";
 
 export class LedgerWallet extends BaseWallet {
 
   cosmosPath: string;
   transport: Transport;
   cosmos: Cosmos;
+  cosmosApp: CosmosApp;
   chainIdToBech32Prefix: Record<string, string> = {}
   hidSupported: boolean = false
 
   constructor(info?: Wallet) {
-
-    const defaultWalletConnectInfo: Wallet = {
-      name: 'LedgerWallet',
-      prettyName: 'Ledger Connect',
-      mode: 'ledger',
-      logo: LedgerConnectIcon
-    }
-
-    super({ ...defaultWalletConnectInfo, ...info })
+    super(info)
   }
 
   async init(meta?: unknown): Promise<void> {
 
-    this.cosmosPath = '44\'/118\'/0\'/0/0';
+    this.cosmosPath = `m/44'/118'/0'/0/0`;
 
-    chains.forEach(c => {
+    chains.forEach((c: Chain) => {
       this.chainIdToBech32Prefix[c.chainId] = c.bech32Prefix;
     })
 
@@ -54,7 +51,7 @@ export class LedgerWallet extends BaseWallet {
   async connect(chainId: string | string[]): Promise<void> {
     try {
       this.transport = await TransportWebHID.create()
-      this.cosmos = new Cosmos(this.transport)
+      this.cosmosApp = new CosmosApp(this.transport)
     } catch (error) {
       this.errorMessage = (error as any).message;
     }
@@ -76,16 +73,16 @@ export class LedgerWallet extends BaseWallet {
     }
 
     try {
-      const { publicKey, address } = await this.cosmos.getAddress(this.cosmosPath, prefix);
+      const { bech32_address, compressed_pk } = await this.cosmosApp.getAddressAndPubKey(this.cosmosPath, prefix);
       return {
         username: this.cosmosPath || '',
-        address,
+        address: bech32_address,
         algo: 'secp256k1',
-        pubkey: new TextEncoder().encode(publicKey),
+        pubkey: compressed_pk,
         isNanoLedger: true,
       };
     } catch (error) {
-      if ((error as any).message.includes("Ledger Device is busy")) {
+      if ((error as any).message.includes("Unknown transport error")) {
         return new Promise((resolve) => {
           setTimeout(() => {
             const account = this.getAccount(chainId)
@@ -123,23 +120,24 @@ export class LedgerWallet extends BaseWallet {
   }
 
   async signAmino(chainId: string, signer: string, signDoc: StdSignDoc, signOptions?: SignOptions): Promise<AminoSignResponse> {
-    const response = await this.cosmos.sign(this.cosmosPath, JSON.stringify(signDoc));
-    if (response.return_code !== 0x9000) {
-      throw new Error("Failed to sign transaction on Ledger device");
-    }
 
-    const account = await this.getAccount(chainId);
+    const signDataBuffer = Buffer.from(JSON.stringify(sortedObject(signDoc)), 'utf-8')
+
+    const cosmosPath = `m/44'/118'/0'/0/0`;
+    const hrp = this.chainIdToBech32Prefix[chainId];
+    const response = await this.cosmosApp.sign(cosmosPath, signDataBuffer, hrp);
+    const { compressed_pk } = await this.cosmosApp.getAddressAndPubKey(cosmosPath, hrp);
 
     return {
       signed: signDoc,
       signature: {
         pub_key: {
           type: "tendermint/PubKeySecp256k1",
-          value: Buffer.from(account.pubkey).toString("base64"),
+          value: compressed_pk.toString("base64"),
         },
-        signature: Buffer.from(response.signature).toString("base64"),
-      },
-    };
+        signature: Buffer.from(convertDerToFixed64(response.signature)).toString("base64"),
+      }
+    }
   }
 
   signArbitrary(chainId: string, signer: string, data: string | Uint8Array): Promise<StdSignature> {

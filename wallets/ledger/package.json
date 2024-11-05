@@ -32,7 +32,13 @@
   },
   "keywords": [],
   "dependencies": {
-    "@interchain-kit/core": "0.0.1-beta.35"
+    "@chain-registry/v2": "^1.71.22",
+    "@chain-registry/v2-types": "^0.53.4",
+    "@interchain-kit/core": "^0.0.1-beta.35",
+    "@ledgerhq/hw-transport": "^6.31.4",
+    "@ledgerhq/hw-transport-webhid": "^6.29.4",
+    "@zondax/ledger-cosmos-js": "^4.0.0",
+    "buffer": "^6.0.3"
   },
   "gitHead": "6e2aa98acf8bad3f8f874f1ace033ec7de079f1a"
 }

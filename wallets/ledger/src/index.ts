@@ -1,18 +1,10 @@
-import { LedgerWallet } from '@interchain-kit/core';
+import { LedgerWallet } from './ledger';
 import { LedgerInfo } from './registry';
 
 export * from './registry'
 export * from './constant'
 
-
-
-export class Ledger extends LedgerWallet {
-    // ...
-}
-
-const ledgerWallet = new Ledger(LedgerInfo)
-
-
+const ledgerWallet = new LedgerWallet(LedgerInfo)
 
 export { ledgerWallet }
 
