@@ -38,7 +38,13 @@
     "@ledgerhq/hw-transport": "^6.31.4",
     "@ledgerhq/hw-transport-webhid": "^6.29.4",
     "@zondax/ledger-cosmos-js": "^4.0.0",
-    "buffer": "^6.0.3"
+    "buffer": "^6.0.3",
+    "crypto": "npm:crypto-es",
+    "crypto-browserify": "^3.12.1",
+    "crypto-es": "^2.1.0"
+  },
+  "browser": {
+    "crypto": "crypto-es"
   },
   "gitHead": "6e2aa98acf8bad3f8f874f1ace033ec7de079f1a"
 }

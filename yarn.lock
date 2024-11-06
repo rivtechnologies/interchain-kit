@@ -491,6 +491,11 @@
   resolved "https://registry.yarnpkg.com/@chain-registry/v2-types/-/v2-types-0.53.4.tgz#a00ddbc362bd6668315687a50a1c43b7293b8e64"
   integrity sha512-2sve+qWttZ3//ZRJaxY4hH7O72xPMZHRxtdO2tti8WBB0lR6PjWZk1RGAChdVBud8br8YQn5oTGDDHplVEubWQ==
 
+"@chain-registry/v2-types@^0.53.5":
+  version "0.53.5"
+  resolved "https://registry.yarnpkg.com/@chain-registry/v2-types/-/v2-types-0.53.5.tgz#eacf091ab8402988de4093f2bdb7325ef9c5b8c3"
+  integrity sha512-6RSVq3zXg5KmUlrjSSUZGSIgHWQZsYvax3cK/xw56d9DkAs3IWyM4wD5iHmY1gdYdDbg9iSso2OgjTOfW9rwDw==
+
 "@chain-registry/v2@1.65.8":
   version "1.65.8"
   resolved "https://registry.npmjs.org/@chain-registry/v2/-/v2-1.65.8.tgz"
@@ -525,6 +530,13 @@
   integrity sha512-xD8YogsZD9rFxIAzVWQCwxDH1kDyhuxQsWpjlKIn1u6A/Ra3gIZElBgpcPiE4mYXhnvYXlDF8h842ikIm1egow==
   dependencies:
     "@chain-registry/v2-types" "^0.53.0"
+
+"@chain-registry/v2@^1.71.22":
+  version "1.71.23"
+  resolved "https://registry.yarnpkg.com/@chain-registry/v2/-/v2-1.71.23.tgz#6dfa3b59af7e9f030b4b8aef58b5d9ead3aabac4"
+  integrity sha512-ivjGepL1i3HY/5zHlyA9J8UcNsjpr/3Z49J9abEn26X04aLPbRvlPUNmARVbYVA9o3AzESHMjx7EDdBuLtdu7Q==
+  dependencies:
+    "@chain-registry/v2-types" "^0.53.5"
 
 "@chenfengyuan/vue-qrcode@^2.0.0":
   version "2.0.0"
@@ -1229,34 +1241,6 @@
     buffer "^6.0.3"
     interchainjs "0.0.1-beta.14"
     long "^5.2.3"
-
-"@interchain-kit/core@0.0.1-beta.35", "@interchain-kit/core@^0.0.1-beta.35":
-  version "0.0.1-beta.35"
-  resolved "https://registry.yarnpkg.com/@interchain-kit/core/-/core-0.0.1-beta.35.tgz#d1d477523d3947503f441d4faff5b55b7f5046f4"
-  integrity sha512-z2h4zAEUVGh0aswLPjtvrdwHpDZvVs61Fn6BTFTt8CDZfXbSIZPoNxcZKYHhvR817z4CQpXSgOjJqdLLU7ypxA==
-  dependencies:
-    "@chain-registry/v2" "^1.71.1"
-    "@chain-registry/v2-keplr" "^0.0.2"
-    "@chain-registry/v2-types" "^0.53.0"
-    "@interchainjs/cosmos" "0.0.1-beta.20"
-    "@interchainjs/cosmos-types" "0.0.1-beta.17"
-    "@ledgerhq/hw-app-cosmos" "^6.30.0"
-    "@ledgerhq/hw-transport" "^6.31.0"
-    "@ledgerhq/hw-transport-webhid" "^6.29.0"
-    "@ledgerhq/hw-transport-webusb" "^6.29.0"
-    "@walletconnect/sign-client" "^2.17.1"
-    "@walletconnect/types" "^2.17.1"
-    axios "^1.7.7"
-    buffer "^6.0.3"
-    interchainjs "0.0.1-beta.27"
-    long "^5.2.3"
-
-"@interchain-kit/ledger@^0.0.1-beta.35":
-  version "0.0.1-beta.35"
-  resolved "https://registry.yarnpkg.com/@interchain-kit/ledger/-/ledger-0.0.1-beta.35.tgz#bfe7f02655cc4655f8d02724c46474efaa4179b8"
-  integrity sha512-U/kkHwXbEF/Dloke0jsa+Snd9IsOBFwpsRwo2Fbpu1JaG7SLjyRUH4g3T4skQY7JmG+rDX7ZGxFMStkDD6LkYQ==
-  dependencies:
-    "@interchain-kit/core" "0.0.1-beta.35"
 
 "@interchain-ui/react@1.24.0":
   version "1.24.0"
@@ -4337,6 +4321,11 @@
   resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-4.36.1.tgz#79f8c1a539d47c83104210be2388813a7af2e524"
   integrity sha512-DJSilV5+ytBP1FbFcEJovv4rnnm/CokuVvrBEtW/Va9DvuJ3HksbXUJEpI0aV1KtuL4ZoO9AVE6PyNLzF7tLeA==
 
+"@tanstack/query-core@5.59.17":
+  version "5.59.17"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.59.17.tgz#bda3bb678be48e2f6ee692abd1cfc2db3d455e4b"
+  integrity sha512-jWdDiif8kaqnRGHNXAa9CnudtxY5v9DUxXhodgqX2Rwzj+1UwStDHEbBd9IA5C7VYAaJ2s+BxFR6PUBs8ERorA==
+
 "@tanstack/react-query@4":
   version "4.36.1"
   resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-4.36.1.tgz#acb589fab4085060e2e78013164868c9c785e5d2"
@@ -4344,6 +4333,13 @@
   dependencies:
     "@tanstack/query-core" "4.36.1"
     use-sync-external-store "^1.2.0"
+
+"@tanstack/react-query@^5.59.16":
+  version "5.59.19"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.59.19.tgz#309ae0d75844e331ea72762bfe0e11fb829a69d3"
+  integrity sha512-xLRfyFyQOFcLltKCds0LijfC6/HQJrrTTnZB8ciyn74LIkVAm++vZJ6eUVG20RmJtdP8REdy7vSOYW4M3//XLA==
+  dependencies:
+    "@tanstack/query-core" "5.59.17"
 
 "@tanstack/react-virtual@^3.10.5":
   version "3.10.8"
@@ -7425,7 +7421,7 @@ crypto-browserify@^3.11.0:
     randombytes "^2.0.0"
     randomfill "^1.0.3"
 
-crypto-browserify@^3.12.0:
+crypto-browserify@^3.12.0, crypto-browserify@^3.12.1:
   version "3.12.1"
   resolved "https://registry.yarnpkg.com/crypto-browserify/-/crypto-browserify-3.12.1.tgz#bb8921bec9acc81633379aa8f52d69b0b69e0dac"
   integrity sha512-r4ESw/IlusD17lgQi1O20Fa3qNnsckR126TdUuBgAu7GBYSIPvdNyONd3Zrxh0xCwA4+6w/TDArBPsMvhur+KQ==
@@ -7443,6 +7439,11 @@ crypto-browserify@^3.12.0:
     randombytes "^2.1.0"
     randomfill "^1.0.4"
 
+crypto-es@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/crypto-es/-/crypto-es-2.1.0.tgz#1095f324ffd7dc1ccab8e21d0960e17025da8ce9"
+  integrity sha512-C5Dbuv4QTPGuloy5c5Vv/FZHtmK+lobLAypFfuRaBbwCsk3qbCWWESCH3MUcBsrgXloRNMrzwUAiPg4U6+IaKA==
+
 crypto-js@^4.0.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-4.2.0.tgz#4d931639ecdfd12ff80e8186dba6af2c2e856631"
@@ -7457,6 +7458,11 @@ crypto@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/crypto/-/crypto-1.0.1.tgz#2af1b7cad8175d24c8a1b0778255794a21803037"
   integrity sha512-VxBKmeNcqQdiUQUW2Tzq0t377b54N2bMtXO/qiLa+6eRRmmC4qT3D4OnTGoT/U6O9aklQ/jTwbOtRMTTY8G0Ig==
+
+"crypto@npm:crypto-es":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/crypto-es/-/crypto-es-2.1.0.tgz#1095f324ffd7dc1ccab8e21d0960e17025da8ce9"
+  integrity sha512-C5Dbuv4QTPGuloy5c5Vv/FZHtmK+lobLAypFfuRaBbwCsk3qbCWWESCH3MUcBsrgXloRNMrzwUAiPg4U6+IaKA==
 
 css-what@^6.1.0:
   version "6.1.0"
@@ -12126,6 +12132,13 @@ proxy-from-env@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/proxy-from-env/-/proxy-from-env-1.1.0.tgz"
   integrity sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==
+
+proxy-memoize@3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/proxy-memoize/-/proxy-memoize-3.0.1.tgz#75eed518778b282abb0bc55e748995214b7f74a9"
+  integrity sha512-VDdG/VYtOgdGkWJx7y0o7p+zArSf2383Isci8C+BP3YXgMYDoPd3cCBjw0JdWb6YBb9sFiOPbAADDVTPJnh+9g==
+  dependencies:
+    proxy-compare "^3.0.0"
 
 public-encrypt@^4.0.0, public-encrypt@^4.0.3:
   version "4.0.3"
