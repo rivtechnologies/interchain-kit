@@ -59,7 +59,7 @@ export const WalletModal = () => {
       default:
         setModalView(defaultModalView);
     }
-  }, [currentWallet, currentWallet?.walletState]);
+  }, [currentWallet, currentWallet?.walletState, modalIsOpen]);
 
   return (
     <ConnectModal
