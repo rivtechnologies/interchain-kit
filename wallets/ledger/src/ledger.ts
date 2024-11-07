@@ -49,12 +49,8 @@ export class LedgerWallet extends BaseWallet {
   }
 
   async connect(chainId: string | string[]): Promise<void> {
-    try {
-      this.transport = await TransportWebHID.create()
-      this.cosmosApp = new CosmosApp(this.transport)
-    } catch (error) {
-      this.errorMessage = (error as any).message;
-    }
+    this.transport = await TransportWebHID.create()
+    this.cosmosApp = new CosmosApp(this.transport)
   }
 
   async disconnect(chainId: string | string[]): Promise<void> {
