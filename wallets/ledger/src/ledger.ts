@@ -49,8 +49,17 @@ export class LedgerWallet extends BaseWallet {
   }
 
   async connect(chainId: string | string[]): Promise<void> {
-    this.transport = await TransportWebHID.create()
-    this.cosmosApp = new CosmosApp(this.transport)
+    try {
+      this.transport = await TransportWebHID.create()
+      this.cosmosApp = new CosmosApp(this.transport)
+      // try to get address to check app in ledger ready or not
+      await this.cosmosApp.getAddressAndPubKey(`m/44'/118'/0'/0/0`, 'cosmoshub')
+    } catch (error) {
+      if ((error as any).message === 'CLA Not Supported') {
+        throw new Error('Please choose Cosmos App in Ledger!!')
+      }
+      throw error
+    }
   }
 
   async disconnect(chainId: string | string[]): Promise<void> {

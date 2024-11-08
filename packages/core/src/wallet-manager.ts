@@ -106,7 +106,6 @@ export class WalletManager {
     } catch (error: any) {
       wallet.walletState = WalletState.Rejected
       wallet.errorMessage = error.message
-      throw error
     }
   }
 
