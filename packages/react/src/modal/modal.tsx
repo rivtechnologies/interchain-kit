@@ -1,9 +1,10 @@
-import { ConnectModal } from "@interchain-ui/react";
 import {
   ConnectedContent,
   ConnectedHeader,
   ConnectingContent,
   ConnectingHeader,
+  NotExistContent,
+  NotExistHeader,
   QRCodeContent,
   QRCodeHeader,
   RejectContent,
@@ -14,7 +15,8 @@ import {
 import { useWalletModal } from "./provider";
 import { useCurrentWallet } from "../hooks";
 import { useEffect, useState } from "react";
-import { WalletState, WCWallet } from "@interchain-kit/core";
+import { ExtensionWallet, WalletState } from "@interchain-kit/core";
+import { ConnectModal } from "@interchain-ui/react";
 
 const defaultModalView = {
   header: <WalletListHeader />,
@@ -36,6 +38,13 @@ export const WalletModal = () => {
         setModalView({
           header: <QRCodeHeader onBack={gotoWalletList} />,
           content: <QRCodeContent />,
+        });
+        break;
+      case currentWallet?.walletState === WalletState.Connected &&
+        !(currentWallet as ExtensionWallet)?.isExtensionInstalled:
+        setModalView({
+          header: <NotExistHeader onBack={gotoWalletList} />,
+          content: <NotExistContent />,
         });
         break;
       case currentWallet?.walletState === WalletState.Connecting:
