@@ -32,7 +32,8 @@ export const WalletModal = () => {
 
   useEffect(() => {
     switch (true) {
-      case currentWallet?.info?.mode === "wallet-connect":
+      case currentWallet?.info?.mode === "wallet-connect" &&
+        currentWallet.walletState !== WalletState.Connected:
         setModalView({
           header: <QRCodeHeader onBack={gotoWalletList} />,
           content: <QRCodeContent />,
