@@ -13,62 +13,80 @@ import {
   WalletListHeader,
 } from "./views";
 import { useWalletModal } from "./provider";
-import { useCurrentWallet } from "../hooks";
-import { useEffect, useState } from "react";
-import { ExtensionWallet, WalletState } from "@interchain-kit/core";
+import { useCurrentWallet, useWalletManager } from "../hooks";
+import { useEffect, useMemo, useState } from "react";
+import { BaseWallet, ExtensionWallet, WalletState } from "@interchain-kit/core";
 import { ConnectModal } from "@interchain-ui/react";
-
-const defaultModalView = {
-  header: <WalletListHeader />,
-  content: <WalletListContent />,
-};
 
 export const WalletModal = () => {
   const { modalIsOpen, open, close } = useWalletModal();
 
   const currentWallet = useCurrentWallet();
 
+  const walletManager = useWalletManager();
+
+  const handleSelectWallet = async (wallet: BaseWallet) => {
+    setModalView({
+      header: <ConnectingHeader wallet={wallet} onBack={gotoWalletList} />,
+      content: <ConnectingContent wallet={wallet} />,
+    });
+
+    if (
+      wallet.info.mode === "extension" &&
+      !(wallet as ExtensionWallet).isExtensionInstalled
+    ) {
+      setModalView({
+        header: <NotExistHeader wallet={wallet} onBack={gotoWalletList} />,
+        content: <NotExistContent wallet={wallet} />,
+      });
+      return;
+    }
+
+    try {
+      if (wallet.info.mode === "wallet-connect") {
+        wallet.events.on("walletConnectQRCode", (uri: string) => {
+          setModalView({
+            header: <QRCodeHeader onBack={gotoWalletList} />,
+            content: <QRCodeContent />,
+          });
+        });
+      }
+
+      await walletManager.connect(wallet?.info?.name);
+
+      setModalView({
+        header: <ConnectedHeader wallet={wallet} onBack={gotoWalletList} />,
+        content: <ConnectedContent wallet={wallet} />,
+      });
+    } catch (error) {
+      setModalView({
+        header: <RejectHeader wallet={wallet} onBack={gotoWalletList} />,
+        content: <RejectContent wallet={wallet} />,
+      });
+    }
+  };
+
+  const defaultModalView = useMemo(() => {
+    return {
+      header: <WalletListHeader />,
+      content: <WalletListContent onSelectWallet={handleSelectWallet} />,
+    };
+  }, []);
+
   const [modalView, setModalView] = useState(defaultModalView);
 
   const gotoWalletList = () => setModalView(defaultModalView);
 
   useEffect(() => {
-    switch (true) {
-      case currentWallet?.info?.mode === "wallet-connect":
-        setModalView({
-          header: <QRCodeHeader onBack={gotoWalletList} />,
-          content: <QRCodeContent />,
-        });
-        break;
-      case currentWallet?.walletState === WalletState.Connected &&
-        !(currentWallet as ExtensionWallet)?.isExtensionInstalled:
-        setModalView({
-          header: <NotExistHeader onBack={gotoWalletList} />,
-          content: <NotExistContent />,
-        });
-        break;
-      case currentWallet?.walletState === WalletState.Connecting:
-        setModalView({
-          header: <ConnectingHeader onBack={gotoWalletList} />,
-          content: <ConnectingContent />,
-        });
-        break;
-      case currentWallet?.walletState === WalletState.Connected:
-        setModalView({
-          header: <ConnectedHeader onBack={gotoWalletList} />,
-          content: <ConnectedContent />,
-        });
-        break;
-      case currentWallet?.walletState === WalletState.Rejected:
-        setModalView({
-          header: <RejectHeader onBack={gotoWalletList} />,
-          content: <RejectContent />,
-        });
-        break;
-      default:
-        setModalView(defaultModalView);
+    if (modalIsOpen && currentWallet?.walletState === WalletState.Connected) {
+      setModalView({
+        header: <ConnectedHeader onBack={gotoWalletList} />,
+        content: <ConnectedContent />,
+      });
+    } else {
+      setModalView(defaultModalView);
     }
-  }, [currentWallet, currentWallet?.walletState, modalIsOpen]);
+  }, [modalIsOpen]);
 
   return (
     <ConnectModal

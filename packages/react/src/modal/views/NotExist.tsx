@@ -1,14 +1,25 @@
-import React from "react";
 import { ConnectModalHead, ConnectModalStatus } from "@interchain-ui/react";
-import { useCurrentWallet } from "../../hooks"; // replace with the actual path
+import { useCurrentWallet, useWalletManager } from "../../hooks"; // replace with the actual path
 import { useWalletModal } from "../provider";
+import { BaseWallet } from "@interchain-kit/core";
+import { useMemo } from "react";
+import { FaAndroid } from "@react-icons/all-files/fa/FaAndroid";
+import { GoDesktopDownload } from "@react-icons/all-files/go/GoDesktopDownload";
+import { GrFirefox } from "@react-icons/all-files/gr/GrFirefox";
+import { RiAppStoreFill } from "@react-icons/all-files/ri/RiAppStoreFill";
+import { RiChromeFill } from "@react-icons/all-files/ri/RiChromeFill";
 
-export const NotExistHeader = ({ onBack }: { onBack: () => void }) => {
-  const currentWallet = useCurrentWallet();
+export const NotExistHeader = ({
+  wallet,
+  onBack,
+}: {
+  wallet: BaseWallet;
+  onBack: () => void;
+}) => {
   const { close } = useWalletModal();
   return (
     <ConnectModalHead
-      title={currentWallet?.info?.prettyName || ""}
+      title={wallet?.info?.prettyName || ""}
       hasBackButton={true}
       onClose={close}
       onBack={onBack}
@@ -17,41 +28,46 @@ export const NotExistHeader = ({ onBack }: { onBack: () => void }) => {
   );
 };
 
-export const NotExistContent = () => {
-  const currentWallet = useCurrentWallet();
+export const NotExistContent = ({ wallet }: { wallet: BaseWallet }) => {
+  const walletManager = useWalletManager();
+
+  const downloadLink = useMemo(() => {
+    return walletManager.getDownloadLink(wallet.info.name);
+  }, [wallet?.info?.name]);
 
   const onInstall = () => {
-    const userAgent = navigator.userAgent.toLowerCase();
-    let downloadLink = "";
-
-    const downloadInfo = currentWallet?.info?.downloads?.find((d) =>
-      userAgent.includes(d.browser as string)
-    );
-
     if (downloadLink) {
-      window.open(downloadLink, "_blank");
+      window.open(downloadLink.link, "_blank");
     }
   };
+
+  const IconComp = getIcon(walletManager.getEnv());
+
   return (
     <ConnectModalStatus
       status="NotExist"
       wallet={{
-        name: currentWallet?.info?.name || "",
-        logo:
-          typeof currentWallet?.info?.logo === "string"
-            ? currentWallet?.info?.logo
-            : "",
+        name: wallet?.info?.prettyName,
+        logo: typeof wallet?.info?.logo === "string" ? wallet?.info?.logo : "",
         mobileDisabled: true,
       }}
-      contentHeader={`${currentWallet?.info?.prettyName} Not Installed`}
+      contentHeader={`${wallet?.info?.prettyName} Not Installed`}
       contentDesc={
         true
-          ? `If ${currentWallet?.info?.prettyName.toLowerCase()} is installed on your device, please refresh this page or follow the browser instruction.`
+          ? `If ${wallet?.info?.prettyName.toLowerCase()} is installed on your device, please refresh this page or follow the browser instruction.`
           : `Download link not provided. Try searching it or consulting the developer team.`
       }
       onInstall={onInstall}
-      installIcon={<div>xxx</div>}
-      disableInstall={true}
+      installIcon={<IconComp />}
+      disableInstall={downloadLink === null}
     />
   );
 };
+
+function getIcon(env: { browser?: string; device?: string; os?: string }) {
+  if (env?.browser === "chrome") return RiChromeFill;
+  if (env?.browser === "firefox") return GrFirefox;
+  if (env?.os === "android") return FaAndroid;
+  if (env?.os === "ios") return RiAppStoreFill;
+  return GoDesktopDownload;
+}

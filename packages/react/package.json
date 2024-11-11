@@ -37,6 +37,7 @@
     "@interchain-ui/react": "1.24.0",
     "@interchainjs/cosmos": "^0.0.1-beta.34",
     "@interchainjs/cosmos-types": "0.0.1-beta.17",
+    "@react-icons/all-files": "^4.1.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "interchainjs": "0.0.1-beta.27",

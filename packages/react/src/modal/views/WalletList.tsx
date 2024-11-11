@@ -15,9 +15,12 @@ export const WalletListHeader = () => {
   );
 };
 
-export const WalletListContent = () => {
+export const WalletListContent = ({
+  onSelectWallet,
+}: {
+  onSelectWallet: (wallet: BaseWallet) => void;
+}) => {
   const walletManager = useWalletManager();
-  const { close } = useWalletModal();
 
   const wallets = walletManager.wallets.map((w: BaseWallet) => {
     return {
@@ -30,19 +33,10 @@ export const WalletListContent = () => {
     };
   });
 
-  const onWalletClick = async (wallet: any) => {
-    try {
-      await walletManager.connect(wallet.info.name);
-      close();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <ConnectModalWalletList
       wallets={wallets}
-      onWalletItemClick={onWalletClick}
+      onWalletItemClick={onSelectWallet}
     />
   );
 };

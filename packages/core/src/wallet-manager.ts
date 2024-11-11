@@ -2,12 +2,13 @@ import { HttpEndpoint } from '@interchainjs/types';
 import { Chain, AssetList } from '@chain-registry/v2-types'
 import { BaseWallet } from './base-wallet'
 import { WCWallet } from './wc-wallet';
-import { ChainName, EndpointOptions, SignerOptions, WalletManagerState, WalletState } from './types'
+import { ChainName, DeviceType, DownloadInfo, EndpointOptions, OS, SignerOptions, WalletManagerState, WalletState } from './types'
 import { ChainNameNotExist, createObservable, getValidRpcEndpoint, getWalletNameFromLocalStorage, NoValidRpcEndpointFound, removeWalletNameFromLocalStorage, setWalletNameToLocalStorage, WalletNotExist } from './utils'
 import { AminoGeneralOfflineSigner, DirectGeneralOfflineSigner, ICosmosGeneralOfflineSigner } from '@interchainjs/cosmos/types/wallet';
 import { SignerOptions as InterchainSignerOptions } from '@interchainjs/cosmos/types/signing-client';
 import { SigningClient } from '@interchainjs/cosmos/signing-client'
 import { chainRegistryChainToKeplr } from '@chain-registry/v2-keplr';
+import Bowser from 'bowser';
 
 export class WalletManager {
   chains: Chain[] = []
@@ -106,6 +107,7 @@ export class WalletManager {
     } catch (error: any) {
       wallet.walletState = WalletState.Rejected
       wallet.errorMessage = error.message
+      throw error
     }
   }
 
@@ -247,4 +249,29 @@ export class WalletManager {
     const { rpcEndpoint, offlineSigner, options } = await this.getInterchainSignerOptions(walletName, chainName)
     return SigningClient.connectWithSigner(rpcEndpoint, offlineSigner, options)
   }
+
+  getEnv() {
+    const parser = Bowser.getParser(window.navigator.userAgent)
+    const env = {
+      browser: parser.getBrowserName(true),
+      device: (parser.getPlatform().type || 'desktop') as DeviceType,
+      os: parser.getOSName(true) as OS,
+    }
+    return env
+  }
+
+  getDownloadLink(walletName: string) {
+    const env = this.getEnv()
+    const wallet = this.getWalletByName(walletName)
+    return wallet.info.downloads.find((d: DownloadInfo) => {
+      if (d.device === 'desktop') {
+        return d.browser === env.browser
+      } else if (d.device === 'mobile') {
+        return d.os === env.os
+      } else {
+        return null
+      }
+    })
+  }
+
 }

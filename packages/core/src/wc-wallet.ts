@@ -85,6 +85,7 @@ export class WCWallet extends BaseWallet {
       })
 
       this.pairingUri = uri
+      this.events.emit('walletConnectQRCode', uri)
 
       const session = await approval()
       this.session = session
