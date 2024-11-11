@@ -25,5 +25,5 @@
     "vite-plugin-ngrok": "^1.0.0",
     "vite-plugin-node-polyfills": "^0.22.0"
   },
-  "gitHead": "a9cc01ebfe784e8ce6166bf7053e0206e0ab6eb6"
+  "gitHead": "e37d5d9a81691eaf7296d7813e291008274ea12c"
 }
