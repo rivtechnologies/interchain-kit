@@ -9,10 +9,10 @@ import { useWalletManager } from './useWalletManager';
 import { BaseWallet } from '@interchain-kit/core';
 
 export const useChainWallet = (chainName: Ref<string>, walletName: Ref<string>): UseChainWalletReturnType => {
-  const logoUrl = ref('');
+  const logoUrl = ref<string>('');
   const walletManager = useWalletManager();
-  const chainToShow = ref();
-  const assetList = ref();
+  const chainToShow = ref<Chain>();
+  const assetList = ref<AssetList>();
   const account = useAccount(chainName, walletName);
   const interchainClient = useInterchainClient(chainName, walletName);
   const getRpcEndpoint = ref()

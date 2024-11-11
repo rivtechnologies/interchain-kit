@@ -11,7 +11,7 @@ export function useInterchainClient(chainName: Ref<string>, walletName: Ref<stri
 	const rpcEndpoint = ref<string | HttpEndpoint>('');
 	const signingClient = ref<SigningClient>();
 	const error = ref<string | unknown | null>(null);
-	const isLoading = ref(false);
+	const isLoading = ref<boolean>(false);
 
 	const walletManager = useWalletManager();
 
