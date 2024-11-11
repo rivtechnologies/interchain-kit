@@ -43,6 +43,7 @@
     "@walletconnect/sign-client": "^2.17.1",
     "@walletconnect/types": "^2.17.1",
     "axios": "^1.7.7",
+    "bowser": "^2.11.0",
     "buffer": "^6.0.3",
     "interchainjs": "0.0.1-beta.27",
     "long": "^5.2.3"

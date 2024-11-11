@@ -1,7 +1,6 @@
 import { ConnectModalHead, ConnectModalStatus } from "@interchain-ui/react";
 import { useAccount, useCurrentWallet, useWalletManager } from "../../hooks";
 import { useWalletModal } from "../provider";
-import React from "react";
 import { getWalletInfo } from "../../utils";
 import { AstronautSvg } from "./Astronaut";
 
