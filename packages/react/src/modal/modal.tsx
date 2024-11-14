@@ -44,7 +44,7 @@ export const WalletModal = () => {
 
     try {
       if (wallet.info.mode === "wallet-connect") {
-        wallet.events.on("walletConnectQRCode", (uri: string) => {
+        wallet.events.on("displayWalletConnectQRCodeUri", (uri: string) => {
           setModalView({
             header: <QRCodeHeader onBack={gotoWalletList} />,
             content: <QRCodeContent />,
@@ -55,8 +55,8 @@ export const WalletModal = () => {
       await walletManager.connect(wallet?.info?.name);
 
       setModalView({
-        header: <ConnectedHeader wallet={wallet} onBack={gotoWalletList} />,
-        content: <ConnectedContent wallet={wallet} />,
+        header: <ConnectedHeader onBack={gotoWalletList} />,
+        content: <ConnectedContent />,
       });
     } catch (error) {
       setModalView({

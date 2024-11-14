@@ -11,6 +11,8 @@ import {
 
 export class ExtensionWallet extends BaseWallet {
 
+  client: any
+
   isExtensionInstalled: boolean = false;
 
   defaultSignOptions = {
@@ -28,9 +30,8 @@ export class ExtensionWallet extends BaseWallet {
       this.client = await getClientFromExtension(this.info.windowKey)
       this.isExtensionInstalled = true
 
-      this.events.removeAllListeners()
       window.addEventListener(this.info.keystoreChange, (event) => {
-        this.events.emit('keystoreChange', event)
+        this.events.emit('accountChanged', event)
       })
 
     } catch (error) {
@@ -153,16 +154,4 @@ export class ExtensionWallet extends BaseWallet {
     return this.client.experimentalSuggestChain(chainInfo);
   }
 
-  async bindingEvent() {
-    this.events.removeAllListeners()
-    window.addEventListener(this.info.keystoreChange, (event) => {
-      this.events.emit('keystoreChange', event)
-    })
-  }
-
-  async unbindingEvent() {
-    window.removeEventListener(this.info.keystoreChange, (event) => {
-      this.events.emit('keystoreChange', event)
-    })
-  }
 }

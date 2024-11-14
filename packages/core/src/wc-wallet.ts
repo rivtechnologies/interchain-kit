@@ -54,22 +54,28 @@ export class WCWallet extends BaseWallet {
 
   removePairing() {
     const pairings = this.getAllPairings()
+    console.log(pairings)
     for (const pairing of pairings) {
-      this.signClient.core.pairing.disconnect({ topic: pairing.topic })
-      // this.signClient.core.pairing.pairings.delete(pairing.topic, {
-      //   code: 7001,
-      //   message: 'disconnect'
-      // })
+      // this.signClient.core.pairing.disconnect({ topic: pairing.topic })
+      this.signClient.core.pairing.pairings.delete(pairing.topic, {
+        code: 7001,
+        message: 'disconnect'
+      })
     }
   }
 
   async connect(chainIds: string | string[]) {
-    this.removePairing()
+    // this.removePairing()
+    console.log('connect has been call')
+
+    const pairings = this.signClient.core.pairing.getPairings()
+    console.log(pairings)
 
     const chainIdsWithNS = Array.isArray(chainIds) ? chainIds.map((chainId) => `cosmos:${chainId}`) : [`cosmos:${chainIds}`]
 
     try {
       const { uri, approval } = await this.signClient.connect({
+        pairingTopic: this.signClient.core.pairing.getPairings()[0]?.topic,
         requiredNamespaces: {
           cosmos: {
             methods: [
@@ -85,7 +91,7 @@ export class WCWallet extends BaseWallet {
       })
 
       this.pairingUri = uri
-      this.events.emit('walletConnectQRCode', uri)
+      this.events.emit('displayWalletConnectQRCodeUri', uri)
 
       const session = await approval()
       this.session = session
@@ -258,10 +264,18 @@ export class WCWallet extends BaseWallet {
     //   })
     // }
 
-    this.signClient.events.on('session_event', (data: SignClientTypes.EventArguments['session_event']) => {
-      console.log('session_event_trigger', data)
-      this.events.emit('keystoreChange')
-    })
+    // this.signClient.events.on('session_event', (data: SignClientTypes.EventArguments['session_event']) => {
+    //   console.log('session_event_trigger', data)
+    //   this.events.emit('accountChanged', data)
+    // })
+
+    for (const event of events) {
+      // console.log(event)
+      this.signClient.on(event as keyof typeof WcEventTypes | keyof typeof WcProviderEventType, (data: any) => {
+        console.log(event, data)
+      })
+    }
+
   }
 
   unbindingEvent(): void {
