@@ -52,30 +52,28 @@ export class WCWallet extends BaseWallet {
     return this.signClient.core.pairing.getPairings()
   }
 
-  removePairing() {
+  async removePairing() {
     const pairings = this.getAllPairings()
-    console.log(pairings)
+
     for (const pairing of pairings) {
       // this.signClient.core.pairing.disconnect({ topic: pairing.topic })
-      this.signClient.core.pairing.pairings.delete(pairing.topic, {
+      await this.signClient.core.pairing.pairings.delete(pairing.topic, {
         code: 7001,
         message: 'disconnect'
       })
+      // await this.signClient.disconnect({ topic: pairing.topic, reason: { code: 7001, message: 'disconnect' } })
     }
   }
 
   async connect(chainIds: string | string[]) {
-    // this.removePairing()
-    console.log('connect has been call')
-
-    const pairings = this.signClient.core.pairing.getPairings()
-    console.log(pairings)
-
+    const pairings = this.signClient.pairing.getAll()
     const chainIdsWithNS = Array.isArray(chainIds) ? chainIds.map((chainId) => `cosmos:${chainId}`) : [`cosmos:${chainIds}`]
+
+    const latestPairing = pairings[pairings.length - 1]
 
     try {
       const { uri, approval } = await this.signClient.connect({
-        pairingTopic: this.signClient.core.pairing.getPairings()[0]?.topic,
+        pairingTopic: latestPairing?.topic,
         requiredNamespaces: {
           cosmos: {
             methods: [
@@ -104,7 +102,7 @@ export class WCWallet extends BaseWallet {
   }
 
   async disconnect(): Promise<void> {
-    this.removePairing()
+    await this.removePairing()
     this.session = null
     this.pairingUri = null
   }
@@ -151,24 +149,29 @@ export class WCWallet extends BaseWallet {
   }
 
   override async getAccount(chainId: string): Promise<WalletAccount> {
-    if (!this.signClient || !this.session?.topic) {
-      return;
-    }
-    const accounts = await this.signClient.request({
-      topic: this.session?.topic,
-      request: {
-        method: 'cosmos_getAccounts',
-        params: {}
-      },
-      chainId: `cosmos:${chainId}`
-    }) as any[]
+    try {
+      if (!this.signClient || !this.session?.topic) {
+        return;
+      }
+      const accounts = await this.signClient.request({
+        topic: this.session?.topic,
+        request: {
+          method: 'cosmos_getAccounts',
+          params: {}
+        },
+        chainId: `cosmos:${chainId}`
+      }) as any[]
 
-    const { address, algo, pubkey } = accounts[0]
+      const { address, algo, pubkey } = accounts[0]
 
-    return {
-      address,
-      algo: algo as Algo,
-      pubkey: new Uint8Array(Buffer.from(pubkey, 'base64')),
+      return {
+        address,
+        algo: algo as Algo,
+        pubkey: new Uint8Array(Buffer.from(pubkey, 'base64')),
+      }
+    } catch (error) {
+      this.errorMessage = (error as any).message
+      throw error
     }
   }
 
@@ -271,7 +274,7 @@ export class WCWallet extends BaseWallet {
 
     for (const event of events) {
       // console.log(event)
-      this.signClient.on(event as keyof typeof WcEventTypes | keyof typeof WcProviderEventType, (data: any) => {
+      this.signClient.on(event as string, (data: any) => {
         console.log(event, data)
       })
     }

@@ -45,10 +45,12 @@ export const WalletModal = () => {
     try {
       if (wallet.info.mode === "wallet-connect") {
         wallet.events.on("displayWalletConnectQRCodeUri", (uri: string) => {
-          setModalView({
-            header: <QRCodeHeader onBack={gotoWalletList} />,
-            content: <QRCodeContent />,
-          });
+          if (uri) {
+            setModalView({
+              header: <QRCodeHeader onBack={gotoWalletList} />,
+              content: <QRCodeContent />,
+            });
+          }
         });
       }
 
