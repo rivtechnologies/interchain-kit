@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/coin98-extension",
-  "version": "0.0.1-beta.37",
+  "version": "0.0.1-beta.38",
   "author": "cosmology-tech <developers@cosmology.zone>",
   "description": "cosmos-kit wallet connector",
   "main": "index.js",
@@ -32,7 +32,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@interchain-kit/core": "0.0.1-beta.37"
+    "@interchain-kit/core": "0.0.1-beta.38"
   },
   "gitHead": "e37d5d9a81691eaf7296d7813e291008274ea12c"
 }
