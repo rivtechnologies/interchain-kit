@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/vue",
-  "version": "0.0.1-beta.36",
+  "version": "0.0.1-beta.38",
   "author": "cosmology-tech <developers@cosmology.zone>",
   "description": "interchain-kit for vue",
   "main": "index.umd.js",
@@ -28,7 +28,7 @@
   "keywords": [],
   "dependencies": {
     "@chain-registry/v2-types": "^0.53.0",
-    "@interchain-kit/core": "0.0.1-beta.36",
+    "@interchain-kit/core": "0.0.1-beta.38",
     "@interchain-ui/vue": "^1.4.1",
     "@interchainjs/cosmos": "0.0.1-beta.34",
     "@interchainjs/cosmos-types": "0.0.1-beta.17",
@@ -44,5 +44,5 @@
   "peerDependencies": {
     "vue": ">=3.0.0"
   },
-  "gitHead": "a9cc01ebfe784e8ce6166bf7053e0206e0ab6eb6"
+  "gitHead": "a4ef44d9a18e2d3460c760bf30b24685dd49e7f3"
 }

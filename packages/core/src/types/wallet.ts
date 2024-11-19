@@ -123,6 +123,10 @@ export enum WalletState {
   Rejected = "Rejected",
 }
 
+export interface WalletEvents {
+  'accountChanged': [event: any];
+  'displayWalletConnectQRCodeUri': [chainId: string];
+}
 
 export const WcProviderEventType = {
   chainChanged: (chainId: string) => { },

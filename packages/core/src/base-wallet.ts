@@ -1,5 +1,5 @@
 import { StdSignDoc } from '@interchainjs/types';
-import { BroadcastMode, DirectSignDoc, SignOptions, SimpleAccount, Wallet, WalletAccount, WalletState } from "./types";
+import { BroadcastMode, DirectSignDoc, SignOptions, SimpleAccount, Wallet, WalletAccount, WalletEvents, WalletState } from "./types";
 import EventEmitter from "events";
 import { ChainInfo } from '@keplr-wallet/types'
 import {
@@ -7,17 +7,16 @@ import {
   OfflineDirectSigner,
   AminoSignResponse, StdSignature, DirectSignResponse
 } from '@interchainjs/cosmos/types/wallet';
+
 export abstract class BaseWallet {
 
   info?: Wallet
-
-  client: any;
 
   walletState: WalletState;
 
   errorMessage: string;
 
-  events = new EventEmitter();
+  events = new EventEmitter<WalletEvents>();
 
   constructor(info?: Wallet) {
     this.info = info
@@ -50,8 +49,4 @@ export abstract class BaseWallet {
   abstract sendTx(chainId: string, tx: Uint8Array, mode: BroadcastMode): Promise<Uint8Array>
 
   abstract addSuggestChain(chainInfo: ChainInfo): Promise<void>
-
-  abstract bindingEvent(): void
-
-  abstract unbindingEvent(): void
 }

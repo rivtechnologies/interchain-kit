@@ -2,13 +2,19 @@ import { ConnectModalHead, ConnectModalStatus } from "@interchain-ui/react";
 import { useWalletModal } from "../provider";
 import { useCurrentWallet, useWalletManager } from "../../hooks";
 import { getWalletInfo } from "../../utils";
+import { BaseWallet } from "@interchain-kit/core";
 
-export const RejectHeader = ({ onBack }: { onBack: () => void }) => {
+export const RejectHeader = ({
+  wallet,
+  onBack,
+}: {
+  wallet: BaseWallet;
+  onBack: () => void;
+}) => {
   const { close } = useWalletModal();
-  const currentWallet = useCurrentWallet();
   return (
     <ConnectModalHead
-      title={currentWallet.info.prettyName}
+      title={wallet.info.prettyName}
       hasBackButton={true}
       onClose={close}
       onBack={onBack}
@@ -17,9 +23,7 @@ export const RejectHeader = ({ onBack }: { onBack: () => void }) => {
   );
 };
 
-export const RejectContent = () => {
-  const currentWallet = useCurrentWallet();
-
+export const RejectContent = ({ wallet }: { wallet: BaseWallet }) => {
   const walletManager = useWalletManager();
 
   const { close } = useWalletModal();
@@ -27,14 +31,10 @@ export const RejectContent = () => {
   return (
     <ConnectModalStatus
       status="Rejected"
-      wallet={getWalletInfo(currentWallet)}
+      wallet={getWalletInfo(wallet)}
       contentHeader={"Request Rejected"}
-      contentDesc={
-        currentWallet.errorMessage || "Connection permission is denied."
-      }
-      onConnect={() =>
-        walletManager.connect(currentWallet.info.name).then(close)
-      }
+      contentDesc={wallet.errorMessage || "Connection permission is denied."}
+      onConnect={() => walletManager.connect(wallet.info.name).then(close)}
     />
   );
 };
