@@ -3,6 +3,7 @@ import UseChain from './views/use-chain.vue'
 import UseChainWallet from './views/use-chain-wallet.vue'
 import UseOfflineSigner from './views/useOfflineSigner.vue'
 import UseConfig from './views/use-config.vue'
+import ActiveWallet from './views/active-wallet.vue'
 import WalletConnect from './views/wallet-connect.vue'
 
 const routes = [
@@ -11,6 +12,7 @@ const routes = [
 	{ path: '/use-chain-wallet', name: 'useChainWallet', component: UseChainWallet },
 	{ path: '/use-offline-signer', name: 'useOfflineSigner', component: UseOfflineSigner },
 	{ path: '/use-config', name: 'useConfig', component: UseConfig },
+	{ path: '/active-wallet', name: 'activeWallet', component: ActiveWallet },
 	{ path: '/use-wallet', name: 'walletConnect', component: WalletConnect }
 ]
 
