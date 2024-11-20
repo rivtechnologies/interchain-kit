@@ -17,18 +17,19 @@ import { galaxyStationWallet } from "@interchain-kit/galaxy-station-extension";
 import { okxWallet } from "@interchain-kit/okx-extension";
 import { coin98Wallet } from "@interchain-kit/coin98-extension";
 import { ledgerWallet } from "@interchain-kit/ledger";
+import { cosmosExtensionMetaMask } from "@interchain-kit/cosmos-extension-metamask";
 
 import { MockWallet } from "@interchain-kit/mock-wallet";
 import { starshipChain, starshipChain1 } from "./utils/starship.ts";
 import { ThemeProvider } from "@interchain-ui/react";
 
 const chainNames = [
-  // "osmosistestnet",
-  "osmosis",
-  "juno",
-  "cosmoshub",
-  "stargaze",
-  "noble",
+  "osmosistestnet",
+  // "osmosis",
+  // "juno",
+  // "cosmoshub",
+  // "stargaze",
+  // "noble",
 ];
 // const chainNames = ["osmosistestnet"];
 // const chainNames = ["cosmoshub"];
@@ -65,13 +66,14 @@ const mock2Wallet = new MockWallet(wallet2Mnemonic, _chains, {
 const _wallets: BaseWallet[] = [
   // mock1Wallet,
   // mock2Wallet,
-  keplrWallet,
+  // keplrWallet,
   // leapWallet,
   // cosmostationWallet,
   // stationWallet,
   // galaxyStationWallet,
   // walletConnect,
-  ledgerWallet,
+  // ledgerWallet,
+  cosmosExtensionMetaMask,
 ];
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

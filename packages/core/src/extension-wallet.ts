@@ -1,3 +1,4 @@
+import { assetLists } from '@chain-registry/v2';
 import { StdSignDoc } from '@interchainjs/types';
 import { BroadcastMode, DirectSignDoc, SignOptions, SignType, Wallet, WalletAccount } from "./types";
 import Long from 'long';
@@ -8,6 +9,8 @@ import {
   OfflineDirectSigner,
   StdSignature,
 } from '@interchainjs/cosmos/types/wallet';
+import { AssetList, Chain } from '@chain-registry/v2-types';
+import { chainRegistryChainToKeplr } from '@chain-registry/v2-keplr';
 
 export class ExtensionWallet extends BaseWallet {
 
@@ -150,7 +153,8 @@ export class ExtensionWallet extends BaseWallet {
     return this.client.sendTx(chainId, tx, mode);
   }
 
-  async addSuggestChain(chainInfo: ChainInfo): Promise<void> {
+  async addSuggestChain(chain: Chain, assetLists: AssetList[]): Promise<void> {
+    const chainInfo = chainRegistryChainToKeplr(chain, assetLists)
     return this.client.experimentalSuggestChain(chainInfo);
   }
 

@@ -7,7 +7,6 @@ import { ChainNameNotExist, createObservable, getValidRpcEndpoint, getWalletName
 import { AminoGeneralOfflineSigner, DirectGeneralOfflineSigner, ICosmosGeneralOfflineSigner } from '@interchainjs/cosmos/types/wallet';
 import { SignerOptions as InterchainSignerOptions } from '@interchainjs/cosmos/types/signing-client';
 import { SigningClient } from '@interchainjs/cosmos/signing-client'
-import { chainRegistryChainToKeplr } from '@chain-registry/v2-keplr';
 import Bowser from 'bowser';
 
 export class WalletManager {
@@ -89,8 +88,7 @@ export class WalletManager {
               (error as any).message === `There is no chain info for ${chain.chainId}` ||
               (error as any).message === `There is no modular chain info for ${chain.chainId}`
             ) {
-              const chainInfo = chainRegistryChainToKeplr(chain, this.assetLists)
-              await wallet.addSuggestChain(chainInfo)
+              await wallet.addSuggestChain(chain, this.assetLists)
             } else {
               throw error
             }
