@@ -1,9 +1,7 @@
 import { AssetList, Chain } from '@chain-registry/v2-types';
 import { computed, Ref, ref, watch } from 'vue';
-
 import { UseChainWalletReturnType } from '../types/chain';
 import { useAccount } from './useAccount';
-import { useCurrentWallet } from './useCurrentWallet';
 import { useInterchainClient } from './useInterchainClient';
 import { useWalletManager } from './useWalletManager';
 import { BaseWallet } from '@interchain-kit/core';

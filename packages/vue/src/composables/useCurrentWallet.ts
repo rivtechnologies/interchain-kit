@@ -1,6 +1,4 @@
-
 import { ref, watch } from 'vue';
-
 import { BaseWallet } from '@interchain-kit/core';
 import { useWalletManager } from './useWalletManager';
 

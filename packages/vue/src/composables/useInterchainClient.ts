@@ -37,14 +37,14 @@ export function useInterchainClient(chainName: Ref<string>, walletName: Ref<stri
 	watch([chainName, wallet, walletManager], initialize);
 	watch(wallet, (newWt, oldWt) => {
 		if (newWt) {
-			oldWt?.events.off('keystoreChange', initialize)
-			newWt?.events.on('keystoreChange', initialize)
+			oldWt?.events.off('accountChanged', initialize)
+			newWt?.events.on('accountChanged', initialize)
 		}
 	})
 	initialize();
 
 	onMounted(() => {
-		wallet.value?.events.on('keystoreChange', initialize)
+		wallet.value?.events.on('accountChanged', initialize)
 	})
 
 	return {

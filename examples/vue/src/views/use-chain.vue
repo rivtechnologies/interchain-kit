@@ -4,10 +4,10 @@ import { useChain } from '@interchain-kit/vue';
 import { createGetBalance } from "interchainjs/cosmos/bank/v1beta1/query.rpc.func";
 import { createSend } from "interchainjs/cosmos/bank/v1beta1/tx.rpc.func";
 import { coins } from "@cosmjs/amino";
- 
+
 const chainName = ref('osmosis')
-const { 
-  logoUrl, openView, connect, disconnect, wallet, address, 
+const {
+  logoUrl, openView, connect, disconnect, wallet, address,
   status, username, message, chain, rpcEndpoint, signingClient
 } = useChain(chainName);
 
@@ -16,7 +16,7 @@ const amount = ref('')
 const isSending = ref(false)
 const balance = ref()
 
-const handleBalanceQuery = async() => {
+const handleBalanceQuery = async () => {
   const balanceQuery = createGetBalance(rpcEndpoint.value as string);
   const { balance: bc } = await balanceQuery({
     address: address.value,
@@ -25,7 +25,7 @@ const handleBalanceQuery = async() => {
   balance.value = bc?.amount
 }
 
-const handleSendToken = async() => {
+const handleSendToken = async () => {
   const denom = chain.value.staking?.stakingTokens[0].denom as string;
   const txSend = createSend(signingClient.value);
   const fee = {
@@ -54,10 +54,7 @@ const handleSendToken = async() => {
 
 <template>
   <div>
-    <select
-      v-model="chainName"
-      className="h-9 px-3 mr-4 border rounded-md shadow-sm"
-    >
+    <select v-model="chainName" className="h-9 px-3 mr-4 border rounded-md shadow-sm">
       <!-- <option value="osmosistestnet">Osmosis Testnet</option> -->
       <option value="juno">Juno</option>
       <option value="osmosis">Osmosis</option>
@@ -68,10 +65,10 @@ const handleSendToken = async() => {
     <div>rpcEndpoint: {{ rpcEndpoint }}</div>
     <div>address: {{ address }}</div>
     <div>balance: {{ balance }} <button @click="handleBalanceQuery">getBalance</button></div>
-    <div>walletStatus: {{ status  }}</div>
+    <div>walletStatus: {{ status }}</div>
     <div>username: {{ username }}</div>
     <div>message: {{ message }}</div>
-    <button @click="openView">openView</button>
+    <!-- <button @click="openView">openView</button> -->
     <button v-if="status !== 'Connected'" @click="connect">connect</button>
     <button v-if="status === 'Connected'" @click="disconnect">disconnect</button>
     <div>
@@ -82,6 +79,4 @@ const handleSendToken = async() => {
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
