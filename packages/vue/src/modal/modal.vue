@@ -4,16 +4,30 @@
     <ConnectModalHead :title="title" :hasCloseButton="true" :hasBackButton="hasBack" @back="isList = true"
       :closeButtonProps="closeButtonProps" />
     <ConnectModalWalletList v-if="isList" :wallets="wallets" @wallet-item-click="walletClick" />
-    <ConnectModalQrcode v-else-if="currentWallet?.info?.mode === 'wallet-connect'"
-      :status="currentWallet?.pairingUri ? 'Done' : 'Pending'" :link="currentWallet?.pairingUri"
-      description="Open App to connect" @onRefresh="onRefresh" qrCodeSize="230" />
-    <ConnectModalStatus v-else :wallet="{
-      name: currentWallet.info?.name,
-      prettyName: currentWallet.info?.prettyName,
-      logo: currentWallet.info?.logo as string,
-      mobileDisable: true
-    }" :connected-info="connectedInfo" :status="currentWallet?.walletState" :content-header="contentHeader"
-      :content-desc="contentDesc" @connect="walletClick(currentWallet)" @disconnect="disconnect(currentWallet)" />
+    <ConnectModalQrcode 
+      v-else-if="currentWallet?.info?.mode === 'wallet-connect' && currentWallet?.pairingUri"
+      status="Done" 
+      :link="currentWallet?.pairingUri"
+      description="Open App to connect" 
+      @onRefresh="onRefresh" 
+      qrCodeSize="230" 
+    />
+    <!-- Connecting, Connected, Rejected -->
+    <ConnectModalStatus 
+      v-else 
+      :wallet="{
+        name: currentWallet.info?.name,
+        prettyName: currentWallet.info?.prettyName,
+        logo: currentWallet.info?.logo as string,
+        mobileDisable: true
+      }" 
+      :connected-info="connectedInfo" 
+      :status="currentWallet?.walletState" 
+      :content-header="contentHeader"
+      :content-desc="contentDesc" 
+      @connect="walletClick(currentWallet)" 
+      @disconnect="disconnect(currentWallet)" 
+    />
   </Modal>
 </template>
 

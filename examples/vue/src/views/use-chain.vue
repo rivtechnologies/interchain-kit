@@ -13,7 +13,6 @@ const {
 
 const recipientAddress = ref('')
 const amount = ref('')
-const isSending = ref(false)
 const balance = ref()
 
 const handleBalanceQuery = async () => {
