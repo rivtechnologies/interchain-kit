@@ -4,7 +4,7 @@ import { ChainProvider } from '@interchain-kit/vue'
 import { keplrWallet } from '@interchain-kit/keplr-extension';
 import { leapWallet } from '@interchain-kit/leap-extension';
 import { RouterView } from 'vue-router';
-import { BaseWallet, WCWallet } from "@interchain-kit/core";
+import { WCWallet } from "@interchain-kit/core";
 import { chain as junoChain, assetList as junoAssetList } from "@chain-registry/v2/mainnet/juno";
 import { chain as osmosisChain, assetList as osmosisAssetList } from "@chain-registry/v2/mainnet/osmosis";
 import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from "@chain-registry/v2/mainnet/cosmoshub";
@@ -15,9 +15,11 @@ const walletConnect = new WCWallet();
 
 <template>
   <ThemeProvider>
-    <ChainProvider :wallets="[keplrWallet, leapWallet, walletConnect]"
+    <ChainProvider 
+      :wallets="[keplrWallet, leapWallet, walletConnect]"
       :chains="[osmosisChain, junoChain, cosmoshubChain, stargazeChain]"
-      :asset-lists="[osmosisAssetList, junoAssetList, cosmoshubAssetList, stargazeAssetList]" :signer-options="{}"
+      :asset-lists="[osmosisAssetList, junoAssetList, cosmoshubAssetList, stargazeAssetList]"
+      :signer-options="{}"
       :endpoint-options="{}">
       <router-view />
     </ChainProvider>

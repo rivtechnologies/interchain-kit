@@ -13,7 +13,7 @@ const routes = [
 	{ path: '/use-offline-signer', name: 'useOfflineSigner', component: UseOfflineSigner },
 	{ path: '/use-config', name: 'useConfig', component: UseConfig },
 	{ path: '/active-wallet', name: 'activeWallet', component: ActiveWallet },
-	{ path: '/use-wallet', name: 'walletConnect', component: WalletConnect }
+	{ path: '/wallet-connect', name: 'walletConnect', component: WalletConnect }
 ]
 
 const router = createRouter({

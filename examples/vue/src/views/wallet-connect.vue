@@ -1,30 +1,34 @@
 <script setup lang="ts">
-import { useWalletManager } from '@interchain-kit/vue';
+import { useAccount, useWalletManager } from '@interchain-kit/vue';
 import { BaseWallet, WCWallet } from '@interchain-kit/core';
 import VueQrcode from '@chenfengyuan/vue-qrcode';
-import { ref } from 'vue';
+import { ref, computed, watch } from 'vue';
 
-const uri = ref('')
 const walletManager = useWalletManager()
-const getCode = async() => {
-  const chainIds = walletManager.chains.map(c => c.chainId)
-  const currentWallet = walletManager.wallets.find((w: BaseWallet) => w.info?.name === 'WalletConnect')
-  // await currentWallet?.connect(chainIds as string[])
-  // await walletManager.connect('WalletConnect')
-  console.log((currentWallet as WCWallet).pairingUri)
-  uri.value = (currentWallet as WCWallet).pairingUri || "";
+const chainName = ref('osmosis')
+const currentWallet = ref<WCWallet>(walletManager.wallets.find((w: BaseWallet) => w.info?.name === 'WalletConnect') as WCWallet)
+const walletName = computed(() => {
+  return currentWallet.value?.info?.name || ''
+})
+watch(walletManager, (wm: any) => {
+  currentWallet.value = wm.wallets.find((w: BaseWallet) => w.info?.name === 'WalletConnect')
+})
+const account = useAccount(chainName, walletName)
+const connect = async() => {
+  await walletManager.connect('WalletConnect')
 }
 
-const disconnect = () => {
-
+const disconnect = async() => {
+  await walletManager.disconnect('WalletConnect')
 }
 </script>
 
 <template>
   <div>
-    <button @click="getCode">connect</button>
+    address: {{ account?.address }}
+    <button @click="connect">connect</button>
     <button @click="disconnect">disconnect</button>
-    <vue-qrcode v-if="uri" :value="uri" :options="{ width: 200 }"></vue-qrcode>
+    <vue-qrcode v-if="currentWallet?.pairingUri" :value="currentWallet?.pairingUri" :options="{ width: 200 }"></vue-qrcode>
   </div>
 </template>
 
