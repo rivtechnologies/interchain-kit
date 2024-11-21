@@ -23,17 +23,24 @@ import { starshipChain, starshipChain1 } from "./utils/starship.ts";
 import { ThemeProvider } from "@interchain-ui/react";
 
 const chainNames = [
-  // "osmosistestnet",
-  "osmosis",
-  "juno",
-  "cosmoshub",
-  "stargaze",
-  "noble",
+  "osmosistestnet",
+  // "osmosis",
+  // "juno",
+  // "cosmoshub",
+  // "stargaze",
+  // "noble",
 ];
 // const chainNames = ["osmosistestnet"];
 // const chainNames = ["cosmoshub"];
 
-const walletConnect = new WCWallet();
+const walletConnect = new WCWallet(undefined, {
+  metadata: {
+    name: "Wallet Connect In React Example",
+    description: "test",
+    url: "#",
+    icons: ["https://walletconnect.com/walletconnect-logo.png"],
+  },
+});
 
 const wallet1Mnemonic =
   "among machine material tide surround boy ramp nuclear body hover among address";
@@ -65,13 +72,13 @@ const mock2Wallet = new MockWallet(wallet2Mnemonic, _chains, {
 const _wallets: BaseWallet[] = [
   // mock1Wallet,
   // mock2Wallet,
-  keplrWallet,
+  // keplrWallet,
   // leapWallet,
   // cosmostationWallet,
   // stationWallet,
   // galaxyStationWallet,
-  // walletConnect,
-  ledgerWallet,
+  walletConnect,
+  // ledgerWallet,
 ];
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
