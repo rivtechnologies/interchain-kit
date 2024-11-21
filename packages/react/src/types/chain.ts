@@ -1,7 +1,7 @@
 import { HttpEndpoint } from '@interchainjs/types';
-import { SigningClient } from '@interchainjs/cosmos/signing-client';
 import { Chain, AssetList } from '@chain-registry/v2-types';
 import { BaseWallet, WalletState } from '@interchain-kit/core';
+import { SigningClient } from './sign-client';
 
 export type CosmosKitUseChainReturnType = {
   connect: () => void
@@ -26,4 +26,11 @@ export type UseChainReturnType = {
   error: unknown
 } & CosmosKitUseChainReturnType
 
-export type UseChainWalletReturnType = Omit<UseChainReturnType, 'openView' | 'closeView'>  
+export type UseChainWalletReturnType = Omit<UseChainReturnType, 'openView' | 'closeView'>
+
+export type UseInterchainClientReturnType = {
+  rpcEndpoint: string | HttpEndpoint | undefined,
+  signingClient: SigningClient | null,
+  error: string | unknown | null,
+  isLoading: boolean
+}

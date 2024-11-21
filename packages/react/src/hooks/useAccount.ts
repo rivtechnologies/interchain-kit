@@ -32,7 +32,7 @@ export const useAccount = (chainName: string, walletName: string): WalletAccount
 
   useEffect(() => {
     if (wallet && walletManager.state === WalletManagerState.Initialized) {
-      wallet.events.on('keystoreChange', getAccount)
+      wallet.events.on('accountChanged', getAccount)
     }
   }, [wallet, walletManager.state])
 

@@ -3,8 +3,8 @@ import { ICON } from './constant';
 
 
 export const LedgerInfo: Wallet = {
-    name: 'ledger-web-usb-hid',
-    prettyName: 'Ledger',
-    logo: ICON,
-    mode: 'ledger',
+  name: 'ledger-web-usb-hid',
+  prettyName: 'Ledger',
+  logo: ICON,
+  mode: 'ledger',
 };

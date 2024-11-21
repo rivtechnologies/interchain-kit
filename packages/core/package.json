@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/core",
-  "version": "0.0.1-beta.33",
+  "version": "0.0.1-beta.38",
   "author": "cosmology-tech <developers@cosmology.zone>",
   "description": "cosmos-kit wallet connector core package",
   "main": "index.js",
@@ -34,8 +34,8 @@
     "@chain-registry/v2": "^1.71.1",
     "@chain-registry/v2-keplr": "^0.0.2",
     "@chain-registry/v2-types": "^0.53.0",
-    "@interchainjs/cosmos": "0.0.1-beta.19",
-    "@interchainjs/cosmos-types": "0.0.1-beta.16",
+    "@interchainjs/cosmos": "0.0.1-beta.20",
+    "@interchainjs/cosmos-types": "0.0.1-beta.17",
     "@ledgerhq/hw-app-cosmos": "^6.30.0",
     "@ledgerhq/hw-transport": "^6.31.0",
     "@ledgerhq/hw-transport-webhid": "^6.29.0",
@@ -43,12 +43,13 @@
     "@walletconnect/sign-client": "^2.17.1",
     "@walletconnect/types": "^2.17.1",
     "axios": "^1.7.7",
+    "bowser": "^2.11.0",
     "buffer": "^6.0.3",
-    "interchainjs": "0.0.1-beta.26",
+    "interchainjs": "0.0.1-beta.27",
     "long": "^5.2.3"
   },
   "devDependencies": {
     "@keplr-wallet/types": "^0.12.102"
   },
-  "gitHead": "98e09a4c98adaec764d6aaab001de745642b4ca8"
+  "gitHead": "a4ef44d9a18e2d3460c760bf30b24685dd49e7f3"
 }

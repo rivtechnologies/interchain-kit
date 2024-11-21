@@ -1,33 +1,34 @@
 import { ConnectModalHead, ConnectModalStatus } from "@interchain-ui/react";
-import { useCurrentWallet, useWalletManager } from "../../hooks";
+import { useWalletManager } from "../../hooks";
 import { useWalletModal } from "../provider";
+import { BaseWallet } from "@interchain-kit/core";
 
-export const ConnectingHeader = ({ onBack }: { onBack: () => void }) => {
-  const currentWallet = useCurrentWallet();
+export const ConnectingHeader = ({
+  wallet,
+  onBack,
+}: {
+  wallet: BaseWallet;
+  onBack: () => void;
+}) => {
   const { close } = useWalletModal();
-  const walletManager = useWalletManager();
-  if (!currentWallet) return null;
+
   return (
     <ConnectModalHead
-      title={currentWallet.info.prettyName}
+      title={wallet.info.prettyName}
       hasBackButton={true}
       onClose={close}
       onBack={onBack}
       closeButtonProps={{
-        onClick: async () => {
-          await walletManager.disconnect(currentWallet.info.name);
-          close();
-        },
+        onClick: close,
       }}
     />
   );
 };
 
-export const ConnectingContent = () => {
-  const currentWallet = useCurrentWallet();
+export const ConnectingContent = ({ wallet }: { wallet: BaseWallet }) => {
   const {
     info: { prettyName, mode },
-  } = currentWallet;
+  } = wallet;
 
   let title = "Requesting Connection";
   let desc: string =
@@ -35,14 +36,14 @@ export const ConnectingContent = () => {
       ? `Approve ${prettyName} connection request on your mobile.`
       : `Open the ${prettyName} browser extension to connect your wallet.`;
 
-  if (!currentWallet) return null;
+  if (!wallet) return null;
 
   return (
     <ConnectModalStatus
       wallet={{
-        name: currentWallet.info.name,
-        prettyName: currentWallet.info.prettyName,
-        logo: currentWallet.info.logo as string,
+        name: wallet.info.name,
+        prettyName: wallet.info.prettyName,
+        logo: wallet.info.logo as string,
         mobileDisabled: true,
       }}
       status="Connecting"

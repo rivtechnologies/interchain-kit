@@ -2,12 +2,13 @@ import { HttpEndpoint } from '@interchainjs/types';
 import { Chain, AssetList } from '@chain-registry/v2-types'
 import { BaseWallet } from './base-wallet'
 import { WCWallet } from './wc-wallet';
-import { ChainName, EndpointOptions, SignerOptions, WalletManagerState, WalletState } from './types'
+import { ChainName, DeviceType, DownloadInfo, EndpointOptions, OS, SignerOptions, WalletManagerState, WalletState } from './types'
 import { ChainNameNotExist, createObservable, getValidRpcEndpoint, getWalletNameFromLocalStorage, NoValidRpcEndpointFound, removeWalletNameFromLocalStorage, setWalletNameToLocalStorage, WalletNotExist } from './utils'
 import { AminoGeneralOfflineSigner, DirectGeneralOfflineSigner, ICosmosGeneralOfflineSigner } from '@interchainjs/cosmos/types/wallet';
 import { SignerOptions as InterchainSignerOptions } from '@interchainjs/cosmos/types/signing-client';
 import { SigningClient } from '@interchainjs/cosmos/signing-client'
 import { chainRegistryChainToKeplr } from '@chain-registry/v2-keplr';
+import Bowser from 'bowser';
 
 export class WalletManager {
   chains: Chain[] = []
@@ -72,27 +73,33 @@ export class WalletManager {
       throw new WalletNotExist(walletName)
     }
 
+    this.currentWalletName = walletName
     wallet.errorMessage = ''
     wallet.walletState = WalletState.Connecting
 
     try {
-      await Promise.all(this.chains.map(async chain => {
-        try {
-          await wallet.connect(chain.chainId)
-        } catch (error) {
-          if (
-            (error as any).message === `There is no chain info for ${chain.chainId}` ||
-            (error as any).message === `There is no modular chain info for ${chain.chainId}`
-          ) {
-            const chainInfo = chainRegistryChainToKeplr(chain, this.assetLists)
-            await wallet.addSuggestChain(chainInfo)
-          } else {
-            throw error
-          }
-        }
-      }))
 
-      this.currentWalletName = walletName
+
+      if (wallet.info.mode === 'extension') {
+        await Promise.all(this.chains.map(async chain => {
+          try {
+            await wallet.connect(chain.chainId)
+          } catch (error) {
+            if (
+              (error as any).message === `There is no chain info for ${chain.chainId}` ||
+              (error as any).message === `There is no modular chain info for ${chain.chainId}`
+            ) {
+              const chainInfo = chainRegistryChainToKeplr(chain, this.assetLists)
+              await wallet.addSuggestChain(chainInfo)
+            } else {
+              throw error
+            }
+          }
+        }))
+      } else {
+        await wallet.connect(this.chains.map(chain => chain.chainId))
+      }
+
       wallet.walletState = WalletState.Connected
 
       setWalletNameToLocalStorage(walletName)
@@ -242,4 +249,29 @@ export class WalletManager {
     const { rpcEndpoint, offlineSigner, options } = await this.getInterchainSignerOptions(walletName, chainName)
     return SigningClient.connectWithSigner(rpcEndpoint, offlineSigner, options)
   }
+
+  getEnv() {
+    const parser = Bowser.getParser(window.navigator.userAgent)
+    const env = {
+      browser: parser.getBrowserName(true),
+      device: (parser.getPlatform().type || 'desktop') as DeviceType,
+      os: parser.getOSName(true) as OS,
+    }
+    return env
+  }
+
+  getDownloadLink(walletName: string) {
+    const env = this.getEnv()
+    const wallet = this.getWalletByName(walletName)
+    return wallet.info.downloads.find((d: DownloadInfo) => {
+      if (d.device === 'desktop') {
+        return d.browser === env.browser
+      } else if (d.device === 'mobile') {
+        return d.os === env.os
+      } else {
+        return null
+      }
+    })
+  }
+
 }

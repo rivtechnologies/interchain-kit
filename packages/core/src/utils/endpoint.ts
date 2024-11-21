@@ -48,11 +48,13 @@ export const isValidRpcEndpoint = async (endpoint: string | HttpEndpoint) => {
   }
 }
 
+const timeoutCheck = (ms: number) => new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
+
 export const getValidRpcEndpoint = async (endpoints: (string | HttpEndpoint)[]) => {
   let rpc: string | HttpEndpoint = ''
   for (const endpoint of endpoints) {
     try {
-      const res = await checkRpcEndpoint(endpoint)
+      const res = await Promise.race([checkRpcEndpoint(endpoint), timeoutCheck(1500)])
       if (res.status === 200) {
         rpc = endpoint
         break

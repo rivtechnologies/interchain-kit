@@ -1,0 +1,48 @@
+{
+  "name": "@interchain-kit/vue",
+  "version": "0.0.1-beta.38",
+  "author": "cosmology-tech <developers@cosmology.zone>",
+  "description": "interchain-kit for vue",
+  "main": "index.umd.js",
+  "module": "index.es.js",
+  "types": "index.d.ts",
+  "homepage": "https://github.com/interchain-kit/vue",
+  "license": "SEE LICENSE IN LICENSE",
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/interchain-kit/vue"
+  },
+  "bugs": {
+    "url": "https://github.com/interchain-kit/vue/issues"
+  },
+  "scripts": {
+    "copy": "copyfiles -f ../../LICENSE README.md package.json dist",
+    "clean": "rimraf dist/**",
+    "build": "vite build && npm run copy",
+    "dev": "tsc -w --preserveWatchOutput -p tsconfig.esm.json"
+  },
+  "keywords": [],
+  "dependencies": {
+    "@chain-registry/v2-types": "^0.53.0",
+    "@interchain-kit/core": "0.0.1-beta.38",
+    "@interchain-ui/vue": "^1.4.1",
+    "@interchainjs/cosmos": "0.0.1-beta.34",
+    "@interchainjs/cosmos-types": "0.0.1-beta.17",
+    "@types/node": "^22.7.5",
+    "@vue/compiler-sfc": "^3.5.12",
+    "interchainjs": "0.0.1-beta.27"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "vite-plugin-dts": "^4.2.4",
+    "vue-tsc": "^2.1.6"
+  },
+  "peerDependencies": {
+    "vue": ">=3.0.0"
+  },
+  "gitHead": "a4ef44d9a18e2d3460c760bf30b24685dd49e7f3"
+}
