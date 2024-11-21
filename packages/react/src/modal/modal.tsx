@@ -15,7 +15,12 @@ import {
 import { useWalletModal } from "./provider";
 import { useCurrentWallet, useWalletManager } from "../hooks";
 import { useEffect, useMemo, useState } from "react";
-import { BaseWallet, ExtensionWallet, WalletState } from "@interchain-kit/core";
+import {
+  BaseWallet,
+  ExtensionWallet,
+  WalletState,
+  WCWallet,
+} from "@interchain-kit/core";
 import { ConnectModal } from "@interchain-ui/react";
 
 export const WalletModal = () => {
@@ -25,36 +30,47 @@ export const WalletModal = () => {
 
   const walletManager = useWalletManager();
 
-  const handleSelectWallet = async (wallet: BaseWallet) => {
+  const handleSelectWallet = async (wallet: any) => {
+    const selectedWallet = walletManager.getWalletByName(
+      (wallet as BaseWallet).info.name
+    );
+
     setModalView({
       header: <ConnectingHeader wallet={wallet} onBack={gotoWalletList} />,
       content: <ConnectingContent wallet={wallet} />,
     });
 
     if (
-      wallet.info.mode === "extension" &&
-      !(wallet as ExtensionWallet).isExtensionInstalled
+      selectedWallet.info.mode === "extension" &&
+      !(selectedWallet as ExtensionWallet).isExtensionInstalled
     ) {
       setModalView({
-        header: <NotExistHeader wallet={wallet} onBack={gotoWalletList} />,
-        content: <NotExistContent wallet={wallet} />,
+        header: (
+          <NotExistHeader wallet={selectedWallet} onBack={gotoWalletList} />
+        ),
+        content: <NotExistContent wallet={selectedWallet} />,
       });
       return;
     }
 
     try {
-      if (wallet.info.mode === "wallet-connect") {
-        wallet.events.on("displayWalletConnectQRCodeUri", (uri: string) => {
-          if (uri) {
-            setModalView({
-              header: <QRCodeHeader onBack={gotoWalletList} />,
-              content: <QRCodeContent />,
-            });
+      if (selectedWallet.info.mode === "wallet-connect") {
+        (selectedWallet as WCWallet).setPairingToConnect(wallet.pairing);
+
+        selectedWallet.events.on(
+          "displayWalletConnectQRCodeUri",
+          (uri: string) => {
+            if (uri) {
+              setModalView({
+                header: <QRCodeHeader onBack={gotoWalletList} />,
+                content: <QRCodeContent />,
+              });
+            }
           }
-        });
+        );
       }
 
-      await walletManager.connect(wallet?.info?.name);
+      await walletManager.connect(selectedWallet?.info?.name);
 
       setModalView({
         header: <ConnectedHeader onBack={gotoWalletList} />,

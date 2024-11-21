@@ -34,7 +34,14 @@ const chainNames = [
 // const chainNames = ["osmosistestnet"];
 // const chainNames = ["cosmoshub"];
 
-const walletConnect = new WCWallet();
+const walletConnect = new WCWallet(undefined, {
+  metadata: {
+    name: "Wallet Connect In React Example",
+    description: "test",
+    url: "#",
+    icons: ["https://walletconnect.com/walletconnect-logo.png"],
+  },
+});
 
 const wallet1Mnemonic =
   "among machine material tide surround boy ramp nuclear body hover among address";
@@ -73,7 +80,9 @@ const _wallets: BaseWallet[] = [
   // galaxyStationWallet,
   // walletConnect,
   // ledgerWallet,
-  cosmosExtensionMetaMask,
+  // cosmosExtensionMetaMask,
+  walletConnect,
+  // ledgerWallet,
 ];
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

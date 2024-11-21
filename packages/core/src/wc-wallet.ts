@@ -1,6 +1,6 @@
 import { Algo, SimpleAccount, Wallet, WcEventTypes, WcProviderEventType } from './types/wallet';
 import { BaseWallet } from "./base-wallet";
-import { WalletAccount, SignOptions, DirectSignDoc, BroadcastMode } from "./types";
+import { WalletAccount, SignOptions, DirectSignDoc, BroadcastMode, DAppInfoForWalletConnect } from "./types";
 import { SignClient } from '@walletconnect/sign-client';
 import { PairingTypes, SessionTypes, SignClientTypes } from '@walletconnect/types';
 import { Buffer } from 'buffer'
@@ -21,7 +21,11 @@ export class WCWallet extends BaseWallet {
 
   signClient: InstanceType<typeof SignClient>;
 
-  constructor(option?: Wallet) {
+  pairingToConnect: PairingTypes.Struct = null
+
+  walletConnectOption: SignClientTypes.Options
+
+  constructor(option?: Wallet, walletConnectOption?: SignClientTypes.Options) {
     const defaultWalletConnectOption: Wallet = {
       name: 'WalletConnect',
       prettyName: 'Wallet Connect',
@@ -30,11 +34,14 @@ export class WCWallet extends BaseWallet {
     }
 
     super({ ...defaultWalletConnectOption, ...option })
+
+    this.walletConnectOption = walletConnectOption
   }
 
   override async init(): Promise<void> {
     this.events.removeAllListeners()
-    this.signClient = await SignClient.init({
+
+    const defaultOption = {
       projectId: '15a12f05b38b78014b2bb06d77eecdc3',
       // optional parameters
       relayUrl: 'wss://relay.walletconnect.org',
@@ -44,57 +51,92 @@ export class WCWallet extends BaseWallet {
         url: '#',
         icons: ['https://walletconnect.com/walletconnect-logo.png']
       }
-    })
+    }
+
+    this.signClient = await SignClient.init({ ...defaultOption, ...this.walletConnectOption })
     this.bindingEvent()
   }
 
-  getAllPairings(): PairingTypes.Struct[] {
-    return this.signClient.core.pairing.getPairings()
-  }
-
   async removePairing() {
-    const pairings = this.getAllPairings()
+    const pairings = this.signClient.pairing.getAll()
 
     for (const pairing of pairings) {
-      // this.signClient.core.pairing.disconnect({ topic: pairing.topic })
-      await this.signClient.core.pairing.pairings.delete(pairing.topic, {
+      await this.signClient.pairing.delete(pairing.topic, {
         code: 7001,
         message: 'disconnect'
       })
-      // await this.signClient.disconnect({ topic: pairing.topic, reason: { code: 7001, message: 'disconnect' } })
     }
   }
 
+  async removeSession() {
+    const sessions = this.signClient.session.getAll()
+    for (const session of sessions) {
+      await this.signClient.session.delete(session.topic, {
+        code: 6000,
+        message: 'user disconnect.'
+      })
+    }
+  }
+
+  getLatestSession() {
+    return this.signClient.session.getAll().pop()
+  }
+
+  getLatestPairing() {
+    return this.signClient.pairing.getAll({ active: true }).pop()
+  }
+
+  getActivePairing(): PairingTypes.Struct[] {
+    if (!this.signClient) {
+      return []
+    }
+    return this.signClient.pairing.getAll({ active: true })
+  }
+
+  setPairingToConnect(pairing: PairingTypes.Struct) {
+    this.pairingToConnect = pairing
+  }
+
   async connect(chainIds: string | string[]) {
-    const pairings = this.signClient.pairing.getAll()
+
     const chainIdsWithNS = Array.isArray(chainIds) ? chainIds.map((chainId) => `cosmos:${chainId}`) : [`cosmos:${chainIds}`]
 
-    const latestPairing = pairings[pairings.length - 1]
+    let session
+
+    if (this.session && this.pairingToConnect && this.session.peer.metadata.name !== this.pairingToConnect.peerMetadata.name) {
+      // if session exist and pairingToConnect exist same time
+      // check if the session is the same as pairingToConnect
+      // if not, remove the session and connect to pairingToConnect
+      await this.removeSession()
+    }
 
     try {
-      const { uri, approval } = await this.signClient.connect({
-        pairingTopic: latestPairing?.topic,
-        requiredNamespaces: {
-          cosmos: {
-            methods: [
-              'cosmos_getAccounts',
-              'cosmos_signAmino',
-              'cosmos_signDirect',
-            ],
-            chains: chainIdsWithNS,
-            events: ['chainChanged', 'accountsChanged']
-          },
-        }
+      session = this.getLatestSession()
+      if (session) {
+        this.session = session
+      } else {
+        await this.removeSession()
+        const { uri, approval } = await this.signClient.connect({
+          pairingTopic: this.pairingToConnect?.topic,
+          requiredNamespaces: {
+            cosmos: {
+              methods: [
+                'cosmos_getAccounts',
+                'cosmos_signAmino',
+                'cosmos_signDirect',
+              ],
+              chains: chainIdsWithNS,
+              events: ['chainChanged', 'accountsChanged']
+            },
+          }
+        })
+        this.pairingUri = uri
+        this.events.emit('displayWalletConnectQRCodeUri', uri)
 
-      })
-
-      this.pairingUri = uri
-      this.events.emit('displayWalletConnectQRCodeUri', uri)
-
-      const session = await approval()
-      this.session = session
-
-      this.pairingUri = null
+        session = await approval()
+        this.session = session
+        this.pairingUri = null
+      }
 
     } catch (error) {
       throw error
@@ -102,9 +144,8 @@ export class WCWallet extends BaseWallet {
   }
 
   async disconnect(): Promise<void> {
-    await this.removePairing()
-    this.session = null
-    this.pairingUri = null
+    // await this.removePairing()
+    await this.removeSession()
   }
 
   getAccounts(): Promise<WalletAccount[]> {
@@ -285,4 +326,21 @@ export class WCWallet extends BaseWallet {
     this.signClient.events.removeAllListeners('session_event')
     this.events.removeAllListeners()
   }
+
+  async ping() {
+    if (!this.signClient) {
+      return
+    }
+    try {
+      await this.signClient.ping({
+        topic: this.session.topic
+      })
+      return 'success'
+    } catch (error) {
+      console.log(error)
+      return 'failed'
+    }
+  }
 }
+
+

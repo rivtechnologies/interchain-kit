@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@chain-registry/v2": "1.65.8",
+    "@chain-registry/v2-types": "^0.53.14",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@interchain-kit/core": "0.0.1-beta.38",
     "@interchain-kit/keplr-extension": "0.0.1-beta.38",

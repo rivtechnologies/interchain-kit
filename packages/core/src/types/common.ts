@@ -12,3 +12,11 @@ export type CosmosClientType = 'stargate' | 'cosmwasm';
 export type SignType = 'amino' | 'direct';
 
 export type ModalTheme = 'light' | 'dark';
+
+export type DAppInfoForWalletConnect = {
+  name?: string;
+  description?: string;
+  url?: string;
+  icons?: string[];
+  projectId?: string,
+}

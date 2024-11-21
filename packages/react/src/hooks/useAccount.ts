@@ -18,7 +18,7 @@ export const useAccount = (chainName: string, walletName: string): WalletAccount
   const getAccount = async () => {
     if (wallet && chain) {
       if (wallet.walletState === WalletState.Connected) {
-        const account = await wallet.getAccount(chain.chainId)
+        const account = await walletManager.getAccount(walletName, chainName)
         setAccount(account)
       }
       if (wallet.walletState === WalletState.Disconnected) {
