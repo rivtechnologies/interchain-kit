@@ -34,5 +34,6 @@
   "dependencies": {
     "@chain-registry/v2-types": "^0.53.15",
     "@interchain-kit/core": "0.0.1-beta.39"
-  }
+  },
+  "gitHead": "efdd2e96b38b8c828b750094865ecf9903c40b25"
 }
