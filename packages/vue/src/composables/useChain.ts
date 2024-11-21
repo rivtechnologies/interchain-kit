@@ -1,7 +1,6 @@
 import { AssetList, Chain } from '@chain-registry/v2-types';
 import { ChainNameNotExist, WalletState } from '@interchain-kit/core';
 import { computed, inject, Ref, ref, watch } from 'vue';
-
 import { CosmosKitUseChainReturnType, UseChainReturnType } from '../types/chain';
 import { CLOSE_MODAL_KEY, OPEN_MODAL_KEY } from '../utils';
 import { useAccount } from './useAccount';
@@ -11,13 +10,13 @@ import { useWalletManager } from './useWalletManager';
 
 export const useChain = (chainName: Ref<string>): UseChainReturnType => {
   const walletManager = useWalletManager();
-  const chainToShow = ref();
-  const assetList = ref();
+  const chainToShow = ref<Chain>();
+  const assetList = ref<AssetList>();
   const getRpcEndpoint = ref();
   const currentWallet = useCurrentWallet();
-  const walletName = computed(() => currentWallet.value?.info?.name);
+  const walletName = computed<string>(() => currentWallet.value?.info?.name);
   const interchainClient = useInterchainClient(chainName, walletName);
-  const logoUrl = ref('');
+  const logoUrl = ref<string>('');
   const account = useAccount(chainName, walletName);
   const _setValuesByChainName = () => {
     chainToShow.value = walletManager.chains.find((c: Chain) => c.chainName === chainName.value);

@@ -1,18 +1,16 @@
 import { AssetList, Chain } from '@chain-registry/v2-types';
 import { computed, Ref, ref, watch } from 'vue';
-
 import { UseChainWalletReturnType } from '../types/chain';
 import { useAccount } from './useAccount';
-import { useCurrentWallet } from './useCurrentWallet';
 import { useInterchainClient } from './useInterchainClient';
 import { useWalletManager } from './useWalletManager';
 import { BaseWallet } from '@interchain-kit/core';
 
 export const useChainWallet = (chainName: Ref<string>, walletName: Ref<string>): UseChainWalletReturnType => {
-  const logoUrl = ref('');
+  const logoUrl = ref<string>('');
   const walletManager = useWalletManager();
-  const chainToShow = ref();
-  const assetList = ref();
+  const chainToShow = ref<Chain>();
+  const assetList = ref<AssetList>();
   const account = useAccount(chainName, walletName);
   const interchainClient = useInterchainClient(chainName, walletName);
   const getRpcEndpoint = ref()

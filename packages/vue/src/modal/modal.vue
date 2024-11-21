@@ -1,48 +1,26 @@
 <!-- Modal.vue -->
 <template>
   <Modal :is-open="visible" @close="close">
-    <ConnectModalHead
-      :title="title"
-      :hasCloseButton="true"
-      :hasBackButton="hasBack"
-      @back="isList=true"
-      :closeButtonProps="closeButtonProps"
-    />
-    <ConnectModalWalletList
-      v-if="isList"
-      :wallets="wallets"
-      @wallet-item-click="walletClick"
-    />
-    <ConnectModalQrcode 
-      v-else-if="currentWallet?.info?.mode === 'wallet-connect'" 
-      :status="currentWallet?.pairingUri ? 'Done' : 'Pending'"
-      :link="currentWallet?.pairingUri"
-      description="Open App to connect"
-      @onRefresh="onRefresh"
-      qrCodeSize="230"
-    />
-    <ConnectModalStatus 
-      v-else
-      :wallet="{
-        name: currentWallet.info?.name,
-        prettyName: currentWallet.info?.prettyName,
-        logo: currentWallet.info?.logo as string,
-        mobileDisable: true
-      }"
-      :connected-info="{}"
-      :status="currentWallet?.walletState"
-      :content-header="contentHeader"
-      :content-desc="contentDesc"
-      @connect="walletClick(currentWallet)"
-      @disconnect="disconnect(currentWallet)"
-    />
+    <ConnectModalHead :title="title" :hasCloseButton="true" :hasBackButton="hasBack" @back="isList = true"
+      :closeButtonProps="closeButtonProps" />
+    <ConnectModalWalletList v-if="isList" :wallets="wallets" @wallet-item-click="walletClick" />
+    <ConnectModalQrcode v-else-if="currentWallet?.info?.mode === 'wallet-connect'"
+      :status="currentWallet?.pairingUri ? 'Done' : 'Pending'" :link="currentWallet?.pairingUri"
+      description="Open App to connect" @onRefresh="onRefresh" qrCodeSize="230" />
+    <ConnectModalStatus v-else :wallet="{
+      name: currentWallet.info?.name,
+      prettyName: currentWallet.info?.prettyName,
+      logo: currentWallet.info?.logo as string,
+      mobileDisable: true
+    }" :connected-info="connectedInfo" :status="currentWallet?.walletState" :content-header="contentHeader"
+      :content-desc="contentDesc" @connect="walletClick(currentWallet)" @disconnect="disconnect(currentWallet)" />
   </Modal>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, computed, Ref } from 'vue'
-import { useCurrentWallet, useWalletManager } from '../composables'
-import { BaseWallet, WalletState, WCWallet, } from '@interchain-kit/core';
+import { ref, onMounted, computed, Ref } from 'vue'
+import { useCurrentWallet, useWalletManager, useAccount } from '../composables'
+import { WalletState, WCWallet, } from '@interchain-kit/core';
 import {
   Box,
   Modal,
@@ -62,6 +40,13 @@ const isList = ref(true)
 const errorMessage = ref('')
 const walletManager = useWalletManager();
 const currentWallet = useCurrentWallet() as Ref<WCWallet>;
+const chainName = computed(() => {
+  return walletManager.chains[0].chainName
+})
+const walletName = computed(() => {
+  return currentWallet.value?.info?.name
+})
+const account = useAccount(chainName, walletName)
 const onRefresh = () => walletManager.connect(currentWallet.value?.info?.name)
 
 onMounted(() => {
@@ -100,6 +85,13 @@ const contentDesc = computed(() => {
     return errorMessage.value || 'Connection permission is denied.'
   }
 })
+const connectedInfo = computed(() => {
+  return {
+    name: account.value?.username || 'Wallet',
+    avatar: "https://picsum.photos/500", // TO_BE_FIXED
+    address: account.value?.address
+  }
+})
 const hasBack = computed(() => {
   return !isList.value
 })
@@ -112,31 +104,31 @@ const close = () => {
   visible.value = false;
   // reset
   isList.value = true
+  errorMessage.value = ''
 };
 
 const closeButtonProps = {
   onClick: close
 }
 
-watch(walletManager, (wm) => {
-  
-});
-
-const walletClick = async(wallet: any) => {
+const walletClick = async (wallet: any) => {
   isList.value = false
   try {
     await walletManager.connect(wallet?.info.name)
-    close()
-  } catch(e: any) {
+    isList.value = false
+    errorMessage.value = ''
+    // close()
+  } catch (e: any) {
+    errorMessage.value = e.message
     console.error('[wallet connecting error]', e.message)
   }
 }
 
-const disconnect = async(wallet: any) => {
+const disconnect = async (wallet: any) => {
   try {
     await walletManager.disconnect(wallet?.info?.name as string);
     close()
-  } catch(e: any) {
+  } catch (e: any) {
     console.log('[wallet disconnecting error]', e.message)
   }
 }
@@ -147,5 +139,4 @@ defineExpose({
 })
 </script>
 
-<style>
-</style>
+<style></style>
