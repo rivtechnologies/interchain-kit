@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-beta.39](https://github.com/@interchain-kit/leap-extension/compare/@interchain-kit/leap-extension@0.0.1-beta.38...@interchain-kit/leap-extension@0.0.1-beta.39) (2024-11-21)
+
+**Note:** Version bump only for package @interchain-kit/leap-extension
+
 ## [0.0.1-beta.38](https://github.com/@interchain-kit/leap-extension/compare/@interchain-kit/leap-extension@0.0.1-beta.37...@interchain-kit/leap-extension@0.0.1-beta.38) (2024-11-15)
 
 **Note:** Version bump only for package @interchain-kit/leap-extension
