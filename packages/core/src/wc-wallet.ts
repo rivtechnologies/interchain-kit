@@ -1,10 +1,9 @@
 import { Algo, SimpleAccount, Wallet, WcEventTypes, WcProviderEventType } from './types/wallet';
 import { BaseWallet } from "./base-wallet";
-import { WalletAccount, SignOptions, DirectSignDoc, BroadcastMode, DAppInfoForWalletConnect } from "./types";
+import { WalletAccount, SignOptions, DirectSignDoc, BroadcastMode } from "./types";
 import { SignClient } from '@walletconnect/sign-client';
 import { PairingTypes, SessionTypes, SignClientTypes } from '@walletconnect/types';
 import { Buffer } from 'buffer'
-import { ChainInfo } from '@keplr-wallet/types'
 import {
   OfflineAminoSigner,
   OfflineDirectSigner,
@@ -12,6 +11,7 @@ import {
 import { AminoSignResponse, StdSignature, DirectSignResponse } from '@interchainjs/cosmos/types/wallet';
 import { StdSignDoc } from '@interchainjs/types'
 import { WalletConnectIcon } from './constant';
+import { Chain, AssetList } from '@chain-registry/v2-types';
 
 export class WCWallet extends BaseWallet {
 
@@ -24,6 +24,8 @@ export class WCWallet extends BaseWallet {
   pairingToConnect: PairingTypes.Struct = null
 
   walletConnectOption: SignClientTypes.Options
+
+  onPairingUriCreated: (uri: string) => void
 
   constructor(option?: Wallet, walletConnectOption?: SignClientTypes.Options) {
     const defaultWalletConnectOption: Wallet = {
@@ -97,6 +99,10 @@ export class WCWallet extends BaseWallet {
     this.pairingToConnect = pairing
   }
 
+  setOnPairingUriCreatedCallback(callback: (uri: string) => void) {
+    this.onPairingUriCreated = callback
+  }
+
   async connect(chainIds: string | string[]) {
 
     const chainIdsWithNS = Array.isArray(chainIds) ? chainIds.map((chainId) => `cosmos:${chainId}`) : [`cosmos:${chainIds}`]
@@ -115,7 +121,6 @@ export class WCWallet extends BaseWallet {
       if (session) {
         this.session = session
       } else {
-        await this.removeSession()
         const { uri, approval } = await this.signClient.connect({
           pairingTopic: this.pairingToConnect?.topic,
           requiredNamespaces: {
@@ -130,8 +135,11 @@ export class WCWallet extends BaseWallet {
             },
           }
         })
-        this.pairingUri = uri
-        this.events.emit('displayWalletConnectQRCodeUri', uri)
+
+        if (uri) {
+          this.pairingUri = uri
+          this.onPairingUriCreated(uri)
+        }
 
         session = await approval()
         this.session = session
@@ -290,8 +298,8 @@ export class WCWallet extends BaseWallet {
     throw new Error("Method not implemented.");
   }
 
-  addSuggestChain(chainInfo: ChainInfo): Promise<void> {
-    throw new Error('Method not implemented.');
+  addSuggestChain(chain: Chain, assetLists: AssetList[]): Promise<void> {
+    throw new Error("Method not implemented.");
   }
 
   bindingEvent(): void {

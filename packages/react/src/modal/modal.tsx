@@ -55,18 +55,17 @@ export const WalletModal = () => {
 
     try {
       if (selectedWallet.info.mode === "wallet-connect") {
-        (selectedWallet as WCWallet).setPairingToConnect(wallet.pairing);
-
-        selectedWallet.events.on(
-          "displayWalletConnectQRCodeUri",
-          (uri: string) => {
-            if (uri) {
-              setModalView({
-                header: <QRCodeHeader onBack={gotoWalletList} />,
-                content: <QRCodeContent />,
-              });
-            }
+        (selectedWallet as unknown as WCWallet).setOnPairingUriCreatedCallback(
+          () => {
+            setModalView({
+              header: <QRCodeHeader onBack={gotoWalletList} />,
+              content: <QRCodeContent />,
+            });
           }
+        );
+
+        (selectedWallet as unknown as WCWallet).setPairingToConnect(
+          wallet.pairing
         );
       }
 

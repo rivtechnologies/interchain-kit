@@ -32,6 +32,16 @@ const WalletConnect = () => {
     setBalance(balance);
   };
 
+  const handleGetPairings = async () => {
+    const pairings = await currentWallet.signClient.pairing.getAll();
+    console.log(pairings);
+  };
+
+  const handleGetSessions = async () => {
+    const sessions = await currentWallet.signClient.session.getAll();
+    console.log(sessions);
+  };
+
   return (
     <div>
       <p>current chain: {chain.chainName}</p>
@@ -47,6 +57,12 @@ const WalletConnect = () => {
       </p>
       <p>
         <button onClick={disconnect}>disconnect</button>
+      </p>
+      <p>
+        <button onClick={handleGetPairings}>get pairings</button>
+      </p>
+      <p>
+        <button onClick={handleGetSessions}>get sessions</button>
       </p>
       <p>
         <button
