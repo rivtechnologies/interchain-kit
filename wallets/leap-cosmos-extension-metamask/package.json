@@ -1,0 +1,37 @@
+{
+  "name": "@interchain-kit/leap-cosmos-extension-metamask",
+  "version": "0.0.1",
+  "author": "cosmology-tech <developers@cosmology.zone>",
+  "description": "interchain-kit wallet connector for leap cosmos extension metamask",
+  "main": "index.js",
+  "module": "esm/index.js",
+  "types": "index.d.ts",
+  "homepage": "https://github.com/interchain-kit/leap-cosmos-extension-metamask",
+  "license": "SEE LICENSE IN LICENSE",
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/interchain-kit/leap-cosmos-extension-metamask"
+  },
+  "bugs": {
+    "url": "https://github.com/interchain-kit/leap-cosmos-extension-metamask/issues"
+  },
+  "scripts": {
+    "copy": "copyfiles -f ../../LICENSE README.md package.json dist",
+    "clean": "rimraf dist/**",
+    "prepare": "npm run build",
+    "build": "npm run clean; tsc; tsc -p tsconfig.esm.json; npm run copy",
+    "build:dev": "npm run clean; tsc --declarationMap; tsc -p tsconfig.esm.json; npm run copy",
+    "lint": "eslint . --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "dev": "tsc -w --preserveWatchOutput -p tsconfig.esm.json"
+  },
+  "keywords": [],
+  "dependencies": {
+    "@interchain-kit/core": "^0.0.1-beta.39"
+  }
+}

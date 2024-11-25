@@ -1,9 +1,12 @@
 import { useEffect, useMemo, useState } from "react"
-import { WalletAccount, WalletManager, WalletManagerState, WalletState } from "@interchain-kit/core"
+import { WalletAccount, WalletManagerState, WalletState } from "@interchain-kit/core"
 import { useWalletManager } from './useWalletManager';
 
 export const useAccount = (chainName: string, walletName: string): WalletAccount | null => {
+
   const walletManager = useWalletManager()
+
+  const [isFetching, setIsFetching] = useState(false)
 
   const wallet = useMemo(() => {
     return walletManager.wallets.find(w => w.info.name === walletName)
@@ -17,9 +20,11 @@ export const useAccount = (chainName: string, walletName: string): WalletAccount
 
   const getAccount = async () => {
     if (wallet && chain) {
-      if (wallet.walletState === WalletState.Connected) {
+      if (wallet.walletState === WalletState.Connected && account === null && !isFetching) {
+        setIsFetching(true)
         const account = await walletManager.getAccount(walletName, chainName)
         setAccount(account)
+        setIsFetching(false)
       }
       if (wallet.walletState === WalletState.Disconnected) {
         setAccount(null)
