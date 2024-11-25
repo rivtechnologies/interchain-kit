@@ -18,6 +18,7 @@ import { okxWallet } from "@interchain-kit/okx-extension";
 import { coin98Wallet } from "@interchain-kit/coin98-extension";
 import { ledgerWallet } from "@interchain-kit/ledger";
 import { cosmosExtensionMetaMask } from "@interchain-kit/cosmos-extension-metamask";
+import { xdefiWallet } from "@interchain-kit/xdefi-extension";
 
 import { MockWallet } from "@interchain-kit/mock-wallet";
 import { starshipChain, starshipChain1 } from "./utils/starship.ts";
@@ -81,8 +82,9 @@ const _wallets: BaseWallet[] = [
   // walletConnect,
   // ledgerWallet,
   // cosmosExtensionMetaMask,
-  walletConnect,
+  // walletConnect,
   // ledgerWallet,
+  xdefiWallet,
 ];
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

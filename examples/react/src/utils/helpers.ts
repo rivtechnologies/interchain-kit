@@ -12,7 +12,7 @@ export const sendToken = async (
 ) => {
   const txSend = createSend(signingClient);
   const fee = {
-    amount: coins(25000, denom),
+    amount: coins(0, denom),
     gas: "1000000",
   };
   try {
