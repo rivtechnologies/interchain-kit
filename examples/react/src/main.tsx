@@ -20,6 +20,7 @@ import { ledgerWallet } from "@interchain-kit/ledger";
 import { cosmosExtensionMetaMask } from "@interchain-kit/cosmos-extension-metamask";
 import { xdefiWallet } from "@interchain-kit/xdefi-extension";
 
+import { leapCosmosExtensionMetaMask } from "@interchain-kit/leap-cosmos-extension-metamask";
 import { MockWallet } from "@interchain-kit/mock-wallet";
 import { starshipChain, starshipChain1 } from "./utils/starship.ts";
 import { ThemeProvider } from "@interchain-ui/react";
@@ -81,10 +82,10 @@ const _wallets: BaseWallet[] = [
   // galaxyStationWallet,
   // walletConnect,
   // ledgerWallet,
-  // cosmosExtensionMetaMask,
+  cosmosExtensionMetaMask,
   // walletConnect,
   // ledgerWallet,
-  xdefiWallet,
+  // leapCosmosExtensionMetaMask,
 ];
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

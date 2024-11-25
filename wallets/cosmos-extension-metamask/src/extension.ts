@@ -8,7 +8,6 @@ declare global {
 
 import { OfflineAminoSigner, OfflineDirectSigner, AminoSignResponse, StdSignature, DirectSignResponse } from '@interchainjs/cosmos/types/wallet';
 import { StdSignDoc } from '@interchainjs/types';
-import { cosmosSnapExtensionInfo } from './registry';
 import { Chain, AssetList } from '@chain-registry/v2-types'
 import { getMetaMaskCosmosChainInfo } from './utils';
 import { Chain as MetaMaskCosmosChainInfo } from './types'
@@ -93,6 +92,9 @@ export class CosmosExtensionMetaMask extends ExtensionWallet {
 
   async init(meta?: unknown) {
     try {
+      if (!window.ethereum || window.ethereum.isMetaMask !== true) {
+        throw new Error('MetaMask is not installed');
+      }
       await installSnap();
       this.chains = await this.getChains()
       this.isExtensionInstalled = true;
@@ -101,13 +103,22 @@ export class CosmosExtensionMetaMask extends ExtensionWallet {
       this.isExtensionInstalled = true;
     }
   }
+
   async connect(chainId: string | string[]): Promise<void> {
+    await window.ethereum.request({
+      method: 'wallet_requestSnaps',
+      params: {
+        [DEFAULT_SNAP_ID]: {},
+      },
+    });
+    this.chains = await this.getChains()
     const chain = this.chains.find(c => c.chain_id === chainId);
-    console.log(this.chains, chainId)
+
     if (!chain) {
       throw new Error(`There is no chain info for ${chainId}`);
     }
   }
+
   async disconnect(chainId: string | string[]): Promise<void> {
     await window.ethereum.request({
       method: 'wallet_revokePermissions',
@@ -118,6 +129,7 @@ export class CosmosExtensionMetaMask extends ExtensionWallet {
       ],
     });
   }
+
   async getAccount(chainId: string): Promise<WalletAccount> {
     const result = await window.ethereum.request({
       method: 'wallet_invokeSnap',
@@ -140,12 +152,14 @@ export class CosmosExtensionMetaMask extends ExtensionWallet {
       pubkey: new Uint8Array(Object.values(pubkey)),
       isNanoLedger: false,
       isSmartContract: false,
-      username: 'x'
+      username: 'cosmos in metamask',
     }
   }
+
   getAccounts(chainIds: string[]): Promise<WalletAccount[]> {
     throw new Error('Method not implemented.');
   }
+
   getOfflineSignerAmino(chainId: string): OfflineAminoSigner {
     return {
       getAccounts: async () => [await this.getAccount(chainId)],
@@ -154,6 +168,7 @@ export class CosmosExtensionMetaMask extends ExtensionWallet {
       }
     }
   }
+
   getOfflineSignerDirect(chainId: string): OfflineDirectSigner {
     return {
       getAccounts: async () => [await this.getAccount(chainId)],
@@ -162,6 +177,7 @@ export class CosmosExtensionMetaMask extends ExtensionWallet {
       }
     }
   }
+
   async signAmino(chainId: string, signer: string, signDoc: StdSignDoc, signOptions?: SignOptions): Promise<AminoSignResponse> {
     const result = await window.ethereum.request({
       method: 'wallet_invokeSnap',
@@ -179,12 +195,15 @@ export class CosmosExtensionMetaMask extends ExtensionWallet {
     });
     return result.data;
   }
+
   signArbitrary(chainId: string, signer: string, data: string | Uint8Array): Promise<StdSignature> {
     throw new Error('Method not implemented.');
   }
+
   verifyArbitrary(chainId: string, signer: string, data: string | Uint8Array): Promise<boolean> {
     throw new Error('Method not implemented.');
   }
+
   async signDirect(chainId: string, signer: string, signDoc: DirectSignDoc, signOptions?: SignOptions): Promise<DirectSignResponse> {
     const result = await window.ethereum.request({
       method: 'wallet_invokeSnap',
@@ -202,9 +221,11 @@ export class CosmosExtensionMetaMask extends ExtensionWallet {
     });
     return result.data
   }
+
   sendTx(chainId: string, tx: Uint8Array, mode: BroadcastMode): Promise<Uint8Array> {
     throw new Error('Method not implemented.');
   }
+
   async addSuggestChain(chain: Chain, assetLists: AssetList[]): Promise<void> {
 
     const chainInfo = getMetaMaskCosmosChainInfo(chain, assetLists[0]);
@@ -226,7 +247,3 @@ export class CosmosExtensionMetaMask extends ExtensionWallet {
   }
 
 }
-
-const cosmosExtensionMetaMask = new CosmosExtensionMetaMask(cosmosSnapExtensionInfo);
-
-export { cosmosExtensionMetaMask }

@@ -487,9 +487,9 @@
   integrity sha512-dpB32GfF1oUO/idjcAB0UEzunIBJre9czJGGreTEOO4/hucbstJbqTVXCyy7TONV1fCoWCfJVT7pPBNS7MFhbg==
 
 "@chain-registry/v2-types@^0.53.14":
-  version "0.53.16"
-  resolved "https://registry.yarnpkg.com/@chain-registry/v2-types/-/v2-types-0.53.16.tgz#31cbb26233008187f490bbe623e5eb8fec00e686"
-  integrity sha512-Lg3uJiN0gXzVbHL6IXTK4+yJfDs8iStJf092Tp5WH4yNFrvXu6aDbP3t9om2uBQOPfNjujzDvLe5ubJmSRsj/g==
+  version "0.53.18"
+  resolved "https://registry.yarnpkg.com/@chain-registry/v2-types/-/v2-types-0.53.18.tgz#43d6377f78dae437d212f33df7ba063e577a577b"
+  integrity sha512-WaVL1m/vA/CjhUFRM9lnXcTkE/gthxrKKV13VhX6ns5lBmDXCDNt5D5QeW8MdADdGwCf3Hh17XIF33vErIhZzA==
 
 "@chain-registry/v2-types@^0.53.15":
   version "0.53.15"
