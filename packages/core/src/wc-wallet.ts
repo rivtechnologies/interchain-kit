@@ -138,7 +138,7 @@ export class WCWallet extends BaseWallet {
 
         if (uri) {
           this.pairingUri = uri
-          this.onPairingUriCreated(uri)
+          this.onPairingUriCreated && this.onPairingUriCreated(uri)
         }
 
         session = await approval()

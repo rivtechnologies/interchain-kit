@@ -48,9 +48,9 @@ export const WalletListContent = ({
 
     activePairings.forEach((pairing) => {
       wallets.push({
-        name: pairing.peerMetadata.name,
-        prettyName: pairing.peerMetadata.name,
-        logo: pairing.peerMetadata.icons[0],
+        name: pairing?.peerMetadata?.name,
+        prettyName: pairing?.peerMetadata?.name,
+        logo: pairing?.peerMetadata?.icons?.[0],
         mobileDisabled: true,
         shape: "list" as "list",
         originalWallet: { ...wcWallet, pairing },
