@@ -1,12 +1,20 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useChain } from '@interchain-kit/vue';
+import { ref, computed } from 'vue'
+import { useChain, useWalletManager } from '@interchain-kit/vue';
 import { ibc } from 'osmojs'
-import { toEncoders, toConverters } from '@interchainjs/cosmos/utils';
-
+import { SigningStargateClient } from '@cosmjs/stargate'
+import { ExtensionWallet } from '@interchain-kit/core';
 
 const chainName = ref("cosmoshub")
-const { rpcEndpoint, signingClient } = useChain(chainName)
+const { rpcEndpoint, chain } = useChain(chainName)
+const wm = useWalletManager()
+const signer = computed(() => {
+  if (!chain.value.chainId) {
+    return
+  }
+  const wallet = wm.getCurrentWallet() as ExtensionWallet
+  return wallet.getOfflineSigner(chain.value.chainId, 'direct') // cosmoshub-4
+})
 
 const transferMsg = ibc.applications.transfer.v1.MessageComposer.withTypeUrl.transfer({
   sourcePort: "transfer",
@@ -26,11 +34,33 @@ const fee = {
   gas: "200000", // Gas limit
 };
 
-const handleTransfer = async() => {
-  signingClient.value.addEncoders(toEncoders(ibc.applications.transfer.v1.MsgTransfer))
-  signingClient.value.addConverters(toConverters(ibc.applications.transfer.v1.MsgTransfer))
+const connectKeplr = async(chainId:string) => {
+  // @ts-ignore
+  if (!window.keplr) {
+      throw new Error("Keplr wallet not installed. Please install it from https://keplr.app/");
+  }
 
-  const result = await signingClient.value.signAndBroadcast('cosmos18gttzdr3v5lwwda8kep9xeuxep7g78ywxzg35r', [transferMsg], fee);
+  // @ts-ignore
+  await window.keplr.enable(chainId);
+
+  // @ts-ignore
+  const offlineSigner = window.getOfflineSigner(chainId);
+
+  // @ts-ignore
+  const accounts = await offlineSigner.getAccounts();
+  console.log("Connected account:", accounts[0].address);
+
+  return { offlineSigner, accounts };
+}
+
+
+const handleTransfer = async() => {
+  // const { offlineSigner } = await connectKeplr('cosmoshub-4')
+  // console.log('offlineSigner>', offlineSigner)
+  console.log('signer.value', signer.value)
+  // @ts-ignore
+  let client = await SigningStargateClient.connectWithSigner(rpcEndpoint.value, signer.value)
+  const result = await client.signAndBroadcast('cosmos18gttzdr3v5lwwda8kep9xeuxep7g78ywxzg35r', [transferMsg], fee);
   console.log("Transaction result:", result);
 }
 </script>
