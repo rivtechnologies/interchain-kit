@@ -5,6 +5,7 @@ import UseOfflineSigner from './views/useOfflineSigner.vue'
 import UseConfig from './views/use-config.vue'
 import ActiveWallet from './views/active-wallet.vue'
 import WalletConnect from './views/wallet-connect.vue'
+import IbcTransfer from './views/ibc-transfer.vue'
 
 const routes = [
 	{ path: '/', name: 'index', component: UseChain },
@@ -13,7 +14,8 @@ const routes = [
 	{ path: '/use-offline-signer', name: 'useOfflineSigner', component: UseOfflineSigner },
 	{ path: '/use-config', name: 'useConfig', component: UseConfig },
 	{ path: '/active-wallet', name: 'activeWallet', component: ActiveWallet },
-	{ path: '/wallet-connect', name: 'walletConnect', component: WalletConnect }
+	{ path: '/wallet-connect', name: 'walletConnect', component: WalletConnect },
+	{ path: '/ibc-transfer', name: 'ibcTransfer', component: IbcTransfer }
 ]
 
 const router = createRouter({
