@@ -1,43 +1,43 @@
-export class CustomMap<K extends string, V> {
-  private o: Record<K, V> = {} as Record<K, V>;
+export function isInstanceOf<T>(obj: any, type: new (...args: any[]) => T): obj is T {
+  if (!obj || typeof obj !== "object") return false;
 
-  set(key: K, value: V): void {
-    this.o[key] = value;
+  // Check for custom metadata
+  if (obj.__class === type.name) return true;
+
+  // Fallback to prototype chain check
+  let proto = Object.getPrototypeOf(obj);
+  while (proto) {
+    if (proto.constructor === type) return true;
+    proto = Object.getPrototypeOf(proto);
   }
 
-  get(key: K): V | undefined {
-    return this.o[key];
-  }
+  return false;
+}
 
-  has(key: K): boolean {
-    return key in this.o;
-  }
+export function createArray<T>(...items: T[]): T[] {
+  return items;
+}
 
-  delete(key: K): void {
-    delete this.o[key];
-  }
+export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-  clear(): void {
-    this.o = {} as Record<K, V>;
-  }
+export async function waitForCondition(
+  condition: () => boolean,
+  interval: number = 100,
+  timeout: number = 5000
+): Promise<void> {
+  const start = Date.now();
 
-  keys(): K[] {
-    return Object.keys(this.o) as K[];
-  }
-
-  values(): V[] {
-    return Object.values(this.o) as V[];
-  }
-
-  entries(): [K, V][] {
-    return Object.entries(this.o) as [K, V][];
-  }
-
-  forEach(callback: (value: V, key: K) => void): void {
-    for (const key in this.o) {
-      if (this.o.hasOwnProperty(key)) {
-        callback(this.o[key], key);
+  return new Promise((resolve, reject) => {
+    const checkCondition = () => {
+      if (condition()) {
+        resolve();
+      } else if (Date.now() - start >= timeout) {
+        reject(new Error("Timeout waiting for condition"));
+      } else {
+        setTimeout(checkCondition, interval);
       }
-    }
-  }
+    };
+
+    checkCondition();
+  });
 }

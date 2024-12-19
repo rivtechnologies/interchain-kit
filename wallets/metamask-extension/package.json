@@ -1,12 +1,12 @@
 {
-  "name": "@interchain-kit/trust-extension",
-  "version": "0.2.205",
-  "author": "Hyperweb <developers@hyperweb.io>",
-  "description": "interchain-kit wallet connector",
+  "name": "@interchain-kit/metamask-extension",
+  "version": "0.0.1",
+  "author": "cosmology-tech <developers@cosmology.zone>",
+  "description": "cosmos-kit wallet connector",
   "main": "index.js",
   "module": "esm/index.js",
   "types": "index.d.ts",
-  "homepage": "https://github.com/interchain-kit/trust-extension",
+  "homepage": "https://github.com/interchain-kit/metamask-extension",
   "license": "SEE LICENSE IN LICENSE",
   "publishConfig": {
     "access": "public",
@@ -14,10 +14,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/interchain-kit/trust-extension"
+    "url": "https://github.com/interchain-kit/metamask-extension"
   },
   "bugs": {
-    "url": "https://github.com/interchain-kit/trust-extension/issues"
+    "url": "https://github.com/interchain-kit/metamask-extension/issues"
   },
   "scripts": {
     "copy": "copyfiles -f ../../LICENSE README.md package.json dist",
@@ -28,11 +28,10 @@
     "lint": "eslint . --fix",
     "test": "jest",
     "test:watch": "jest --watch",
-    "watch:dev": "tsc -w -p tsconfig.esm.json & tsc -w"
+    "dev": "tsc -w --preserveWatchOutput -p tsconfig.esm.json"
   },
   "keywords": [],
   "dependencies": {
     "@interchain-kit/core": "^0.0.1-beta.39"
-  },
-  "gitHead": "fd54de0f490b6ac590ccf29f8b3d2a2226a66ec1"
+  }
 }

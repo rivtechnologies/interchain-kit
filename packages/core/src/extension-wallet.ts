@@ -1,4 +1,3 @@
-
 import { StdSignDoc } from '@interchainjs/types';
 import { BroadcastMode, DirectSignDoc, SignOptions, SignType, Wallet, WalletAccount } from "./types";
 import Long from 'long';

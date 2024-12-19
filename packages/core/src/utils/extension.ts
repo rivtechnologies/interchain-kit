@@ -45,7 +45,7 @@ export const getClientFromExtension = async (key: string | string[]) => {
         if (wallet) {
           resolve(wallet);
         } else {
-          reject(clientNotExistError.message);
+          reject(clientNotExistError);
         }
 
         document.removeEventListener('readystatechange', documentStateChange);

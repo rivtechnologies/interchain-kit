@@ -1,9 +1,8 @@
-import { KeplrWallet } from "./extension";
+import { ExtensionWallet } from "@interchain-kit/core";
 import { keplrExtensionInfo } from "./registry";
 
-export * from './extension'
 export * from './registry'
 
-const keplrWallet = new KeplrWallet(keplrExtensionInfo);
+const keplrWallet = new ExtensionWallet(keplrExtensionInfo);
 
 export { keplrWallet }
