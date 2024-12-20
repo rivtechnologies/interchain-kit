@@ -15,12 +15,12 @@ export class ChainSettingsManager {
       this.chainNameMap[chain.chainName] = chain
       this.setSignerOptions(chain.chainName, signerOptions)
       this.setPreferredSignType(chain.chainName, signerOptions)
-      this.setPreferredEndpoint(chain.chainName, endpointOption.endpoints[chain.chainName])
+      this.setPreferredEndpoint(chain.chainName, endpointOption)
     })
   }
 
   setSignerOptions(chainName: Chain['chainName'], options: SignerOptions) {
-    this.signerOptionMap[chainName] = options.signing ? options.signing(this.chainNameMap[chainName]) : {}
+    this.signerOptionMap[chainName] = options?.signing?.(this.chainNameMap[chainName]) || {}
   }
 
   getSignerOptions(chainName: Chain['chainName']) {
@@ -28,7 +28,7 @@ export class ChainSettingsManager {
   }
 
   setPreferredSignType(chainName: Chain['chainName'], options: SignerOptions) {
-    this.preferredSignTypeMap[chainName] = options.preferredSignType ? options.preferredSignType(this.chainNameMap[chainName]) : 'amino'
+    this.preferredSignTypeMap[chainName] = options?.preferredSignType?.(this.chainNameMap[chainName]) || 'amino'
   }
 
   getPreferredSignType(chainName: Chain['chainName']) {
@@ -36,8 +36,8 @@ export class ChainSettingsManager {
     return this.preferredSignTypeMap[chain.chainName]
   }
 
-  setPreferredEndpoint(chainName: Chain['chainName'], endpoints: Endpoints) {
-    this.preferredEndpointMap[chainName] = endpoints
+  setPreferredEndpoint(chainName: Chain['chainName'], endpointOption: EndpointOptions) {
+    this.preferredEndpointMap[chainName] = endpointOption?.endpoints?.[chainName] || { rest: [], rpc: [] }
   }
 
   getPreferredEndpoint(chainName: Chain['chainName']) {

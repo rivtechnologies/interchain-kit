@@ -68,17 +68,17 @@ export class WalletManager {
     return wm
   }
 
-  addChains(chains: Chain[], assetLists: AssetList[], signerOptions: SignerOptions, endpointOptions: EndpointOptions) {
+  addChains(chains: Chain[], assetLists: AssetList[], signerOptions?: SignerOptions, endpointOptions?: EndpointOptions) {
     chains.forEach(newChain => {
       if (!this.chains.find(existChain => existChain.chainId === newChain.chainId)) {
         this.chains.push(newChain)
         this.assetLists.push(assetLists.find(assetList => assetList.chainName === newChain.chainName))
       }
       this.chainSettingsManager.setSettings([newChain], signerOptions, endpointOptions)
-      if (endpointOptions.endpoints[newChain.chainName].rest.length > 0) {
+      if (endpointOptions?.endpoints?.[newChain.chainName].rest.length > 0) {
         delete this.restEndpoint[newChain.chainName]
       }
-      if (endpointOptions.endpoints[newChain.chainName].rpc.length > 0) {
+      if (endpointOptions?.endpoints?.[newChain.chainName].rpc.length > 0) {
         delete this.rpcEndpoint[newChain.chainName]
       }
     })
