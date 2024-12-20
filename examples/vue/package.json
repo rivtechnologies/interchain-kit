@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/vue-examples",
-  "version": "0.0.1-beta.40",
+  "version": "0.0.1-beta.41",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,7 +11,7 @@
     "@chain-registry/v2": "^1.71.16",
     "@chain-registry/v2-types": "^0.53.0",
     "@chenfengyuan/vue-qrcode": "^2.0.0",
-    "@interchain-kit/vue": "0.0.1-beta.40",
+    "@interchain-kit/vue": "0.0.1-beta.41",
     "interchainjs": "0.0.1-alpha.31",
     "osmojs": "^16.15.0",
     "vue": "^3.5.12",
