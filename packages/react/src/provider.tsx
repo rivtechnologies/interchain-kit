@@ -7,7 +7,7 @@ import {
   EndpointOptions,
 } from "@interchain-kit/core";
 import { AssetList, Chain } from "@chain-registry/v2-types";
-import { WalletModal, WalletModalProvider } from "./modal";
+import { WalletModalProvider } from "./modal";
 
 type InterchainWalletContextType = {
   walletManager: WalletManager;
@@ -17,8 +17,8 @@ type InterchainWalletProviderProps = {
   chains: Chain[];
   assetLists: AssetList[];
   wallets: BaseWallet[];
-  signerOptions: SignerOptions;
-  endpointOptions: EndpointOptions;
+  signerOptions?: SignerOptions;
+  endpointOptions?: EndpointOptions;
   children: React.ReactNode;
 };
 

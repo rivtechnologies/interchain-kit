@@ -3,7 +3,7 @@ import { Chain, AssetList } from '@chain-registry/v2-types'
 import { BaseWallet } from './base-wallet'
 import { WCWallet } from './wc-wallet';
 import { ChainName, DeviceType, DownloadInfo, EndpointOptions, OS, SignerOptions, WalletManagerState, WalletState } from './types'
-import { ChainNameNotExist, createObservable, getValidRpcEndpoint, getWalletNameFromLocalStorage, NoValidRpcEndpointFound, removeWalletNameFromLocalStorage, setWalletNameToLocalStorage, WalletNotExist } from './utils'
+import { ChainNameNotExist, ChainSettingsManager, createObservable, getValidRpcEndpoint, getWalletNameFromLocalStorage, NoValidRpcEndpointFound, removeWalletNameFromLocalStorage, setWalletNameToLocalStorage, WalletNotExist } from './utils'
 import { AminoGeneralOfflineSigner, DirectGeneralOfflineSigner, ICosmosGeneralOfflineSigner } from '@interchainjs/cosmos/types/wallet';
 import { SignerOptions as InterchainSignerOptions } from '@interchainjs/cosmos/types/signing-client';
 import { SigningClient } from '@interchainjs/cosmos/signing-client'
@@ -20,6 +20,8 @@ export class WalletManager {
   restEndpoint: Record<string, string | HttpEndpoint> = {}
   state: WalletManagerState = WalletManagerState.Initializing
 
+  chainSettingsManager = new ChainSettingsManager()
+
   constructor(
     chain: Chain[],
     assetLists: AssetList[],
@@ -34,6 +36,8 @@ export class WalletManager {
     this.wallets = wallets.map(wallet => createObservable(wallet, onUpdate))
     this.signerOptions = signerOptions
     this.endpointOptions = endpointOptions
+
+    this.chainSettingsManager.setSettings(chain, signerOptions, endpointOptions)
 
     return createObservable(this, onUpdate)
   }
@@ -62,6 +66,22 @@ export class WalletManager {
     const wm = new WalletManager(chain, assetLists, wallets, signerOptions, endpointOptions, onUpdate)
     await wm.init()
     return wm
+  }
+
+  addChains(chains: Chain[], assetLists: AssetList[], signerOptions: SignerOptions, endpointOptions: EndpointOptions) {
+    chains.forEach(newChain => {
+      if (!this.chains.find(existChain => existChain.chainId === newChain.chainId)) {
+        this.chains.push(newChain)
+        this.assetLists.push(assetLists.find(assetList => assetList.chainName === newChain.chainName))
+      }
+      this.chainSettingsManager.setSettings([newChain], signerOptions, endpointOptions)
+      if (endpointOptions.endpoints[newChain.chainName].rest.length > 0) {
+        delete this.restEndpoint[newChain.chainName]
+      }
+      if (endpointOptions.endpoints[newChain.chainName].rpc.length > 0) {
+        delete this.rpcEndpoint[newChain.chainName]
+      }
+    })
   }
 
   async connect(walletName: string) {
@@ -153,7 +173,7 @@ export class WalletManager {
 
     const chain = this.getChainByName(chainName)
 
-    const providerRpcEndpoints = this.endpointOptions?.endpoints?.[chain.chainName]?.rpc || []
+    const providerRpcEndpoints = this.chainSettingsManager.getPreferredEndpoint(chainName)?.rpc || []
     // const walletRpcEndpoints = wallet?.info?.endpoints?.[chain.chainName]?.rpc || []
     const chainRpcEndpoints = chain.apis.rpc.map(url => url.address)
 
@@ -173,20 +193,12 @@ export class WalletManager {
     return validRpcEndpoint
   }
 
-  initRpcEndpoint = async () => {
-    const promises = []
-    for (const chain of this.chains) {
-      promises.push(this.getRpcEndpoint(null, chain.chainName))
-    }
-    await Promise.all(promises)
-  }
-
   getPreferSignType(chainName: string) {
-    return this.signerOptions?.preferredSignType?.(chainName) || 'amino'
+    return this.chainSettingsManager.getPreferredSignType(chainName)
   }
 
   getSignerOptions(chainName: string): InterchainSignerOptions {
-    return this.signerOptions?.signing?.(chainName) || {}
+    return this.chainSettingsManager.getSignerOptions(chainName)
   }
 
   getOfflineSigner(wallet: BaseWallet, chainName: string): ICosmosGeneralOfflineSigner {

@@ -7,11 +7,11 @@ export const useCurrentWallet = () => {
   const walletManager = useWalletManager()
   const { open } = useWalletModal()
 
-  useEffect(() => {
-    if (!walletManager.currentWalletName && walletManager.state === WalletManagerState.Initialized) {
-      open()
-    }
-  }, [walletManager.currentWalletName, walletManager.state])
+  // useEffect(() => {
+  //   if (!walletManager.currentWalletName && walletManager.state === WalletManagerState.Initialized) {
+  //     open()
+  //   }
+  // }, [walletManager.currentWalletName, walletManager.state])
 
 
   return walletManager.getCurrentWallet()
