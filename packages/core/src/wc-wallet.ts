@@ -1,18 +1,21 @@
 import { Algo, SimpleAccount, Wallet, WcEventTypes, WcProviderEventType } from './types/wallet';
-import { BaseWallet } from "./base-wallet";
+import { BaseWallet } from "./wallets/base-wallet";
 import { WalletAccount, SignOptions, DirectSignDoc, BroadcastMode } from "./types";
 import { SignClient } from '@walletconnect/sign-client';
-import { PairingTypes, SessionTypes, SignClientTypes } from '@walletconnect/types';
+import { EngineTypes, PairingTypes, SessionTypes, SignClientTypes } from '@walletconnect/types';
 import { Buffer } from 'buffer'
 import {
+  AminoGeneralOfflineSigner,
   OfflineAminoSigner,
   OfflineDirectSigner,
   OfflineSigner,
 } from '@interchainjs/cosmos/types/wallet';
 import { AminoSignResponse, StdSignature, DirectSignResponse } from '@interchainjs/cosmos/types/wallet';
-import { StdSignDoc } from '@interchainjs/types'
+import { IGeneralOfflineSigner, StdSignDoc } from '@interchainjs/types'
 import { WalletConnectIcon } from './constant';
 import { Chain, AssetList } from '@chain-registry/v2-types';
+import UniversalProvider, { ConnectParams } from '@walletconnect/universal-provider';
+
 
 export class WCWallet extends BaseWallet {
 
@@ -20,7 +23,9 @@ export class WCWallet extends BaseWallet {
 
   session: SessionTypes.Struct;
 
-  signClient: InstanceType<typeof SignClient>;
+  // signClient: InstanceType<typeof SignClient>;
+
+  provider: UniversalProvider
 
   pairingToConnect: PairingTypes.Struct = null
 
@@ -56,15 +61,16 @@ export class WCWallet extends BaseWallet {
       }
     }
 
-    this.signClient = await SignClient.init({ ...defaultOption, ...this.walletConnectOption })
+    // this.signClient = await SignClient.init({ ...defaultOption, ...this.walletConnectOption })
+    this.provider = await UniversalProvider.init({ ...defaultOption, ...this.walletConnectOption })
     this.bindingEvent()
   }
 
   async removePairing() {
-    const pairings = this.signClient.pairing.getAll()
+    const pairings = this.provider.client.pairing.getAll()
 
     for (const pairing of pairings) {
-      await this.signClient.pairing.delete(pairing.topic, {
+      await this.provider.client.pairing.delete(pairing.topic, {
         code: 7001,
         message: 'disconnect'
       })
@@ -72,28 +78,28 @@ export class WCWallet extends BaseWallet {
   }
 
   async removeSession() {
-    const sessions = this.signClient.session.getAll()
+    const sessions = this.provider.client.session.getAll()
     for (const session of sessions) {
-      await this.signClient.session.delete(session.topic, {
+      await this.provider.client.session.delete(session.topic, {
         code: 6000,
         message: 'user disconnect.'
       })
     }
   }
 
-  getLatestSession() {
-    return this.signClient.session.getAll().pop()
+  getLatestSession(): SessionTypes.Struct | undefined {
+    return this.provider.client.session.getAll().pop()
   }
 
-  getLatestPairing() {
-    return this.signClient.pairing.getAll({ active: true }).pop()
+  getLatestPairing(): PairingTypes.Struct | undefined {
+    return this.provider.client.pairing.getAll({ active: true }).pop()
   }
 
   getActivePairing(): PairingTypes.Struct[] {
-    if (!this.signClient) {
+    if (!this.provider.client) {
       return []
     }
-    return this.signClient.pairing.getAll({ active: true })
+    return this.provider.client.pairing.getAll({ active: true })
   }
 
   setPairingToConnect(pairing: PairingTypes.Struct) {
@@ -106,7 +112,60 @@ export class WCWallet extends BaseWallet {
 
   async connect(chainIds: string | string[]) {
 
-    const chainIdsWithNS = Array.isArray(chainIds) ? chainIds.map((chainId) => `cosmos:${chainId}`) : [`cosmos:${chainIds}`]
+
+    // const chainIdsWithNS = Array.isArray(chainIds) ? chainIds.map((chainId) => `cosmos:${chainId}`) : [`cosmos:${chainIds}`]
+
+    const _chainIds = Array.isArray(chainIds) ? chainIds : [chainIds]
+    const cosmosChainNS: string[] = []
+    const eip155ChainNS: string[] = []
+
+    _chainIds.forEach((chainId) => {
+      const chain = this.getChainById(chainId)
+      if (chain.chainType === 'cosmos') {
+        cosmosChainNS.push(`cosmos:${chainId}`)
+      }
+      if (chain.chainType === 'eip155') {
+        eip155ChainNS.push(`eip155:${chainId}`)
+      }
+    })
+
+    console.log({ cosmosChainNS, eip155ChainNS })
+
+    const connectParam: ConnectParams = {
+      pairingTopic: this.pairingToConnect?.topic,
+      namespaces: {}
+    }
+
+    if (cosmosChainNS.length) {
+      connectParam.namespaces.cosmos = {
+        methods: [
+          'cosmos_getAccounts',
+          'cosmos_signAmino',
+          'cosmos_signDirect',
+        ],
+        chains: cosmosChainNS,
+        events: ['chainChanged', 'accountsChanged']
+      }
+    }
+
+    if (eip155ChainNS.length) {
+      connectParam.namespaces.eip155 = {
+        methods: [
+          'eth_sign',
+          'eth_sendTransaction',
+          'eth_signTypedData_v4',
+          'eth_signTypedData',
+          'eth_signTransaction',
+          // 'eth_private_key'
+          // 'eth_getBalance',
+          // 'eth_requestAccounts'
+        ],
+        chains: eip155ChainNS,
+        events: ['chainChanged', 'accountsChanged']
+      }
+    }
+
+    console.log(connectParam)
 
     let session
 
@@ -122,28 +181,18 @@ export class WCWallet extends BaseWallet {
       if (session) {
         this.session = session
       } else {
-        const { uri, approval } = await this.signClient.connect({
-          pairingTopic: this.pairingToConnect?.topic,
-          requiredNamespaces: {
-            cosmos: {
-              methods: [
-                'cosmos_getAccounts',
-                'cosmos_signAmino',
-                'cosmos_signDirect',
-              ],
-              chains: chainIdsWithNS,
-              events: ['chainChanged', 'accountsChanged']
-            },
-          }
-        })
 
-        if (uri) {
+        this.provider.on('display_uri', (uri: string) => {
           this.pairingUri = uri
           this.onPairingUriCreated && this.onPairingUriCreated(uri)
-        }
+        })
 
-        session = await approval()
-        this.session = session
+
+        await this.provider.connect(connectParam)
+
+
+
+        this.session = this.provider.session
         this.pairingUri = null
         this.onPairingUriCreated && this.onPairingUriCreated(null)
       }
@@ -158,7 +207,7 @@ export class WCWallet extends BaseWallet {
     await this.removeSession()
   }
 
-  getAccounts(): Promise<WalletAccount[]> {
+  async getAccounts(): Promise<WalletAccount[]> {
     const accounts: WalletAccount[] = []
 
     const namespaces = this.session.namespaces
@@ -177,7 +226,7 @@ export class WCWallet extends BaseWallet {
       })
     })
 
-    return Promise.resolve(accounts)
+    return accounts
   }
 
   override async getSimpleAccount(chainId: string): Promise<SimpleAccount> {
@@ -199,12 +248,23 @@ export class WCWallet extends BaseWallet {
     return Promise.resolve(accounts.find((account) => account.chainId === chainId))
   }
 
-  override async getAccount(chainId: string): Promise<WalletAccount> {
+  getAccount(chainId: Chain['chainId']): Promise<WalletAccount> {
+    const chain = this.getChainById(chainId)
+
+    if (chain.chainType === 'cosmos') {
+      return this.getCosmosAccount(chainId)
+    } else {
+      return this.getEthAddress(chainId)
+    }
+
+  }
+
+  async getCosmosAccount(chainId: string): Promise<WalletAccount> {
     try {
       if (!this.signClient || !this.session?.topic) {
         return;
       }
-      const accounts = await this.signClient.request({
+      const accounts = await this.provider.request({
         topic: this.session?.topic,
         request: {
           method: 'cosmos_getAccounts',
@@ -226,12 +286,79 @@ export class WCWallet extends BaseWallet {
     }
   }
 
-  getOfflineSignerAmino(chainId: string): OfflineAminoSigner {
+  async getEthAddress(chainId: string) {
+
+
+    // const accounts = await this.provider.request({ method: 'eth_requestAccounts', params: [{ chainId }] })
+    // console.log({ chainId, accounts })
+    // return {
+    //   address: accounts[0],
+    //   pubkey: new Uint8Array(),
+    //   algo: 'eth_secp256k1',
+    //   isNanoLedger: false,
+    //   isSmartContract: false,
+    //   username: 'ethereum'
+    // }
+    const accounts = this.session.namespaces.eip155.accounts.find((account) => account.startsWith(`eip155:${chainId}`))
     return {
+      address: accounts.split(':')[2],
+      algo: 'secp256k1',
+      pubkey: new Uint8Array(),
+    }
+  }
+
+  async getBalance(chainId: string) {
+    try {
+      const account = await this.getAccount(chainId)
+      console.log({ address: account.address, chainId })
+      // const result = await this.signClient.request({
+      //   topic: this.session.topic,
+      //   chainId: `eip155:${chainId}`,
+      //   request: {
+      //     method: 'eth_getBalance',
+      //     params: [account.address, 'latest']
+      //   }
+      // })
+      const result = await this.provider.request({
+        method: 'eth_getBalance',
+        params: [account.address, 'latest'],
+      }, `eip155:${chainId}`)
+
+      console.log(result)
+      return result
+    } catch (error) {
+      console.log(error)
+      throw error
+    }
+
+  }
+
+  async sendTransaction(transaction: any) {
+    const result = await this.provider.request({
+      method: 'eth_sendTransaction',
+      params: [transaction],
+    })
+    return result
+  }
+
+  async getEthPrivateKey() {
+    const result = await this.provider.request({
+      method: 'eth_private_key',
+    })
+    console.log(result)
+    return result
+  }
+
+  async getOfflineSigner(chainId: Chain['chainId']): Promise<IGeneralOfflineSigner> {
+    return this.getOfflineSignerAmino(chainId)
+  }
+
+  getOfflineSignerAmino(chainId: string): IGeneralOfflineSigner {
+    return new AminoGeneralOfflineSigner({
       getAccounts: async () => [await this.getAccount(chainId)],
       signAmino: (signerAddress: string, signDoc: StdSignDoc) =>
         this.signAmino(chainId, signerAddress, signDoc),
-    }
+    }) as IGeneralOfflineSigner
   }
 
   getOfflineSignerDirect(chainId: string): OfflineDirectSigner {
@@ -360,6 +487,10 @@ export class WCWallet extends BaseWallet {
       console.log(error)
       return 'failed'
     }
+  }
+
+  getProvider() {
+    return this.provider
   }
 }
 

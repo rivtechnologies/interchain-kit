@@ -15,6 +15,7 @@ import { ChainInfo } from "@keplr-wallet/types";
 import { createGetBalance } from "interchainjs/cosmos/bank/v1beta1/query.rpc.func";
 import QRCode from "react-qr-code";
 import { createSend } from "interchainjs/cosmos/bank/v1beta1/tx.rpc.func";
+import { ethers } from "ethers";
 
 type BalanceProps = {
   address: string;
@@ -37,6 +38,18 @@ const BalanceTd = ({ address, wallet, chain }: BalanceProps) => {
     let balance;
 
     setIsLoading(true);
+
+    if (isInstanceOf(wallet, WCWallet)) {
+      const provider = wallet.getProvider();
+      const ethersProvider = new ethers.JsonRpcProvider(
+        "https://rpc.sepolia.org"
+      );
+      console.log({ ethersProvider, provider, address });
+      const result = await ethersProvider.getBalance(address, "latest");
+      console.log(result);
+      const balanceInWei = result;
+      balance = { balance: { amount: balanceInWei.toString() } };
+    }
 
     if (isInstanceOf(wallet, EthereumWallet)) {
       const result = await wallet.getBalance(chain.chainId as string);
@@ -105,7 +118,17 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
       from: address,
       to: toAddressRef.current.value,
       value: `0x${parseInt(amountRef.current.value).toString(16)}`,
+      data: "0x",
     };
+
+    if (isInstanceOf(wallet, WCWallet)) {
+      // const privateKey = await wallet.getEthPrivateKey();
+
+      // console.log(privateKey);
+
+      const tx = await wallet.sendTransaction(transaction);
+      console.log(tx);
+    }
 
     if (isInstanceOf(wallet, EthereumWallet)) {
       try {

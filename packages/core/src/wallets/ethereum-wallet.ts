@@ -122,12 +122,7 @@ export class EthereumWallet extends BaseWallet {
     try {
       const result = await this.ethereum.request({
         method: 'eth_sendTransaction',
-        params: [{
-          to: '',
-          from: '',
-          value: '',
-          data: ''
-        }]
+        params: [transaction]
       })
 
       return result

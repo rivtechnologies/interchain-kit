@@ -32,7 +32,7 @@ import {
 } from "./utils/eth-test-net.ts";
 
 const chainNames = [
-  "osmosistestnet",
+  // "osmosistestnet",
   // "osmosis",
   // "juno",
   // "cosmoshub",
@@ -90,7 +90,7 @@ const goerliethereumtestnet = {
 };
 
 const sepoliaEthereumTestNet = {
-  chainId: "0xaa36a7",
+  chainId: "11155111",
   chainName: "Sepolia Testnet",
   rpcUrls: ["https://endpoints.omniatech.io/v1/eth/sepolia/public"],
   nativeCurrency: {
@@ -132,11 +132,11 @@ const _wallets: BaseWallet[] = [
   keplrWallet,
   // trustExtension,
   metaMaskExtension,
-  leapWallet,
+  // leapWallet,
   // cosmostationWallet,
   // stationWallet,
   // galaxyStationWallet,
-  // walletConnect,
+  walletConnect,
   // ledgerWallet,
   // cosmosExtensionMetaMask,
   // walletConnect,
