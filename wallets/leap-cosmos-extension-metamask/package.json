@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/leap-cosmos-extension-metamask",
-  "version": "0.0.1-beta.41",
+  "version": "0.0.1-beta.42",
   "author": "cosmology-tech <developers@cosmology.zone>",
   "description": "interchain-kit wallet connector for leap cosmos extension metamask",
   "main": "index.js",
@@ -32,7 +32,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@interchain-kit/core": "0.0.1-beta.41"
+    "@interchain-kit/core": "0.0.1-beta.42"
   },
   "gitHead": "6832c39290929c742b3528afcbc80cfcba00ca5e"
 }
