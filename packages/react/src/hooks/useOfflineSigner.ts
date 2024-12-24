@@ -1,4 +1,4 @@
-import { OfflineSigner, ICosmosGeneralOfflineSigner } from '@interchainjs/cosmos/types/wallet';
+import { ICosmosGeneralOfflineSigner } from '@interchainjs/cosmos/types/wallet';
 import { useEffect, useState } from "react"
 import { useWalletManager } from "./useWalletManager"
 
