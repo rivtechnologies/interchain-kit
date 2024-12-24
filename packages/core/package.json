@@ -31,25 +31,25 @@
   },
   "keywords": [],
   "dependencies": {
-    "@chain-registry/v2": "^1.71.1",
-    "@chain-registry/v2-keplr": "^0.0.2",
-    "@chain-registry/v2-types": "^0.53.0",
-    "@interchainjs/cosmos": "0.0.1-beta.20",
-    "@interchainjs/cosmos-types": "0.0.1-beta.17",
-    "@ledgerhq/hw-app-cosmos": "^6.30.0",
-    "@ledgerhq/hw-transport": "^6.31.0",
-    "@ledgerhq/hw-transport-webhid": "^6.29.0",
-    "@ledgerhq/hw-transport-webusb": "^6.29.0",
-    "@walletconnect/sign-client": "^2.17.1",
-    "@walletconnect/types": "^2.17.1",
-    "axios": "^1.7.7",
+    "@chain-registry/v2": "^1.71.71",
+    "@chain-registry/v2-keplr": "^0.0.72",
+    "@chain-registry/v2-types": "^0.53.40",
+    "@interchainjs/cosmos": "1.6.3",
+    "@interchainjs/cosmos-types": "1.6.3",
+    "@ledgerhq/hw-app-cosmos": "^6.30.4",
+    "@ledgerhq/hw-transport": "^6.31.4",
+    "@ledgerhq/hw-transport-webhid": "^6.30.0",
+    "@ledgerhq/hw-transport-webusb": "^6.29.4",
+    "@walletconnect/sign-client": "^2.17.3",
+    "@walletconnect/types": "^2.17.3",
+    "axios": "^1.7.9",
     "bowser": "^2.11.0",
     "buffer": "^6.0.3",
-    "interchainjs": "0.0.1-beta.27",
+    "interchainjs": "1.6.3",
     "long": "^5.2.3"
   },
   "devDependencies": {
-    "@keplr-wallet/types": "^0.12.102"
+    "@keplr-wallet/types": "^0.12.168"
   },
-  "gitHead": "6832c39290929c742b3528afcbc80cfcba00ca5e"
+  "gitHead": "7b28144cabe79814db97527170b34dd6b92f7bbe"
 }

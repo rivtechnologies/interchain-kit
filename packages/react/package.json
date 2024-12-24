@@ -32,18 +32,18 @@
   },
   "keywords": [],
   "dependencies": {
-    "@chain-registry/v2-types": "^0.53.0",
+    "@chain-registry/v2-types": "^0.53.40",
     "@interchain-kit/core": "0.0.1-beta.42",
-    "@interchain-ui/react": "1.24.0",
-    "@interchainjs/cosmos": "^0.0.1-beta.34",
-    "@interchainjs/cosmos-types": "0.0.1-beta.17",
+    "@interchain-ui/react": "1.26.1",
+    "@interchainjs/cosmos": "1.6.3",
+    "@interchainjs/cosmos-types": "1.6.3",
     "@react-icons/all-files": "^4.1.0",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
-    "@walletconnect/types": "^2.17.2",
-    "interchainjs": "0.0.1-beta.27",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "@walletconnect/types": "^2.17.3",
+    "interchainjs": "1.6.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
-  "gitHead": "6832c39290929c742b3528afcbc80cfcba00ca5e"
+  "gitHead": "7b28144cabe79814db97527170b34dd6b92f7bbe"
 }

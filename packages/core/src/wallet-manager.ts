@@ -4,7 +4,7 @@ import { BaseWallet } from './base-wallet'
 import { WCWallet } from './wc-wallet';
 import { ChainName, DeviceType, DownloadInfo, EndpointOptions, OS, SignerOptions, WalletManagerState, WalletState } from './types'
 import { ChainNameNotExist, ChainSettingsManager, createObservable, getValidRpcEndpoint, getWalletNameFromLocalStorage, NoValidRpcEndpointFound, removeWalletNameFromLocalStorage, setWalletNameToLocalStorage, WalletNotExist } from './utils'
-import { AminoGeneralOfflineSigner, DirectGeneralOfflineSigner, ICosmosGeneralOfflineSigner } from '@interchainjs/cosmos/types/wallet';
+import { AminoGenericOfflineSigner, DirectGenericOfflineSigner, ICosmosGenericOfflineSigner } from '@interchainjs/cosmos/types/wallet';
 import { SignerOptions as InterchainSignerOptions } from '@interchainjs/cosmos/types/signing-client';
 import { SigningClient } from '@interchainjs/cosmos/signing-client'
 import Bowser from 'bowser';
@@ -201,15 +201,15 @@ export class WalletManager {
     return this.chainSettingsManager.getSignerOptions(chainName)
   }
 
-  getOfflineSigner(wallet: BaseWallet, chainName: string): ICosmosGeneralOfflineSigner {
+  getOfflineSigner(wallet: BaseWallet, chainName: string): ICosmosGenericOfflineSigner {
     const chain = this.getChainByName(chainName)
     const signType = this.getPreferSignType(chainName)
     if (signType === 'direct') {
       const direct = wallet.getOfflineSignerDirect(chain.chainId)
-      return new DirectGeneralOfflineSigner(direct)
+      return new DirectGenericOfflineSigner(direct)
     } else {
       const amino = wallet.getOfflineSignerAmino(chain.chainId)
-      return new AminoGeneralOfflineSigner(amino)
+      return new AminoGenericOfflineSigner(amino)
     }
   }
 
