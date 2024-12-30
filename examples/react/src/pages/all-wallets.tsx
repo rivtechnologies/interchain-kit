@@ -1,6 +1,10 @@
 import { assetLists, chains } from "@chain-registry/v2";
 import { BaseWallet, WCWallet } from "@interchain-kit/core";
-import { useChainWallet, useWalletManager } from "@interchain-kit/react";
+import {
+  useChainWallet,
+  useWalletManager,
+  useWalletModal,
+} from "@interchain-kit/react";
 import { useRef, useState } from "react";
 import { makeKeplrChainInfo } from "../utils";
 import { Chain, Asset } from "@chain-registry/v2-types";
@@ -120,18 +124,23 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
 };
 
 const ChainRow = ({ chain, wallet }: { chain: Chain; wallet: BaseWallet }) => {
-  const { address } = useChainWallet(
+  const { address, rpcEndpoint, connect, disconnect } = useChainWallet(
     chain.chainName,
     wallet.info?.name as string
   );
   return (
     <tr>
+      <td>
+        <button onClick={connect}>connect by chain</button>
+        <button onClick={disconnect}>disconnect by chain</button>
+      </td>
       <td>{chain.chainName}</td>
       <td>{chain.chainId}</td>
+      <td>{rpcEndpoint as string}</td>
       <td>{address}</td>
       <BalanceTd
         address={address}
-        chainId={chain.chainId}
+        chainId={chain.chainId as string}
         chainName={chain.chainName}
         wallet={wallet}
         chain={chain}
@@ -176,7 +185,7 @@ const WalletConnectTd = ({ wallet }: { wallet: BaseWallet }) => {
 
 const E2ETest = () => {
   const walletManager = useWalletManager();
-
+  const { open } = useWalletModal();
   const addChain = async () => {
     const keplrExtension = walletManager.wallets.find(
       (w) => w.info?.name === "keplr-extension"
@@ -221,8 +230,10 @@ const E2ETest = () => {
                   <table>
                     <thead>
                       <tr>
+                        <th>connect</th>
                         <th>name</th>
                         <th>chainId</th>
+                        <th>rpc</th>
                         <th>address</th>
                         <th>faucet</th>
                         <th>send token</th>
@@ -248,6 +259,9 @@ const E2ETest = () => {
       </table>
       <button className="bg-blue-100 p-1 m-1" onClick={addChain}>
         add suggest chain
+      </button>
+      <button className="bg-blue-100 p-1 m-1" onClick={open}>
+        open modal
       </button>
     </div>
   );

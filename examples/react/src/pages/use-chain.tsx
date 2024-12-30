@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { useChain } from "@interchain-kit/react";
+import { useChain, useWalletManager } from "@interchain-kit/react";
+import { Chain } from "@chain-registry/v2-types";
 
 const UseChain = () => {
+  const walletManager = useWalletManager();
   const [chainName, setChainName] = useState("osmosis");
   const {
     logoUrl,
@@ -22,10 +24,15 @@ const UseChain = () => {
         onChange={(e) => setChainName(e.target.value)}
         className="h-9 px-3 mr-4 border rounded-md shadow-sm"
       >
-        <option value="juno">Juno</option>
+        {walletManager.chains.map((chain: Chain) => (
+          <option key={chain.chainId} value={chain.chainName}>
+            {chain.chainName}
+          </option>
+        ))}
+        {/* <option value="juno">Juno</option>
         <option value="osmosis">Osmosis</option>
         <option value="stargaze">Stargaze</option>
-        <option value="cosmoshub">Cosmos Hub</option>
+        <option value="cosmoshub">Cosmos Hub</option> */}
       </select>
       <div className="flex items-center">
         <span className="font-bold">logo:</span>{" "}

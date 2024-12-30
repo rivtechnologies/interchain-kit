@@ -1,61 +1,39 @@
-import { AssetList, Chain } from "@chain-registry/v2-types"
 import { useWalletManager } from "./useWalletManager"
 import { useAccount } from "./useAccount"
-import { BaseWallet, ChainNotExist, WalletNotExist, WalletState } from "@interchain-kit/core"
 import { UseChainWalletReturnType } from "../types/chain"
 import { useInterchainClient } from "./useInterchainClient"
-import { useCallback } from "react"
+import { useRpcEndpoint } from "./useRpcEndpoint"
 
 export const useChainWallet = (chainName: string, walletName: string): UseChainWalletReturnType => {
   const walletManager = useWalletManager()
-  const chainToShow = walletManager.chains.find((c: Chain) => c.chainName === chainName)
-  const assetList = walletManager.assetLists.find((a: AssetList) => a.chainName === chainName)
-  const wallet = walletManager.wallets.find((w: BaseWallet) => w.info.name === walletName)
 
-  const account = useAccount(chainName, walletName)
+  const walletRepository = walletManager.getWalletRepositoryByName(walletName)
+  const chainAccount = walletRepository.getChainAccountByName(chainName)
 
-  const interchainClient = useInterchainClient(chainName, walletName)
-
-  const connect = useCallback(() => {
-    if (!wallet) {
-      const error = new WalletNotExist(walletName)
-      console.error(error.message)
-      return
-    }
-
-    if (!chainToShow) {
-      const error = new ChainNotExist(chainName)
-      console.error(error.message)
-      return
-    }
-
-    if (wallet.walletState !== WalletState.Connected) {
-      walletManager.connect(wallet.info.name)
-    }
-  }, [chainName, walletName])
-
-  const disconnect = useCallback(() => {
-    if (wallet.walletState === WalletState.Connected) {
-      walletManager.disconnect(wallet.info.name)
-    }
-  }, [chainName, walletName])
-
-  const getRpcEndpoint = useCallback(async () => {
-    return walletManager.getRpcEndpoint(wallet, chainName)
-  }, [])
+  const rpcEndpointHook = useRpcEndpoint(chainName, walletName)
+  const accountHook = useAccount(chainName, walletName)
+  const signingClientHook = useInterchainClient(chainName, walletName)
 
   return {
-    connect,
-    disconnect,
-    getRpcEndpoint,
-    status: wallet?.walletState,
-    username: account?.username,
-    message: wallet?.errorMessage,
+    connect: () => chainAccount.connect(),
+    disconnect: () => chainAccount.disconnect(),
+    getRpcEndpoint: () => chainAccount.getRpcEndpoint(),
+    status: chainAccount.walletState,
+    username: accountHook.account?.username,
+    message: chainAccount.errorMessage,
     logoUrl: walletManager.getChainLogoUrl(chainName),
-    chain: chainToShow,
-    assetList,
-    address: account?.address,
-    wallet,
-    ...interchainClient
+    rpcEndpoint: rpcEndpointHook.rpcEndpoint,
+    chain: chainAccount.chain,
+    assetList: chainAccount.assetList,
+    address: accountHook.account?.address,
+    wallet: walletRepository,
+    signingClient: signingClientHook.signingClient,
+    isRpcEndpointLoading: rpcEndpointHook.isLoading,
+    isAccountLoading: accountHook.isLoading,
+    isSigningClientLoading: signingClientHook.isLoading,
+    isLoading: rpcEndpointHook.isLoading || accountHook.isLoading || signingClientHook.isLoading,
+    getRpcEndpointError: rpcEndpointHook.error,
+    getSigningClientError: signingClientHook.error,
+    getAccountError: accountHook.error
   }
 }

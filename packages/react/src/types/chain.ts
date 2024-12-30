@@ -22,14 +22,18 @@ export type UseChainReturnType = {
   wallet: BaseWallet
   rpcEndpoint: string | HttpEndpoint
   signingClient: SigningClient
+  isRpcEndpointLoading: boolean
+  isAccountLoading: boolean
+  isSigningClientLoading: boolean
   isLoading: boolean
-  error: unknown
+  getRpcEndpointError: Error | null,
+  getSigningClientError: Error | null,
+  getAccountError: Error | null,
 } & CosmosKitUseChainReturnType
 
 export type UseChainWalletReturnType = Omit<UseChainReturnType, 'openView' | 'closeView'>
 
 export type UseInterchainClientReturnType = {
-  rpcEndpoint: string | HttpEndpoint | undefined,
   signingClient: SigningClient | null,
   error: string | unknown | null,
   isLoading: boolean

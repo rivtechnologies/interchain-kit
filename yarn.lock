@@ -2722,6 +2722,11 @@
   dependencies:
     nx "15.9.7"
 
+"@nx-js/observer-util@^4.2.2":
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/@nx-js/observer-util/-/observer-util-4.2.2.tgz#faea1bc61936653486d1b5dec7485220991e628d"
+  integrity sha512-9OayX1xkdGjdnsDiO2YdaYJ6aMyCF7/NY4QWVgIgjSAZJ4OX2fD766Ts79hEzBscenQy2DCaSoY8VkguIMB1ZA==
+
 "@octokit/auth-token@^3.0.0":
   version "3.0.4"
   resolved "https://registry.npmjs.org/@octokit/auth-token/-/auth-token-3.0.4.tgz"
@@ -5097,6 +5102,13 @@
   dependencies:
     "@vue/shared" "3.5.12"
 
+"@vue/reactivity@^3.5.13":
+  version "3.5.13"
+  resolved "https://registry.yarnpkg.com/@vue/reactivity/-/reactivity-3.5.13.tgz#b41ff2bb865e093899a22219f5b25f97b6fe155f"
+  integrity sha512-NaCwtw8o48B9I6L1zl2p41OHo/2Z4wqYGGIK1Khu5T7yxrn+ATOixn/Udn2m+6kZKB/J7cuT9DbWWhRxqixACg==
+  dependencies:
+    "@vue/shared" "3.5.13"
+
 "@vue/runtime-core@3.5.12":
   version "3.5.12"
   resolved "https://registry.yarnpkg.com/@vue/runtime-core/-/runtime-core-3.5.12.tgz#849207f203d0fd82971f19574d30dbe7134c78c7"
@@ -5132,6 +5144,11 @@
   version "3.5.12"
   resolved "https://registry.yarnpkg.com/@vue/shared/-/shared-3.5.12.tgz#f9e45b7f63f2c3f40d84237b1194b7f67de192e3"
   integrity sha512-L2RPSAwUFbgZH20etwrXyVyCBu9OxRSi8T/38QsvnkJyvq2LufW2lDCOzm7t/U9C1mkhJGWYfCuFBCmIuNivrg==
+
+"@vue/shared@3.5.13":
+  version "3.5.13"
+  resolved "https://registry.yarnpkg.com/@vue/shared/-/shared-3.5.13.tgz#87b309a6379c22b926e696893237826f64339b6f"
+  integrity sha512-/hnE/qP5ZoGpol0a5mDi45bOd7t3tjYJBjsgCsivow7D48cJeV5l05RD82lPqi7gRiphZM37rnhW1l6ZoCNNnQ==
 
 "@vueuse/core@10.11.1", "@vueuse/core@^10.5.0":
   version "10.11.1"
@@ -11602,6 +11619,11 @@ object.assign@^4.1.4:
     define-properties "^1.2.1"
     has-symbols "^1.0.3"
     object-keys "^1.1.1"
+
+observable-slim@^0.1.6:
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/observable-slim/-/observable-slim-0.1.6.tgz#50f643acafc69365701e312a46cac46161efffb3"
+  integrity sha512-a6xYwLaJgGxPxm5tBdKrGSNxiYklbshjlAJE0Nm7iHTMMrkKWvUG63QUhn4urMl5/aPLHIVouh0B3CktyU664w==
 
 ofetch@^1.3.3:
   version "1.3.4"

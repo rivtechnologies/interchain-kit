@@ -5,6 +5,7 @@ import {
   SignerOptions,
   WalletManager,
   EndpointOptions,
+  WalletManagerState,
 } from "@interchain-kit/core";
 import { AssetList, Chain } from "@chain-registry/v2-types";
 import { WalletModalProvider } from "./modal";
@@ -36,20 +37,25 @@ export const ChainProvider = ({
   const [_, forceRender] = useState({});
 
   const walletManager = useMemo(() => {
-    return new WalletManager(
+    const wm = new WalletManager(
       chains,
       assetLists,
       wallets,
       signerOptions,
-      endpointOptions,
-      () => forceRender({})
+      endpointOptions
     );
+    return wm.getObservableObj(() => {
+      forceRender({});
+    });
   }, []);
 
   useEffect(() => {
     walletManager.init();
   }, []);
 
+  if (walletManager.state === WalletManagerState.Initializing) {
+    return <div>Interchain Kit Initializing...</div>;
+  }
   return (
     <InterchainWalletContext.Provider value={{ walletManager }}>
       <WalletModalProvider>{children}</WalletModalProvider>

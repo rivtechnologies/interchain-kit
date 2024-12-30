@@ -1,20 +1,22 @@
-import { ICosmosGenericOfflineSigner } from '@interchainjs/cosmos/types/wallet';
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useWalletManager } from "./useWalletManager"
+import { WalletState } from "@interchain-kit/core"
 
 export const useOfflineSigner = (chainName: string, walletName: string) => {
   const walletManager = useWalletManager()
-  const wallet = walletManager.wallets.find((w) => w.info.name === walletName)
 
-  const [offlineSigner, setOfflineSigner] = useState<ICosmosGenericOfflineSigner | null>(null)
+  const chainAccount = walletManager.getWalletRepositoryByName(walletName)?.getChainAccountByName(chainName)
 
   useEffect(() => {
-    if (wallet && chainName) {
-      setOfflineSigner(walletManager.getOfflineSigner(wallet, chainName))
+    if (chainAccount?.walletState === WalletState.Connected && !chainAccount.offlineSigner && chainName && walletName) {
+      chainAccount.getOfflineSigner()
     }
-  }, [wallet, chainName])
+  }, [chainAccount?.walletState, chainName, walletName])
 
   return {
-    offlineSigner
+    offlineSigner: chainAccount?.offlineSigner,
+    isLoading: chainAccount?.getOfflineSignerState().loading,
+    error: chainAccount?.getOfflineSignerState().error,
+    getOfflineSigner: chainAccount?.getOfflineSigner
   }
 }

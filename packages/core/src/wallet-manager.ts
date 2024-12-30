@@ -1,10 +1,10 @@
+import { WalletRepository } from './wallet-repository';
 import { HttpEndpoint } from '@interchainjs/types';
 import { Chain, AssetList } from '@chain-registry/v2-types'
 import { BaseWallet } from './base-wallet'
-import { WCWallet } from './wc-wallet';
 import { ChainName, DeviceType, DownloadInfo, EndpointOptions, OS, SignerOptions, WalletManagerState, WalletState } from './types'
-import { ChainNameNotExist, ChainSettingsManager, createObservable, getValidRpcEndpoint, getWalletNameFromLocalStorage, NoValidRpcEndpointFound, removeWalletNameFromLocalStorage, setWalletNameToLocalStorage, WalletNotExist } from './utils'
-import { AminoGenericOfflineSigner, DirectGenericOfflineSigner, ICosmosGenericOfflineSigner } from '@interchainjs/cosmos/types/wallet';
+import { ChainNotExist, createObservable, getWalletNameFromLocalStorage, WalletNotExist } from './utils'
+import { ICosmosGenericOfflineSigner } from '@interchainjs/cosmos/types/wallet';
 import { SignerOptions as InterchainSignerOptions } from '@interchainjs/cosmos/types/signing-client';
 import { SigningClient } from '@interchainjs/cosmos/signing-client'
 import Bowser from 'bowser';
@@ -13,6 +13,7 @@ export class WalletManager {
   chains: Chain[] = []
   assetLists: AssetList[] = []
   wallets: BaseWallet[] = []
+  walletRepositories: WalletRepository[] = []
   currentWalletName: string | undefined
   signerOptions: SignerOptions | undefined
   endpointOptions: EndpointOptions | undefined
@@ -20,7 +21,8 @@ export class WalletManager {
   restEndpoint: Record<string, string | HttpEndpoint> = {}
   state: WalletManagerState = WalletManagerState.Initializing
 
-  chainSettingsManager = new ChainSettingsManager()
+  observableObj: any
+  listeners: (() => void)[] = []
 
   constructor(
     chain: Chain[],
@@ -33,13 +35,15 @@ export class WalletManager {
   ) {
     this.chains = chain
     this.assetLists = assetLists
-    this.wallets = wallets.map(wallet => createObservable(wallet, onUpdate))
+    this.wallets = wallets
+    this.walletRepositories = this.wallets.map(wallet => new WalletRepository(chain, assetLists, wallet, this))
     this.signerOptions = signerOptions
     this.endpointOptions = endpointOptions
+    // return createObservable(this, onUpdate)
+  }
 
-    this.chainSettingsManager.setSettings(chain, signerOptions, endpointOptions)
-
-    return createObservable(this, onUpdate)
+  getObservableObj(onChange: () => void) {
+    return createObservable(this, onChange)
   }
 
   async init() {
@@ -65,89 +69,56 @@ export class WalletManager {
   ) {
     const wm = new WalletManager(chain, assetLists, wallets, signerOptions, endpointOptions, onUpdate)
     await wm.init()
+
     return wm
   }
 
   addChains(chains: Chain[], assetLists: AssetList[], signerOptions?: SignerOptions, endpointOptions?: EndpointOptions) {
+    const existChains = this.chains
     chains.forEach(newChain => {
-      if (!this.chains.find(existChain => existChain.chainId === newChain.chainId)) {
+      const existChain = existChains.find(c => c.chainId === newChain.chainId)
+      if (!existChain) {
         this.chains.push(newChain)
-        this.assetLists.push(assetLists.find(assetList => assetList.chainName === newChain.chainName))
-      }
-      this.chainSettingsManager.setSettings([newChain], signerOptions, endpointOptions)
-      if (endpointOptions?.endpoints?.[newChain.chainName].rest.length > 0) {
-        delete this.restEndpoint[newChain.chainName]
-      }
-      if (endpointOptions?.endpoints?.[newChain.chainName].rpc.length > 0) {
-        delete this.rpcEndpoint[newChain.chainName]
+        const assetList = assetLists.find(a => a.chainName === newChain.chainName)
+        this.assetLists.push(assetList)
+        this.walletRepositories.forEach(walletRepository => {
+          walletRepository.addChains(newChain, assetList, signerOptions, endpointOptions)
+        })
+      } else {
+        this.walletRepositories.forEach(walletRepository => {
+          walletRepository.chainAccountMap.forEach((chainAccount) => {
+            chainAccount.signerOptions = signerOptions?.signing?.(chainAccount.chain.chainName)
+            chainAccount.rpcEndpoint = endpointOptions?.endpoints?.[chainAccount.chain.chainName].rpc[0]
+          })
+        })
       }
     })
   }
 
   async connect(walletName: string) {
-
-    const wallet = this.wallets.find(wallet => wallet.info.name === walletName)
-
-    if (!wallet) {
-      throw new WalletNotExist(walletName)
-    }
-
-    this.currentWalletName = walletName
-    wallet.errorMessage = ''
-    wallet.walletState = WalletState.Connecting
-
-    try {
-
-
-      if (wallet.info.mode === 'extension') {
-        await Promise.all(this.chains.map(async chain => {
-          try {
-            await wallet.connect(chain.chainId)
-          } catch (error) {
-            if (
-              (error as any).message === `There is no chain info for ${chain.chainId}` ||
-              (error as any).message === `There is no modular chain info for ${chain.chainId}`
-            ) {
-              await wallet.addSuggestChain(chain, this.assetLists)
-            } else {
-              throw error
-            }
-          }
-        }))
-      } else {
-        await wallet.connect(this.chains.map(chain => chain.chainId))
-      }
-
-      wallet.walletState = WalletState.Connected
-
-      setWalletNameToLocalStorage(walletName)
-
-    } catch (error: any) {
-      wallet.walletState = WalletState.Rejected
-      wallet.errorMessage = error.message
-      throw error
-    }
+    const chainId = this.chains.map(chain => chain.chainId)
+    return this.getWalletRepositoryByName(walletName).connect(chainId)
   }
 
   async disconnect(walletName: string) {
-    const wallet = this.wallets.find(wallet => wallet.info.name === walletName)
+    const chainId = this.chains.map(chain => chain.chainId)
+    return this.getWalletRepositoryByName(walletName).disconnect(chainId)
+  }
 
-    if (wallet instanceof WCWallet) {
-      await wallet.disconnect()
-    } else {
-      await wallet.disconnect(this.chains.map(chain => chain.chainId))
+  assertChainExist(chainName: ChainName) {
+    if (!this.chains.find(chain => chain.chainName === chainName)) {
+      throw new ChainNotExist(chainName)
     }
-    wallet.walletState = WalletState.Disconnected
-
-    removeWalletNameFromLocalStorage()
   }
 
-  getCurrentWallet() {
-    return this.wallets.find(wallet => wallet.info.name === this.currentWalletName)
+  assetWalletExist(walletName: string) {
+    if (!this.walletRepositories.find(walletRepository => walletRepository.wallet.info.name === walletName)) {
+      throw new WalletNotExist(walletName)
+    }
   }
 
-  addChain(chain: Chain) {
-    this.chains.push(chain)
+  getCurrentWallet(): WalletRepository | undefined {
+    return this.walletRepositories.find(walletRepository => walletRepository.getWalletInfo().name === this.currentWalletName)
   }
 
   getChainLogoUrl(chainName: ChainName) {
@@ -155,8 +126,12 @@ export class WalletManager {
     return assetList?.assets?.[0].logoURIs?.png || assetList?.assets?.[0].logoURIs?.svg || undefined
   }
 
-  getWalletByName(walletName: string): BaseWallet {
-    return this.wallets.find(wallet => wallet.info.name === walletName)
+  getWalletByName(walletName: string): BaseWallet | undefined {
+    return this.walletRepositories.find(walletRepository => walletRepository.wallet.info.name === walletName)?.wallet
+  }
+
+  getWalletRepositoryByName(walletName: string): WalletRepository | undefined {
+    return this.walletRepositories.find(walletRepository => walletRepository.wallet.info.name === walletName)
   }
 
   getChainByName(chainName: string): Chain {
@@ -165,89 +140,27 @@ export class WalletManager {
   }
 
   getRpcEndpoint = async (wallet: BaseWallet, chainName: string) => {
-    const cacheKey = `${chainName}`
-    const cachedRpcEndpoint = this.rpcEndpoint[cacheKey]
-    if (cachedRpcEndpoint) {
-      return cachedRpcEndpoint
-    }
-
-    const chain = this.getChainByName(chainName)
-
-    const providerRpcEndpoints = this.chainSettingsManager.getPreferredEndpoint(chainName)?.rpc || []
-    // const walletRpcEndpoints = wallet?.info?.endpoints?.[chain.chainName]?.rpc || []
-    const chainRpcEndpoints = chain.apis.rpc.map(url => url.address)
-
-
-    if (providerRpcEndpoints?.[0]) {
-      this.rpcEndpoint[cacheKey] = providerRpcEndpoints[0]
-      return this.rpcEndpoint[cacheKey]
-    }
-
-    const validRpcEndpoint = await getValidRpcEndpoint([...providerRpcEndpoints, ...chainRpcEndpoints])
-
-    if (validRpcEndpoint === '') {
-      throw new NoValidRpcEndpointFound()
-    }
-
-    this.rpcEndpoint[cacheKey] = validRpcEndpoint
-    return validRpcEndpoint
+    return this.getWalletRepositoryByName(wallet.info.name).getChainAccountByName(chainName).getRpcEndpoint()
   }
 
   getPreferSignType(chainName: string) {
-    return this.chainSettingsManager.getPreferredSignType(chainName)
+    return this.getWalletRepositoryByName(this.currentWalletName).getChainAccountByName(chainName).getPreferredSignType()
   }
 
   getSignerOptions(chainName: string): InterchainSignerOptions {
-    return this.chainSettingsManager.getSignerOptions(chainName)
+    return this.signerOptions?.signing?.(chainName)
   }
 
   getOfflineSigner(wallet: BaseWallet, chainName: string): ICosmosGenericOfflineSigner {
-    const chain = this.getChainByName(chainName)
-    const signType = this.getPreferSignType(chainName)
-    if (signType === 'direct') {
-      const direct = wallet.getOfflineSignerDirect(chain.chainId)
-      return new DirectGenericOfflineSigner(direct)
-    } else {
-      const amino = wallet.getOfflineSignerAmino(chain.chainId)
-      return new AminoGenericOfflineSigner(amino)
-    }
+    return this.getWalletRepositoryByName(wallet.info.name).getChainAccountByName(chainName).getOfflineSigner()
   }
 
   async getAccount(walletName: string, chainName: ChainName) {
-
-    const chain = this.chains.find(c => c.chainName === chainName)
-    const wallet = this.wallets.find(w => w.info.name === walletName)
-
-    if (!chain) {
-      throw new ChainNameNotExist(chainName)
-    }
-
-    if (!wallet) {
-      throw new WalletNotExist(walletName)
-    }
-
-    return wallet.getAccount(chain.chainId)
+    return this.getWalletRepositoryByName(walletName).getChainAccountByName(chainName).getAccount()
   }
 
   async getInterchainSignerOptions(walletName: string, chainName: string) {
-    const wallet = this.getWalletByName(walletName)
-    const chain = this.getChainByName(chainName)
-    const rpcEndpoint = await this.getRpcEndpoint(wallet, chainName)
-    const offlineSigner = this.getOfflineSigner(wallet, chainName)
-    const signerOptions = this.getSignerOptions(chainName)
-    const options: InterchainSignerOptions = {
-      prefix: chain.bech32Prefix,
-      broadcast: {
-        checkTx: true,
-        deliverTx: false,
-      },
-      ...signerOptions,
-    }
-    return {
-      rpcEndpoint,
-      offlineSigner,
-      options
-    }
+    return this.getWalletRepositoryByName(walletName).getChainAccountByName(chainName).getSignerOptions()
   }
 
   isWalletConnected = (walletName: string) => {
@@ -255,9 +168,7 @@ export class WalletManager {
   }
 
   async getSigningClient(walletName: string, chainName: ChainName): Promise<SigningClient> {
-    if (!this.isWalletConnected(walletName)) return null
-    const { rpcEndpoint, offlineSigner, options } = await this.getInterchainSignerOptions(walletName, chainName)
-    return SigningClient.connectWithSigner(rpcEndpoint, offlineSigner, options)
+    return this.getWalletRepositoryByName(walletName).getChainAccountByName(chainName).getSigningClient()
   }
 
   getEnv() {

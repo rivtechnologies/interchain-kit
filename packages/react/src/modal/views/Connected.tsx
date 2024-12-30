@@ -21,8 +21,8 @@ export const ConnectedHeader = ({ onBack }: { onBack: () => void }) => {
 export const ConnectedContent = () => {
   const currentWallet = useCurrentWallet();
   const walletManager = useWalletManager();
-  const account = useAccount(
-    walletManager.chains[0].chainName,
+  const { account } = useAccount(
+    currentWallet.currentChainName,
     currentWallet?.info?.name
   );
   const { close } = useWalletModal();

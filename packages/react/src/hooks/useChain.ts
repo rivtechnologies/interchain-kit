@@ -1,60 +1,52 @@
 import { useWalletManager } from "./useWalletManager"
 import { CosmosKitUseChainReturnType, UseChainReturnType } from '../types/chain';
 import { useAccount } from "./useAccount";
-import { AssetList, Chain } from "@chain-registry/v2-types";
 import { useCurrentWallet } from './useCurrentWallet';
 import { useInterchainClient } from './useInterchainClient';
 import { useWalletModal } from "../modal";
-import { ChainNameNotExist, WalletState } from "@interchain-kit/core";
-import { useCallback } from "react";
-
+import { useRpcEndpoint } from "./useRpcEndpoint";
 
 export const useChain = (chainName: string): UseChainReturnType => {
   const walletManager = useWalletManager()
-  const chainToShow = walletManager.chains.find((c: Chain) => c.chainName === chainName)
-  const assetList = walletManager.assetLists.find((a: AssetList) => a.chainName === chainName)
 
   const currentWallet = useCurrentWallet()
-  const account = useAccount(chainName, currentWallet?.info?.name)
-  const interchainClient = useInterchainClient(chainName, currentWallet?.info?.name)
 
-  if (!chainToShow) {
-    throw new ChainNameNotExist(chainName)
-  }
+  const chainAccount = currentWallet?.getChainAccountByName?.(chainName)
+
+  const walletName = currentWallet?.info?.name
+
+  const rpcEndpointHook = useRpcEndpoint(chainName, walletName)
+  const accountHook = useAccount(chainName, walletName)
+  const signingClientHook = useInterchainClient(chainName, walletName)
 
   const { open, close } = useWalletModal()
 
-  const getRpcEndpoint = useCallback(async () => {
-    return await walletManager.getRpcEndpoint(currentWallet, chainName);
-  }, [walletManager, currentWallet, chainName]);
-
-  const disconnect = useCallback(() => {
-    walletManager.disconnect(currentWallet?.info?.name);
-  }, [walletManager, currentWallet]);
-
   const cosmosKitUserChainReturnType: CosmosKitUseChainReturnType = {
-    connect: () => {
-      if (currentWallet?.walletState === WalletState.Connected) {
-        return
-      }
-      open()
-    },
-    disconnect,
+    connect: () => chainAccount.connect(),
+    disconnect: () => chainAccount.disconnect(),
     openView: open,
     closeView: close,
-    getRpcEndpoint,
+    getRpcEndpoint: () => chainAccount.getRpcEndpoint(),
     status: currentWallet?.walletState,
-    username: account?.username,
+    username: accountHook.account?.username,
     message: currentWallet?.errorMessage
   }
 
   return {
     logoUrl: walletManager.getChainLogoUrl(chainName),
-    chain: chainToShow,
-    assetList,
-    address: account?.address,
+    chain: chainAccount?.chain,
+    assetList: chainAccount?.assetList,
+    address: accountHook.account?.address,
     wallet: currentWallet,
+    rpcEndpoint: rpcEndpointHook.rpcEndpoint,
     ...cosmosKitUserChainReturnType, //for migration cosmos kit
-    ...interchainClient
+    signingClient: signingClientHook.signingClient,
+    isRpcEndpointLoading: rpcEndpointHook.isLoading,
+    isAccountLoading: accountHook.isLoading,
+    isSigningClientLoading: signingClientHook.isLoading,
+    isLoading: rpcEndpointHook.isLoading || accountHook.isLoading || signingClientHook.isLoading,
+    getRpcEndpointError: rpcEndpointHook.error,
+    getSigningClientError: signingClientHook.error,
+    getAccountError: accountHook.error
   }
 }

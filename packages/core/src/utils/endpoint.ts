@@ -1,4 +1,4 @@
-import { HttpEndpoint } from "@cosmjs/stargate"
+import { HttpEndpoint } from '@interchainjs/types';
 import axios, { AxiosRequestConfig } from "axios"
 
 const pendingRequests = new Map<string, Promise<any>>();

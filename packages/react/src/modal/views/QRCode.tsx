@@ -21,7 +21,8 @@ export const QRCodeHeader = ({ onBack }: { onBack: () => void }) => {
   );
 };
 export const QRCodeContent = () => {
-  const currentWallet = useCurrentWallet() as WCWallet;
+  const currentWalletRepository = useCurrentWallet();
+  const currentWallet = currentWalletRepository.wallet as WCWallet;
   const walletManager = useWalletManager();
   const data = currentWallet.pairingUri;
 

@@ -27,10 +27,10 @@ import { ThemeProvider } from "@interchain-ui/react";
 
 const chainNames = [
   "osmosistestnet",
-  // "osmosis",
-  // "juno",
-  // "cosmoshub",
-  // "stargaze",
+  "osmosis",
+  "juno",
+  "cosmoshub",
+  "stargaze",
   // "noble",
 ];
 // const chainNames = ["osmosistestnet"];

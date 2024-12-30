@@ -1,49 +1,22 @@
-import { useEffect, useMemo, useState } from "react"
-import { WalletAccount, WalletManagerState, WalletState } from "@interchain-kit/core"
+import { WalletState } from "@interchain-kit/core"
 import { useWalletManager } from './useWalletManager';
+import { useEffect } from "react";
 
-export const useAccount = (chainName: string, walletName: string): WalletAccount | null => {
-
+export const useAccount = (chainName: string, walletName: string) => {
   const walletManager = useWalletManager()
 
-  const [isFetching, setIsFetching] = useState(false)
+  const chainAccount = walletManager.getWalletRepositoryByName(walletName)?.getChainAccountByName(chainName)
 
-  const wallet = useMemo(() => {
-    return walletManager.wallets.find(w => w.info.name === walletName)
-  }, [walletManager, walletName]);
-
-  const [account, setAccount] = useState<WalletAccount | null>(null)
-
-  const chain = useMemo(() => {
-    return walletManager.chains.find(c => c.chainName === chainName);
-  }, [walletManager, chainName]);
-
-  const getAccount = async () => {
-    if (wallet && chain) {
-      if (wallet.walletState === WalletState.Connected && !isFetching) {
-        setIsFetching(true)
-        const account = await walletManager.getAccount(walletName, chainName)
-        setAccount(account)
-        setIsFetching(false)
-      }
-      if (wallet.walletState === WalletState.Disconnected) {
-        setAccount(null)
-      }
+  useEffect(() => {
+    if (chainAccount?.walletState === WalletState.Connected && !chainAccount?.account && chainName && walletName) {
+      chainAccount.getAccount()
     }
-    if (!wallet) {
-      setAccount(null)
-    }
+  }, [chainAccount?.walletState, chainName, walletName])
+
+  return {
+    account: chainAccount?.account || undefined,
+    isLoading: chainAccount?.getAccountState().loading || false,
+    error: chainAccount?.getAccountState().error || undefined,
+    getAccount: chainAccount?.getAccount
   }
-
-  useEffect(() => {
-    if (wallet && walletManager.state === WalletManagerState.Initialized) {
-      wallet.events.on('accountChanged', getAccount)
-    }
-  }, [wallet, walletManager.state])
-
-  useEffect(() => {
-    getAccount()
-  }, [wallet, chainName, wallet?.walletState])
-
-  return account
 }

@@ -4,7 +4,8 @@ import EventEmitter from "events";
 import {
   OfflineAminoSigner,
   OfflineDirectSigner,
-  AminoSignResponse, StdSignature, DirectSignResponse
+  AminoSignResponse, StdSignature, DirectSignResponse,
+  OfflineSigner
 } from '@interchainjs/cosmos/types/wallet';
 import { Chain, AssetList } from '@chain-registry/v2-types';
 
@@ -33,6 +34,8 @@ export abstract class BaseWallet {
   abstract getAccounts(chainIds: string[]): Promise<WalletAccount[]>
 
   abstract getSimpleAccount(chainId: string): Promise<SimpleAccount>
+
+  abstract getOfflineSigner(chainId: string): OfflineSigner
 
   abstract getOfflineSignerAmino(chainId: string): OfflineAminoSigner
 
