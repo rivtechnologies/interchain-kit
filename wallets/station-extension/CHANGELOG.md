@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-beta.44](https://github.com/interchain-kit/station-extension/compare/@interchain-kit/station-extension@0.0.1-beta.43...@interchain-kit/station-extension@0.0.1-beta.44) (2024-12-30)
+
+**Note:** Version bump only for package @interchain-kit/station-extension
+
 ## [0.0.1-beta.43](https://github.com/interchain-kit/station-extension/compare/@interchain-kit/station-extension@0.0.1-beta.42...@interchain-kit/station-extension@0.0.1-beta.43) (2024-12-24)
 
 **Note:** Version bump only for package @interchain-kit/station-extension

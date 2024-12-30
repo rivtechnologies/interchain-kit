@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/xdefi-extension",
-  "version": "0.0.1-beta.43",
+  "version": "0.0.1-beta.44",
   "author": "cosmology-tech <developers@cosmology.zone>",
   "description": "cosmos-kit wallet connector",
   "main": "index.js",
@@ -32,7 +32,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@interchain-kit/core": "0.0.1-beta.43"
+    "@interchain-kit/core": "0.0.1-beta.44"
   },
   "gitHead": "afa55d5476570d30de21cb3673f5963a4493e9e2"
 }
