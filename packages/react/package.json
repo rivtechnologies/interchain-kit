@@ -39,14 +39,14 @@
     "@interchainjs/cosmos-types": "1.6.3",
     "@nx-js/observer-util": "^4.2.2",
     "@react-icons/all-files": "^4.1.0",
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
     "@vue/reactivity": "^3.5.13",
     "@walletconnect/types": "^2.17.3",
     "interchainjs": "1.6.3",
     "observable-slim": "^0.1.6",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "gitHead": "f2f8ba10d72dc5779ff9f6acb1830abe96014d15"
 }
