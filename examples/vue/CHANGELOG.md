@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-beta.45](https://github.com/cosmology-tech/interchain-kit/compare/@interchain-kit/vue-examples@0.0.1-beta.44...@interchain-kit/vue-examples@0.0.1-beta.45) (2024-12-31)
+
+**Note:** Version bump only for package @interchain-kit/vue-examples
+
 ## [0.0.1-beta.44](https://github.com/cosmology-tech/interchain-kit/compare/@interchain-kit/vue-examples@0.0.1-beta.43...@interchain-kit/vue-examples@0.0.1-beta.44) (2024-12-30)
 
 **Note:** Version bump only for package @interchain-kit/vue-examples
