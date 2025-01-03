@@ -5,12 +5,11 @@ import { useCurrentWallet } from './useCurrentWallet';
 import { useInterchainClient } from './useInterchainClient';
 import { useWalletModal } from "../modal";
 import { useRpcEndpoint } from "./useRpcEndpoint";
+import { WalletState } from "@interchain-kit/core";
 
 export const useChain = (chainName: string): UseChainReturnType => {
   const walletManager = useWalletManager()
-
   const currentWallet = useCurrentWallet()
-
   const chainAccount = currentWallet?.getChainAccountByName?.(chainName)
 
   const walletName = currentWallet?.info?.name
@@ -32,6 +31,26 @@ export const useChain = (chainName: string): UseChainReturnType => {
     message: currentWallet?.errorMessage
   }
 
+  if (currentWallet && chainAccount?.walletState === WalletState.Connected) {
+    return {
+      logoUrl: walletManager.getChainLogoUrl(chainName),
+      chain: chainAccount?.chain,
+      assetList: chainAccount?.assetList,
+      address: accountHook.account?.address,
+      wallet: currentWallet,
+      rpcEndpoint: rpcEndpointHook.rpcEndpoint,
+      ...cosmosKitUserChainReturnType, //for migration cosmos kit
+      signingClient: signingClientHook.signingClient,
+      getSigningClient: () => signingClientHook.getSigningClient(),
+      isRpcEndpointLoading: rpcEndpointHook.isLoading,
+      isAccountLoading: accountHook.isLoading,
+      isSigningClientLoading: signingClientHook.isLoading,
+      isLoading: rpcEndpointHook.isLoading || accountHook.isLoading || signingClientHook.isLoading,
+      getRpcEndpointError: rpcEndpointHook.error,
+      getSigningClientError: signingClientHook.error,
+      getAccountError: accountHook.error
+    }
+  }
   return {
     logoUrl: walletManager.getChainLogoUrl(chainName),
     chain: chainAccount?.chain,
@@ -41,6 +60,7 @@ export const useChain = (chainName: string): UseChainReturnType => {
     rpcEndpoint: rpcEndpointHook.rpcEndpoint,
     ...cosmosKitUserChainReturnType, //for migration cosmos kit
     signingClient: signingClientHook.signingClient,
+    getSigningClient: () => signingClientHook.getSigningClient(),
     isRpcEndpointLoading: rpcEndpointHook.isLoading,
     isAccountLoading: accountHook.isLoading,
     isSigningClientLoading: signingClientHook.isLoading,
@@ -49,4 +69,5 @@ export const useChain = (chainName: string): UseChainReturnType => {
     getSigningClientError: signingClientHook.error,
     getAccountError: accountHook.error
   }
+
 }

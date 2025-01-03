@@ -31,7 +31,7 @@ const chainNames = [
   "juno",
   "cosmoshub",
   "stargaze",
-  // "noble",
+  "noble",
 ];
 // const chainNames = ["osmosistestnet"];
 // const chainNames = ["cosmoshub"];

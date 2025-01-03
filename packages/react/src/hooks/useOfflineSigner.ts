@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useMemo } from "react"
 import { useWalletManager } from "./useWalletManager"
 import { WalletState } from "@interchain-kit/core"
 
@@ -7,16 +7,18 @@ export const useOfflineSigner = (chainName: string, walletName: string) => {
 
   const chainAccount = walletManager.getWalletRepositoryByName(walletName)?.getChainAccountByName(chainName)
 
-  useEffect(() => {
-    if (chainAccount?.walletState === WalletState.Connected && !chainAccount.offlineSigner && chainName && walletName) {
-      chainAccount.getOfflineSigner()
+  if (chainAccount && chainAccount.walletState === WalletState.Connected) {
+    return {
+      offlineSigner: chainAccount?.offlineSigner,
+      isLoading: chainAccount?.getOfflineSignerState().loading,
+      error: chainAccount?.getOfflineSignerState().error,
+      getOfflineSigner: () => chainAccount?.getOfflineSigner()
     }
-  }, [chainAccount?.walletState, chainName, walletName])
-
+  }
   return {
-    offlineSigner: chainAccount?.offlineSigner,
-    isLoading: chainAccount?.getOfflineSignerState().loading,
-    error: chainAccount?.getOfflineSignerState().error,
-    getOfflineSigner: chainAccount?.getOfflineSigner
+    offlineSigner: undefined,
+    isLoading: false,
+    error: undefined,
+    getOfflineSigner: () => chainAccount?.getOfflineSigner()
   }
 }

@@ -103,6 +103,10 @@ export class ChainAccount extends BaseWallet {
       setWalletNameToLocalStorage(this.wallet.info.name)
     } catch (error) {
       console.log(error)
+      if ((error as any).message === `There is no modular chain info for ${this.chain.chainId}` && this.wallet.info.name === 'keplr-extension') {
+        await this.wallet.addSuggestChain(this.chain, [this.assetList])
+      }
+      console.log(error)
       this.errorMessage = (error as any).message
       this.wallet.errorMessage = (error as any).message
       this.walletRepo.errorMessage = (error as any).message

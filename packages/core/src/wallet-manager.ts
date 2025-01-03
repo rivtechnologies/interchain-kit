@@ -42,8 +42,17 @@ export class WalletManager {
     // return createObservable(this, onUpdate)
   }
 
-  getObservableObj(onChange: () => void) {
-    return createObservable(this, onChange)
+  getObservableObj() {
+    return createObservable(this, this.notify.bind(this))
+  }
+
+  subscribe(listener: () => void) {
+    this.listeners.push(listener)
+    return () => this.listeners.filter(l => l !== listener)
+  }
+
+  notify() {
+    this.listeners.forEach(listener => listener())
   }
 
   async init() {

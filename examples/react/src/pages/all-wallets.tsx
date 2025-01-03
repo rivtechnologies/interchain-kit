@@ -4,6 +4,8 @@ import {
   useChainWallet,
   useWalletManager,
   useWalletModal,
+  useRpcEndpoint as useRpcEndpointFromInterchainKit,
+  useAccount,
 } from "@interchain-kit/react";
 import { useRef, useState } from "react";
 import { makeKeplrChainInfo } from "../utils";
@@ -123,6 +125,34 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
   );
 };
 
+const RpcTd = ({ wallet, address, chain }: SendTokenProps) => {
+  const { rpcEndpoint, getRpcEndpoint } = useRpcEndpointFromInterchainKit(
+    chain.chainName,
+    wallet.info?.name as string
+  );
+
+  return (
+    <td>
+      <p>{rpcEndpoint as string}</p>
+      <button onClick={getRpcEndpoint}>get rpc</button>
+    </td>
+  );
+};
+
+const AddressTd = ({ wallet, chain }: SendTokenProps) => {
+  const { account, getAccount } = useAccount(
+    chain.chainName,
+    wallet.info?.name as string
+  );
+
+  return (
+    <td>
+      <p>{account?.address}</p>
+      <button onClick={getAccount}>get account</button>
+    </td>
+  );
+};
+
 const ChainRow = ({ chain, wallet }: { chain: Chain; wallet: BaseWallet }) => {
   const { address, rpcEndpoint, connect, disconnect } = useChainWallet(
     chain.chainName,
@@ -136,8 +166,8 @@ const ChainRow = ({ chain, wallet }: { chain: Chain; wallet: BaseWallet }) => {
       </td>
       <td>{chain.chainName}</td>
       <td>{chain.chainId}</td>
-      <td>{rpcEndpoint as string}</td>
-      <td>{address}</td>
+      <RpcTd address={address} wallet={wallet} chain={chain}></RpcTd>
+      <AddressTd address={address} wallet={wallet} chain={chain}></AddressTd>
       <BalanceTd
         address={address}
         chainId={chain.chainId as string}

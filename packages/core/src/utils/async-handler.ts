@@ -29,6 +29,11 @@ export class AsyncHandler<T> {
   }
 
   async doAsync(fetchFunction: () => Promise<T>): Promise<T | null> {
+
+    if (this.data) {
+      return this.data;
+    }
+
     if (this.currentFetchPromise) {
       await this.currentFetchPromise;
       return this.data;

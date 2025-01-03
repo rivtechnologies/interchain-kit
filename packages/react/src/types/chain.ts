@@ -22,6 +22,7 @@ export type UseChainReturnType = {
   wallet: BaseWallet
   rpcEndpoint: string | HttpEndpoint
   signingClient: SigningClient
+  getSigningClient: () => Promise<SigningClient>
   isRpcEndpointLoading: boolean
   isAccountLoading: boolean
   isSigningClientLoading: boolean

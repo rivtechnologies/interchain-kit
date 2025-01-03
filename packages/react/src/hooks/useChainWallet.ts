@@ -28,6 +28,7 @@ export const useChainWallet = (chainName: string, walletName: string): UseChainW
     address: accountHook.account?.address,
     wallet: walletRepository,
     signingClient: signingClientHook.signingClient,
+    getSigningClient: () => signingClientHook.getSigningClient(),
     isRpcEndpointLoading: rpcEndpointHook.isLoading,
     isAccountLoading: accountHook.isLoading,
     isSigningClientLoading: signingClientHook.isLoading,

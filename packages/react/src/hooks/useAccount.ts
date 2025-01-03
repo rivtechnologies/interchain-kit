@@ -8,15 +8,25 @@ export const useAccount = (chainName: string, walletName: string) => {
   const chainAccount = walletManager.getWalletRepositoryByName(walletName)?.getChainAccountByName(chainName)
 
   useEffect(() => {
-    if (chainAccount?.walletState === WalletState.Connected && !chainAccount?.account && chainName && walletName) {
+    if (chainAccount?.walletState === WalletState.Connected) {
       chainAccount.getAccount()
     }
-  }, [chainAccount?.walletState, chainName, walletName])
+  }, [chainName, walletName, chainAccount?.walletState])
+
+  if (chainAccount?.walletState === WalletState.Connected) {
+    return {
+      account: chainAccount?.account,
+      isLoading: chainAccount.getAccountState().loading,
+      error: chainAccount.getAccountState().error,
+      getAccount: () => chainAccount?.getAccount()
+    }
+  }
 
   return {
-    account: chainAccount?.account || undefined,
-    isLoading: chainAccount?.getAccountState().loading || false,
-    error: chainAccount?.getAccountState().error || undefined,
-    getAccount: chainAccount?.getAccount
+    account: undefined,
+    isLoading: false,
+    error: null,
+    getAccount: () => chainAccount?.getAccount()
   }
+
 }

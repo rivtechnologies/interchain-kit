@@ -44,9 +44,11 @@ export const ChainProvider = ({
       signerOptions,
       endpointOptions
     );
-    return wm.getObservableObj(() => {
-      forceRender({});
-    });
+    const observable = wm.getObservableObj();
+
+    observable.subscribe(() => forceRender({}));
+
+    return observable;
   }, []);
 
   useEffect(() => {
@@ -56,6 +58,7 @@ export const ChainProvider = ({
   if (walletManager.state === WalletManagerState.Initializing) {
     return <div>Interchain Kit Initializing...</div>;
   }
+
   return (
     <InterchainWalletContext.Provider value={{ walletManager }}>
       <WalletModalProvider>{children}</WalletModalProvider>

@@ -40,8 +40,8 @@ export class WalletRepository extends BaseWallet {
     this.chainIdMap.set(chain.chainId, chain)
 
     const newChainAccount = new ChainAccount(chain, assetList, this, this.walletManager)
-    newChainAccount.signerOptions = signerOptions.signing?.(chain.chainName)
-    newChainAccount.rpcEndpoint = endpointOptions.endpoints[chain.chainName].rpc?.[0]
+    newChainAccount.signerOptions = signerOptions?.signing?.(chain.chainName)
+    newChainAccount.rpcEndpoint = endpointOptions?.endpoints[chain.chainName].rpc?.[0]
 
     this.chainAccountMap.set(chain.chainId, newChainAccount)
   }
@@ -60,9 +60,7 @@ export class WalletRepository extends BaseWallet {
 
   getChainAccountByName(chainName: Chain['chainName']): ChainAccount | undefined {
     const chain = this.chainNameMap.get(chainName)
-    if (!chain) {
-      throw new Error(`Chain ${chainName} not found`)
-    }
+    if (!chain) return undefined
     return this.chainAccountMap.get(chain.chainId)
   }
   getChainAccountById(chainId: Chain['chainId']): ChainAccount | undefined {

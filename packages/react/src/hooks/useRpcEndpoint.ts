@@ -8,15 +8,24 @@ export const useRpcEndpoint = (chainName: string, walletName: string) => {
   const chainAccount = walletManager.getWalletRepositoryByName(walletName)?.getChainAccountByName(chainName)
 
   useEffect(() => {
-    if (chainAccount?.walletState === WalletState.Connected && !chainAccount.rpcEndpoint && chainName && walletName) {
+    if (chainAccount?.walletState === WalletState.Connected) {
       chainAccount.getRpcEndpoint()
     }
-  }, [chainAccount?.walletState, walletName, chainName])
+  }, [chainName, walletName, chainAccount?.walletState])
+
+  if (chainAccount && chainAccount.walletState === WalletState.Connected) {
+    return {
+      rpcEndpoint: chainAccount?.rpcEndpoint,
+      isLoading: chainAccount?.getRpcEndpointState().loading,
+      error: chainAccount?.getRpcEndpointState().error,
+      getRpcEndpoint: () => chainAccount?.getRpcEndpoint()
+    }
+  }
 
   return {
-    rpcEndpoint: chainAccount?.rpcEndpoint,
-    isLoading: chainAccount?.getRpcEndpointState().loading,
-    error: chainAccount?.getRpcEndpointState().error,
-    getRpcEndpoint: chainAccount?.getRpcEndpoint
+    rpcEndpoint: undefined,
+    isLoading: false,
+    error: undefined,
+    getRpcEndpoint: () => chainAccount?.getRpcEndpoint()
   }
 }
