@@ -28,6 +28,10 @@ export const WalletModal = () => {
 
   const currentWallet = useCurrentWallet();
 
+  const currentChainAccount = currentWallet?.getChainAccountByName?.(
+    currentWallet.currentChainName
+  );
+
   const walletManager = useWalletManager();
 
   const handleSelectWallet = async (wallet: any) => {
@@ -93,9 +97,11 @@ export const WalletModal = () => {
   const [modalView, setModalView] = useState(defaultModalView);
 
   const gotoWalletList = () => setModalView(defaultModalView);
-
   useEffect(() => {
-    if (modalIsOpen && currentWallet?.walletState === WalletState.Connected) {
+    if (
+      modalIsOpen &&
+      currentChainAccount?.walletState === WalletState.Connected
+    ) {
       setModalView({
         header: <ConnectedHeader onBack={gotoWalletList} />,
         content: <ConnectedContent />,

@@ -21,7 +21,13 @@ export const useChain = (chainName: string): UseChainReturnType => {
   const { open, close } = useWalletModal()
 
   const cosmosKitUserChainReturnType: CosmosKitUseChainReturnType = {
-    connect: () => chainAccount.connect(),
+    connect: () => {
+      if (chainAccount?.walletState === WalletState.Connected) {
+        return
+      } else {
+        open()
+      }
+    },
     disconnect: () => chainAccount.disconnect(),
     openView: open,
     closeView: close,

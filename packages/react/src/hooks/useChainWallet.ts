@@ -3,6 +3,7 @@ import { useAccount } from "./useAccount"
 import { UseChainWalletReturnType } from "../types/chain"
 import { useInterchainClient } from "./useInterchainClient"
 import { useRpcEndpoint } from "./useRpcEndpoint"
+import { WalletState } from "@interchain-kit/core"
 
 export const useChainWallet = (chainName: string, walletName: string): UseChainWalletReturnType => {
   const walletManager = useWalletManager()
@@ -15,7 +16,12 @@ export const useChainWallet = (chainName: string, walletName: string): UseChainW
   const signingClientHook = useInterchainClient(chainName, walletName)
 
   return {
-    connect: () => chainAccount.connect(),
+    connect: () => {
+      if (!chainAccount && chainAccount.walletState === WalletState.Connected) {
+        return
+      }
+      chainAccount.connect()
+    },
     disconnect: () => chainAccount.disconnect(),
     getRpcEndpoint: () => chainAccount.getRpcEndpoint(),
     status: chainAccount.walletState,

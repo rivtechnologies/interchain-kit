@@ -123,7 +123,7 @@ const hwAssetList = {
 
 export default function ActiveWallet() {
   const { address, wallet, logoUrl, connect, disconnect, chain } =
-    useChain("hyperweb");
+    useChain("osmosistestnet");
   const { open } = useWalletModal();
   const { getOfflineSignerAmino, disconnectAll } = useCurrentWallet();
   const { addChains } = useWalletManager();
