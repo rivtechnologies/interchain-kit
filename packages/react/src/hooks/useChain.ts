@@ -6,13 +6,13 @@ import { useInterchainClient } from './useInterchainClient';
 import { useWalletModal } from "../modal";
 import { useRpcEndpoint } from "./useRpcEndpoint";
 import { WalletState } from "@interchain-kit/core";
+import { useCurrentChainWallet } from "./useCurrentChainWallet";
 
 export const useChain = (chainName: string): UseChainReturnType => {
   const walletManager = useWalletManager()
-  const currentWallet = useCurrentWallet()
-  const chainAccount = currentWallet?.getChainAccountByName?.(chainName)
+  const chainAccount = useCurrentChainWallet()
 
-  const walletName = currentWallet?.info?.name
+  const walletName = chainAccount?.info?.name
 
   const rpcEndpointHook = useRpcEndpoint(chainName, walletName)
   const accountHook = useAccount(chainName, walletName)
@@ -24,26 +24,32 @@ export const useChain = (chainName: string): UseChainReturnType => {
     connect: () => {
       if (chainAccount?.walletState === WalletState.Connected) {
         return
-      } else {
-        open()
       }
+      walletManager.currentChainName = chainName
+      open()
     },
-    disconnect: () => chainAccount.disconnect(),
-    openView: open,
+    disconnect: () => {
+      walletManager.currentChainName = chainName
+      chainAccount ?? chainAccount.disconnect()
+    },
+    openView: () => {
+      walletManager.currentChainName = chainName
+      open()
+    },
     closeView: close,
     getRpcEndpoint: () => chainAccount.getRpcEndpoint(),
-    status: currentWallet?.walletState,
+    status: chainAccount?.walletState,
     username: accountHook.account?.username,
-    message: currentWallet?.errorMessage
+    message: chainAccount?.errorMessage
   }
 
-  if (currentWallet && chainAccount?.walletState === WalletState.Connected) {
+  if (chainAccount && chainAccount?.walletState === WalletState.Connected) {
     return {
       logoUrl: walletManager.getChainLogoUrl(chainName),
       chain: chainAccount?.chain,
       assetList: chainAccount?.assetList,
       address: accountHook.account?.address,
-      wallet: currentWallet,
+      wallet: chainAccount,
       rpcEndpoint: rpcEndpointHook.rpcEndpoint,
       ...cosmosKitUserChainReturnType, //for migration cosmos kit
       signingClient: signingClientHook.signingClient,
@@ -62,7 +68,7 @@ export const useChain = (chainName: string): UseChainReturnType => {
     chain: chainAccount?.chain,
     assetList: chainAccount?.assetList,
     address: accountHook.account?.address,
-    wallet: currentWallet,
+    wallet: chainAccount,
     rpcEndpoint: rpcEndpointHook.rpcEndpoint,
     ...cosmosKitUserChainReturnType, //for migration cosmos kit
     signingClient: signingClientHook.signingClient,

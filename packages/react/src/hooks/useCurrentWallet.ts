@@ -1,9 +1,8 @@
-import { WalletRepository } from '@interchain-kit/core/wallet-repository';
 import { useWalletManager } from "./useWalletManager"
 import { useWalletModal } from "../modal"
 import { bindAllMethodsToContext } from "../utils/helpers"
-import { useEffect } from 'react';
-import { WalletManagerState } from '@interchain-kit/core';
+import { ChainAccount } from '@interchain-kit/core/chain-account';
+import { WalletRepository } from "@interchain-kit/core/wallet-repository";
 
 export const useCurrentWallet = (): WalletRepository => {
   const walletManager = useWalletManager()
@@ -15,7 +14,10 @@ export const useCurrentWallet = (): WalletRepository => {
   //   }
   // }, [walletManager.currentWalletName, walletManager.state])
 
-  const wallet = walletManager.getCurrentWallet()
+  const { currentWalletName, currentChainName, getWalletRepositoryByName } = walletManager
+
+
+  const wallet = getWalletRepositoryByName(currentWalletName)
 
   if (wallet) {
     return bindAllMethodsToContext(wallet)

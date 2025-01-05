@@ -22,22 +22,19 @@ import {
   WCWallet,
 } from "@interchain-kit/core";
 import { ConnectModal } from "@interchain-ui/react";
+import { useCurrentChainWallet } from "../hooks/useCurrentChainWallet";
 
 export const WalletModal = () => {
   const { modalIsOpen, open, close } = useWalletModal();
 
-  const currentWallet = useCurrentWallet();
-
-  const currentChainAccount = currentWallet?.getChainAccountByName?.(
-    currentWallet.currentChainName
-  );
-
   const walletManager = useWalletManager();
 
   const handleSelectWallet = async (wallet: any) => {
-    const selectedWallet = walletManager.getWalletByName(
-      (wallet as BaseWallet).info.name
-    );
+    walletManager.currentWalletName = wallet.info.name;
+
+    const currentWallet = walletManager
+      .getWalletRepositoryByName(wallet.info.name)
+      .getChainAccountByName(walletManager.currentChainName);
 
     setModalView({
       header: <ConnectingHeader wallet={wallet} onBack={gotoWalletList} />,
@@ -45,41 +42,43 @@ export const WalletModal = () => {
     });
 
     if (
-      selectedWallet.info.mode === "extension" &&
-      !(selectedWallet as ExtensionWallet).isExtensionInstalled
+      currentWallet.wallet.info.mode === "extension" &&
+      !(currentWallet.wallet as ExtensionWallet).isExtensionInstalled
     ) {
       setModalView({
         header: (
-          <NotExistHeader wallet={selectedWallet} onBack={gotoWalletList} />
+          <NotExistHeader wallet={currentWallet} onBack={gotoWalletList} />
         ),
-        content: <NotExistContent wallet={selectedWallet} />,
+        content: <NotExistContent wallet={currentWallet} />,
       });
       return;
     }
 
     try {
-      if (selectedWallet.info.mode === "wallet-connect") {
-        (selectedWallet as unknown as WCWallet).setOnPairingUriCreatedCallback(
-          () => {
-            setModalView({
-              header: <QRCodeHeader onBack={gotoWalletList} />,
-              content: <QRCodeContent />,
-            });
-          }
-        );
+      if (currentWallet.wallet.info.mode === "wallet-connect") {
+        (
+          currentWallet.wallet as unknown as WCWallet
+        ).setOnPairingUriCreatedCallback(() => {
+          setModalView({
+            header: <QRCodeHeader onBack={gotoWalletList} />,
+            content: <QRCodeContent />,
+          });
+        });
 
-        (selectedWallet as unknown as WCWallet).setPairingToConnect(
+        (currentWallet.wallet as unknown as WCWallet).setPairingToConnect(
           wallet.pairing
         );
       }
 
-      await walletManager.connect(selectedWallet?.info?.name);
+      await currentWallet.connect();
+      await currentWallet.getAccount();
 
       setModalView({
         header: <ConnectedHeader onBack={gotoWalletList} />,
         content: <ConnectedContent />,
       });
     } catch (error) {
+      console.log(error);
       setModalView({
         header: <RejectHeader wallet={wallet} onBack={gotoWalletList} />,
         content: <RejectContent wallet={wallet} />,
@@ -97,11 +96,11 @@ export const WalletModal = () => {
   const [modalView, setModalView] = useState(defaultModalView);
 
   const gotoWalletList = () => setModalView(defaultModalView);
+
+  const currentWallet = useCurrentChainWallet();
+
   useEffect(() => {
-    if (
-      modalIsOpen &&
-      currentChainAccount?.walletState === WalletState.Connected
-    ) {
+    if (modalIsOpen && currentWallet?.walletState === WalletState.Connected) {
       setModalView({
         header: <ConnectedHeader onBack={gotoWalletList} />,
         content: <ConnectedContent />,

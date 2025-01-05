@@ -33,6 +33,7 @@ export class ChainAccount extends BaseWallet {
     this.assetList = assetList
     this.walletRepo = walletRepo
     this.wallet = this.walletRepo.wallet
+    this.info = this.wallet.info
     this.walletManager = walletManager
   }
 
@@ -99,14 +100,12 @@ export class ChainAccount extends BaseWallet {
 
       this.walletManager.currentWalletName = this.wallet.info.name
 
-      this.walletRepo.currentChainName = this.chain.chainName
+      this.walletManager.currentChainName = this.chain.chainName
       setWalletNameToLocalStorage(this.wallet.info.name)
     } catch (error) {
-      console.log(error)
       if ((error as any).message === `There is no modular chain info for ${this.chain.chainId}` && this.wallet.info.name === 'keplr-extension') {
         await this.wallet.addSuggestChain(this.chain, [this.assetList])
       }
-      console.log(error)
       this.errorMessage = (error as any).message
       this.wallet.errorMessage = (error as any).message
       this.walletRepo.errorMessage = (error as any).message

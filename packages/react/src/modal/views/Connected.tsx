@@ -1,11 +1,12 @@
 import { ConnectModalHead, ConnectModalStatus } from "@interchain-ui/react";
-import { useAccount, useCurrentWallet } from "../../hooks";
+import { useAccount, useCurrentWallet, useWalletManager } from "../../hooks";
 import { useWalletModal } from "../provider";
 import { getWalletInfo } from "../../utils";
 import { AstronautSvg } from "./Astronaut";
+import { useCurrentChainWallet } from "../../hooks/useCurrentChainWallet";
 
 export const ConnectedHeader = ({ onBack }: { onBack: () => void }) => {
-  const currentWallet = useCurrentWallet();
+  const currentWallet = useCurrentChainWallet();
   const { close } = useWalletModal();
   return (
     <ConnectModalHead
@@ -19,13 +20,12 @@ export const ConnectedHeader = ({ onBack }: { onBack: () => void }) => {
 };
 
 export const ConnectedContent = () => {
-  const currentWallet = useCurrentWallet();
+  const currentWallet = useCurrentChainWallet();
 
-  const chainAccount = currentWallet?.getChainAccountByName?.(
-    currentWallet.currentChainName
-  );
+  const walletManager = useWalletManager();
+
   const { account } = useAccount(
-    currentWallet.currentChainName,
+    walletManager.currentChainName,
     currentWallet?.info?.name
   );
   const { close } = useWalletModal();
@@ -50,7 +50,7 @@ export const ConnectedContent = () => {
         address: account?.address,
       }}
       onDisconnect={async () => {
-        await chainAccount.disconnect();
+        await currentWallet.disconnect();
         close();
       }}
     />

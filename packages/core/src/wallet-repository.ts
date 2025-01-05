@@ -13,7 +13,6 @@ export class WalletRepository extends BaseWallet {
   chainIdMap: CustomMap<Chain['chainId'], Chain> = new CustomMap()
   chainAccountMap: CustomMap<Chain['chainId'], ChainAccount> = new CustomMap()
   walletManager: WalletManager
-  currentChainName: string
 
   constructor(chains: Chain[], assetLists: AssetList[], wallet: BaseWallet, walletManager: WalletManager) {
     super()

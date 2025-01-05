@@ -36,7 +36,7 @@ const UseChain = () => {
       </select>
       <div className="flex items-center">
         <span className="font-bold">logo:</span>{" "}
-        <img className="w-[20px] h-[20px]" src={logoUrl} alt="logoUrl" />
+        <img className="w-[40px] h-[40px]" src={logoUrl} alt="logoUrl" />
       </div>
       <div>
         <span className="font-bold">rpcEndpoint: {rpcEndpoint as string}</span>
@@ -52,24 +52,21 @@ const UseChain = () => {
         ) : (
           status
         )}
-        {status === "Connected" ? (
-          <span
-            className="text-red-600 underline cursor-pointer ml-5"
-            onClick={disconnect}
-          >
-            disconnect
-          </span>
-        ) : (
-          <>
-            <span className="text-red-600">Disconnected</span>
-            <span
-              className="text-blue-600 underline cursor-pointer ml-5"
-              onClick={openView}
-            >
-              connect
-            </span>
-          </>
-        )}
+
+        <button
+          className="text-red-600 underline cursor-pointer ml-5"
+          onClick={disconnect}
+        >
+          disconnect
+        </button>
+
+        <span className="text-red-600">Disconnected</span>
+        <button
+          className="text-blue-600 underline cursor-pointer ml-5"
+          onClick={openView}
+        >
+          connect
+        </button>
       </div>
       <div>
         <span className="font-bold">username: </span>

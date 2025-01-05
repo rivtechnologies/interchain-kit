@@ -15,6 +15,7 @@ export class WalletManager {
   wallets: BaseWallet[] = []
   walletRepositories: WalletRepository[] = []
   currentWalletName: string | undefined
+  currentChainName: ChainName | undefined
   signerOptions: SignerOptions | undefined
   endpointOptions: EndpointOptions | undefined
   rpcEndpoint: Record<string, string | HttpEndpoint> = {}
