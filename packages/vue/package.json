@@ -23,7 +23,7 @@
     "copy": "copyfiles -f ../../LICENSE README.md package.json dist",
     "clean": "rimraf dist/**",
     "build": "vite build && npm run copy",
-    "dev": "tsc -w --preserveWatchOutput -p tsconfig.esm.json"
+    "dev": "tsc -w --preserveWatchOutput"
   },
   "keywords": [],
   "dependencies": {
