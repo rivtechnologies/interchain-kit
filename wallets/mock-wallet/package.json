@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/mock-wallet",
-  "version": "0.0.1-beta.47",
+  "version": "0.0.1-beta.48",
   "author": "Cosmology <developers@cosmology.zone>",
   "description": "cosmos-kit wallet connector",
   "main": "index.js",
@@ -32,7 +32,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@interchain-kit/core": "0.0.1-beta.47"
+    "@interchain-kit/core": "0.0.1-beta.48"
   },
   "gitHead": "ecd10d66d0c74955a26c75659d998f31663fcb93"
 }
