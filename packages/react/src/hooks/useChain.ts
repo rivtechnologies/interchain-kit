@@ -1,7 +1,6 @@
 import { useWalletManager } from "./useWalletManager"
 import { CosmosKitUseChainReturnType, UseChainReturnType } from '../types/chain';
 import { useAccount } from "./useAccount";
-import { useCurrentWallet } from './useCurrentWallet';
 import { useInterchainClient } from './useInterchainClient';
 import { useWalletModal } from "../modal";
 import { useRpcEndpoint } from "./useRpcEndpoint";
@@ -12,6 +11,8 @@ export const useChain = (chainName: string): UseChainReturnType => {
   const walletManager = useWalletManager()
   const chainAccount = useCurrentChainWallet()
 
+  const chain = walletManager.getChainByName(chainName)
+  walletManager.currentChainName = chainName
   const walletName = chainAccount?.info?.name
 
   const rpcEndpointHook = useRpcEndpoint(chainName, walletName)
@@ -28,9 +29,9 @@ export const useChain = (chainName: string): UseChainReturnType => {
       walletManager.currentChainName = chainName
       open()
     },
-    disconnect: () => {
+    disconnect: async () => {
       walletManager.currentChainName = chainName
-      chainAccount ?? chainAccount.disconnect()
+      await chainAccount?.disconnect()
     },
     openView: () => {
       walletManager.currentChainName = chainName
@@ -46,7 +47,7 @@ export const useChain = (chainName: string): UseChainReturnType => {
   if (chainAccount && chainAccount?.walletState === WalletState.Connected) {
     return {
       logoUrl: walletManager.getChainLogoUrl(chainName),
-      chain: chainAccount?.chain,
+      chain,
       assetList: chainAccount?.assetList,
       address: accountHook.account?.address,
       wallet: chainAccount,
@@ -65,7 +66,7 @@ export const useChain = (chainName: string): UseChainReturnType => {
   }
   return {
     logoUrl: walletManager.getChainLogoUrl(chainName),
-    chain: chainAccount?.chain,
+    chain,
     assetList: chainAccount?.assetList,
     address: accountHook.account?.address,
     wallet: chainAccount,

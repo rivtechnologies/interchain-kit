@@ -42,7 +42,7 @@ export const WalletModal = () => {
     });
 
     if (
-      currentWallet.wallet.info.mode === "extension" &&
+      currentWallet.wallet?.info.mode === "extension" &&
       !(currentWallet.wallet as ExtensionWallet).isExtensionInstalled
     ) {
       setModalView({
@@ -55,7 +55,7 @@ export const WalletModal = () => {
     }
 
     try {
-      if (currentWallet.wallet.info.mode === "wallet-connect") {
+      if (currentWallet.wallet?.info.mode === "wallet-connect") {
         (
           currentWallet.wallet as unknown as WCWallet
         ).setOnPairingUriCreatedCallback(() => {

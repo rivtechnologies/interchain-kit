@@ -37,18 +37,14 @@ export const ChainProvider = ({
   const [_, forceRender] = useState({});
 
   const walletManager = useMemo(() => {
-    const wm = new WalletManager(
+    return new WalletManager(
       chains,
       assetLists,
       wallets,
       signerOptions,
-      endpointOptions
+      endpointOptions,
+      () => forceRender({})
     );
-    const observable = wm.getObservableObj();
-
-    observable.subscribe(() => forceRender({}));
-
-    return observable;
   }, []);
 
   useEffect(() => {

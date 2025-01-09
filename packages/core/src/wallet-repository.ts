@@ -24,7 +24,11 @@ export class WalletRepository extends BaseWallet {
       this.chainNameMap.set(chain.chainName, chain)
       this.chainIdMap.set(chain.chainId, chain)
       const assetList = assetLists.find((assetList) => assetList.chainName === chain.chainName)
-      this.chainAccountMap.set(chain.chainId, new ChainAccount(chain, assetList, this, walletManager))
+
+      const chainAccount = new ChainAccount(chain, assetList, this, walletManager)
+      chainAccount.on('interchainStateChange', this.walletManager.onInterchainStateUpdate)
+
+      this.chainAccountMap.set(chain.chainId, chainAccount)
     })
 
     this.wallet.events.on('accountChanged', () => {
@@ -39,6 +43,7 @@ export class WalletRepository extends BaseWallet {
     this.chainIdMap.set(chain.chainId, chain)
 
     const newChainAccount = new ChainAccount(chain, assetList, this, this.walletManager)
+    newChainAccount.on('interchainStateChange', this.walletManager.onInterchainStateUpdate)
     newChainAccount.signerOptions = signerOptions?.signing?.(chain.chainName)
     newChainAccount.rpcEndpoint = endpointOptions?.endpoints[chain.chainName].rpc?.[0]
 

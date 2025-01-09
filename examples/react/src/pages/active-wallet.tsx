@@ -1,9 +1,11 @@
+import { WalletManager } from "@interchain-kit/core";
 import {
   useChain,
   useCurrentWallet,
   useWalletManager,
   useWalletModal,
 } from "@interchain-kit/react";
+import { useState } from "react";
 
 const hwChain = {
   $schema: "../chain.schema.json",
@@ -122,11 +124,15 @@ const hwAssetList = {
 };
 
 export default function ActiveWallet() {
+  const { addChains, chains } = useWalletManager();
+
+  const [chainName, setChainName] = useState(chains[0].chainName);
+
   const { address, wallet, logoUrl, connect, disconnect, chain } =
-    useChain("osmosistestnet");
+    useChain(chainName);
+
   const { open } = useWalletModal();
   const { getOfflineSignerAmino, disconnectAll } = useCurrentWallet();
-  const { addChains } = useWalletManager();
 
   const handleAddChain = async () => {
     addChains([hwChain], [hwAssetList]);
@@ -134,6 +140,13 @@ export default function ActiveWallet() {
 
   return (
     <>
+      <select onChange={(e) => setChainName(e.target.value)}>
+        {chains.map((chain) => (
+          <option key={chain.chainId} value={chain.chainName}>
+            {chain.chainName}
+          </option>
+        ))}
+      </select>
       <button onClick={open}>open wallets modal</button>
       <button onClick={handleAddChain}>add new chain</button>
       <button
@@ -148,7 +161,7 @@ export default function ActiveWallet() {
           }
         }}
       >
-        open wallets modal
+        test some function
       </button>
       <p>{wallet?.walletState}</p>
       <p>{wallet?.info?.prettyName}</p>

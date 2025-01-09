@@ -3,13 +3,13 @@ import { HttpEndpoint } from '@interchainjs/types';
 import { Chain, AssetList } from '@chain-registry/v2-types'
 import { BaseWallet } from './base-wallet'
 import { ChainName, DeviceType, DownloadInfo, EndpointOptions, OS, SignerOptions, WalletManagerState, WalletState } from './types'
-import { ChainNotExist, createObservable, getWalletNameFromLocalStorage, WalletNotExist } from './utils'
+import { ChainNotExist, getChainNameFromLocalStorage, getWalletNameFromLocalStorage, ObservableObject, WalletNotExist } from './utils'
 import { ICosmosGenericOfflineSigner } from '@interchainjs/cosmos/types/wallet';
 import { SignerOptions as InterchainSignerOptions } from '@interchainjs/cosmos/types/signing-client';
 import { SigningClient } from '@interchainjs/cosmos/signing-client'
 import Bowser from 'bowser';
 
-export class WalletManager {
+export class WalletManager extends ObservableObject {
   chains: Chain[] = []
   assetLists: AssetList[] = []
   wallets: BaseWallet[] = []
@@ -23,7 +23,8 @@ export class WalletManager {
   state: WalletManagerState = WalletManagerState.Initializing
 
   observableObj: any
-  listeners: (() => void)[] = []
+
+  onInterchainStateUpdate: () => void
 
   constructor(
     chain: Chain[],
@@ -32,28 +33,22 @@ export class WalletManager {
     signerOptions?: SignerOptions,
     endpointOptions?: EndpointOptions,
 
-    onUpdate?: () => void
+    onInterchainStateUpdate?: () => void
   ) {
+    super()
+    this.onInterchainStateUpdate = onInterchainStateUpdate
     this.chains = chain
     this.assetLists = assetLists
     this.wallets = wallets
-    this.walletRepositories = this.wallets.map(wallet => new WalletRepository(chain, assetLists, wallet, this))
+    this.on('interchainStateChange', this.onInterchainStateUpdate)
+    this.walletRepositories = this.wallets.map(wallet => {
+      const wr = new WalletRepository(chain, assetLists, wallet, this)
+      wr.on('interchainStateChange', this.onInterchainStateUpdate)
+      return wr
+    })
     this.signerOptions = signerOptions
     this.endpointOptions = endpointOptions
     // return createObservable(this, onUpdate)
-  }
-
-  getObservableObj() {
-    return createObservable(this, this.notify.bind(this))
-  }
-
-  subscribe(listener: () => void) {
-    this.listeners.push(listener)
-    return () => this.listeners.filter(l => l !== listener)
-  }
-
-  notify() {
-    this.listeners.forEach(listener => listener())
   }
 
   async init() {
@@ -61,9 +56,10 @@ export class WalletManager {
 
     await Promise.all(this.wallets.map(async (wallet) => wallet.init()))
 
-    const loggedWallet = getWalletNameFromLocalStorage()
-    if (loggedWallet) {
-      await this.connect(loggedWallet)
+    const loggedWalletName = getWalletNameFromLocalStorage()
+    const laggedChainName = getChainNameFromLocalStorage()
+    if (loggedWalletName && laggedChainName) {
+      await this.getWalletRepositoryByName(loggedWalletName).getChainAccountByName(laggedChainName)?.connect()
     }
 
     this.state = WalletManagerState.Initialized
@@ -144,7 +140,7 @@ export class WalletManager {
     return this.walletRepositories.find(walletRepository => walletRepository.wallet.info.name === walletName)
   }
 
-  getChainByName(chainName: string): Chain {
+  getChainByName(chainName: string): Chain | undefined {
     const chain = this.chains.find(chain => chain.chainName === chainName)
     return chain
   }

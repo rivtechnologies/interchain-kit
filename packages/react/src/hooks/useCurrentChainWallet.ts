@@ -6,7 +6,6 @@ export const useCurrentChainWallet = () => {
   const walletManager = useWalletManager();
   const { currentChainName, currentWalletName } = walletManager
   const chainWallet = walletManager.getWalletRepositoryByName(currentWalletName)?.getChainAccountByName(currentChainName);
-
   if (chainWallet) {
     return bindAllMethodsToContext(chainWallet)
   }

@@ -14,6 +14,8 @@
 //   });
 // };
 
+import { EventEmitter } from "eventemitter3";
+
 type ChangeDetails = {
   target: any; // 由于我们处理的是动态对象，所以这里使用any
   prop: string | symbol;
@@ -64,4 +66,30 @@ export function createObservable<T extends object>(target: T, updateCallback: Ch
 
   // Start by creating a proxy for the target object
   return createProxy(target) as T;
+}
+
+
+interface ObservableEvents {
+  interchainStateChange: (prop: string | symbol, value: any, oldValue: any) => void;
+}
+
+export class ObservableObject extends EventEmitter<ObservableEvents> {
+  constructor() {
+    super();
+
+    // 返回一个 Proxy 包裹 this
+    return new Proxy(this, {
+      set: (target, prop, value) => {
+        const oldValue = target[prop as keyof this];
+        if (oldValue !== value) {
+          target[prop as keyof this] = value;
+          this.emit('interchainStateChange', prop, value, oldValue); // 触发事件
+        }
+        return true;
+      },
+      get: (target, prop) => {
+        return target[prop as keyof this];
+      },
+    });
+  }
 }

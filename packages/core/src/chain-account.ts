@@ -4,7 +4,7 @@ import { AssetList, Chain } from "@chain-registry/v2-types";
 import { BaseWallet } from "./base-wallet";
 import { AminoGenericOfflineSigner, AminoSignResponse, DirectGenericOfflineSigner, DirectSignResponse, ICosmosGenericOfflineSigner, OfflineAminoSigner, OfflineDirectSigner, OfflineSigner, StdSignature } from '@interchainjs/cosmos/types/wallet';
 import { SigningClient } from '@interchainjs/cosmos/signing-client';
-import { AsyncHandler, getValidRpcEndpoint, NoValidRpcEndpointFound, removeWalletNameFromLocalStorage, setWalletNameToLocalStorage } from './utils';
+import { AsyncHandler, getValidRpcEndpoint, NoValidRpcEndpointFound, removeChainNameFromLocalStorage, removeWalletNameFromLocalStorage, setChainNameToLocalStorage, setWalletNameToLocalStorage } from './utils';
 import { BroadcastMode, DirectSignDoc, SignOptions, SimpleAccount, WalletAccount, WalletState } from './types';
 import { WalletRepository } from './wallet-repository';
 import { SignerOptions as InterchainSignerOptions } from '@interchainjs/cosmos/types/signing-client';
@@ -102,6 +102,7 @@ export class ChainAccount extends BaseWallet {
 
       this.walletManager.currentChainName = this.chain.chainName
       setWalletNameToLocalStorage(this.wallet.info.name)
+      setChainNameToLocalStorage(this.chain.chainName)
     } catch (error) {
       if ((error as any).message === `There is no modular chain info for ${this.chain.chainId}` && this.wallet.info.name === 'keplr-extension') {
         await this.wallet.addSuggestChain(this.chain, [this.assetList])
@@ -120,6 +121,7 @@ export class ChainAccount extends BaseWallet {
         this.wallet.walletState = WalletState.Disconnected
         this.walletRepo.walletState = WalletState.Disconnected
         removeWalletNameFromLocalStorage()
+        removeChainNameFromLocalStorage()
       }
       this.reset()
     } catch (error) {
