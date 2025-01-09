@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-beta.49](https://github.com/@interchain-kit/keplr-mobile/compare/@interchain-kit/keplr-mobile@0.0.1-beta.48...@interchain-kit/keplr-mobile@0.0.1-beta.49) (2025-01-09)
+
+**Note:** Version bump only for package @interchain-kit/keplr-mobile
+
 ## [0.0.1-beta.48](https://github.com/@interchain-kit/keplr-mobile/compare/@interchain-kit/keplr-mobile@0.0.1-beta.47...@interchain-kit/keplr-mobile@0.0.1-beta.48) (2025-01-06)
 
 **Note:** Version bump only for package @interchain-kit/keplr-mobile
