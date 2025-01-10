@@ -14,7 +14,7 @@
 //   });
 // };
 
-import { EventEmitter } from "eventemitter3";
+import EventEmitter from "events";
 
 type ChangeDetails = {
   target: any; // 由于我们处理的是动态对象，所以这里使用any
@@ -70,7 +70,7 @@ export function createObservable<T extends object>(target: T, updateCallback: Ch
 
 
 interface ObservableEvents {
-  interchainStateChange: (prop: string | symbol, value: any, oldValue: any) => void;
+  interchainStateChange: [prop: string | symbol, value: any, oldValue: any]
 }
 
 export class ObservableObject extends EventEmitter<ObservableEvents> {
