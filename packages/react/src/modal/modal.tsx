@@ -35,15 +35,19 @@ export const WalletModal = () => {
     const currentWallet = walletManager
       .getWalletRepositoryByName(wallet.info.name)
       .getChainAccountByName(walletManager.currentChainName);
-
+    console.log(
+      wallet.info.name,
+      walletManager.currentChainName,
+      Boolean(currentWallet)
+    );
     setModalView({
       header: <ConnectingHeader wallet={wallet} onBack={gotoWalletList} />,
       content: <ConnectingContent wallet={wallet} />,
     });
 
     if (
-      currentWallet.wallet?.info.mode === "extension" &&
-      !(currentWallet.wallet as ExtensionWallet).isExtensionInstalled
+      currentWallet?.wallet?.info.mode === "extension" &&
+      !(currentWallet?.wallet as ExtensionWallet).isExtensionInstalled
     ) {
       setModalView({
         header: (
@@ -55,9 +59,9 @@ export const WalletModal = () => {
     }
 
     try {
-      if (currentWallet.wallet?.info.mode === "wallet-connect") {
+      if (currentWallet?.wallet?.info.mode === "wallet-connect") {
         (
-          currentWallet.wallet as unknown as WCWallet
+          currentWallet?.wallet as unknown as WCWallet
         ).setOnPairingUriCreatedCallback(() => {
           setModalView({
             header: <QRCodeHeader onBack={gotoWalletList} />,
@@ -65,13 +69,13 @@ export const WalletModal = () => {
           });
         });
 
-        (currentWallet.wallet as unknown as WCWallet).setPairingToConnect(
+        (currentWallet?.wallet as unknown as WCWallet).setPairingToConnect(
           wallet.pairing
         );
       }
 
-      await currentWallet.connect();
-      await currentWallet.getAccount();
+      await currentWallet?.connect();
+      await currentWallet?.getAccount();
 
       setModalView({
         header: <ConnectedHeader onBack={gotoWalletList} />,
