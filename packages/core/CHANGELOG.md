@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-beta.51](https://github.com/@interchain-kit/core/compare/@interchain-kit/core@0.0.1-beta.50...@interchain-kit/core@0.0.1-beta.51) (2025-01-10)
+
+**Note:** Version bump only for package @interchain-kit/core
+
 ## [0.0.1-beta.50](https://github.com/@interchain-kit/core/compare/@interchain-kit/core@0.0.1-beta.49...@interchain-kit/core@0.0.1-beta.50) (2025-01-10)
 
 **Note:** Version bump only for package @interchain-kit/core
