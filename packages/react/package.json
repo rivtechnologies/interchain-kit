@@ -28,7 +28,7 @@
     "lint": "eslint . --fix",
     "test": "jest",
     "test:watch": "jest --watch",
-    "dev": "tsc -w --preserveWatchOutput"
+    "dev": "tsc -w --preserveWatchOutput -p tsconfig.esm.json"
   },
   "keywords": [],
   "dependencies": {
@@ -48,5 +48,5 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
-  "gitHead": "9e654a387647809d840c118c1f281f3a8fc4c700"
+  "gitHead": "b88068536c1230bf52e8288237862416a42adf7c"
 }
