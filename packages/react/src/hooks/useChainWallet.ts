@@ -14,7 +14,10 @@ export const useChainWallet = (chainName: string, walletName: string): UseChainW
 
   return {
     //for migration cosmos kit
-    connect: () => connect(walletName, chainName),
+    connect: async () => {
+      await connect(walletName, chainName)
+      await getAccount(walletName, chainName)
+    },
     disconnect: () => disconnect(walletName, chainName),
     getRpcEndpoint: () => getRpcEndpoint(walletName, chainName),
     status: chainWalletStateToShow?.walletState,

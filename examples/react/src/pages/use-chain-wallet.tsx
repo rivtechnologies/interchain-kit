@@ -7,7 +7,7 @@ const Tr = ({
   chainName: string;
   walletName: string;
 }) => {
-  const { address, connect, disconnect } = useChainWallet(
+  const { address, connect, disconnect, status } = useChainWallet(
     chainName,
     walletName
   );
@@ -15,6 +15,7 @@ const Tr = ({
     <tr>
       <td>{walletName}</td>
       <td>{chainName}</td>
+      <td>{status}</td>
       <td>{address}</td>
       <td>
         <button className="bg-green-300 px-1" onClick={connect}>
