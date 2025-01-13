@@ -20,7 +20,8 @@ needToInjectDevCommandPackages.forEach((packagePath) => {
     packageJson.scripts = {};
   }
 
-  packageJson.scripts.dev = `tsc -w --preserveWatchOutput -p tsconfig.esm.json`;
+  delete packageJson.scripts.dev;
+  packageJson.scripts["watch:dev"] = `tsc -w -p tsconfig.esm.json & tsc -w`;
 
   fs.writeFileSync(
     packageJsonPath,
