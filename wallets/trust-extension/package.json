@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/trust-extension",
-  "version": "0.0.1-beta.53",
+  "version": "0.0.1-beta.54",
   "author": "cosmology-tech <developers@cosmology.zone>",
   "description": "cosmos-kit wallet connector",
   "main": "index.js",
