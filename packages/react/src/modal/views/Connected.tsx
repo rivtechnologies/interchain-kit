@@ -1,16 +1,21 @@
 import { ConnectModalHead, ConnectModalStatus } from "@interchain-ui/react";
-import { useAccount, useCurrentWallet, useWalletManager } from "../../hooks";
+import { useChainWallet, useWalletManager } from "../../hooks";
 import { useWalletModal } from "../provider";
 import { getWalletInfo } from "../../utils";
 import { AstronautSvg } from "./Astronaut";
-import { useCurrentChainWallet } from "../../hooks/useCurrentChainWallet";
+import { BaseWallet } from "@interchain-kit/core";
 
-export const ConnectedHeader = ({ onBack }: { onBack: () => void }) => {
-  const currentWallet = useCurrentChainWallet();
+export const ConnectedHeader = ({
+  wallet,
+  onBack,
+}: {
+  wallet: BaseWallet;
+  onBack: () => void;
+}) => {
   const { close } = useWalletModal();
   return (
     <ConnectModalHead
-      title={currentWallet?.info?.prettyName || ""}
+      title={wallet?.info?.prettyName || ""}
       hasBackButton={true}
       onClose={close}
       onBack={onBack}
@@ -20,24 +25,23 @@ export const ConnectedHeader = ({ onBack }: { onBack: () => void }) => {
 };
 
 export const ConnectedContent = () => {
-  const currentWallet = useCurrentChainWallet();
-
-  const walletManager = useWalletManager();
-
-  const { account } = useAccount(
-    walletManager.currentChainName,
-    currentWallet?.info?.name
+  const { currentChainName, currentWalletName } = useWalletManager();
+  console.log({ currentChainName, currentWalletName });
+  const { address, username, wallet } = useChainWallet(
+    currentChainName,
+    currentWalletName
   );
+
   const { close } = useWalletModal();
-  if (!currentWallet) {
+  if (!wallet) {
     return null;
   }
   return (
     <ConnectModalStatus
-      wallet={getWalletInfo(currentWallet)}
+      wallet={getWalletInfo(wallet)}
       status={"Connected"}
       connectedInfo={{
-        name: account?.username || "Wallet",
+        name: username || "Wallet",
         avatar: (
           <AstronautSvg
             style={{
@@ -47,10 +51,10 @@ export const ConnectedContent = () => {
             }}
           />
         ),
-        address: account?.address,
+        address: address,
       }}
       onDisconnect={async () => {
-        await currentWallet.disconnect();
+        await wallet.disconnect(currentChainName);
         close();
       }}
     />

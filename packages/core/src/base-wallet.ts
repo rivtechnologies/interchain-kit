@@ -8,9 +8,8 @@ import {
   OfflineSigner
 } from '@interchainjs/cosmos/types/wallet';
 import { Chain, AssetList } from '@chain-registry/v2-types';
-import { ObservableObject } from './utils';
 
-export abstract class BaseWallet extends ObservableObject {
+export abstract class BaseWallet {
 
   info?: Wallet
 
@@ -21,7 +20,6 @@ export abstract class BaseWallet extends ObservableObject {
   events = new EventEmitter<WalletEvents>();
 
   constructor(info?: Wallet) {
-    super()
     this.info = info
   }
 

@@ -1,6 +1,6 @@
 import { ConnectModalHead, ConnectModalWalletList } from "@interchain-ui/react";
 import { useWalletModal } from "../provider";
-import { useCurrentWallet, useWalletManager } from "../../hooks";
+import { useWalletManager } from "../../hooks";
 import { BaseWallet, WCWallet } from "@interchain-kit/core";
 import { Wallet as InterchainUIWalletType } from "@interchain-ui/react";
 

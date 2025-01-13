@@ -28,7 +28,7 @@
     "lint": "eslint . --fix",
     "test": "jest",
     "test:watch": "jest --watch",
-    "dev": "tsc -w --preserveWatchOutput"
+    "dev": "tsc -w --preserveWatchOutput -p tsconfig.esm.json"
   },
   "keywords": [],
   "gitHead": "b88068536c1230bf52e8288237862416a42adf7c"

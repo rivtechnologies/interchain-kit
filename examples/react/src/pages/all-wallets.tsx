@@ -4,8 +4,6 @@ import {
   useChainWallet,
   useWalletManager,
   useWalletModal,
-  useRpcEndpoint as useRpcEndpointFromInterchainKit,
-  useAccount,
 } from "@interchain-kit/react";
 import { useRef, useState } from "react";
 import { makeKeplrChainInfo } from "../utils";
@@ -25,7 +23,7 @@ type BalanceProps = {
 };
 
 const BalanceTd = ({ address, wallet, chain }: BalanceProps) => {
-  const { rpcEndpoint, isLoading: isChainWalletLoading } = useChainWallet(
+  const { rpcEndpoint } = useChainWallet(
     chain.chainName,
     wallet.info?.name as string
   );
@@ -43,10 +41,6 @@ const BalanceTd = ({ address, wallet, chain }: BalanceProps) => {
     setBalance(balance);
     setIsLoading(false);
   };
-
-  if (isLoading || isChainWalletLoading) {
-    return <td>loading...</td>;
-  }
 
   return (
     <td>
@@ -72,12 +66,14 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
   const ref = useRef<HTMLInputElement>(null);
   const amountRef = useRef<HTMLInputElement>(null);
 
-  const { signingClient } = useChainWallet(
+  const { getSigningClient } = useChainWallet(
     chain.chainName,
     wallet.info?.name as string
   );
 
   const handleSendToken = async () => {
+    const signingClient = await getSigningClient();
+
     const txSend = createSend(signingClient);
 
     if (ref.current) {
@@ -126,7 +122,7 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
 };
 
 const RpcTd = ({ wallet, address, chain }: SendTokenProps) => {
-  const { rpcEndpoint, getRpcEndpoint } = useRpcEndpointFromInterchainKit(
+  const { rpcEndpoint, getRpcEndpoint } = useChainWallet(
     chain.chainName,
     wallet.info?.name as string
   );
@@ -140,15 +136,17 @@ const RpcTd = ({ wallet, address, chain }: SendTokenProps) => {
 };
 
 const AddressTd = ({ wallet, chain }: SendTokenProps) => {
-  const { account, getAccount } = useAccount(
+  const { address, wallet: walletHandler } = useChainWallet(
     chain.chainName,
     wallet.info?.name as string
   );
 
   return (
     <td>
-      <p>{account?.address}</p>
-      <button onClick={getAccount}>get account</button>
+      <p>{address}</p>
+      <button onClick={() => walletHandler.getAccount(chain.chainId as string)}>
+        get account
+      </button>
     </td>
   );
 };

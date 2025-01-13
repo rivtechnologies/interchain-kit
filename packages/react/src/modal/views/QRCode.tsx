@@ -1,19 +1,20 @@
 import { ConnectModalHead, ConnectModalQRCode } from "@interchain-ui/react";
 import { WCWallet } from "@interchain-kit/core";
-import { useCurrentWallet, useWalletManager } from "../../hooks";
+import { useWalletManager } from "../../hooks";
 import { useWalletModal } from "../provider";
 
 export const QRCodeHeader = ({ onBack }: { onBack: () => void }) => {
-  const currentWallet = useCurrentWallet();
-  const walletManager = useWalletManager();
+  const { currentChainName, currentWalletName, getWalletByName, disconnect } =
+    useWalletManager();
   const { close } = useWalletModal();
+  const currentWallet = getWalletByName(currentWalletName);
   return (
     <ConnectModalHead
       title={currentWallet?.info?.prettyName || ""}
       hasBackButton={true}
       onClose={() => void 0}
       onBack={async () => {
-        await walletManager.disconnect(currentWallet?.info?.name || "");
+        await disconnect(currentWallet?.info?.name || "", currentChainName);
         onBack();
       }}
       closeButtonProps={{ onClick: close }}
@@ -21,9 +22,11 @@ export const QRCodeHeader = ({ onBack }: { onBack: () => void }) => {
   );
 };
 export const QRCodeContent = () => {
-  const currentWalletRepository = useCurrentWallet();
-  const currentWallet = currentWalletRepository.wallet as WCWallet;
-  const walletManager = useWalletManager();
+  const { currentChainName, currentWalletName, getWalletByName, connect } =
+    useWalletManager();
+
+  const currentWallet = getWalletByName(currentWalletName) as WCWallet;
+
   const data = currentWallet.pairingUri;
 
   return (
@@ -33,7 +36,9 @@ export const QRCodeContent = () => {
       description={"Open App to connect"}
       errorTitle={"errorTitle"}
       errorDesc={currentWallet.errorMessage || ""}
-      onRefresh={() => walletManager.connect(currentWallet?.info?.name || "")}
+      onRefresh={() =>
+        connect(currentWallet?.info?.name || "", currentChainName)
+      }
     />
   );
 };

@@ -1,5 +1,5 @@
 import { ConnectModalHead, ConnectModalStatus } from "@interchain-ui/react";
-import { useCurrentWallet, useWalletManager } from "../../hooks"; // replace with the actual path
+import { useWalletManager } from "../../hooks"; // replace with the actual path
 import { useWalletModal } from "../provider";
 import { BaseWallet } from "@interchain-kit/core";
 import { useMemo } from "react";

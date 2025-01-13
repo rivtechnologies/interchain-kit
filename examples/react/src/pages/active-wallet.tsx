@@ -1,7 +1,5 @@
-import { WalletManager } from "@interchain-kit/core";
 import {
   useChain,
-  useCurrentWallet,
   useWalletManager,
   useWalletModal,
 } from "@interchain-kit/react";
@@ -128,11 +126,18 @@ export default function ActiveWallet() {
 
   const [chainName, setChainName] = useState(chains[0].chainName);
 
-  const { address, wallet, logoUrl, connect, disconnect, chain } =
-    useChain(chainName);
+  const {
+    address,
+    wallet,
+    logoUrl,
+    connect,
+    disconnect,
+    chain,
+    status,
+    openView,
+  } = useChain(chainName);
 
   const { open } = useWalletModal();
-  const { getOfflineSignerAmino, disconnectAll } = useCurrentWallet();
 
   const handleAddChain = async () => {
     addChains([hwChain], [hwAssetList]);
@@ -147,7 +152,7 @@ export default function ActiveWallet() {
           </option>
         ))}
       </select>
-      <button onClick={open}>open wallets modal</button>
+      <button onClick={openView}>open wallets modal</button>
       <button onClick={handleAddChain}>add new chain</button>
       <button
         onClick={async () => {
@@ -163,7 +168,7 @@ export default function ActiveWallet() {
       >
         test some function
       </button>
-      <p>{wallet?.walletState}</p>
+      <p>{status}</p>
       <p>{wallet?.info?.prettyName}</p>
 
       <p>{address}</p>
@@ -171,7 +176,7 @@ export default function ActiveWallet() {
       <img src={logoUrl} style={{ width: "100px" }}></img>
       <button onClick={connect}>Connect</button>
       <button onClick={disconnect}>Disconnect {chain?.chainName}</button>
-      <button onClick={disconnectAll}>Disconnect All</button>
+      {/* <button onClick={disconnectAll}>Disconnect All</button> */}
     </>
   );
 }

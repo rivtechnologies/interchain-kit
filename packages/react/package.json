@@ -46,7 +46,8 @@
     "interchainjs": "1.6.3",
     "observable-slim": "^0.1.6",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "zustand": "^5.0.3"
   },
   "gitHead": "b88068536c1230bf52e8288237862416a42adf7c"
 }

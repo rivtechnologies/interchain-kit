@@ -16,7 +16,7 @@ export default function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<E2ETest />} />
         <Route path="active-wallet" element={<ActiveWallet />} />
-        <Route path="wallet-connect" element={<WalletConnect />} />
+        {/* <Route path="wallet-connect" element={<WalletConnect />} /> */}
         <Route path="use-chain" element={<UseChain />} />
         <Route path="use-chain-wallet" element={<UseChainWallet />} />
         <Route path="ledger" element={<LedgerExample />} />

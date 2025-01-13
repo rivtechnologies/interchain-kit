@@ -3,8 +3,8 @@ import { useChain, useWalletManager } from "@interchain-kit/react";
 import { Chain } from "@chain-registry/v2-types";
 
 const UseChain = () => {
-  const walletManager = useWalletManager();
   const [chainName, setChainName] = useState("osmosis");
+  const walletManager = useWalletManager();
   const {
     logoUrl,
     address,
@@ -14,6 +14,7 @@ const UseChain = () => {
     openView,
     rpcEndpoint,
     disconnect,
+    connect,
   } = useChain(chainName);
 
   return (
@@ -63,7 +64,7 @@ const UseChain = () => {
         <span className="text-red-600">Disconnected</span>
         <button
           className="text-blue-600 underline cursor-pointer ml-5"
-          onClick={openView}
+          onClick={connect}
         >
           connect
         </button>
