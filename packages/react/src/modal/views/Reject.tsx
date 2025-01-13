@@ -35,9 +35,7 @@ export const RejectContent = ({ wallet }: { wallet: BaseWallet }) => {
       contentHeader={"Request Rejected"}
       contentDesc={wallet.errorMessage || "Connection permission is denied."}
       onConnect={() =>
-        walletManager
-          .connect(wallet.info.name, walletManager.currentChainName)
-          .then(close)
+        walletManager.connect(wallet.info.name, walletManager.currentChainName)
       }
     />
   );

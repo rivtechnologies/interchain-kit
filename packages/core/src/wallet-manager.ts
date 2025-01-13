@@ -88,7 +88,7 @@ export class WalletManager {
     return this.assetLists.find(assetList => assetList.chainName === chainName)
   }
 
-  connect(walletName: string, chainName: string) {
+  async connect(walletName: string, chainName: string) {
     const wallet = this.getWalletByName(walletName)
     const chain = this.getChainByName(chainName)
 
@@ -99,8 +99,15 @@ export class WalletManager {
     if (!chain) {
       throw new ChainNameNotExist(chainName)
     }
-
-    return wallet.connect(chain.chainId)
+    try {
+      await wallet.connect(chain.chainId)
+    } catch (error) {
+      if ((error as any).message !== 'Request rejected') {
+        await wallet.addSuggestChain(chain, this.assetLists)
+      } else {
+        throw error
+      }
+    }
   }
 
   disconnect(walletName: string, chainName: string) {
