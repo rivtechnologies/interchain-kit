@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/cosmos-extension-metamask",
-  "version": "0.0.1-beta.56",
+  "version": "0.0.1-beta.57",
   "author": "cosmology-tech <developers@cosmology.zone>",
   "description": "interchain-kit wallet connector for cosmos extension metamask",
   "main": "index.js",
@@ -33,7 +33,7 @@
   "keywords": [],
   "dependencies": {
     "@chain-registry/v2-types": "^0.53.15",
-    "@interchain-kit/core": "0.0.1-beta.56"
+    "@interchain-kit/core": "0.0.1-beta.57"
   },
   "gitHead": "f089ac6f99ebc8671dd19a2405fd6b187dbe3145"
 }

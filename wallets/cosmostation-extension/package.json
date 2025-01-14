@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/cosmostation-extension",
-  "version": "0.0.1-beta.56",
+  "version": "0.0.1-beta.57",
   "author": "cosmology-tech <developers@cosmology.zone>",
   "description": "cosmos-kit wallet connector",
   "main": "index.js",
