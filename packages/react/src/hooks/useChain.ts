@@ -43,9 +43,10 @@ export const useChain = (chainName: string): UseChainReturnType => {
     chain,
     assetList,
     address: chainWalletStateToShow?.account?.address,
-    wallet: wallet ? Object.assign({}, wallet, {
+    wallet: wallet ? Object.assign(wallet, {
       walletState: chainWalletStateToShow?.walletState,
       connect: () => connect(currentWalletName, chainName),
+      disconnect: () => disconnect(currentWalletName, chainName),
       getAccount: () => getAccount(currentWalletName, chainName)
     }) : undefined,
     rpcEndpoint: chainWalletStateToShow?.rpcEndpoint,

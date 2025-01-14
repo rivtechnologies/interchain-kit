@@ -29,7 +29,7 @@ export const useChainWallet = (chainName: string, walletName: string): UseChainW
     chain,
     assetList,
     address: chainWalletStateToShow?.account?.address,
-    wallet: wallet ? Object.assign({}, wallet, {
+    wallet: wallet ? Object.assign(wallet, {
       walletState: chainWalletStateToShow?.walletState,
       connect: () => connect(walletName, chainName),
       disconnect: () => disconnect(walletName, chainName),
