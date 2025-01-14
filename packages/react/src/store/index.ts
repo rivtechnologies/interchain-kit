@@ -4,6 +4,7 @@ import { SignerOptions as InterchainSignerOptions } from '@interchainjs/cosmos/t
 import { HttpEndpoint } from '@interchainjs/types';
 import { createStore } from "zustand";
 import { immer } from "zustand/middleware/immer";
+import { persist, createJSONStorage } from 'zustand/middleware'
 
 const immerSyncUp = (newWalletManager: WalletManager) => {
   return (draft: { chains: Chain[]; assetLists: AssetList[]; wallets: BaseWallet[]; signerOptions: SignerOptions; endpointOptions: EndpointOptions; signerOptionMap: Record<string, InterchainSignerOptions>; endpointOptionsMap: Record<string, Endpoints>; preferredSignTypeMap: Record<string, SignType>; }) => {
@@ -67,7 +68,7 @@ export const createInterchainStore = (walletManager: WalletManager) => {
     })
   })
 
-  return createStore(immer<InterchainStore>((set, get) => ({
+  return createStore(persist(immer<InterchainStore>((set, get) => ({
     chainWalletState,
     currentWalletName: '',
     currentChainName: '',
@@ -207,7 +208,27 @@ export const createInterchainStore = (walletManager: WalletManager) => {
     getEnv() {
       return walletManager.getEnv()
     },
-  })))
+  })), {
+    name: 'interchain-kit-store',
+    storage: createJSONStorage(() => localStorage),
+    partialize: state => ({
+      chainWalletState: state.chainWalletState,
+      currentWalletName: state.currentWalletName,
+      currentChainName: state.currentChainName
+    }),
+    onRehydrateStorage: (state) => {
+      console.log('interchain-kit store hydration starts')
+
+      // optional
+      return (state, error) => {
+        if (error) {
+          console.log('an error happened during hydration', error)
+        } else {
+          console.log('interchain-kit store hydration finished')
+        }
+      }
+    },
+  }))
 
 }
 
