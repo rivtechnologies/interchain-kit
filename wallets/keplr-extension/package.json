@@ -34,5 +34,5 @@
     "@interchain-kit/core": "0.0.1-beta.57",
     "@keplr-wallet/provider-extension": "^0.12.102"
   },
-  "gitHead": "f089ac6f99ebc8671dd19a2405fd6b187dbe3145"
+  "gitHead": "7a34f9aff73cea139a65acaa2eae91948e26e281"
 }
