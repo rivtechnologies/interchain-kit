@@ -1,32 +1,39 @@
-import { createContext, useContext, useState } from "react";
-import { WalletModal } from "./modal";
+import { createContext, lazy, useContext, useState } from "react";
+
+const WalletModal = lazy(
+  () => import(/*webpackChunkName: "interchain-kit-modal" */ "./modal")
+);
 
 type WalletModalContextType = {
-  modalIsOpen: boolean
-  open: () => void
-  close: () => void
-}
+  modalIsOpen: boolean;
+  open: () => void;
+  close: () => void;
+};
 
-const WalletModalContext = createContext<WalletModalContextType | null>(null)
+const WalletModalContext = createContext<WalletModalContextType | null>(null);
 
-export const WalletModalProvider = ({ children }: { children: React.ReactNode }) => {
-  const [modalIsOpen, setModalIsOpen] = useState(false)
+export const WalletModalProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  const open = () => setModalIsOpen(true)
-  const close = () => setModalIsOpen(false)
+  const open = () => setModalIsOpen(true);
+  const close = () => setModalIsOpen(false);
 
   return (
     <WalletModalContext.Provider value={{ modalIsOpen, open, close }}>
       {children}
       <WalletModal />
     </WalletModalContext.Provider>
-  )
-}
+  );
+};
 
 export const useWalletModal = () => {
-  const context = useContext(WalletModalContext)
+  const context = useContext(WalletModalContext);
   if (!context) {
-    throw new Error('useWalletModal must be used within a WalletModalProvider')
+    throw new Error("useWalletModal must be used within a WalletModalProvider");
   }
-  return context
-}
+  return context;
+};
