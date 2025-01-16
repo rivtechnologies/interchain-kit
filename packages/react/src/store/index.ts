@@ -59,7 +59,7 @@ export const createInterchainStore = (walletManager: WalletManager) => {
       chainWalletState.push({
         chainName: chain.chainName,
         walletName: wallet.info.name,
-        walletState: null,
+        walletState: WalletState.Disconnected,
         rpcEndpoint: "",
         errorMessage: "",
         signerOption: undefined,
