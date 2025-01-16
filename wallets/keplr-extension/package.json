@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/keplr-extension",
-  "version": "0.0.1-beta.60",
+  "version": "0.0.1-beta.61",
   "author": "cosmology-tech <developers@cosmology.zone>",
   "description": "cosmos-kit wallet connector",
   "main": "index.js",
@@ -31,7 +31,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@interchain-kit/core": "0.0.1-beta.60",
+    "@interchain-kit/core": "0.0.1-beta.61",
     "@keplr-wallet/provider-extension": "^0.12.102"
   },
   "gitHead": "33f4215216b28d8aab9453421c7c89436b11c8df"
