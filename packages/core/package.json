@@ -27,6 +27,7 @@
     "lint": "eslint . --fix",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "watch:dev": "tsc -w -p tsconfig.esm.json & tsc -w"
   },
   "keywords": [],
@@ -49,7 +50,8 @@
     "long": "^5.2.3"
   },
   "devDependencies": {
-    "@keplr-wallet/types": "^0.12.168"
+    "@keplr-wallet/types": "^0.12.168",
+    "jest-environment-jsdom": "^29.7.0"
   },
   "gitHead": "fd54de0f490b6ac590ccf29f8b3d2a2226a66ec1"
 }

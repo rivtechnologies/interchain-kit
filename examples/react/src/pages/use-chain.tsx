@@ -17,6 +17,8 @@ const UseChain = () => {
     connect,
   } = useChain(chainName);
 
+  console.log(wallet);
+
   return (
     <div className="space-y-4 mx-auto max-w-3xl mt-20">
       <h1 className="text-2xl font-semibold">useChain usage:</h1>
