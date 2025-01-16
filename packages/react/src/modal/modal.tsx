@@ -46,10 +46,9 @@ export const WalletModal = () => {
   );
 
   const handleConnect = async () => {
-    return connect(selectedWallet?.info?.name, chain.chainName)
-      .then(() => getAccount(selectedWallet?.info?.name, chain.chainName))
-      .then(() => setSelectedWallet(null))
-      .catch(() => {});
+    await connect(selectedWallet?.info?.name, chain.chainName);
+    await getAccount(selectedWallet?.info?.name, chain.chainName);
+    setSelectedWallet(null);
   };
 
   useEffect(() => {

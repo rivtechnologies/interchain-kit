@@ -158,7 +158,6 @@ export const createInterchainStore = (walletManager: WalletManager) => {
           return
         }
         get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Disconnected, errorMessage: (error as any).message })
-        throw error
       }
     },
     disconnect: async (walletName: string, chainName: string) => {
