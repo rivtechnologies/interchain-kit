@@ -1,8 +1,5 @@
-import { createContext, lazy, useContext, useState } from "react";
-
-const WalletModal = lazy(
-  () => import(/*webpackChunkName: "interchain-kit-modal" */ "./modal")
-);
+import { createContext, useContext, useState } from "react";
+import { WalletModal } from "./modal";
 
 type WalletModalContextType = {
   modalIsOpen: boolean;

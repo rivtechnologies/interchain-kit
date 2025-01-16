@@ -26,7 +26,7 @@ type ModalType =
   | "not-exist"
   | "qr-code";
 
-const WalletModal = () => {
+export const WalletModal = () => {
   const {
     currentWalletName,
     currentChainName,
@@ -146,5 +146,3 @@ const WalletModal = () => {
     </ConnectModal>
   );
 };
-
-export default WalletModal;
