@@ -157,8 +157,10 @@ export default function ActiveWallet() {
       <button
         onClick={async () => {
           try {
-            console.log(chain);
-            const x = getOfflineSignerAmino(chain.chainId as string);
+            console.log(wallet);
+            const y = wallet.getOfflineSigner(chain.chainId as string);
+            const x = wallet.getOfflineSignerAmino(chain.chainId as string);
+            console.log(await y.getAccounts());
             console.log(await x.getAccounts());
           } catch (error) {
             console.log(error);

@@ -2,6 +2,7 @@ import { UseChainReturnType } from '../types/chain';
 import { useWalletModal } from "../modal";
 import { useWalletManager } from './useWalletManager';
 import { ChainNameNotExist } from '@interchain-kit/core';
+import { ChainWallet } from '../store/chain-wallet';
 
 export const useChain = (chainName: string): UseChainReturnType => {
 
@@ -43,12 +44,7 @@ export const useChain = (chainName: string): UseChainReturnType => {
     chain,
     assetList,
     address: chainWalletStateToShow?.account?.address,
-    wallet: wallet ? Object.assign(wallet, {
-      walletState: chainWalletStateToShow?.walletState,
-      connect: () => connect(currentWalletName, chainName),
-      disconnect: () => disconnect(currentWalletName, chainName),
-      getAccount: () => getAccount(currentWalletName, chainName)
-    }) : undefined,
+    wallet: new ChainWallet(wallet, () => connect(currentWalletName, chainName), () => disconnect(currentWalletName, chainName), () => getAccount(currentWalletName, chainName)),
     rpcEndpoint: chainWalletStateToShow?.rpcEndpoint,
     getSigningClient: () => getSigningClient(currentWalletName, chainName),
   }

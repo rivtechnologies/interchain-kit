@@ -122,19 +122,19 @@ export const createInterchainStore = (walletManager: WalletManager) => {
             draft.chains.push(newChain)
             const assetList = assetLists.find(a => a.chainName === newChain.chainName)
             draft.assetLists.push(assetList)
-          }
 
-          draft.wallets.forEach(w => {
-            draft.chainWalletState.push({
-              chainName: newChain.chainName,
-              walletName: w.info.name,
-              walletState: WalletState.Disconnected,
-              rpcEndpoint: "",
-              errorMessage: "",
-              signerOption: undefined,
-              account: undefined
+            draft.wallets.forEach(w => {
+              draft.chainWalletState.push({
+                chainName: newChain.chainName,
+                walletName: w.info.name,
+                walletState: WalletState.Disconnected,
+                rpcEndpoint: "",
+                errorMessage: "",
+                signerOption: signerOptions?.signing?.(newChain.chainName),
+                account: undefined
+              })
             })
-          })
+          }
 
           draft.signerOptionMap[newChain.chainName] = signerOptions?.signing?.(newChain.chainName)
           draft.endpointOptionsMap[newChain.chainName] = endpointOptions?.endpoints?.[newChain.chainName]
@@ -170,6 +170,8 @@ export const createInterchainStore = (walletManager: WalletManager) => {
       return account
     },
     getRpcEndpoint: async (walletName: string, chainName: string) => {
+      const exist = get().getChainWalletState(walletName, chainName).rpcEndpoint
+      if (exist) return exist
       const rpcEndpoint = await walletManager.getRpcEndpoint(walletName, chainName)
       get().updateChainWalletState(walletName, chainName, { rpcEndpoint })
       return rpcEndpoint

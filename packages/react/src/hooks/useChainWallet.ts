@@ -1,8 +1,9 @@
 import { useWalletManager } from "./useWalletManager"
 import { UseChainWalletReturnType } from "../types/chain"
+import { ChainWallet } from "../store/chain-wallet"
 
 export const useChainWallet = (chainName: string, walletName: string): UseChainWalletReturnType => {
-  const { assetLists, disconnect, getChainByName, getWalletByName, getChainWalletState, getChainLogoUrl, connect, getSigningClient, getRpcEndpoint, getAccount } = useWalletManager()
+  const { assetLists, disconnect, setCurrentChainName, setCurrentWalletName, getChainByName, getWalletByName, getChainWalletState, getChainLogoUrl, connect, getSigningClient, getRpcEndpoint, getAccount } = useWalletManager()
 
   const chain = getChainByName(chainName)
 
@@ -16,7 +17,10 @@ export const useChainWallet = (chainName: string, walletName: string): UseChainW
     //for migration cosmos kit
     connect: async () => {
       await connect(walletName, chainName)
+      setCurrentWalletName(walletName)
+      setCurrentChainName(chainName)
       await getAccount(walletName, chainName)
+
     },
     disconnect: () => disconnect(walletName, chainName),
     getRpcEndpoint: () => getRpcEndpoint(walletName, chainName),
@@ -29,12 +33,7 @@ export const useChainWallet = (chainName: string, walletName: string): UseChainW
     chain,
     assetList,
     address: chainWalletStateToShow?.account?.address,
-    wallet: wallet ? Object.assign(wallet, {
-      walletState: chainWalletStateToShow?.walletState,
-      connect: () => connect(walletName, chainName),
-      disconnect: () => disconnect(walletName, chainName),
-      getAccount: () => getAccount(walletName, chainName)
-    }) : undefined,
+    wallet: new ChainWallet(wallet, () => connect(walletName, chainName), () => disconnect(walletName, chainName), () => getAccount(currentWalletName, chainName)),
     rpcEndpoint: chainWalletStateToShow?.rpcEndpoint,
     getSigningClient: () => getSigningClient(walletName, chainName),
   }
