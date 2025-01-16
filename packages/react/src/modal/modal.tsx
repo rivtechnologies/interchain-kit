@@ -18,7 +18,7 @@ import { useEffect, useState } from "react";
 import { ExtensionWallet, WalletState, WCWallet } from "@interchain-kit/core";
 import { ConnectModal } from "@interchain-ui/react";
 
-export const WalletModal = () => {
+const WalletModal = () => {
   const { modalIsOpen, open, close } = useWalletModal();
 
   const {
@@ -113,8 +113,11 @@ export const WalletModal = () => {
         ),
         content: <ConnectedContent />,
       });
-    } else {
-      setModalView(defaultModalView);
+    } else if (modalIsOpen && status === WalletState.Disconnected) {
+      setModalView({
+        header: <WalletListHeader />,
+        content: <WalletListContent onSelectWallet={handleSelectWallet} />,
+      });
     }
   }, [modalIsOpen, status]);
 
@@ -129,3 +132,5 @@ export const WalletModal = () => {
     </ConnectModal>
   );
 };
+
+export default WalletModal;
