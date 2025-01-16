@@ -24,7 +24,11 @@ export const ConnectedHeader = ({
   );
 };
 
-export const ConnectedContent = () => {
+export const ConnectedContent = ({
+  afterDisconnect,
+}: {
+  afterDisconnect: () => void;
+}) => {
   const { currentChainName, currentWalletName } = useWalletManager();
   console.log({ currentChainName, currentWalletName });
   const { address, username, wallet } = useChainWallet(
@@ -55,7 +59,7 @@ export const ConnectedContent = () => {
       }}
       onDisconnect={async () => {
         await wallet.disconnect(currentChainName);
-        close();
+        afterDisconnect();
       }}
     />
   );

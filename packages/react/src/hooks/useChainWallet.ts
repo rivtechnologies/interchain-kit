@@ -33,7 +33,7 @@ export const useChainWallet = (chainName: string, walletName: string): UseChainW
     chain,
     assetList,
     address: chainWalletStateToShow?.account?.address,
-    wallet: new ChainWallet(wallet, () => connect(walletName, chainName), () => disconnect(walletName, chainName), () => getAccount(currentWalletName, chainName)),
+    wallet: new ChainWallet(wallet, () => connect(walletName, chainName), () => disconnect(walletName, chainName), () => getAccount(walletName, chainName)),
     rpcEndpoint: chainWalletStateToShow?.rpcEndpoint,
     getSigningClient: () => getSigningClient(walletName, chainName),
   }

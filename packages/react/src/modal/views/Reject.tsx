@@ -14,7 +14,7 @@ export const RejectHeader = ({
   const { close } = useWalletModal();
   return (
     <ConnectModalHead
-      title={wallet.info.prettyName}
+      title={wallet?.info?.prettyName}
       hasBackButton={true}
       onClose={close}
       onBack={onBack}
@@ -23,20 +23,20 @@ export const RejectHeader = ({
   );
 };
 
-export const RejectContent = ({ wallet }: { wallet: BaseWallet }) => {
-  const walletManager = useWalletManager();
-
-  const { close } = useWalletModal();
-
+export const RejectContent = ({
+  wallet,
+  onReconnect,
+}: {
+  wallet: BaseWallet;
+  onReconnect: () => void;
+}) => {
   return (
     <ConnectModalStatus
       status="Rejected"
       wallet={getWalletInfo(wallet)}
       contentHeader={"Request Rejected"}
       contentDesc={wallet.errorMessage || "Connection permission is denied."}
-      onConnect={() =>
-        walletManager.connect(wallet.info.name, walletManager.currentChainName)
-      }
+      onConnect={onReconnect}
     />
   );
 };
