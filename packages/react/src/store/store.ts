@@ -128,7 +128,7 @@ export const createInterchainStore = (walletManager: WalletManager) => {
                 chainName: newChain.chainName,
                 walletName: w.info.name,
                 walletState: WalletState.Disconnected,
-                rpcEndpoint: "",
+                rpcEndpoint: endpointOptions?.endpoints?.[newChain.chainName]?.rpc?.[0],
                 errorMessage: "",
                 signerOption: signerOptions?.signing?.(newChain.chainName),
                 account: undefined
@@ -223,7 +223,7 @@ export const createInterchainStore = (walletManager: WalletManager) => {
       currentChainName: state.currentChainName
     }),
     onRehydrateStorage: (state) => {
-      console.log('interchain-kit store hydration starts')
+      // console.log('interchain-kit store hydration starts')
 
       // optional
       return (state, error) => {

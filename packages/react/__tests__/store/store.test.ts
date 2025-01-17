@@ -20,11 +20,17 @@ const localStorageMock: Storage = (() => {
   };
 })();
 
-global.window.localStorage = localStorageMock;
+Object.defineProperties(global, {
+  localStorage: {
+    value: localStorageMock,
+    writable: true
+  }
+})
 
 describe('InterchainStore', () => {
   let walletManager: WalletManager;
   let store: InterchainStore;
+  let useStore: ReturnType<typeof createInterchainStore>;
 
   beforeEach(() => {
     walletManager = {
@@ -55,6 +61,11 @@ describe('InterchainStore', () => {
     } as unknown as WalletManager;
 
     store = createInterchainStore(walletManager).getState();
+    useStore = createInterchainStore(walletManager);
+  });
+
+  afterEach(() => {
+    localStorage.clear();
   });
 
   it('should initialize store with wallet manager data', () => {
@@ -66,42 +77,42 @@ describe('InterchainStore', () => {
   });
 
   it('should set current chain name', () => {
-    store.setCurrentChainName('chain1');
-    expect(store.currentChainName).toBe('chain1');
+    useStore.getState().setCurrentChainName('chain1');
+    expect(useStore.getState().currentChainName).toBe('chain1');
   });
 
   it('should set current wallet name', () => {
-    store.setCurrentWalletName('wallet1');
-    expect(store.currentWalletName).toBe('wallet1');
+    useStore.getState().setCurrentWalletName('wallet1');
+    expect(useStore.getState().currentWalletName).toBe('wallet1');
   });
 
   it('should update chain wallet state', () => {
-    store.updateChainWalletState('wallet1', 'chain1', { walletState: WalletState.Connected });
-    const state = store.getChainWalletState('wallet1', 'chain1');
+    useStore.getState().updateChainWalletState('wallet1', 'chain1', { walletState: WalletState.Connected });
+    const state = useStore.getState().getChainWalletState('wallet1', 'chain1');
     expect(state?.walletState).toBe(WalletState.Connected);
   });
 
   it('should connect to a wallet', async () => {
     (walletManager.connect as jest.Mock).mockResolvedValueOnce(undefined);
-    await store.connect('wallet1', 'chain1');
-    expect(store.currentChainName).toBe('chain1');
-    expect(store.currentWalletName).toBe('wallet1');
-    const state = store.getChainWalletState('wallet1', 'chain1');
+    await useStore.getState().connect('wallet1', 'chain1');
+    expect(useStore.getState().currentChainName).toBe('chain1');
+    expect(useStore.getState().currentWalletName).toBe('wallet1');
+    const state = useStore.getState().getChainWalletState('wallet1', 'chain1');
     expect(state?.walletState).toBe(WalletState.Connected);
   });
 
   it('should handle connection error', async () => {
     (walletManager.connect as jest.Mock).mockRejectedValueOnce(new Error('Connection error'));
-    await store.connect('wallet1', 'chain1');
-    const state = store.getChainWalletState('wallet1', 'chain1');
+    await useStore.getState().connect('wallet1', 'chain1');
+    const state = useStore.getState().getChainWalletState('wallet1', 'chain1');
     expect(state?.walletState).toBe(WalletState.Disconnected);
     expect(state?.errorMessage).toBe('Connection error');
   });
 
   it('should disconnect from a wallet', async () => {
     (walletManager.disconnect as jest.Mock).mockResolvedValueOnce(undefined);
-    await store.disconnect('wallet1', 'chain1');
-    const state = store.getChainWalletState('wallet1', 'chain1');
+    await useStore.getState().disconnect('wallet1', 'chain1');
+    const state = useStore.getState().getChainWalletState('wallet1', 'chain1');
     expect(state?.walletState).toBe(WalletState.Disconnected);
     expect(state?.account).toBeNull();
   });
@@ -109,29 +120,38 @@ describe('InterchainStore', () => {
   it('should get account', async () => {
     const account = { address: 'address1' };
     (walletManager.getAccount as jest.Mock).mockResolvedValueOnce(account);
-    const result = await store.getAccount('wallet1', 'chain1');
+    const result = await useStore.getState().getAccount('wallet1', 'chain1');
     expect(result).toBe(account);
-    const state = store.getChainWalletState('wallet1', 'chain1');
+    const state = useStore.getState().getChainWalletState('wallet1', 'chain1');
     expect(state?.account).toBe(account);
   });
 
   it('should get RPC endpoint', async () => {
     const rpcEndpoint = 'http://localhost:26657';
     (walletManager.getRpcEndpoint as jest.Mock).mockResolvedValueOnce(rpcEndpoint);
-    const result = await store.getRpcEndpoint('wallet1', 'chain1');
+    const result = await useStore.getState().getRpcEndpoint('wallet1', 'chain1');
     expect(result).toBe(rpcEndpoint);
-    const state = store.getChainWalletState('wallet1', 'chain1');
+    const state = useStore.getState().getChainWalletState('wallet1', 'chain1');
     expect(state?.rpcEndpoint).toBe(rpcEndpoint);
   });
 
   it('should add chains', () => {
     const newChains = [{ chainName: 'chain2', chainId: '2' }] as Chain[];
     const newAssetLists = [{ chainName: 'chain2', assets: [] }] as AssetList[];
-    const newSignerOptions = {} as SignerOptions;
-    const newEndpointOptions = {} as EndpointOptions;
-    store.addChains(newChains, newAssetLists, newSignerOptions, newEndpointOptions);
+    const signingMock = jest.fn().mockReturnValue('prefix');
+    const newSignerOptions = {
+      signing: signingMock,
+    } as SignerOptions;
+    const newEndpointOptions = {
+      endpoints: { chain2: { rpc: ['http://localhost:26657'] } },
+    } as EndpointOptions;
+    useStore.getState().addChains(newChains, newAssetLists, newSignerOptions, newEndpointOptions);
     expect(walletManager.addChains).toHaveBeenCalledWith(newChains, newAssetLists, newSignerOptions, newEndpointOptions);
-    expect(store.chains).toContainEqual(newChains[0]);
-    expect(store.assetLists).toContainEqual(newAssetLists[0]);
+    expect(useStore.getState().chains).toContainEqual(newChains[0]);
+    expect(useStore.getState().assetLists).toContainEqual(newAssetLists[0]);
+    expect(useStore.getState().signerOptionMap).toEqual({ chain2: 'prefix' });
+    expect(useStore.getState().endpointOptionsMap).toEqual({ chain2: newEndpointOptions.endpoints.chain2 });
+    expect(useStore.getState().getChainWalletState('wallet1', 'chain2').signerOption).toBe('prefix');
+    expect(useStore.getState().getChainWalletState('wallet1', 'chain2').rpcEndpoint).toBe('http://localhost:26657');
   });
 });
