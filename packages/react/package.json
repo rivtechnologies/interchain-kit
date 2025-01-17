@@ -38,13 +38,19 @@
     "@interchainjs/cosmos": "1.6.3",
     "@interchainjs/cosmos-types": "1.6.3",
     "@react-icons/all-files": "^4.1.0",
+    "@testing-library/jest-dom": "^6.6.3",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@walletconnect/types": "^2.17.3",
     "interchainjs": "1.6.3",
+    "jest-environment-jsdom": "^29.7.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react-hooks": "^8.0.1"
   },
   "gitHead": "b63ee16e1bbb876bfa9d683e32eb687b0bf10838"
 }
