@@ -1,7 +1,7 @@
 {
   "name": "@interchain-kit/leap-extension",
   "version": "0.0.1-beta.62",
-  "author": "Cosmology <developers@cosmology.zone>",
+  "author": "Cosmology <developers@hyperweb.io>",
   "description": "cosmos-kit wallet connector",
   "main": "index.js",
   "module": "esm/index.js",

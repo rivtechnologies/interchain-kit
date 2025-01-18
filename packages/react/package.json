@@ -1,7 +1,7 @@
 {
   "name": "@interchain-kit/react",
   "version": "0.0.1-beta.62",
-  "author": "cosmology-tech <developers@cosmology.zone>",
+  "author": "cosmology-tech <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector react package",
   "main": "index.js",
   "module": "esm/index.js",
