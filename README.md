@@ -1,4 +1,163 @@
-# interchain-kit
+# Interchain-kit
+
+<p align="center" width="100%">
+    <img height="90" src="https://user-images.githubusercontent.com/545047/190171432-5526db8f-9952-45ce-a745-bea4302f912b.svg" />
+</p>
+
+<p align="center" width="100%">
+  <a href="https://github.com/hyperweb-io/cosmos-kit/actions/workflows/run-tests.yml">
+    <img height="20" src="https://github.com/hyperweb-io/cosmos-kit/actions/workflows/run-tests.yml/badge.svg" />
+  </a>
+  <a href="https://github.com/hyperweb-io/lib-count">
+    <img height="20" src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fhyperweb-io%2Flib-count%2Fmain%2Foutput%2Fbadges%2Fproducts%2Fcosmos-kit%2Ftotal.json"/>  
+  </a>
+  <a href="https://github.com/hyperweb-io/lib-count">
+    <img height="20" src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fhyperweb-io%2Flib-count%2Fmain%2Foutput%2Fbadges%2Fproducts%2Fcosmos-kit%2Fmonthly.json"/>  
+  </a>
+  <br />
+   <a href="https://github.com/hyperweb-io/cosmos-kit/blob/main/LICENSE"><img height="20" src="https://img.shields.io/badge/license-BSD%203--Clause%20Clear-blue.svg"></a>
+   <a href="https://www.npmjs.com/package/cosmos-kit"><img height="20" src="https://img.shields.io/github/package-json/v/hyperweb-io/cosmos-kit?filename=packages%2Fcosmos-kit%2Fpackage.json"></a>
+</p>
+
+Interchain Kit is a universal wallet adapter for developers to build apps that quickly and easily interact with Cosmos blockchains and wallets.
+
+## 🏁 Quickstart
+
+Get started quickly by using [create-interchain-app](https://github.com/hyperweb-io/create-interchain-app) to help you build high-quality Cosmos apps fast!
+
+## ⚙️ Configuration
+
+Check out [our docs here](https://docs.hyperweb.io/interchain-kit#get-started) to configure InterchainKit.
+
+## ⚛️ InterchainJS Signers
+
+If you want to get a interchainjs signer, [here are docs for our hooks](https://docs.hyperweb.io/interchain-kit/hook)
+
+## 📦 Packages
+
+| Name                                                                                                       | Description                                                             |
+| ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| [@interchain-kit/core](https://github.com/hyperweb-io/interchain-kit/tree/main/packages/core)                   | Core Interchain Kit functionality                                           
+| [@interchain-kit/react](https://github.com/hyperweb-io/interchain-kit/tree/main/packages/react)                 | React integration with Interchain UI Modal for simple usage             |
+| [@interchain-kit/vue](https://github.com/hyperweb-io/interchain-kit/tree/main/packages/vue)       | Vue integration with Interchain UI Modal for simple usage |
+
+## 📦 Wallets
+
+Explore the range of wallet adapters available in our [wallets directory](https://github.com/hyperweb-io/interchain-kit/tree/main/wallets).
+
+<p align="center" width="100%">
+<a href="https://www.keplr.app/">
+  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/cosmos-kit/main/public/images/logos/wallets/keplr.svg" />
+</a>
+<a href="https://www.ledger.com/">
+  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/cosmos-kit/main/public/images/logos/wallets/ledger.png" />
+</a>
+<a href="https://www.leapwallet.io/">
+  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/cosmos-kit/main/public/images/logos/wallets/leap.png" />
+</a>
+<a href="https://wallet.cosmostation.io/">
+  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/cosmos-kit/main/public/images/logos/wallets/cosmostation.png" />
+</a>
+<br />
+<a href="https://www.okx.com/web3">
+  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/cosmos-kit/main/public/images/logos/wallets/okxwallet.svg" />
+</a>
+<a href="https://walletconnect.com/">
+  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/cosmos-kit/main/public/images/wallet-connect.svg" />
+</a>
+<a href="https://chromewebstore.google.com/detail/station-wallet/aiifbnbfobpmeekipheeijimdpnlpgpp?hl=en">
+  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/cosmos-kit/main/public/images/logos/wallets/station.svg" />
+</a>
+<a href="https://trustwallet.com/">
+  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/cosmos-kit/main/public/images/logos/wallets/trust.png" />
+</a>
+<br />
+<a href="https://coin98.com/wallet">
+  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/cosmos-kit/main/public/images/logos/wallets/coin98.png" />
+</a>
+<a href="https://chromewebstore.google.com/detail/galaxy-station-wallet/akckefnapafjbpphkefbpkpcamkoaoai?hl=en">
+  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/cosmos-kit/main/public/images/logos/wallets/galaxystation.svg" />
+</a>
+</p>
+
+## 🔌 Integrating Wallets
+
+See our docs on [integrating your wallet](https://docs.cosmology.zone/interchain-kit/integrating-wallets)
+
+### 🚀 Running Example
+
+For high-level examples suitable for most developers, explore our [create-interchain-app](https://github.com/hyperweb-io/create-interchain-app). For a deeper, more technical understanding, this repository contains an example, which is also useful when integrating new wallets.
+
+```sh
+yarn build
+cd packages/example
+yarn dev
+```
+
+#### [Basic Vanilla Example](https://github.com/hyperweb-io/interchain-kit/tree/main/examples)
+
+This example demonstrates a Next.js project that integrates the `@interchain-kit/react` wallet adapter. Note that this example has historically been used by multiple teams to test PRs.
+
+#### ["vanilla" example showing how `WalletManager` works](https://github.com/hyperweb-io/interchain-kit/blob/main/examples/vanilla/src/)
+
+This example is ideal for developers looking to create integrations for Vue.js, Svelte, or other frameworks. It uses a basic Next.js setup without relying on React-specific hooks, providing a clear model for building custom integrations.
+
+- `/connect.html` - show how WalletManager connect to wallet
+- `/account.html` - show how WalletManager get account
+
+## 🛠 Developing
+
+Checkout the repository and bootstrap the yarn workspace:
+
+```sh
+# Clone the repo.
+git clone https://github.com/hyperweb-io/interchain-kit
+cd cosmos-kit
+yarn
+yarn dev:watch
+```
+
+### Building
+
+```sh
+yarn build
+```
+
+### Publishing
+
+```
+lerna publish
+# lerna publish minor
+# lerna publish major
+```
+
+## Related
+
+Checkout these related projects:
+
+- [@cosmology/telescope](https://github.com/hyperweb-io/telescope) Your Frontend Companion for Building with TypeScript with Cosmos SDK Modules.
+- [@cosmwasm/ts-codegen](https://github.com/CosmWasm/ts-codegen) Convert your CosmWasm smart contracts into dev-friendly TypeScript classes.
+- [chain-registry](https://github.com/hyperweb-io/chain-registry) Everything from token symbols, logos, and IBC denominations for all assets you want to support in your application.
+- [cosmos-kit](https://github.com/hyperweb-io/cosmos-kit) Experience the convenience of connecting with a variety of web3 wallets through a single, streamlined interface.
+- [create-cosmos-app](https://github.com/hyperweb-io/create-cosmos-app) Set up a modern Cosmos app by running one command.
+- [interchain-ui](https://github.com/hyperweb-io/interchain-ui) The Interchain Design System, empowering developers with a flexible, easy-to-use UI kit.
+- [starship](https://github.com/hyperweb-io/starship) Unified Testing and Development for the Interchain.
+
+## Credits
+
+🛠 Built by Hyperweb (formerly Cosmology) — if you like our tools, please checkout and contribute to [our github ⚛️](https://github.com/hyperweb-io)
+
+## Disclaimer
+
+AS DESCRIBED IN THE LICENSES, THE SOFTWARE IS PROVIDED “AS IS”, AT YOUR OWN RISK, AND WITHOUT WARRANTIES OF ANY KIND.
+
+No developer or entity involved in creating this software will be liable for any claims or damages whatsoever associated with your use, inability to use, or your interaction with other users of the code, including any direct, indirect, incidental, special, exemplary, punitive or consequential damages, or loss of profits, cryptocurrencies, tokens, or anything else of value.
+
+
+
+
+
+<!-- # interchain-kit
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/545047/188804067-28e67e5e-0214-4449-ab04-2e0c564a6885.svg" width="80"><br />
@@ -132,4 +291,4 @@ Checkout these related projects:
 AS DESCRIBED IN THE LICENSES, THE SOFTWARE IS PROVIDED “AS IS”, AT YOUR OWN RISK, AND WITHOUT WARRANTIES OF ANY KIND.
 
 No developer or entity involved in creating this software will be liable for any claims or damages whatsoever associated with your use, inability to use, or your interaction with other users of the code, including any direct, indirect, incidental, special, exemplary, punitive or consequential damages, or loss of profits, cryptocurrencies, tokens, or anything else of value.
-
+ -->
