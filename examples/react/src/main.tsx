@@ -83,7 +83,7 @@ const _wallets: BaseWallet[] = [
   // walletConnect,
   // ledgerWallet,
   // cosmosExtensionMetaMask,
-  // walletConnect,
+  walletConnect,
   // ledgerWallet,
   // leapCosmosExtensionMetaMask,
 ];

@@ -7,6 +7,7 @@ import { Buffer } from 'buffer'
 import {
   OfflineAminoSigner,
   OfflineDirectSigner,
+  OfflineSigner,
 } from '@interchainjs/cosmos/types/wallet';
 import { AminoSignResponse, StdSignature, DirectSignResponse } from '@interchainjs/cosmos/types/wallet';
 import { StdSignDoc } from '@interchainjs/types'
@@ -144,6 +145,7 @@ export class WCWallet extends BaseWallet {
         session = await approval()
         this.session = session
         this.pairingUri = null
+        this.onPairingUriCreated && this.onPairingUriCreated(null)
       }
 
     } catch (error) {
@@ -240,6 +242,16 @@ export class WCWallet extends BaseWallet {
     }
   }
 
+  getOfflineSigner(chainId: string): OfflineSigner {
+    return {
+      getAccounts: async () => [await this.getAccount(chainId)],
+      signAmino: (signerAddress: string, signDoc: StdSignDoc) =>
+        this.signAmino(chainId, signerAddress, signDoc),
+      signDirect: (signerAddress: string, signDoc: DirectSignDoc) =>
+        this.signDirect(chainId, signerAddress, signDoc),
+    }
+  }
+
   override async signAmino(chainId: string, signer: string, signDoc: StdSignDoc, signOptions?: SignOptions): Promise<AminoSignResponse> {
     try {
       const result = await this.signClient.request({
@@ -323,7 +335,7 @@ export class WCWallet extends BaseWallet {
 
     for (const event of events) {
       // console.log(event)
-      this.signClient.on(event as string, (data: any) => {
+      this.signClient.on(event as any, (data: any) => {
         console.log(event, data)
       })
     }

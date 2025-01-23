@@ -20,8 +20,6 @@ export const useChain = (chainName: string): UseChainReturnType => {
   const chainWalletStateToShow = getChainWalletState(currentWalletName, chainName)
   const { open, close } = useWalletModal()
 
-  console.log({ chainName, chain })
-
   return {
     //for migration cosmos kit
     connect: () => {

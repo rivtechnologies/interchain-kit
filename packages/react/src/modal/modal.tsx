@@ -27,6 +27,7 @@ type ModalType =
   | "qr-code";
 
 export const WalletModal = () => {
+  const [qrCode, setQRCode] = useState<string | null>(null);
   const {
     currentWalletName,
     currentChainName,
@@ -46,6 +47,13 @@ export const WalletModal = () => {
   );
 
   const handleConnect = async () => {
+
+    if (wallet.originalWallet instanceof WCWallet) {
+      wallet.originalWallet.setOnPairingUriCreatedCallback((uri) => {
+        setQRCode(uri);
+      })
+    }
+
     await connect(selectedWallet?.info?.name, chain.chainName);
     await getAccount(selectedWallet?.info?.name, chain.chainName);
     setSelectedWallet(null);
@@ -79,6 +87,9 @@ export const WalletModal = () => {
       if (status === WalletState.Disconnected) {
         setModalType("wallet-list");
       }
+      if (qrCode) {
+        setModalType("qr-code");
+      }
     }
   }, [
     currentWalletName,
@@ -86,6 +97,7 @@ export const WalletModal = () => {
     status,
     modalIsOpen,
     selectedWallet,
+    qrCode
   ]);
 
   const goBackList = () => setModalType("wallet-list");
