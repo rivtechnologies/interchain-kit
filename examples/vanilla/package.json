@@ -14,8 +14,8 @@
     "vite": "^5.2.0"
   },
   "dependencies": {
-    "@chain-registry/v2": "1.65.8",
-    "@chain-registry/v2-types": "^0.53.14",
+    "@chain-registry/v2": "^1.71.100",
+    "@chain-registry/v2-types": "^0.53.52",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@interchain-kit/core": "0.0.1-beta.62",
     "@interchain-kit/keplr-extension": "0.0.1-beta.62",
