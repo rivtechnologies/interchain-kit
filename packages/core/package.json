@@ -1,7 +1,7 @@
 {
   "name": "@interchain-kit/core",
   "version": "0.0.1-beta.62",
-  "author": "hyperweb-io <developers@hyperweb.io>",
+  "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector core package",
   "main": "index.js",
   "module": "esm/index.js",

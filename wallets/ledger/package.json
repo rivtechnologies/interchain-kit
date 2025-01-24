@@ -1,7 +1,7 @@
 {
   "name": "@interchain-kit/ledger",
   "version": "0.0.1-beta.62",
-  "author": "hyperweb-io <developers@hyperweb.io>",
+  "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector",
   "main": "index.js",
   "module": "esm/index.js",
