@@ -19,19 +19,19 @@
    <a href="https://www.npmjs.com/package/cosmos-kit"><img height="20" src="https://img.shields.io/github/package-json/v/hyperweb-io/cosmos-kit?filename=packages%2Fcosmos-kit%2Fpackage.json"></a>
 </p>
 
-Interchain Kit is a universal wallet adapter for developers to build apps that quickly and easily interact with Cosmos blockchains and wallets.
+Interchain Kit is a universal wallet adapter for developers to build apps that quickly and easily interact with blockchains and wallets.
 
 ## 🏁 Quickstart
 
-Get started quickly by using [create-interchain-app](https://github.com/hyperweb-io/create-interchain-app) to help you build high-quality Cosmos apps fast!
+Get started quickly by using [create-interchain-app](https://github.com/hyperweb-io/create-interchain-app) to help you build high-quality web3 apps fast!
 
 ## ⚙️ Configuration
 
-Check out [our docs here](https://docs.hyperweb.io/interchain-kit#get-started) to configure InterchainKit.
+Check out [our docs here](https://docs.hyperweb.io/interchain-kit#get-started) to configure Interchain Kit.
 
 ## ⚛️ InterchainJS Signers
 
-If you want to get a interchainjs signer, [here are docs for our hooks](https://docs.hyperweb.io/interchain-kit/hook)
+If you want to get a interchainjs signer, [here are docs for our hooks](https://docs.hyperweb.io/interchain-kit/hooks)
 
 ## 📦 Packages
 
@@ -112,7 +112,7 @@ Checkout the repository and bootstrap the yarn workspace:
 ```sh
 # Clone the repo.
 git clone https://github.com/hyperweb-io/interchain-kit
-cd cosmos-kit
+cd interchain-kit
 yarn
 yarn dev:watch
 ```
