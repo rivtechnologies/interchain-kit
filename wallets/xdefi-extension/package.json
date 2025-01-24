@@ -2,7 +2,7 @@
   "name": "@interchain-kit/xdefi-extension",
   "version": "0.0.1-beta.62",
   "author": "hyperweb-io <developers@hyperweb.io>",
-  "description": "cosmos-kit wallet connector",
+  "description": "interchain-kit wallet connector",
   "main": "index.js",
   "module": "esm/index.js",
   "types": "index.d.ts",
