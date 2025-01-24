@@ -33,6 +33,16 @@ Check out [our docs here](https://docs.hyperweb.io/interchain-kit#get-started) t
 
 If you want to get a interchainjs signer, [here are docs for our hooks](https://docs.hyperweb.io/interchain-kit/hooks)
 
+## 🖼️ Supported Frameworks
+
+Whether you're developing with React or Vue, Interchain Kit offers tools and components to accelerate your development process and ensure compatibility with multiple blockchains:
+
+<p align="center" width="100%">
+  <img height="40" src="public/images/logos/frameworks/react.svg" alt="React" />
+  <img height="40" src="public/images/logos/frameworks/vue.svg" alt="Vue" />
+</p>
+
+
 ## 📦 Packages
 
 | Name                                                                                                       | Description                                                             |
