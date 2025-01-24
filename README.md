@@ -1,4 +1,4 @@
-# Interchain-kit
+# Interchain Kit
 
 <p align="center" width="100%">
     <img height="90" src="https://user-images.githubusercontent.com/545047/190171432-5526db8f-9952-45ce-a745-bea4302f912b.svg" />
@@ -105,68 +105,6 @@ This example is ideal for developers looking to create integrations for Vue.js, 
 - `/connect.html` - show how WalletManager connect to wallet
 - `/account.html` - show how WalletManager get account
 
-## 🛠 Developing
-
-Checkout the repository and bootstrap the yarn workspace:
-
-```sh
-# Clone the repo.
-git clone https://github.com/hyperweb-io/interchain-kit
-cd interchain-kit
-yarn
-yarn dev:watch
-```
-
-### Building
-
-```sh
-yarn build
-```
-
-### Publishing
-
-```
-lerna publish
-# lerna publish minor
-# lerna publish major
-```
-
-## Related
-
-Checkout these related projects:
-
-- [@cosmology/telescope](https://github.com/hyperweb-io/telescope) Your Frontend Companion for Building with TypeScript with Cosmos SDK Modules.
-- [@cosmwasm/ts-codegen](https://github.com/CosmWasm/ts-codegen) Convert your CosmWasm smart contracts into dev-friendly TypeScript classes.
-- [chain-registry](https://github.com/hyperweb-io/chain-registry) Everything from token symbols, logos, and IBC denominations for all assets you want to support in your application.
-- [cosmos-kit](https://github.com/hyperweb-io/cosmos-kit) Experience the convenience of connecting with a variety of web3 wallets through a single, streamlined interface.
-- [create-cosmos-app](https://github.com/hyperweb-io/create-cosmos-app) Set up a modern Cosmos app by running one command.
-- [interchain-ui](https://github.com/hyperweb-io/interchain-ui) The Interchain Design System, empowering developers with a flexible, easy-to-use UI kit.
-- [starship](https://github.com/hyperweb-io/starship) Unified Testing and Development for the Interchain.
-
-
-
-
-
-
-
-<!-- # interchain-kit
-
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/545047/188804067-28e67e5e-0214-4449-ab04-2e0c564a6885.svg" width="80"><br />
-    Universal wallet connector for the interchain
-</p>
-
-Interchain Kit is a universal wallet adapter for developers to build apps that quickly and easily interact with Cosmos blockchains and wallets.
-
-## Packages
-
-### [@interchain-kit/core](https://github.com/hyperweb-io/interchain-kit/blob/main/packages/core/README.md)
-### [@interchain-kit/react](https://github.com/hyperweb-io/interchain-kit/blob/main/packages/react/README.md)
-
-## Wallets
-Explore the range of wallet adapters available in our [wallets directory](https://github.com/hyperweb-io/interchain-kit/tree/main/wallets)
-
---->
 ## Overview
 
 ```mermaid
@@ -251,39 +189,44 @@ classDiagram
     }
 
 ```
-<!---
-## Developing
 
-When first cloning the repo:
-```
+## 🛠 Developing
+
+Checkout the repository and bootstrap the yarn workspace:
+
+```sh
+# Clone the repo.
+git clone https://github.com/hyperweb-io/interchain-kit
+cd interchain-kit
 yarn
+yarn dev:watch
+```
+
+### Building
+
+```sh
 yarn build
-yarn dev
+```
+
+### Publishing
+
+```
+lerna publish
+# lerna publish minor
+# lerna publish major
 ```
 
 ## Related
 
 Checkout these related projects:
 
-* [telescope](https://github.com/hyperweb-io/telescope) Your Frontend Companion for Building with TypeScript with Cosmos SDK Modules.
-* [@cosmwasm/ts-codegen](https://github.com/CosmWasm/ts-codegen) Convert your CosmWasm smart contracts into dev-friendly TypeScript classes.
-* [chain-registry](https://github.com/hyperweb-io/chain-registry) Everything from token symbols, logos, and IBC denominations for all assets you want to support in your application.
-* [cosmos-kit](https://github.com/hyperweb-io/cosmos-kit) Experience the convenience of connecting with a variety of web3 wallets through a single, streamlined interface.
-* [create-cosmos-app](https://github.com/hyperweb-io/create-cosmos-app) Set up a modern Cosmos app by running one command.
-* [interchain-ui](https://github.com/hyperweb-io/interchain-ui) The Interchain Design System, empowering developers with a flexible, easy-to-use UI kit.
-* [starship](https://github.com/hyperweb-io/starship) Unified Testing and Development for the Interchain.
-
-## Credits
-
-🛠 Built by Hyperweb (formerly Cosmology) — if you like our tools, please checkout and contribute to [our github ⚛️](https://github.com/hyperweb-io)
-
-
-## Disclaimer
-
-AS DESCRIBED IN THE LICENSES, THE SOFTWARE IS PROVIDED “AS IS”, AT YOUR OWN RISK, AND WITHOUT WARRANTIES OF ANY KIND.
-
-No developer or entity involved in creating this software will be liable for any claims or damages whatsoever associated with your use, inability to use, or your interaction with other users of the code, including any direct, indirect, incidental, special, exemplary, punitive or consequential damages, or loss of profits, cryptocurrencies, tokens, or anything else of value.
- -->
+- [@cosmology/telescope](https://github.com/hyperweb-io/telescope) Your Frontend Companion for Building with TypeScript with Cosmos SDK Modules.
+- [@cosmwasm/ts-codegen](https://github.com/CosmWasm/ts-codegen) Convert your CosmWasm smart contracts into dev-friendly TypeScript classes.
+- [chain-registry](https://github.com/hyperweb-io/chain-registry) Everything from token symbols, logos, and IBC denominations for all assets you want to support in your application.
+- [cosmos-kit](https://github.com/hyperweb-io/cosmos-kit) Experience the convenience of connecting with a variety of web3 wallets through a single, streamlined interface.
+- [create-cosmos-app](https://github.com/hyperweb-io/create-cosmos-app) Set up a modern Cosmos app by running one command.
+- [interchain-ui](https://github.com/hyperweb-io/interchain-ui) The Interchain Design System, empowering developers with a flexible, easy-to-use UI kit.
+- [starship](https://github.com/hyperweb-io/starship) Unified Testing and Development for the Interchain.
 
 ## Credits
 
