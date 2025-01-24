@@ -41,7 +41,7 @@ const hwChain = {
     },
   },
   codebase: {
-    gitRepo: "https://github.com/cosmology-tech/jsd",
+    gitRepo: "https://github.com/hyperweb-io/jsd",
     compatibleVersions: [],
     binaries: {},
     consensus: {

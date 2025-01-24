@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/react-examples",
-  "author": "cosmology-tech <developers@hyperweb.io>",
+  "author": "hyperweb-io <developers@hyperweb.io>",
   "description": "cosmos-kit wallet connector core package",
   "version": "0.0.1-beta.62",
   "type": "module",
