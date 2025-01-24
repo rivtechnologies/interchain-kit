@@ -47,36 +47,36 @@ Explore the range of wallet adapters available in our [wallets directory](https:
 
 <p align="center" width="100%">
 <a href="https://www.keplr.app/">
-  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/cosmos-kit/main/public/images/logos/wallets/keplr.svg" />
+  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/interchain-kit/main/public/images/logos/wallets/keplr.svg" />
 </a>
 <a href="https://www.ledger.com/">
-  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/cosmos-kit/main/public/images/logos/wallets/ledger.png" />
+  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/interchain-kit/main/public/images/logos/wallets/ledger.png" />
 </a>
 <a href="https://www.leapwallet.io/">
-  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/cosmos-kit/main/public/images/logos/wallets/leap.png" />
+  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/interchain-kit/main/public/images/logos/wallets/leap.png" />
 </a>
 <a href="https://wallet.cosmostation.io/">
-  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/cosmos-kit/main/public/images/logos/wallets/cosmostation.png" />
+  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/interchain-kit/main/public/images/logos/wallets/cosmostation.png" />
 </a>
 <br />
 <a href="https://www.okx.com/web3">
-  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/cosmos-kit/main/public/images/logos/wallets/okxwallet.svg" />
+  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/interchain-kit/main/public/images/logos/wallets/okxwallet.svg" />
 </a>
 <a href="https://walletconnect.com/">
-  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/cosmos-kit/main/public/images/wallet-connect.svg" />
+  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/interchain-kit/main/public/images/wallet-connect.svg" />
 </a>
 <a href="https://chromewebstore.google.com/detail/station-wallet/aiifbnbfobpmeekipheeijimdpnlpgpp?hl=en">
-  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/cosmos-kit/main/public/images/logos/wallets/station.svg" />
+  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/interchain-kit/main/public/images/logos/wallets/station.svg" />
 </a>
 <a href="https://trustwallet.com/">
-  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/cosmos-kit/main/public/images/logos/wallets/trust.png" />
+  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/interchain-kit/main/public/images/logos/wallets/trust.png" />
 </a>
 <br />
 <a href="https://coin98.com/wallet">
-  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/cosmos-kit/main/public/images/logos/wallets/coin98.png" />
+  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/interchain-kit/main/public/images/logos/wallets/coin98.png" />
 </a>
 <a href="https://chromewebstore.google.com/detail/galaxy-station-wallet/akckefnapafjbpphkefbpkpcamkoaoai?hl=en">
-  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/cosmos-kit/main/public/images/logos/wallets/galaxystation.svg" />
+  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/interchain-kit/main/public/images/logos/wallets/galaxystation.svg" />
 </a>
 </p>
 
