@@ -30,70 +30,134 @@ Using yarn:
 yarn add @interchain-kit/core 
 ```
 ## Usage
-### Query
+#### Connect
 ```js
-import { assetLists, chains } from '@chain-registry/v2';
-import { keplrWallet } from '@interchain-kit/keplr-extension';
-import { WalletManager } from '@interchain-kit/core';
+import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from '@chain-registry/v2/mainnet/cosmoshub'
+import { chain as junoChain, assetList as junoAssetList } from '@chain-registry/v2/mainnet/juno'
+import { WalletManager } from '@interchain-kit/core'
+import { keplrWallet } from '@interchain-kit/keplr-extension'
 
-const chainName = 'cosmoshub'
-const walletName = 'keplr-extension'
 
-const _chains = chains.filter(c => c.chainName === chainName)
-const _assetLists = assetLists.filter(c => c.chainName === chainName)
-const _wallets = [keplrWallet]
+const walletManager = await WalletManager.create(
+  [cosmoshubChain, junoChain],
+  [cosmoshubAssetList, junoAssetList],
+  [keplrWallet]
+)
 
-const wm = await WalletManager.create(_chains, _assetLists, _wallets)
+// pop up keplr extension wallet connect window to connect cosmoshub chain
+await walletManager.connect(keplrWallet.info?.name as string, cosmoshubChain.chainName)
 
-const queryClient = await wm.getQueryClient(walletName, chainName)
+// pop up keplr extension wallet connect window to connect juno chain
+await walletManager.connect(keplrWallet.info?.name as string, junoChain.chainName)
 
-const account = await wm.getAccount(walletName, chainName)
 
-const { balance } = await queryClient.balance({ address: account.address, denom: 'uosmo' })
+// disconnect cosmoshub chain from keplr wallet extension
+await walletManager.disconnect(keplrWallet.info?.name as string, cosmoshubChain.chainName)
 
-console.log(`i have ${balance?.amount}${balance?.denom} in ${chainName}`)
+// disconnect juno chain from keplr wallet extension
+await walletManager.disconnect(keplrWallet.info?.name as string, junoChain.chainName)
 
-//i have 26589633uosmo in osmosis
+
 ```
-### Signing
+#### Account
 ```js
-import { assetLists, chains } from '@chain-registry/v2';
-import { keplrWallet } from '@interchain-kit/keplr-extension';
+
+import osmosis from '@chain-registry/v2/mainnet/osmosis';
+import cosmoshub from '@chain-registry/v2/mainnet/cosmoshub'
 import { WalletManager } from '@interchain-kit/core';
+import { keplrWallet } from '@interchain-kit/keplr-extension';
 
-const chainName = 'osmosis'
-const walletName = 'keplr-extension'
+const walletManager = await WalletManager.create(
+    [osmosis.chain, cosmoshub.chain],
+    [osmosis.assetList, cosmoshub.assetList],
+    [keplrWallet])
 
-const _chains = chains.filter(c => c.chainName === chainName)
-const _assetLists = assetLists.filter(c => c.chainName === chainName)
-const _wallets = [keplrWallet]
+// return account of osmosis chain from keplr wallet extension
+const account = await walletManager.getAccount(keplrWallet.info?.name as string, osmosis.chain.chainName)
+console.log(account)
+// return account of cosmoshub chain from keplr wallet extension
+const account2 = await walletManager.getAccount(keplrWallet.info?.name as string, cosmoshub.chain.chainName)
+console.log(account2)
 
-const wm = await WalletManager.create(_chains, _assetLists, _wallets)
+```
+#### Query (balance)
+```ts
 
-const cosmosSigningClient = await wm.getSigningCosmosClient(walletName, chainName)
+import { chain as osmosisChain, assetList as osmosisAssetList } from '@chain-registry/v2/mainnet/osmosis';
+import { WalletManager } from '@interchain-kit/core';
+import { keplrWallet } from '@interchain-kit/keplr-extension';
+import { createGetBalance } from "interchainjs/cosmos/bank/v1beta1/query.rpc.func";
 
-const signerAccount = await wm.getAccount(walletName, chainName)
+const walletManager = await WalletManager.create(
+    [osmosisChain],
+    [osmosisAssetList],
+    [keplrWallet])
 
-const receiveAddress = 'osmo1zx6zx6zx6zx6zx6zx6z6zx6xz6zx6zx6'
+const account = await walletManager.getAccount(keplrWallet.info?.name as string, osmosisChain.chainName)
+const osmosisRpcEndpoint = await walletManager.getRpcEndpoint(keplrWallet.info?.name as string, osmosisChain.chainName)
+
+const balanceQuery = createGetBalance(osmosisRpcEndpoint as string);
+const { balance } = await balanceQuery({
+    address: account.address,
+    denom: osmosisChain.staking?.stakingTokens[0].denom as string,
+});
+
+console.log(balance)
+
+/**
+ * { amount: '26589633', denom: 'uosmo' }
+ */
+```
+#### Signing (send tx)
+```ts
+
+import { chain as osmosisChain, assetList as osmosisAssetList } from '@chain-registry/v2/mainnet/osmosis';
+import { WalletManager } from '@interchain-kit/core';
+import { keplrWallet } from '@interchain-kit/keplr-extension';
+import { createSend } from "interchainjs/cosmos/bank/v1beta1/tx.rpc.func";
+
+const walletManager = await WalletManager.create(
+  [osmosisChain],
+  [osmosisAssetList],
+  [keplrWallet])
+
+const signingClient = await walletManager.getSigningClient(keplrWallet.info?.name as string, osmosisChain.chainName)
+const account = await walletManager.getAccount(keplrWallet.info?.name as string, osmosisChain.chainName)
+const txSend = createSend(signingClient);
+
+const denom = osmosisChain.staking?.stakingTokens[0].denom as string
+
+const fromAddress = account.address
 
 const fee = {
-    amount: [
-        {
-            denom: 'uosmo',
-            amount: '2500',
-        },
-    ],
-    gas: '550000',
+  amount: [{
+    denom,
+    amount: '25000'
+  }],
+  gas: "1000000",
 };
 
-const token = {
-    amount: '1000',
-    denom: 'uosmo',
-};
+const message = {
+  fromAddress: fromAddress,
+  toAddress: 'osmo10m5gpakfe95t5k86q5fhqe03wuev7g3ac2lvcu',
+  amount: [
+    {
+      denom,
+      amount: '1'
+    },
+  ],
+}
 
-const message = { fromAddress: signerAccount.address, toAddress: receiveAddress, amount: [token] }
+const memo = "test"
 
-await cosmosSigningClient.helpers.send(signerAccount.address, message, fee, 'hello world')
+await txSend(
+  fromAddress,
+  message,
+  fee,
+  memo
+)
+
+// pop up confirm modal from wallet to start signing process
 ```
 
 ## Developing
@@ -102,7 +166,7 @@ When first cloning the repo:
 
 ```
 yarn
-yarn build
+yarn dev
 ```
 
 ## Related

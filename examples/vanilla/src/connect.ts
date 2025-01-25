@@ -1,39 +1,25 @@
-import { chain, assetList } from '@chain-registry/v2/mainnet/cosmoshub'
-import { WalletManager, WalletState } from '@interchain-kit/core'
+import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from '@chain-registry/v2/mainnet/cosmoshub'
+import { chain as junoChain, assetList as junoAssetList } from '@chain-registry/v2/mainnet/juno'
+import { WalletManager } from '@interchain-kit/core'
 import { keplrWallet } from '@interchain-kit/keplr-extension'
 
-const button = document.querySelector('#connect')
-const disconnectButton = document.querySelector('#disconnect')
 
 const walletManager = await WalletManager.create(
-  [chain],
-  [assetList],
+  [cosmoshubChain, junoChain],
+  [cosmoshubAssetList, junoAssetList],
   [keplrWallet]
 )
 
+// pop up keplr extension wallet connect window to connect cosmoshub chain
+await walletManager.connect(keplrWallet.info?.name as string, cosmoshubChain.chainName)
+
+// pop up keplr extension wallet connect window to connect juno chain
+await walletManager.connect(keplrWallet.info?.name as string, junoChain.chainName)
 
 
-button?.addEventListener('click', async () => {
-  try {
-    await walletManager.connect(keplrWallet.info?.name as string, chain.chainName)
-    const stateElement = document.querySelector('#state');
-    if (stateElement) {
-      stateElement.textContent = 'Connected';
-    }
-  } catch (error) {
-    console.error(error)
-  }
-})
+// disconnect cosmoshub chain from keplr wallet extension
+await walletManager.disconnect(keplrWallet.info?.name as string, cosmoshubChain.chainName)
 
-disconnectButton?.addEventListener('click', async () => {
+// disconnect juno chain from keplr wallet extension
+await walletManager.disconnect(keplrWallet.info?.name as string, junoChain.chainName)
 
-  try {
-    await walletManager.disconnect(keplrWallet.info?.name as string, chain.chainName)
-    const stateElement = document.querySelector('#state');
-    if (stateElement) {
-      stateElement.textContent = 'Disconnected';
-    }
-  } catch (error) {
-    console.log(error)
-  }
-})
