@@ -114,6 +114,8 @@ This example is ideal for developers looking to create integrations for Vue.js, 
 
 - `/connect.html` - show how WalletManager connect to wallet
 - `/account.html` - show how WalletManager get account
+- `/balance.html` = show how to query (get balance)
+- `/signing.html` = show how to sign (send token)
 
 ## Overview
 
