@@ -210,31 +210,6 @@ const connectLeap = async() => {
 </style>
 ```
 
-### useCurrentWallet
-```ts
-const wallet = useCurrentWallet()
-
-console.log(wallet.value) // current connected wallet
-```
-
-### useAccount
-```ts
-const chainName = ref('cosmoshub')
-const walletName = ref('keplr-extension')
-const account = useAccount(chainName, walletName)
-
-console.log(account.value.address) // cosmoshub address in keplr-extension wallet
-```
-
-### useOfflineSigner
-```ts
-const chainName = ref('cosmoshub')
-const walletName = ref('keplr-extension')
-const offlineSigner = useOfflineSigner(chainName, walletName)
-
-console.log(offlineSigner.value) // cosmoshub offlineSigner in keplr-extension wallet 
-```
-
 ### useChains
 
 ```ts

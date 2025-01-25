@@ -105,20 +105,12 @@ export default App;
 ```js
 
 const chainName = 'cosmoshub'
-const { chain, assetList, address, wallet, queryClient, signingClient } = useChain(chainName)
+const { chain, assetList, address, wallet } = useChain(chainName)
 
 console.log(wallet) //keprl extension wallet info
 console.log(chain) // chain info for cosmoshub
 console.log(assetList) // assets info for cosmoshub
 console.log(address) // address for cosmoshub in keplr-extension wallet
-
-//query
-const { balance } = await queryClient.balance({
-  address,
-  denom: 'uosmo'
-})
-console.log(balance)
-// { amount: 23423, denom: 'uosmos' }
 
 ```
 
@@ -157,35 +149,20 @@ function App() {
 export default App;
 ```
 
-### useCurrentWallet
-```js
-const wallet = useCurrentWallet()
-
-console.log(wallet) // current connected wallet
-
-```
-
-### useAccount
-```js
-const account = useAccount('cosmoshub', 'keplr-extension')
-
-console.log(account.address) // cosmoshub address in keplr-extension wallet
-
-```
-
-### useOfflineSigner
-```js
-const offlineSigner = useOfflineSigner('cosmoshub', 'keplr-extension')
-
-console.log(offlineSigner) // cosmoshub offlineSigner in keplr-extension wallet 
-```
-
 ### useChains
 
 ```js
 WIP
 ```
+### use wallet methods
+```js
+const { wallet } = useChain('osmosis')
 
+//use method from wallet that you select
+await wallet.signAmino(chainId, signAddress, stdDoc)
+await wallet.verifyArbitrary(chainId, signAddress, stdDoc)
+
+```
 
 ## Developing
 
@@ -202,7 +179,7 @@ Or if you want to make your dev process smoother, you can run:
 ```sh
 yarn
 # build the dev packages with .map files, this enables navigation from references to their source code between packages.
-yarn build:dev
+yarn watch:dev
 ```
 
 ## Related
