@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/coin98-extension",
-  "version": "0.0.1-beta.64",
+  "version": "0.1.0",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector",
   "main": "index.js",
@@ -32,7 +32,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@interchain-kit/core": "^0.0.1-beta.64"
+    "@interchain-kit/core": "^0.1.0"
   },
   "gitHead": "5d5934c835bbe83fc3cfd2aa9bb6cfa617722019"
 }

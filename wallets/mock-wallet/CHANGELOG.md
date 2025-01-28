@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0](https://github.com/@interchain-kit/mock-wallet/compare/@interchain-kit/mock-wallet@0.0.1-beta.64...@interchain-kit/mock-wallet@0.1.0) (2025-01-28)
+
+**Note:** Version bump only for package @interchain-kit/mock-wallet
+
 ## [0.0.1-beta.64](https://github.com/@interchain-kit/mock-wallet/compare/@interchain-kit/mock-wallet@0.0.1-beta.63...@interchain-kit/mock-wallet@0.0.1-beta.64) (2025-01-28)
 
 **Note:** Version bump only for package @interchain-kit/mock-wallet
