@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/hyperweb-io/interchain-kit/compare/interchain-kit@0.1.0...interchain-kit@0.2.0) (2025-01-28)
+
+**Note:** Version bump only for package interchain-kit
+
 # [0.1.0](https://github.com/hyperweb-io/interchain-kit/compare/interchain-kit@0.0.1-beta.64...interchain-kit@0.1.0) (2025-01-28)
 
 **Note:** Version bump only for package interchain-kit
