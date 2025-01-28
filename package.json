@@ -8,9 +8,6 @@
     "url": "https://github.com/hyperweb-io/interchain-kit"
   },
   "license": "SEE LICENSE IN LICENSE",
-  "publishConfig": {
-    "access": "restricted"
-  },
   "workspaces": [
     "packages/*",
     "wallets/*",
