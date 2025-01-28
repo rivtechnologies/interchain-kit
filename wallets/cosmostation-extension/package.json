@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/cosmostation-extension",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector",
   "main": "index.js",
