@@ -10,8 +10,7 @@
   "license": "SEE LICENSE IN LICENSE",
   "workspaces": [
     "packages/*",
-    "wallets/*",
-    "examples/*"
+    "wallets/*"
   ],
   "scripts": {
     "clean": "lerna run clean",
