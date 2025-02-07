@@ -10,7 +10,8 @@
   "license": "SEE LICENSE IN LICENSE",
   "workspaces": [
     "packages/*",
-    "wallets/*"
+    "wallets/*",
+    "examples/*"
   ],
   "scripts": {
     "clean": "lerna run clean",
@@ -18,7 +19,7 @@
     "lint": "lerna run lint --parallel",
     "symlink": "symlink-workspace --logLevel error",
     "postinstall": "yarn symlink",
-    "dev:watch": "node scripts/dev.js && npx lerna run watch:dev --parallel"
+    "dev:watch": "node scripts/dev.js && npx lerna run watch:dev --parallel --stream"
   },
   "devDependencies": {
     "@types/jest": "^29.5.11",
