@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/core",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector core package",
   "main": "index.js",
@@ -34,8 +34,8 @@
     "@chain-registry/v2": "^1.71.71",
     "@chain-registry/v2-keplr": "^0.0.72",
     "@chain-registry/v2-types": "^0.53.40",
-    "@interchainjs/cosmos": "1.6.3",
-    "@interchainjs/cosmos-types": "1.6.3",
+    "@interchainjs/cosmos": "1.9.3",
+    "@interchainjs/cosmos-types": "1.9.3",
     "@ledgerhq/hw-app-cosmos": "^6.30.4",
     "@ledgerhq/hw-transport": "^6.31.4",
     "@ledgerhq/hw-transport-webhid": "^6.30.0",
@@ -45,7 +45,7 @@
     "axios": "^1.7.9",
     "bowser": "^2.11.0",
     "buffer": "^6.0.3",
-    "interchainjs": "1.6.3",
+    "interchainjs": "1.9.3",
     "long": "^5.2.3"
   },
   "devDependencies": {
