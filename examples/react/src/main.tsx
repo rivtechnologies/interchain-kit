@@ -33,7 +33,7 @@ import {
 
 const chainNames = [
   // "osmosistestnet",
-  // "osmosis",
+  "osmosis",
   // "juno",
   // "cosmoshub",
   // "stargaze",
@@ -105,14 +105,14 @@ const _chains = [
   ...chains.filter((c) => chainNames.includes(c.chainName)),
   // createChainFromEthereumChainInfo(bscethertestnet),
   // createChainFromEthereumChainInfo(goerliethereumtestnet),
-  createChainFromEthereumChainInfo(sepoliaEthereumTestNet),
+  // createChainFromEthereumChainInfo(sepoliaEthereumTestNet),
 ];
 // const _chains = [starshipChain1]
 const _assetLists = [
   ...assetLists.filter((a) => chainNames.includes(a.chainName)),
   // createAssetListFromEthereumChainInfo(bscethertestnet),
   // createAssetListFromEthereumChainInfo(goerliethereumtestnet),
-  createAssetListFromEthereumChainInfo(sepoliaEthereumTestNet),
+  // createAssetListFromEthereumChainInfo(sepoliaEthereumTestNet),
 ];
 
 // const mock1Wallet = new MockWallet(wallet1Mnemonic, _chains, {
@@ -131,17 +131,18 @@ const _wallets: BaseWallet[] = [
   // mock2Wallet,
   keplrWallet,
   // trustExtension,
-  metaMaskExtension,
+  // metaMaskExtension,
   // leapWallet,
   // cosmostationWallet,
   // stationWallet,
   // galaxyStationWallet,
-  walletConnect,
+  // walletConnect,
   // ledgerWallet,
   // cosmosExtensionMetaMask,
   // walletConnect,
   // ledgerWallet,
   // leapCosmosExtensionMetaMask,
+  // coin98Wallet,
 ];
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

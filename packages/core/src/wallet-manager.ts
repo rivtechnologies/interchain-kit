@@ -1,7 +1,7 @@
 import { AminoGenericOfflineSigner, DirectGenericOfflineSigner } from '@interchainjs/cosmos/types/wallet';
 import { HttpEndpoint } from '@interchainjs/types';
 import { Chain, AssetList } from '@chain-registry/v2-types'
-import { BaseWallet } from './base-wallet'
+import { BaseWallet } from './wallets/base-wallet'
 import { ChainName, DeviceType, DownloadInfo, EndpointOptions, Endpoints, OS, SignerOptions, SignType } from './types'
 import { SigningOptions as InterchainSignerOptions } from '@interchainjs/cosmos/types/signing-client';
 import { SigningClient } from '@interchainjs/cosmos/signing-client'
@@ -37,6 +37,10 @@ export class WalletManager {
       this.signerOptionMap[chain.chainName] = signerOptions?.signing?.(chain.chainName)
       this.preferredSignTypeMap[chain.chainName] = signerOptions?.preferredSignType?.(chain.chainName)
       this.endpointOptionsMap[chain.chainName] = endpointOptions?.endpoints?.[chain.chainName]
+    })
+
+    this.wallets.forEach(wallet => {
+      wallet.setChainMap(this.chains)
     })
   }
 

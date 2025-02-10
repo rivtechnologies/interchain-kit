@@ -11,6 +11,7 @@ const Tr = ({
     chainName,
     walletName
   );
+  console.log({ chainName, walletName });
   return (
     <tr>
       <td>{walletName}</td>

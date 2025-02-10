@@ -6,7 +6,11 @@ import {
   MultiChainWallet,
   WCWallet,
 } from "@interchain-kit/core";
-import { useChainWallet, useWalletManager } from "@interchain-kit/react";
+import {
+  useChainWallet,
+  useWalletManager,
+  useWalletModal,
+} from "@interchain-kit/react";
 import { useRef, useState } from "react";
 import { makeKeplrChainInfo } from "../utils";
 import { Chain, Asset } from "@chain-registry/v2-types";
@@ -225,7 +229,6 @@ const AddressTd = ({ wallet, chain }: SendTokenProps) => {
     chain.chainName,
     wallet.info?.name as string
   );
-
   return (
     <td>
       <p>{address}</p>
