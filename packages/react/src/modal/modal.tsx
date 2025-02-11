@@ -47,16 +47,19 @@ export const WalletModal = () => {
   );
 
   const handleConnect = async () => {
+    try {
+      if (wallet.originalWallet instanceof WCWallet) {
+        wallet.originalWallet.setOnPairingUriCreatedCallback((uri) => {
+          setQRCode(uri);
+        });
+      }
 
-    if (wallet.originalWallet instanceof WCWallet) {
-      wallet.originalWallet.setOnPairingUriCreatedCallback((uri) => {
-        setQRCode(uri);
-      })
+      await connect(selectedWallet?.info?.name, chain.chainName);
+      await getAccount(selectedWallet?.info?.name, chain.chainName);
+      setSelectedWallet(null);
+    } catch (error) {
+      console.error("Failed to connect wallet:", error);
     }
-
-    await connect(selectedWallet?.info?.name, chain.chainName);
-    await getAccount(selectedWallet?.info?.name, chain.chainName);
-    setSelectedWallet(null);
   };
 
   useEffect(() => {
@@ -97,7 +100,7 @@ export const WalletModal = () => {
     status,
     modalIsOpen,
     selectedWallet,
-    qrCode
+    qrCode,
   ]);
 
   const goBackList = () => setModalType("wallet-list");
