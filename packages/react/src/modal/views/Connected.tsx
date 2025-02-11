@@ -30,7 +30,7 @@ export const ConnectedContent = ({
   afterDisconnect: () => void;
 }) => {
   const { currentChainName, currentWalletName } = useWalletManager();
-  console.log({ currentChainName, currentWalletName });
+
   const { address, username, wallet } = useChainWallet(
     currentChainName,
     currentWalletName
