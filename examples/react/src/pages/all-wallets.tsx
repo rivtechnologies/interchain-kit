@@ -152,7 +152,7 @@ const AddressTd = ({ wallet, chain }: SendTokenProps) => {
 };
 
 const ChainRow = ({ chain, wallet }: { chain: Chain; wallet: BaseWallet }) => {
-  const { address, rpcEndpoint, connect, disconnect } = useChainWallet(
+  const { address, rpcEndpoint, connect, disconnect, status } = useChainWallet(
     chain.chainName,
     wallet.info?.name as string
   );
@@ -164,6 +164,7 @@ const ChainRow = ({ chain, wallet }: { chain: Chain; wallet: BaseWallet }) => {
       </td>
       <td>{chain.chainName}</td>
       <td>{chain.chainId}</td>
+      <td>{status}</td>
       <RpcTd address={address} wallet={wallet} chain={chain}></RpcTd>
       <AddressTd address={address} wallet={wallet} chain={chain}></AddressTd>
       <BalanceTd
@@ -261,6 +262,7 @@ const E2ETest = () => {
                         <th>connect</th>
                         <th>name</th>
                         <th>chainId</th>
+                        <th>state</th>
                         <th>rpc</th>
                         <th>address</th>
                         <th>faucet</th>

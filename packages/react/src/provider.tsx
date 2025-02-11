@@ -46,7 +46,8 @@ export const ChainProvider = ({
   const store = useRef(createInterchainStore(walletManager));
 
   useEffect(() => {
-    walletManager.init();
+    // walletManager.init();
+    store.current.getState().init();
   }, []);
 
   return (

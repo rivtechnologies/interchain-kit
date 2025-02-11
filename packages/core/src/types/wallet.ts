@@ -121,6 +121,7 @@ export enum WalletState {
   Connecting = "Connecting",
   Connected = "Connected",
   Rejected = "Rejected",
+  NotExist = "NotExist",
 }
 
 export interface WalletEvents {

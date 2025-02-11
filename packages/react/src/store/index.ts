@@ -1,5 +1,5 @@
 import { AssetList, Chain } from "@chain-registry/v2-types"
-import { BaseWallet, EndpointOptions, Endpoints, SignerOptions, SignType, Wallet, WalletAccount, WalletManager, WalletState } from "@interchain-kit/core"
+import { BaseWallet, clientNotExistError, EndpointOptions, Endpoints, SignerOptions, SignType, Wallet, WalletAccount, WalletManager, WalletState } from "@interchain-kit/core"
 import { SigningOptions as InterchainSignerOptions } from '@interchainjs/cosmos/types/signing-client';
 import { HttpEndpoint } from '@interchainjs/types';
 import { createStore } from "zustand";
@@ -89,7 +89,27 @@ export const createInterchainStore = (walletManager: WalletManager) => {
       })
     },
 
-    init: () => walletManager.init(),
+    init: async () => {
+      const NotExistWallets: string[] = []
+      await Promise.all(get().wallets.map(async wallet => {
+        try {
+          await wallet.init()
+        } catch (error) {
+          if (error === clientNotExistError.message) {
+            NotExistWallets.push(wallet.info.name)
+          }
+        }
+      }))
+      set(draft => {
+        draft.chainWalletState = draft.chainWalletState.map(cws => {
+          if (NotExistWallets.includes(cws.walletName)) {
+            return { ...cws, walletState: WalletState.NotExist }
+          }
+          return cws
+        })
+      })
+      // return walletManager.init()
+    },
 
     setCurrentChainName: (chainName: string) => {
       set(draft => { draft.currentChainName = chainName })

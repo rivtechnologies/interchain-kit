@@ -40,6 +40,7 @@ export class ExtensionWallet extends BaseWallet {
       if (error === clientNotExistError.message) {
         this.isExtensionInstalled = false;
       }
+      throw error
     }
   }
 
