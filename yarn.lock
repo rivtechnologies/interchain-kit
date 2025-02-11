@@ -2079,6 +2079,13 @@
   resolved "https://registry.yarnpkg.com/@hutson/parse-repository-url/-/parse-repository-url-3.0.2.tgz#98c23c950a3d9b6c8f0daed06da6c3af06981340"
   integrity sha512-H9XAx3hc0BQHY6l+IFSWHDySypcXsvsuLhgYLUGywmJ5pswRVQJUHpOsobnLYp2ZUaUlKiKDrgWWhosOwAEM8Q==
 
+"@interchain-kit/coin98-extension@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@interchain-kit/coin98-extension/-/coin98-extension-0.1.0.tgz#bdd7c05490a96f3e4a69b6c2b863324ff7a2c67c"
+  integrity sha512-OSy0IaHIl+ZIpO3cPNbLIZMtXwsu3NbZs1ZtrD8OLj8wEILJKObNzb+azZM33FX8UnfOTZ/o/ENZEYiX04wiIQ==
+  dependencies:
+    "@interchain-kit/core" "^0.1.0"
+
 "@interchain-kit/core@0.0.1-beta.22":
   version "0.0.1-beta.22"
   resolved "https://registry.yarnpkg.com/@interchain-kit/core/-/core-0.0.1-beta.22.tgz#693078d26eac3bd7dffd58bbad83ad7e5e88f2c9"
@@ -2101,6 +2108,140 @@
     buffer "^6.0.3"
     interchainjs "0.0.1-beta.14"
     long "^5.2.3"
+
+"@interchain-kit/core@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@interchain-kit/core/-/core-0.1.0.tgz#261c4f8f7486fface390252c154ab5d2dbc8b7d0"
+  integrity sha512-f/l0a7a1fvNemNH4vUV8Hnsk98V5njPVVaTybf0Cy9/Uqa/rRr5/nXkFpozl6z6LrB+HQ80ABijoFgeTIjEeVw==
+  dependencies:
+    "@chain-registry/v2" "^1.71.71"
+    "@chain-registry/v2-keplr" "^0.0.72"
+    "@chain-registry/v2-types" "^0.53.40"
+    "@interchainjs/cosmos" "1.6.3"
+    "@interchainjs/cosmos-types" "1.6.3"
+    "@ledgerhq/hw-app-cosmos" "^6.30.4"
+    "@ledgerhq/hw-transport" "^6.31.4"
+    "@ledgerhq/hw-transport-webhid" "^6.30.0"
+    "@ledgerhq/hw-transport-webusb" "^6.29.4"
+    "@walletconnect/sign-client" "^2.17.3"
+    "@walletconnect/types" "^2.17.3"
+    axios "^1.7.9"
+    bowser "^2.11.0"
+    buffer "^6.0.3"
+    interchainjs "1.6.3"
+    long "^5.2.3"
+
+"@interchain-kit/cosmos-extension-metamask@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@interchain-kit/cosmos-extension-metamask/-/cosmos-extension-metamask-0.1.0.tgz#5dd24c4c0ed87ce4dcc5183759cdb8669e6eebaf"
+  integrity sha512-vycn5Z/0MWzjwv2H8orHS4kiTBWrP+yCbI05Zo3I2SEAfMbZxnYHdZg5GrXhcoPpyLWK04aC9/e565GsvgmnMQ==
+  dependencies:
+    "@chain-registry/v2-types" "^0.53.15"
+    "@interchain-kit/core" "^0.1.0"
+
+"@interchain-kit/keplr-extension@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@interchain-kit/keplr-extension/-/keplr-extension-0.1.0.tgz#5e0118c0af71af8d61adaadddbdb87210756ad7f"
+  integrity sha512-SJ7/h+R0UeklDoD/47DnIvisqIJJpgKqVsUCKvCaStkvWZiWkDqXQBErJA0wjA2xaKFm/OM9AAJbfH16rMTLEA==
+  dependencies:
+    "@interchain-kit/core" "^0.1.0"
+    "@keplr-wallet/provider-extension" "^0.12.102"
+
+"@interchain-kit/keplr-mobile@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@interchain-kit/keplr-mobile/-/keplr-mobile-0.1.0.tgz#d26db9ce463c0e787831383b4d1e2d58ceb6a66d"
+  integrity sha512-TGqNmngF31TB7gIGiBPME++9S3v7HwYxF4v5tpTHyRC/JrDKayb2TIRqitUPc4dRH8tPE3a94jWW/k8ESBmqyA==
+  dependencies:
+    "@interchain-kit/core" "^0.1.0"
+
+"@interchain-kit/leap-cosmos-extension-metamask@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@interchain-kit/leap-cosmos-extension-metamask/-/leap-cosmos-extension-metamask-0.1.0.tgz#b6427b97db428fb399ffb4aacdd8dcbf038cbaac"
+  integrity sha512-mjc+UCfMsFukwVabqAA39qxCBHhRnrRa1Bgil4ic0SmH82L2YELO9fR+3Hbi5s/r4QpEW07AIUlKTwqzF/D3kw==
+  dependencies:
+    "@interchain-kit/core" "^0.1.0"
+
+"@interchain-kit/leap-extension@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@interchain-kit/leap-extension/-/leap-extension-0.1.0.tgz#1e73a8e4245bf3e8433807da18a9d2e8260ad246"
+  integrity sha512-XlXvRhddZ0g2WSQfm25q5pUHqidwYyGlL9PVyAI7uAyQ/zzdPRaNLL5uuPJGsz3oh8x01/hMRWvKkgc28AfhHQ==
+  dependencies:
+    "@interchain-kit/core" "^0.1.0"
+
+"@interchain-kit/leap-mobile@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@interchain-kit/leap-mobile/-/leap-mobile-0.1.0.tgz#7d5d372804367879a43af6f6057b10be94d03634"
+  integrity sha512-xKndpVk4MC1eeeS+CUZR+WJ3Q1LJ3CYt2q/E2SrV/ihrHDBYHh0LCPcN3R4cECsZdVLDdCquOpLB7KorBfbb3g==
+  dependencies:
+    "@interchain-kit/core" "^0.1.0"
+
+"@interchain-kit/ledger@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@interchain-kit/ledger/-/ledger-0.1.0.tgz#c91612cbca59a9be4820efa20fb393bf4d63d341"
+  integrity sha512-S+QxQ8HR6V03dPgI3Lls5Qosy/3v5zvfDKoPLj6weqR4r1xlf3jO8YmOOFo+ux3OWEZynJiipaQAat7oU1J8fw==
+  dependencies:
+    "@chain-registry/v2" "^1.71.22"
+    "@chain-registry/v2-types" "^0.53.4"
+    "@interchain-kit/core" "^0.1.0"
+    "@ledgerhq/hw-transport" "^6.31.4"
+    "@ledgerhq/hw-transport-webhid" "^6.29.4"
+    "@zondax/ledger-cosmos-js" "^4.0.0"
+    buffer "^6.0.3"
+    crypto "npm:crypto-es"
+    crypto-browserify "^3.12.1"
+    crypto-es "^2.1.0"
+
+"@interchain-kit/mock-wallet@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@interchain-kit/mock-wallet/-/mock-wallet-0.1.0.tgz#4e8875eea2fd4d39fb99f223b176bc31cb995579"
+  integrity sha512-KTeT++eTXJTqxzbAcEGFUTerNSHzsncjykoLsltkWtZw1Vk7bGz4HRXDcChgrSdJAyFNm8jEVTErVv/dL1uMGQ==
+  dependencies:
+    "@interchain-kit/core" "^0.1.0"
+
+"@interchain-kit/okx-extension@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@interchain-kit/okx-extension/-/okx-extension-0.1.0.tgz#5d49237879508709f0b1c054336ebaeb122f6b6f"
+  integrity sha512-Qj8TwCZnreVRCySHEEkLxnvVtjwI05LoxYF+jQc3gltcOWNiECKKOiMt9Wsik9SQeIwMOzeRe2cFE1xqKJSVzA==
+
+"@interchain-kit/react@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@interchain-kit/react/-/react-0.1.0.tgz#f012abe6748f53cb457fe9865c86e8b9b696239f"
+  integrity sha512-ni5ifpQxeqN8h0MKn6N/8Y4WrR7HqfS+2dQpR1Bvt8OTkvUQoseiwsogYfX8ZuB/a9wGwmRR26h9tH18iWjvUA==
+  dependencies:
+    "@chain-registry/v2-types" "^0.53.40"
+    "@interchain-kit/core" "^0.1.0"
+    "@interchain-ui/react" "1.26.1"
+    "@interchainjs/cosmos" "1.6.3"
+    "@interchainjs/cosmos-types" "1.6.3"
+    "@react-icons/all-files" "^4.1.0"
+    "@types/react" "^18.3.3"
+    "@types/react-dom" "^18.3.0"
+    "@walletconnect/types" "^2.17.3"
+    interchainjs "1.6.3"
+    react "^18.3.1"
+    react-dom "^18.3.1"
+    zustand "^5.0.3"
+
+"@interchain-kit/vue@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@interchain-kit/vue/-/vue-0.1.0.tgz#6adb6eda8b711bf6d45ddabf9b67688fb348cf00"
+  integrity sha512-4QaDXA00zKULNtWzucNS685OM5J30tex1q/VyMBHYDmfrXWYcAR54ayfcomnJxNgC9TfafXSwq6tzF8cKczeDQ==
+  dependencies:
+    "@chain-registry/v2-types" "^0.53.0"
+    "@interchain-kit/core" "^0.1.0"
+    "@interchain-ui/vue" "^1.4.1"
+    "@interchainjs/cosmos" "0.0.1-beta.34"
+    "@interchainjs/cosmos-types" "0.0.1-beta.17"
+    "@types/node" "^22.7.5"
+    "@vue/compiler-sfc" "^3.5.12"
+    interchainjs "0.0.1-beta.27"
+
+"@interchain-kit/xdefi-extension@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@interchain-kit/xdefi-extension/-/xdefi-extension-0.1.0.tgz#d8e958b6ca029659ec0a7bf3a8c27997566efc4a"
+  integrity sha512-6fVTYvASnTZxS6i3qs4jCCkSRCRMsqRaBY9MJ4/KxFJ88MXwUsqNWnuZVbVTTI01YHbxhBrq/slJN1kjIhO0HA==
+  dependencies:
+    "@interchain-kit/core" "^0.1.0"
 
 "@interchain-ui/react@1.26.1", "@interchain-ui/react@^1.23.31":
   version "1.26.1"
@@ -2191,6 +2332,18 @@
     "@noble/hashes" "^1.3.1"
     ethers "^6.5.1"
 
+"@interchainjs/auth@^1.8.3":
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/@interchainjs/auth/-/auth-1.8.3.tgz#89c2a0f7b2fa1aca4ade4a7457be3d996831874d"
+  integrity sha512-Q0VGdmIAQ+e2/Oh39XzEbtCZ184yNAT5rZpNhYm51Yr+X/htgyZ9dotqLVH16Fa2Zgct8qQVS1+8A/mxJUkQaQ==
+  dependencies:
+    "@interchainjs/types" "^1.8.3"
+    "@interchainjs/utils" "^1.8.3"
+    "@noble/curves" "^1.1.0"
+    "@noble/hashes" "^1.3.1"
+    "@scure/bip32" "^1.0.10"
+    ethers "^6.5.1"
+
 "@interchainjs/cosmos-types@0.0.1-alpha.31":
   version "0.0.1-alpha.31"
   resolved "https://registry.yarnpkg.com/@interchainjs/cosmos-types/-/cosmos-types-0.0.1-alpha.31.tgz#9632988dc311c66e13b89c8f78c0f6fda23a2940"
@@ -2230,6 +2383,14 @@
   dependencies:
     "@interchainjs/types" "1.6.3"
     "@interchainjs/utils" "1.6.3"
+
+"@interchainjs/cosmos-types@1.9.3", "@interchainjs/cosmos-types@^1.9.3":
+  version "1.9.3"
+  resolved "https://registry.yarnpkg.com/@interchainjs/cosmos-types/-/cosmos-types-1.9.3.tgz#d05876de25dc41da2cf0c2555e4aae49f66641d7"
+  integrity sha512-PbrrIgG97FfypJAkh8wvDquaKEVI9KXtGvB/7FwbKPzt/ru1ZJcsHSg3BvljF0sRCsc0Uqc+DsG361BBwdCMrg==
+  dependencies:
+    "@interchainjs/types" "^1.8.3"
+    "@interchainjs/utils" "^1.8.3"
 
 "@interchainjs/cosmos@0.0.1-alpha.31":
   version "0.0.1-alpha.31"
@@ -2272,6 +2433,21 @@
     "@interchainjs/cosmos-types" "1.6.3"
     "@interchainjs/types" "1.6.3"
     "@interchainjs/utils" "1.6.3"
+    "@noble/curves" "^1.1.0"
+    "@noble/hashes" "^1.3.1"
+    decimal.js "^10.4.3"
+
+"@interchainjs/cosmos@1.9.3", "@interchainjs/cosmos@^1.9.3":
+  version "1.9.3"
+  resolved "https://registry.yarnpkg.com/@interchainjs/cosmos/-/cosmos-1.9.3.tgz#8fc2fa7bef23664d3a130f67a845481d281d5fbf"
+  integrity sha512-AijqPOm7jTO1QaYjbSzKmLXLyBItOkz+V6DJgNY1McEA00MDKhslN1GckWhehfdY5bTgdSU9AcgxUdrYphzgVA==
+  dependencies:
+    "@chain-registry/v2" "^1.65.6"
+    "@chain-registry/v2-types" "^0.49.6"
+    "@interchainjs/auth" "^1.8.3"
+    "@interchainjs/cosmos-types" "^1.9.3"
+    "@interchainjs/types" "^1.8.3"
+    "@interchainjs/utils" "^1.8.3"
     "@noble/curves" "^1.1.0"
     "@noble/hashes" "^1.3.1"
     decimal.js "^10.4.3"
@@ -2339,6 +2515,13 @@
   dependencies:
     decimal.js "^10.4.3"
 
+"@interchainjs/types@^1.8.3":
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/@interchainjs/types/-/types-1.8.3.tgz#8de0b5464063bd6a0550574790dc09208bfc4496"
+  integrity sha512-6BtHu74xuz+r/WkX6WZ6OK3EZW82vRDQovG16wtVLHD2Ig0GUKTLmmHpsDXNddT/3t8sA2OkWKI8JOUXwRcxCQ==
+  dependencies:
+    decimal.js "^10.4.3"
+
 "@interchainjs/utils@0.0.1-alpha.31":
   version "0.0.1-alpha.31"
   resolved "https://registry.yarnpkg.com/@interchainjs/utils/-/utils-0.0.1-alpha.31.tgz#5972f3cfa4d7da62eca6a0141ea0a90e6b2f56fc"
@@ -2362,6 +2545,15 @@
   dependencies:
     "@interchainjs/types" "1.6.3"
     bech32 "^2.0.0"
+
+"@interchainjs/utils@^1.8.3":
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/@interchainjs/utils/-/utils-1.8.3.tgz#e5d7b80957b0c4dfdd2a8907e1b40ef6ed3e338a"
+  integrity sha512-kuI+cJB623mMlMKYUr3qtKklSdE/8L6XszT4kezAPRnR+1o7FV/0fW951VmF8HtQsVhrY3WvFGg8aNM8FrEpZA==
+  dependencies:
+    "@interchainjs/types" "^1.8.3"
+    bech32 "^2.0.0"
+    decimal.js "^10.4.3"
 
 "@internationalized/date@3.5.5":
   version "3.5.5"
@@ -3076,6 +3268,13 @@
   dependencies:
     "@noble/hashes" "1.7.0"
 
+"@noble/curves@~1.8.1":
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/@noble/curves/-/curves-1.8.1.tgz#19bc3970e205c99e4bdb1c64a4785706bce497ff"
+  integrity sha512-warwspo+UYUPep0Q+vtdVB4Ugn8GGQj8iyB3gnRWsztmUHTI3S1nhdiWNsPUGL0vud7JlRRk1XEu7Lq1KGTnMQ==
+  dependencies:
+    "@noble/hashes" "1.7.1"
+
 "@noble/hashes@1.3.2":
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-1.3.2.tgz#6f26dbc8fbc7205873ce3cee2f690eba0d421b39"
@@ -3085,6 +3284,11 @@
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-1.7.0.tgz#5d9e33af2c7d04fee35de1519b80c958b2e35e39"
   integrity sha512-HXydb0DgzTpDPwbVeDGCG1gIu7X6+AuU6Zl6av/E/KG8LMsvPntvq+w17CHRpKBmN6Ybdrt1eP3k4cj8DJa78w==
+
+"@noble/hashes@1.7.1", "@noble/hashes@~1.7.1":
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-1.7.1.tgz#5738f6d765710921e7a751e00c20ae091ed8db0f"
+  integrity sha512-B8XBPsn4vT/KJAGqDzbwztd+6Yte3P4V7iafm24bxgDe/mlRuK6xmWPuCNrKt2vDafZ8MfJLlchDG/vYafQEjQ==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -4894,6 +5098,20 @@
     "@types/argparse" "1.0.38"
     argparse "~1.0.9"
     string-argv "~0.3.1"
+
+"@scure/base@~1.2.2":
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/@scure/base/-/base-1.2.4.tgz#002eb571a35d69bdb4c214d0995dff76a8dcd2a9"
+  integrity sha512-5Yy9czTO47mqz+/J8GM6GIId4umdCk1wc1q8rKERQulIoc8VP9pzDcghv10Tl2E7R96ZUx/PhND3ESYUQX8NuQ==
+
+"@scure/bip32@^1.0.10":
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/@scure/bip32/-/bip32-1.6.2.tgz#093caa94961619927659ed0e711a6e4bf35bffd0"
+  integrity sha512-t96EPDMbtGgtb7onKKqxRLfE5g05k7uHnHRM2xdE6BP/ZmxaLtPek4J4KfVn/90IQNrU1IOAqMgiDtUdtbe3nw==
+  dependencies:
+    "@noble/curves" "~1.8.1"
+    "@noble/hashes" "~1.7.1"
+    "@scure/base" "~1.2.2"
 
 "@sigstore/bundle@^1.1.0":
   version "1.1.0"
@@ -10074,6 +10292,18 @@ interchainjs@1.6.3:
     "@interchainjs/cosmos-types" "1.6.3"
     "@interchainjs/types" "1.6.3"
     "@interchainjs/utils" "1.6.3"
+    "@noble/hashes" "^1.3.1"
+    decimal.js "^10.4.3"
+
+interchainjs@1.9.3:
+  version "1.9.3"
+  resolved "https://registry.yarnpkg.com/interchainjs/-/interchainjs-1.9.3.tgz#865649e551938911ccca98d89ea18aa2ab637135"
+  integrity sha512-uoMGXtokqdpQivKCzLejlGERdGxR3IP3VJMpNB7rKc/VyBSN3aSFUyYjYsKw/MuZQsjizEuo8SPMLrZmRnuMOw==
+  dependencies:
+    "@interchainjs/cosmos" "^1.9.3"
+    "@interchainjs/cosmos-types" "^1.9.3"
+    "@interchainjs/types" "^1.8.3"
+    "@interchainjs/utils" "^1.8.3"
     "@noble/hashes" "^1.3.1"
     decimal.js "^10.4.3"
 

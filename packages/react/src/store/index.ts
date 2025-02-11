@@ -1,6 +1,6 @@
 import { AssetList, Chain } from "@chain-registry/v2-types"
 import { BaseWallet, EndpointOptions, Endpoints, SignerOptions, SignType, Wallet, WalletAccount, WalletManager, WalletState } from "@interchain-kit/core"
-import { SignerOptions as InterchainSignerOptions } from '@interchainjs/cosmos/types/signing-client';
+import { SigningOptions as InterchainSignerOptions } from '@interchainjs/cosmos/types/signing-client';
 import { HttpEndpoint } from '@interchainjs/types';
 import { createStore } from "zustand";
 import { immer } from "zustand/middleware/immer";
