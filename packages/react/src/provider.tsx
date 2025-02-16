@@ -8,10 +8,8 @@ import {
 } from "@interchain-kit/core";
 import { AssetList, Chain } from "@chain-registry/v2-types";
 import { WalletModalProvider } from "./modal";
-import { createInterchainStore, InterchainStore } from "./store";
-import { StoreApi } from "zustand";
 
-type InterchainWalletContextType = StoreApi<InterchainStore>;
+type InterchainWalletContextType = WalletManager;
 
 type InterchainWalletProviderProps = {
   chains: Chain[];
@@ -43,15 +41,12 @@ export const ChainProvider = ({
     endpointOptions
   );
 
-  const store = useRef(createInterchainStore(walletManager));
-
   useEffect(() => {
-    // walletManager.init();
-    store.current.getState().init();
+    walletManager.init();
   }, []);
 
   return (
-    <InterchainWalletContext.Provider value={store.current}>
+    <InterchainWalletContext.Provider value={walletManager}>
       <WalletModalProvider>{children}</WalletModalProvider>
     </InterchainWalletContext.Provider>
   );
