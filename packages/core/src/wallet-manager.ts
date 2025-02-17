@@ -63,6 +63,16 @@ export class WalletManager {
       this.store.getState().update(draft => {
         draft.chainWalletState = chainWalletState
       })
+    } else {
+      this.store.getState().update(draft => {
+        draft.chainWalletState = draft.chainWalletState.map(cws => {
+          const updated: Partial<ChainWalletState> = {
+            signerOption: this.signerOptions?.signing?.(cws.chainName),
+            preferredSignType: this.signerOptions.preferredSignType?.(cws.chainName),
+          }
+          return { ...cws, ...updated }
+        })
+      })
     }
   }
 
