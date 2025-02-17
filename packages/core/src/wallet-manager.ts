@@ -278,7 +278,7 @@ export class WalletManager {
   }
 
   getPreferSignType(chainName: string) {
-    return this.store.getState().chainWalletState.find(cws => cws.chainName === chainName)?.preferredSignType || 'amino'
+    return this.store.getState().chainWalletState.find(cws => cws.chainName === chainName)?.preferredSignType || 'direct'
   }
 
   getSignerOptions(chainName: string): InterchainSignerOptions {
