@@ -2,9 +2,9 @@
 import { SigningOptions as InterchainSignerOptions } from '@interchainjs/cosmos/types/signing-client';
 import { HttpEndpoint } from '@interchainjs/types';
 import { createStore } from "zustand"
-import { EndpointOptions, SignerOptions, SignType, WalletAccount, WalletState } from "./types"
+import { EndpointOptions, WalletAccount, WalletState } from "./types"
 import { immer } from "zustand/middleware/immer";
-import { persist, createJSONStorage } from 'zustand/middleware'
+import { persist } from 'zustand/middleware'
 import { AssetList, Chain } from '@chain-registry/v2-types';
 import { BaseWallet } from './base-wallet';
 import { WritableDraft } from 'immer';
@@ -15,9 +15,7 @@ export type ChainWalletState = {
   walletState: WalletState,
   rpcEndpoint: string | HttpEndpoint
   errorMessage: string
-  signerOption: InterchainSignerOptions
   account: WalletAccount
-  preferredSignType?: SignType
 }
 
 export type InterchainStore = {
@@ -51,7 +49,7 @@ export const createInterchainStore = () => {
     ]
   >(
     persist(
-      immer((set, get) => ({
+      immer<InterchainStore>((set, get) => ({
         chains: [],
         assetLists: [],
         wallets: [],

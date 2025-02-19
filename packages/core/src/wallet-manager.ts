@@ -37,43 +37,37 @@ export class WalletManager {
     this.signerOptions = signerOptions
     this.endpointOptions = endpointOptions
 
-    const chainWalletState: ChainWalletState[] = []
+    this.chains.forEach(chain => {
+      this.preferredSignTypeMap[chain.chainName] = signerOptions?.preferredSignType?.(chain.chainName)
+      this.signerOptionMap[chain.chainName] = signerOptions?.signing?.(chain.chainName)
+    })
+
+    const existedChainWalletStateMap = new Map(this.store.getState().chainWalletState.map(cws => [cws.chainName + cws.walletName, cws]))
+
+    const newChainWalletStates: ChainWalletState[] = []
+
     wallets.forEach(wallet => {
       chains.forEach(chain => {
-        chainWalletState.push({
-          chainName: chain.chainName,
-          walletName: wallet.info.name,
-          walletState: WalletState.Disconnected,
-          rpcEndpoint: "",
-          errorMessage: "",
-          signerOption: this.signerOptions?.signing?.(chain.chainName),
-          preferredSignType: this.signerOptions.preferredSignType?.(chain.chainName),
-          account: undefined
-        })
+        if (!existedChainWalletStateMap.has(chain.chainName + wallet.info.name)) {
+          newChainWalletStates.push({
+            chainName: chain.chainName,
+            walletName: wallet.info.name,
+            walletState: WalletState.Disconnected,
+            rpcEndpoint: "",
+            errorMessage: "",
+            account: undefined
+          })
+        }
       })
     })
+
     this.store.getState().update(draft => {
       draft.chains = chains
       draft.assetLists = assetLists
       draft.wallets = wallets
+
+      draft.chainWalletState = [...draft.chainWalletState, ...newChainWalletStates]
     })
-
-
-    if (this.store.getState().chainWalletState.length === 0) {
-      this.store.getState().update(draft => {
-        draft.chainWalletState = chainWalletState
-      })
-    } else {
-      this.store.getState().update(draft => {
-        draft.chainWalletState = draft.chainWalletState.map(cws => {
-          const updated: Partial<ChainWalletState> = {
-            signerOption: this.signerOptions?.signing?.(cws.chainName),
-            preferredSignType: this.signerOptions.preferredSignType?.(cws.chainName),
-          }
-          return { ...cws, ...updated }
-        })
-      })
-    }
   }
 
   async init() {
@@ -129,8 +123,6 @@ export class WalletManager {
               walletState: WalletState.Disconnected,
               rpcEndpoint: endpointOptions?.endpoints[newChain.chainName]?.rpc?.[0] || newChain.apis.rpc[0].address,
               errorMessage: "",
-              signerOption: signerOptions?.signing?.(newChain.chainName),
-              preferredSignType: signerOptions?.preferredSignType?.(newChain.chainName),
               account: undefined
             }
 
@@ -144,10 +136,11 @@ export class WalletManager {
         })
 
         this.store.getState().updateChainWalletStateByChainName(newChain.chainName, {
-          signerOption: signerOptions?.signing?.(newChain.chainName),
-          preferredSignType: signerOptions?.preferredSignType?.(newChain.chainName),
           rpcEndpoint: endpointOptions?.endpoints[newChain.chainName]?.rpc?.[0]
         })
+
+        this.preferredSignTypeMap[newChain.chainName] = signerOptions?.preferredSignType?.(newChain.chainName)
+        this.signerOptionMap[newChain.chainName] = signerOptions?.signing(newChain.chainName)
       }
     })
   }
@@ -288,12 +281,11 @@ export class WalletManager {
   }
 
   getPreferSignType(chainName: string) {
-    return this.store.getState().chainWalletState.find(cws => cws.chainName === chainName)?.preferredSignType || 'direct'
+    return this.preferredSignTypeMap[chainName] || 'direct'
   }
 
   getSignerOptions(chainName: string): InterchainSignerOptions {
-    const signerOptions = this.store.getState().chainWalletState.find(cws => cws.chainName === chainName)?.signerOption
-
+    const signerOptions = this.signerOptionMap[chainName]
     const options: InterchainSignerOptions = {
       broadcast: {
         checkTx: true,

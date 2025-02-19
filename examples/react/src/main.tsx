@@ -27,11 +27,11 @@ import { ThemeProvider } from "@interchain-ui/react";
 
 const chainNames = [
   "osmosistestnet",
-  "osmosis",
+  // "osmosis",
   "juno",
-  "cosmoshub",
-  "stargaze",
-  "noble",
+  // "cosmoshub",
+  // "stargaze",
+  // "noble",
 ];
 // const chainNames = ["osmosistestnet"];
 // const chainNames = ["cosmoshub"];
@@ -95,7 +95,22 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         chains={_chains}
         wallets={_wallets}
         assetLists={_assetLists}
-        signerOptions={{}}
+        signerOptions={{
+          signing: (chainName) => {
+            return {
+              broadcast: {
+                checkTx: chainName === "osmosistestnet",
+                deliverTx: chainName === "osmosistestnet",
+                timeoutMs: chainName === "osmosistestnet" ? 20000 : 10000,
+              },
+              gasPrice:
+                chainName === "osmosistestnet" ? "0.025uosmo" : "0.025uatom",
+            };
+          },
+          preferredSignType: (chainName) => {
+            return chainName === "osmosistestnet" ? "direct" : "amino";
+          },
+        }}
         endpointOptions={{
           endpoints: {
             // 'osmosis': {
