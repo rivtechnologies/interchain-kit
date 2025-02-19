@@ -35,5 +35,5 @@
     "@chain-registry/v2-types": "^0.53.15",
     "@interchain-kit/core": "0.2.204"
   },
-  "gitHead": "60f30aa20fa8d8e0167ebe67ce195dda02dcb3ff"
+  "gitHead": "256ae367a0ff176254eac9e8695f64099ba7b1a1"
 }
