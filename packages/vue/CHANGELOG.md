@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.205](https://github.com/interchain-kit/vue/compare/@interchain-kit/vue@0.2.204...@interchain-kit/vue@0.2.205) (2025-02-20)
+
+**Note:** Version bump only for package @interchain-kit/vue
+
 ## [0.2.204](https://github.com/interchain-kit/vue/compare/@interchain-kit/vue@0.2.203...@interchain-kit/vue@0.2.204) (2025-02-19)
 
 **Note:** Version bump only for package @interchain-kit/vue
