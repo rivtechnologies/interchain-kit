@@ -25,7 +25,6 @@ type ChainWalletState = {
   walletState: WalletState,
   rpcEndpoint: string | HttpEndpoint
   errorMessage: string
-  signerOption: InterchainSignerOptions
   account: WalletAccount
 }
 
@@ -53,23 +52,9 @@ export const createInterchainStore = (walletManager: WalletManager) => {
   const { chains, assetLists, wallets, signerOptions, endpointOptions } = walletManager
   // const walletManager = new WalletManager(chains, assetLists, wallets, signerOptions, endpointOptions)
 
-  const chainWalletState: ChainWalletState[] = []
-  wallets.forEach(wallet => {
-    chains.forEach(chain => {
-      chainWalletState.push({
-        chainName: chain.chainName,
-        walletName: wallet.info.name,
-        walletState: WalletState.Disconnected,
-        rpcEndpoint: "",
-        errorMessage: "",
-        signerOption: undefined,
-        account: undefined
-      })
-    })
-  })
 
   return createStore(persist(immer<InterchainStore>((set, get) => ({
-    chainWalletState,
+    chainWalletState: [],
     currentWalletName: '',
     currentChainName: '',
     chains: [...walletManager.chains],
@@ -90,6 +75,24 @@ export const createInterchainStore = (walletManager: WalletManager) => {
     },
 
     init: async () => {
+      const existedChainWalletStatesMap = new Map(get().chainWalletState.map(cws => [cws.walletName + cws.chainName, cws]))
+      wallets.forEach(wallet => {
+        chains.forEach(chain => {
+          if (!existedChainWalletStatesMap.has(wallet.info.name + chain.chainName)) {
+            set(draft => {
+              draft.chainWalletState.push({
+                chainName: chain.chainName,
+                walletName: wallet.info.name,
+                walletState: WalletState.Disconnected,
+                rpcEndpoint: "",
+                errorMessage: "",
+                account: undefined
+              })
+            })
+          }
+        })
+      })
+
       const NotExistWallets: string[] = []
       await Promise.all(get().wallets.map(async wallet => {
         try {
@@ -150,7 +153,6 @@ export const createInterchainStore = (walletManager: WalletManager) => {
                 walletState: WalletState.Disconnected,
                 rpcEndpoint: "",
                 errorMessage: "",
-                signerOption: signerOptions?.signing?.(newChain.chainName),
                 account: undefined
               })
             })

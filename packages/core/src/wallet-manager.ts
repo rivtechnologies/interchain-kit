@@ -35,6 +35,8 @@ export class WalletManager {
 
     this.chains.forEach(chain => {
       this.signerOptionMap[chain.chainName] = signerOptions?.signing?.(chain.chainName)
+      this.preferredSignTypeMap[chain.chainName] = signerOptions?.preferredSignType?.(chain.chainName)
+      this.endpointOptionsMap[chain.chainName] = endpointOptions?.endpoints?.[chain.chainName]
     })
   }
 
