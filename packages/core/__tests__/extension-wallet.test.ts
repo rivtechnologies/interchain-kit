@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import { BroadcastMode, SignOptions, Wallet } from '../src/types';
 import { StdSignDoc } from '@interchainjs/types';
 import { clientNotExistError, getClientFromExtension } from '../src/utils';
@@ -59,7 +63,7 @@ describe('ExtensionWallet', () => {
 
   it('should handle client not existing during initialization', async () => {
     (getClientFromExtension as jest.Mock).mockRejectedValue(clientNotExistError.message);
-    await wallet.init();
+    await expect(wallet.init).rejects.toThrow(clientNotExistError.message);
     expect(wallet.isExtensionInstalled).toBe(false);
   });
 

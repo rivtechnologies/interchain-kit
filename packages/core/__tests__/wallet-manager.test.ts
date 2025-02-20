@@ -190,12 +190,12 @@ describe('WalletManager', () => {
     expect(signType1).toBe('amino');
 
     const signType2 = walletManager.getPreferSignType(chain2.chainName);
-    expect(signType2).toBe('amino');
+    expect(signType2).toBe('direct');
   });
 
   it('should get signer options', () => {
     const options = walletManager.getSignerOptions(chain1.chainName);
-    expect(options.prefix).toBe(signerOptions.signing?.(chain1.chainName as string)?.prefix);
+    expect(options.signerOptions?.prefix).toBe(signerOptions.signing?.(chain1.chainName as string)?.signerOptions?.prefix);
   });
 
   it('should get offline signer', async () => {

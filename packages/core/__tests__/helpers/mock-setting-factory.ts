@@ -1,11 +1,15 @@
-export const createSignerOption = (chainName: string) => {
+import { SigningOptions as InterchainSignerOptions } from '@interchainjs/cosmos/types/signing-client';
+
+export const createSignerOption = (chainName: string): InterchainSignerOptions => {
   return {
-    prefix: `${chainName}cosmos`,
-    amino: {
-      signMode: 'SIGN_MODE_LEGACY_AMINO_JSON',
-      prefix: 'cosmos',
-      accountNumber: '0',
-      sequence: '0'
+    broadcast: {
+      checkTx: true,
+      deliverTx: true,
+      timeoutMs: 20000
+    },
+    gasPrice: '0.025uatom',
+    signerOptions: {
+      prefix: chainName,
     }
   }
 }
