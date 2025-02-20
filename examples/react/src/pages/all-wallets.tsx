@@ -152,7 +152,7 @@ const AddressTd = ({ wallet, chain }: SendTokenProps) => {
 };
 
 const ChainRow = ({ chain, wallet }: { chain: Chain; wallet: BaseWallet }) => {
-  const { address, connect, disconnect, status } = useChainWallet(
+  const { address, rpcEndpoint, connect, disconnect, status } = useChainWallet(
     chain.chainName,
     wallet.info?.name as string
   );

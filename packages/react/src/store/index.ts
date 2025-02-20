@@ -69,7 +69,6 @@ export const createInterchainStore = (walletManager: WalletManager) => {
   })
 
   return createStore(persist(immer<InterchainStore>((set, get) => ({
-    store: walletManager.store,
     chainWalletState,
     currentWalletName: '',
     currentChainName: '',
