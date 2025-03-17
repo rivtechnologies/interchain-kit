@@ -1,8 +1,7 @@
-import { IGeneralOfflineSigner, StdSignDoc } from '@interchainjs/types';
-import { AminoGeneralOfflineSigner, AminoSignResponse, DirectGeneralOfflineSigner, DirectSignResponse, StdSignature } from "@interchainjs/cosmos/types/wallet";
+import { BroadcastMode, IGenericOfflineSigner, StdSignDoc } from '@interchainjs/types';
+import { AminoGenericOfflineSigner, AminoSignResponse, DirectGenericOfflineSigner, DirectSignResponse, StdSignature } from "@interchainjs/cosmos/types/wallet";
 import { BaseWallet } from "./base-wallet";
 import { DirectSignDoc, SignOptions, SignType, WalletAccount } from '../types';
-import { BroadcastMode } from '@interchainjs/cosmos/types';
 import { getClientFromExtension } from '../utils';
 import { chainRegistryChainToKeplr } from '@chain-registry/v2-keplr';
 
@@ -16,20 +15,17 @@ export class CosmosWallet extends BaseWallet {
       throw error
     }
   }
-  async connect(chainId: string | string[]): Promise<void> {
-    const chainIds = Array.isArray(chainId) ? chainId : [chainId]
-    await Promise.all(chainIds.map(async (chainId) => {
-      try {
-        await this.client.enable(chainId)
-      } catch (error) {
-        if ((error as any).message === `There is no chain info for ${chainId}`) {
-          await this.addSuggestChain(chainId)
-        }
-        throw error
+  async connect(chainId: string): Promise<void> {
+    try {
+      await this.client.enable(chainId)
+    } catch (error) {
+      if ((error as any).message !== `Request rejected`) {
+        await this.addSuggestChain(chainId)
       }
-    }))
+      throw error
+    }
   }
-  async disconnect(chainId: string | string[]): Promise<void> {
+  async disconnect(chainId: string): Promise<void> {
     await this.client.disable(chainId)
   }
   async getAccount(chainId: string): Promise<WalletAccount> {
@@ -44,19 +40,19 @@ export class CosmosWallet extends BaseWallet {
   }
   async getOfflineSigner(chainId: string, preferredSignType?: SignType) {
     if (preferredSignType === 'amino') {
-      return new AminoGeneralOfflineSigner({
+      return new AminoGenericOfflineSigner({
         getAccounts: async () => [await this.getAccount(chainId)],
         signAmino: async (signer, signDoc) => {
           return this.client.signAmino(chainId, signer, signDoc)
         }
-      }) as IGeneralOfflineSigner
+      }) as IGenericOfflineSigner
     } else {
-      return new DirectGeneralOfflineSigner({
+      return new DirectGenericOfflineSigner({
         getAccounts: async () => [await this.getAccount(chainId)],
         signDirect: async (signer, signDoc) => {
           return this.client.signDirect(chainId, signer, signDoc)
         }
-      }) as IGeneralOfflineSigner
+      }) as IGenericOfflineSigner
     }
   }
   async signAmino(chainId: string, signer: string, signDoc: StdSignDoc, signOptions?: SignOptions): Promise<AminoSignResponse> {
@@ -78,5 +74,8 @@ export class CosmosWallet extends BaseWallet {
     const chain = this.chainMap.get(chainId)
     const chainInfo = chainRegistryChainToKeplr(chain, this.assetLists)
     return this.client.experimentalSuggestChain(chainInfo);
+  }
+  async getProvider() {
+    return this.client
   }
 }

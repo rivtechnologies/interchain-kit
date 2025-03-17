@@ -32,8 +32,8 @@ import {
 } from "./utils/eth-test-net.ts";
 
 const chainNames = [
-  // "osmosistestnet",
-  "osmosis",
+  "osmosistestnet",
+  // "osmosis",
   // "juno",
   // "cosmoshub",
   // "stargaze",
@@ -129,20 +129,21 @@ const _assetLists = [
 const _wallets: BaseWallet[] = [
   // mock1Wallet,
   // mock2Wallet,
-  keplrWallet,
+  // keplrWallet,
   // trustExtension,
   // metaMaskExtension,
-  // leapWallet,
+  leapWallet,
   // cosmostationWallet,
   // stationWallet,
   // galaxyStationWallet,
   // walletConnect,
   // ledgerWallet,
   // cosmosExtensionMetaMask,
-  // walletConnect,
+  walletConnect,
   // ledgerWallet,
   // leapCosmosExtensionMetaMask,
   // coin98Wallet,
+  // okxWallet,
 ];
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

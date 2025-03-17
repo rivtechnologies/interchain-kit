@@ -44,30 +44,37 @@ const BalanceTd = ({ address, wallet, chain }: BalanceProps) => {
     setIsLoading(true);
 
     if (isInstanceOf(wallet, WCWallet)) {
-      const provider = wallet.getProvider();
-      const ethersProvider = new ethers.JsonRpcProvider(
-        "https://rpc.sepolia.org"
-      );
-      console.log({ ethersProvider, provider, address });
-      const result = await ethersProvider.getBalance(address, "latest");
-      console.log(result);
-      const balanceInWei = result;
-      balance = { balance: { amount: balanceInWei.toString() } };
+      if (chain.chainType === "eip155") {
+        // await wallet.personalSign("test", address);
+
+        const provider = wallet.getProvider();
+        const ethersProvider = new ethers.BrowserProvider(provider);
+        const result = await ethersProvider.getBalance(address, "latest");
+        const balanceInWei = result;
+        balance = { balance: { amount: balanceInWei.toString() } };
+      }
+      if (chain.chainType === "cosmos") {
+        const balanceQuery = createGetBalance(rpcEndpoint as string);
+        balance = await balanceQuery({
+          address,
+          denom: chain.staking?.stakingTokens[0].denom as string,
+        });
+      }
     }
 
     if (isInstanceOf(wallet, EthereumWallet)) {
-      const result = await wallet.getBalance(chain.chainId as string);
-      const balanceInWei = parseInt(result, 16);
-      balance = { balance: { amount: balanceInWei.toString() } };
+      const provider = new ethers.BrowserProvider(wallet.getProvider());
+      const result = await provider.getBalance(address);
+      balance = { balance: { amount: result.toString() } };
     }
 
     if (isInstanceOf(wallet, MultiChainWallet)) {
       if (chain.chainType === "eip155") {
         const ethWallet = wallet.getWalletByChainType("eip155");
         if (isInstanceOf(ethWallet, EthereumWallet)) {
-          const result = await ethWallet.getBalance(chain.chainId as string);
-          const balanceInWei = parseInt(result, 16);
-          balance = { balance: { amount: balanceInWei.toString() } };
+          const provider = new ethers.BrowserProvider(ethWallet.getProvider());
+          const result = await provider.getBalance(address);
+          balance = { balance: { amount: result.toString() } };
         }
       }
 
@@ -122,23 +129,68 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
       from: address,
       to: toAddressRef.current.value,
       value: `0x${parseInt(amountRef.current.value).toString(16)}`,
-      data: "0x",
+      // data: "0x",
     };
 
     if (isInstanceOf(wallet, WCWallet)) {
-      // const privateKey = await wallet.getEthPrivateKey();
+      if (chain.chainType === "eip155") {
+        const provider = new ethers.BrowserProvider(wallet.getProvider());
+        // const provider = new ethers.JsonRpcProvider(
+        //   "https://endpoints.omniatech.io/v1/eth/sepolia/public"
+        // );
 
-      // console.log(privateKey);
+        const signer = await provider.getSigner();
 
-      const tx = await wallet.sendTransaction(transaction);
-      console.log(tx);
+        try {
+          console.log(transaction);
+
+          const txResponse = await signer.sendTransaction(transaction);
+
+          const txReceipt = await txResponse.wait();
+          console.log("Transaction hash:", txReceipt?.hash);
+          console.log(txResponse);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      if (chain.chainType === "cosmos") {
+        const signingClient = await getSigningClient();
+        const txSend = createSend(signingClient);
+        const recipientAddress = toAddressRef.current.value;
+        const denom = chain.staking?.stakingTokens[0].denom as string;
+
+        const fee = {
+          amount: coins(25000, denom),
+          gas: "1000000",
+        };
+
+        try {
+          const tx = await txSend(
+            address,
+            {
+              fromAddress: address,
+              toAddress: recipientAddress,
+              amount: [
+                { denom: denom, amount: amountRef.current?.value as string },
+              ],
+            },
+            fee,
+            "test"
+          );
+          console.log(tx);
+        } catch (error) {
+          console.error(error);
+        }
+      }
     }
 
     if (isInstanceOf(wallet, EthereumWallet)) {
+      const provider = new ethers.BrowserProvider(wallet.getProvider());
+      const signer = await provider.getSigner();
       try {
         console.log(transaction);
         await wallet.switchChain(chain.chainId as string);
-        const tx = await wallet.sendTransaction(transaction);
+        const tx = await signer.sendTransaction(transaction);
         console.log(tx);
       } catch (error) {
         console.log(error);
@@ -149,10 +201,12 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
       if (chain.chainType === "eip155") {
         const ethWallet = wallet.getWalletByChainType("eip155");
         if (isInstanceOf(ethWallet, EthereumWallet)) {
+          console.log(ethWallet);
+          const provider = new ethers.BrowserProvider(ethWallet.getProvider());
+          const signer = await provider.getSigner();
           try {
-            console.log(transaction);
-            await ethWallet.switchChain(chain.chainId as string);
-            const tx = await ethWallet.sendTransaction(transaction);
+            // await ethWallet.switchChain(chain.chainId as string);
+            const tx = await signer.sendTransaction(transaction);
             console.log(tx);
           } catch (error) {
             console.log(error);
@@ -161,6 +215,7 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
       }
 
       if (chain.chainType === "cosmos") {
+        const signingClient = await getSigningClient();
         const txSend = createSend(signingClient);
         const recipientAddress = toAddressRef.current.value;
         const denom = chain.staking?.stakingTokens[0].denom as string;
@@ -277,14 +332,14 @@ const WalletConnectTd = ({ wallet }: { wallet: BaseWallet }) => {
   );
 
   const connect = () => {
-    walletManager.connect(wallet.info?.name as string);
+    walletManager.connect(wallet.info?.name as string, "osmosis");
   };
 
   const disconnect = () => {
-    walletManager.disconnect(wallet.info?.name as string);
+    walletManager.disconnect(wallet.info?.name as string, "osmosis");
   };
 
-  const uri = (currentWallet as WCWallet).pairingUri || "";
+  const uri = walletManager.walletConnectQRCodeUri;
 
   return (
     <td>

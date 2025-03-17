@@ -5,7 +5,8 @@ import { SignClient } from '@walletconnect/sign-client';
 import { EngineTypes, PairingTypes, SessionTypes, SignClientTypes } from '@walletconnect/types';
 import { Buffer } from 'buffer'
 import {
-  AminoGeneralOfflineSigner,
+  AminoGenericOfflineSigner,
+  DirectGenericOfflineSigner,
   OfflineAminoSigner,
   OfflineDirectSigner,
   OfflineSigner,
@@ -28,6 +29,8 @@ export class WCWallet extends BaseWallet {
   provider: UniversalProvider
 
   pairingToConnect: PairingTypes.Struct = null
+
+  sessionToConnect: SessionTypes.Struct = null
 
   walletConnectOption: SignClientTypes.Options
 
@@ -99,7 +102,9 @@ export class WCWallet extends BaseWallet {
     if (!this.provider.client) {
       return []
     }
-    return this.provider.client.pairing.getAll({ active: true })
+    const p = this.provider.client.pairing.getAll({ active: true })
+    console.log(p)
+    return p
   }
 
   setPairingToConnect(pairing: PairingTypes.Struct) {
@@ -110,12 +115,11 @@ export class WCWallet extends BaseWallet {
     this.onPairingUriCreated = callback
   }
 
-  async connect(chainIds: string | string[]) {
-
+  async connect(chainIds: string) {
 
     // const chainIdsWithNS = Array.isArray(chainIds) ? chainIds.map((chainId) => `cosmos:${chainId}`) : [`cosmos:${chainIds}`]
 
-    const _chainIds = Array.isArray(chainIds) ? chainIds : [chainIds]
+    const _chainIds = Array.from(this.chainMap).map(([chainId, chain]) => chainId)
     const cosmosChainNS: string[] = []
     const eip155ChainNS: string[] = []
 
@@ -129,82 +133,76 @@ export class WCWallet extends BaseWallet {
       }
     })
 
-    console.log({ cosmosChainNS, eip155ChainNS })
-
     const connectParam: ConnectParams = {
       pairingTopic: this.pairingToConnect?.topic,
-      namespaces: {}
+      namespaces: {},
     }
 
     if (cosmosChainNS.length) {
       connectParam.namespaces.cosmos = {
         methods: [
-          'cosmos_getAccounts',
           'cosmos_signAmino',
           'cosmos_signDirect',
+          'cosmos_getAccounts',
         ],
         chains: cosmosChainNS,
-        events: ['chainChanged', 'accountsChanged']
+        events: ["accountsChanged", "chainChanged"],
       }
     }
 
     if (eip155ChainNS.length) {
       connectParam.namespaces.eip155 = {
         methods: [
-          'eth_sign',
           'eth_sendTransaction',
-          'eth_signTypedData_v4',
-          'eth_signTypedData',
           'eth_signTransaction',
-          // 'eth_private_key'
-          // 'eth_getBalance',
-          // 'eth_requestAccounts'
+          'eth_sign',
+          'personal_sign',
+          'eth_signTypedData',
+          'trust_sendTransaction',
         ],
         chains: eip155ChainNS,
-        events: ['chainChanged', 'accountsChanged']
+        events: []
       }
-    }
-
-    console.log(connectParam)
-
-    let session
-
-    if (this.session && this.pairingToConnect && this.session.peer.metadata.name !== this.pairingToConnect.peerMetadata.name) {
-      // if session exist and pairingToConnect exist same time
-      // check if the session is the same as pairingToConnect
-      // if not, remove the session and connect to pairingToConnect
-      await this.removeSession()
     }
 
     try {
-      session = this.getLatestSession()
-      if (session) {
-        this.session = session
-      } else {
+      console.log('start connect', this.sessionToConnect)
+      this.provider.on("disconnect", (error) => {
+        console.error("断开连接:", error);
+      });
 
-        this.provider.on('display_uri', (uri: string) => {
-          this.pairingUri = uri
-          this.onPairingUriCreated && this.onPairingUriCreated(uri)
-        })
+      this.provider.on("session_delete", (event) => {
+        console.log("会话被删除，清理状态", event);
+      });
 
+      this.provider.on("session_event", (event) => {
+        console.log("收到 Session 事件:", event);
+      });
 
-        await this.provider.connect(connectParam)
+      this.provider.on('display_uri', (uri: string) => {
+        this.pairingUri = uri
+        this.onPairingUriCreated && this.onPairingUriCreated(uri)
+      })
+      console.log(connectParam)
+      await this.provider.connect(connectParam)
 
+      this.pairingUri = null
 
-
-        this.session = this.provider.session
-        this.pairingUri = null
-        this.onPairingUriCreated && this.onPairingUriCreated(null)
-      }
-
+      this.onPairingUriCreated && this.onPairingUriCreated(null)
     } catch (error) {
+      console.log('wc connect error', error)
       throw error
     }
   }
 
   async disconnect(): Promise<void> {
-    // await this.removePairing()
-    await this.removeSession()
+    await this.provider.client.session.delete(this.provider?.session?.topic, { code: 6000, message: 'user disconnect!!' })
+    // await this.provider.disconnect()
+    // this.provider.client.pairing.delete(this.pairingToConnect.topic, { code: 6000, message: 'user disconnect!!' })
+    // await this.provider.client.disconnect({ topic: this.sessionToConnect.topic, reason: { code: 6000, message: 'user disconnect!!' } })
+    // await this.provider.client.pairing.delete(this.pairingToConnect.topic, { code: 6000, message: 'user disconnect!!' })
+    // await this.removeSession()
+    // this.sessionToConnect = null
   }
 
   async getAccounts(): Promise<WalletAccount[]> {
@@ -229,169 +227,88 @@ export class WCWallet extends BaseWallet {
     return accounts
   }
 
-  override async getSimpleAccount(chainId: string): Promise<SimpleAccount> {
-    const accounts: SimpleAccount[] = []
-
-    const namespaces = this.session.namespaces
-
-    Object.entries(namespaces).forEach(([namespace, session]: [string, SessionTypes.BaseNamespace]) => {
-      session.accounts.forEach((account: string) => {
-        const [namespace, chainId, address] = account.split(':')
-        accounts.push({
-          namespace,
-          chainId,
-          address,
-        })
-      })
-    })
-
-    return Promise.resolve(accounts.find((account) => account.chainId === chainId))
-  }
-
-  getAccount(chainId: Chain['chainId']): Promise<WalletAccount> {
+  async getAccount(chainId: Chain['chainId']): Promise<WalletAccount> {
     const chain = this.getChainById(chainId)
 
-    if (chain.chainType === 'cosmos') {
-      return this.getCosmosAccount(chainId)
-    } else {
-      return this.getEthAddress(chainId)
+    let accounts: string[] = []
+
+    if (this.provider.session) {
+      accounts = this.provider.session.namespaces[chain.chainType].accounts
     }
 
+    return {
+      address: accounts[0]?.split(':').pop(),
+      algo: 'secp256k1',
+      pubkey: null,
+      username: '',
+      isNanoLedger: null,
+      isSmartContract: null
+    }
   }
 
   async getCosmosAccount(chainId: string): Promise<WalletAccount> {
+
     try {
-      if (!this.signClient || !this.session?.topic) {
-        return;
-      }
+
       const accounts = await this.provider.request({
-        topic: this.session?.topic,
-        request: {
-          method: 'cosmos_getAccounts',
-          params: {}
-        },
-        chainId: `cosmos:${chainId}`
-      }) as any[]
+        method: 'cosmos_getAccounts',
+        params: []
+      }, `cosmos:${chainId}`) as any[]
 
       const { address, algo, pubkey } = accounts[0]
-
       return {
         address,
         algo: algo as Algo,
-        pubkey: new Uint8Array(Buffer.from(pubkey, 'base64')),
+        pubkey: pubkey,
       }
     } catch (error) {
       this.errorMessage = (error as any).message
+      console.log('get cosmos account error', error)
       throw error
     }
   }
 
-  async getEthAddress(chainId: string) {
-
-
-    // const accounts = await this.provider.request({ method: 'eth_requestAccounts', params: [{ chainId }] })
-    // console.log({ chainId, accounts })
-    // return {
-    //   address: accounts[0],
-    //   pubkey: new Uint8Array(),
-    //   algo: 'eth_secp256k1',
-    //   isNanoLedger: false,
-    //   isSmartContract: false,
-    //   username: 'ethereum'
-    // }
-    const accounts = this.session.namespaces.eip155.accounts.find((account) => account.startsWith(`eip155:${chainId}`))
-    return {
-      address: accounts.split(':')[2],
-      algo: 'secp256k1',
-      pubkey: new Uint8Array(),
-    }
-  }
-
-  async getBalance(chainId: string) {
-    try {
-      const account = await this.getAccount(chainId)
-      console.log({ address: account.address, chainId })
-      // const result = await this.signClient.request({
-      //   topic: this.session.topic,
-      //   chainId: `eip155:${chainId}`,
-      //   request: {
-      //     method: 'eth_getBalance',
-      //     params: [account.address, 'latest']
-      //   }
-      // })
-      const result = await this.provider.request({
-        method: 'eth_getBalance',
-        params: [account.address, 'latest'],
-      }, `eip155:${chainId}`)
-
-      console.log(result)
-      return result
-    } catch (error) {
-      console.log(error)
-      throw error
-    }
-
-  }
-
-  async sendTransaction(transaction: any) {
-    const result = await this.provider.request({
-      method: 'eth_sendTransaction',
-      params: [transaction],
+  async getOfflineSignerAmino(chainId: string): IGeneralOfflineSigner {
+    return new AminoGenericOfflineSigner({
+      getAccounts: async () => [await this.getAccount(chainId)],
+      signAmino: (signerAddress: string, signDoc: StdSignDoc) =>
+        this.signAmino(chainId, signerAddress, signDoc),
     })
-    return result
   }
 
-  async getEthPrivateKey() {
-    const result = await this.provider.request({
-      method: 'eth_private_key',
+  async getOfflineSignerDirect(chainId: string): IGeneralOfflineSigner {
+    return new DirectGenericOfflineSigner({
+      getAccounts: async () => [await this.getAccount(chainId)],
+      signDirect: (signerAddress: string, signDoc: DirectSignDoc) =>
+        this.signDirect(chainId, signerAddress, signDoc),
     })
-    console.log(result)
-    return result
   }
 
-  async getOfflineSigner(chainId: Chain['chainId']): Promise<IGeneralOfflineSigner> {
+  getOfflineSigner(chainId: string): IGeneralOfflineSigner {
     return this.getOfflineSignerAmino(chainId)
   }
 
-  getOfflineSignerAmino(chainId: string): IGeneralOfflineSigner {
-    return new AminoGeneralOfflineSigner({
-      getAccounts: async () => [await this.getAccount(chainId)],
-      signAmino: (signerAddress: string, signDoc: StdSignDoc) =>
-        this.signAmino(chainId, signerAddress, signDoc),
-    }) as IGeneralOfflineSigner
-  }
-
-  getOfflineSignerDirect(chainId: string): OfflineDirectSigner {
-    return {
-      getAccounts: async () => [await this.getAccount(chainId)],
-      signDirect: (signerAddress: string, signDoc: DirectSignDoc) =>
-        this.signDirect(chainId, signerAddress, signDoc),
-    }
-  }
-
-  getOfflineSigner(chainId: string): OfflineSigner {
-    return {
-      getAccounts: async () => [await this.getAccount(chainId)],
-      signAmino: (signerAddress: string, signDoc: StdSignDoc) =>
-        this.signAmino(chainId, signerAddress, signDoc),
-      signDirect: (signerAddress: string, signDoc: DirectSignDoc) =>
-        this.signDirect(chainId, signerAddress, signDoc),
-    }
-  }
-
-  override async signAmino(chainId: string, signer: string, signDoc: StdSignDoc, signOptions?: SignOptions): Promise<AminoSignResponse> {
+  async signAmino(chainId: string, signer: string, signDoc: StdSignDoc, signOptions?: SignOptions): Promise<AminoSignResponse> {
     try {
-      const result = await this.signClient.request({
-        topic: this.session.topic,
-        chainId: `cosmos:${chainId}`,
-        request: {
-          method: 'cosmos_signAmino',
-          params: {
-            signerAddress: signer,
-            signDoc,
-          },
+      // const result = await this.signClient.request({
+      //   topic: this.session.topic,
+      //   chainId: `cosmos:${chainId}`,
+      //   request: {
+      //     method: 'cosmos_signAmino',
+      //     params: {
+      //       signerAddress: signer,
+      //       signDoc,
+      //     },
+      //   },
+      // });
+      const result = await this.provider.request({
+        method: 'cosmos_signAmino',
+        params: {
+          signerAddress: signer,
+          signDoc,
         },
-      });
+      }, `cosmos:${chainId}`)
+
       return result as AminoSignResponse
     } catch (error) {
       console.log(error)
@@ -419,14 +336,18 @@ export class WCWallet extends BaseWallet {
       },
     };
 
-    return this.signClient.request({
-      topic: this.session.topic,
-      chainId: `cosmos:${chainId}`,
-      request: {
-        method: 'cosmos_signDirect',
-        params: signDocValue,
-      },
-    });
+    // return this.signClient.request({
+    //   topic: this.session.topic,
+    //   chainId: `cosmos:${chainId}`,
+    //   request: {
+    //     method: 'cosmos_signDirect',
+    //     params: signDocValue,
+    //   },
+    // });
+    return this.provider.request({
+      method: 'cosmos_signDirect',
+      params: signDocValue,
+    }, `cosmos:${chainId}`) as Promise<DirectSignResponse>
   }
 
   sendTx(chainId: string, tx: Uint8Array, mode: BroadcastMode): Promise<Uint8Array> {
@@ -437,7 +358,7 @@ export class WCWallet extends BaseWallet {
     throw new Error("Method not implemented.");
   }
 
-  addSuggestChain(chain: Chain, assetLists: AssetList[]): Promise<void> {
+  addSuggestChain(chainId: Chain['chainId']): Promise<void> {
     throw new Error("Method not implemented.");
   }
 

@@ -1,4 +1,4 @@
-import { CosmosWallet, ExtensionWallet } from "@interchain-kit/core";
+import { CosmosWallet, ExtensionWallet, MultiChainWallet } from "@interchain-kit/core";
 import { leapExtensionInfo } from "./registry";
 
 class LeapCosmosWallet extends CosmosWallet {
@@ -19,8 +19,9 @@ class LeapCosmosWallet extends CosmosWallet {
   }
 }
 
-const leapWallet = new ExtensionWallet(leapExtensionInfo);
+const leapWallet = new MultiChainWallet(leapExtensionInfo);
 
 leapWallet.setNetworkWallet('cosmos', new LeapCosmosWallet(leapExtensionInfo))
+leapWallet.setNetworkWallet('eip155', new LeapCosmosWallet(leapExtensionInfo))
 
 export { leapWallet }

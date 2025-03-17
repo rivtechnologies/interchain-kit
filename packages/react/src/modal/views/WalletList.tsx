@@ -34,6 +34,7 @@ export const WalletListContent = ({
         originalWallet: {
           ...w,
           pairing: null,
+          session: null,
         },
       };
     }
@@ -44,25 +45,27 @@ export const WalletListContent = ({
   ) as WCWallet;
 
   if (wcWallet) {
-    const activePairings = wcWallet.getActivePairing();
-
-    activePairings.forEach((pairing) => {
-      wallets.push({
-        name: pairing?.peerMetadata?.name,
-        prettyName: pairing?.peerMetadata?.name,
-        logo: pairing?.peerMetadata?.icons?.[0],
-        mobileDisabled: true,
-        shape: "list" as "list",
-        originalWallet: { ...wcWallet, pairing },
-        subLogo: wcWallet.info.logo as string,
-      });
-    });
+    // const activePairings = wcWallet.getActivePairing();
+    // activePairings.forEach((pairing) => {
+    //   wallets.push({
+    //     name: pairing?.peerMetadata?.name,
+    //     prettyName: pairing?.peerMetadata?.name,
+    //     logo: pairing?.peerMetadata?.icons?.[0],
+    //     mobileDisabled: true,
+    //     shape: "list" as "list",
+    //     originalWallet: { ...wcWallet, pairing },
+    //     subLogo: wcWallet.info.logo as string,
+    //   });
+    // });
   }
 
   return (
     <ConnectModalWalletList
       wallets={wallets}
-      onWalletItemClick={onSelectWallet}
+      onWalletItemClick={(w) => {
+        // wcWallet.setPairingToConnect(w?.pairing);
+        onSelectWallet(w);
+      }}
     />
   );
 };

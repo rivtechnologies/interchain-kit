@@ -4,7 +4,7 @@ import { WalletAccount } from "../types";
 import { BaseWallet } from "./base-wallet";
 import { delay, getClientFromExtension } from "../utils";
 import { EthereumNetwork } from "../types/ethereum";
-import { IGeneralOfflineSigner } from '@interchainjs/types';
+import { IGenericOfflineSigner } from '@interchainjs/types';
 
 export class EthereumWallet extends BaseWallet {
 
@@ -20,22 +20,19 @@ export class EthereumWallet extends BaseWallet {
       throw error
     }
   }
-  async connect(chainId: Chain["chainId"] | Chain["chainId"][]): Promise<void> {
-    const chainIds = Array.isArray(chainId) ? chainId : [chainId]
-    await Promise.all(chainIds.map(async (chainId) => {
-      try {
-        await this.ethereum.request({
-          method: "wallet_switchEthereumChain",
-          params: [{ chainId }],
-        })
-      } catch (error) {
-        if ((error as any).message.includes("Unrecognized chain ID")) {
-          await this.addSuggestChain(chainId as string)
-        }
+  async connect(chainId: Chain["chainId"]): Promise<void> {
+    try {
+      await this.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId }],
+      })
+    } catch (error) {
+      if ((error as any).message.includes("Unrecognized chain ID")) {
+        await this.addSuggestChain(chainId as string)
       }
-    }))
+    }
   }
-  async disconnect(chainId: Chain["chainId"] | Chain["chainId"][]): Promise<void> {
+  async disconnect(chainId: Chain["chainId"]): Promise<void> {
     // throw new Error("Method not implemented.");
     console.log('eth disconnect')
   }
@@ -74,9 +71,9 @@ export class EthereumWallet extends BaseWallet {
       username: 'ethereum'
     }
   }
-  async getOfflineSigner(chainId: Chain["chainId"]): Promise<IGeneralOfflineSigner> {
+  async getOfflineSigner(chainId: Chain["chainId"]): Promise<IGenericOfflineSigner> {
     await this.switchChain(chainId)
-    return new EthereumGenericOfflineSigner();
+    return {} as IGenericOfflineSigner
   }
   async addSuggestChain(chainId: string): Promise<void> {
     const chain = this.chainMap.get(chainId)
@@ -103,45 +100,8 @@ export class EthereumWallet extends BaseWallet {
       throw error;
     }
   }
-  async getBalance(chainId: string) {
-    try {
-      await this.switchChain(chainId)
-      const account = await this.getAccount(chainId)
-      const result = await this.ethereum.request({
-        method: 'eth_getBalance',
-        params: [account.address, 'latest']
-      })
-      return result
-    } catch (error) {
-      console.log(error)
-      throw error
-    }
-
+  getProvider() {
+    return this.ethereum
   }
-  async sendTransaction(transaction: any) {
-    try {
-      const result = await this.ethereum.request({
-        method: 'eth_sendTransaction',
-        params: [transaction]
-      })
 
-      return result
-    } catch (error) {
-      console.log(error)
-      throw error
-    }
-  }
-  async signTransaction(transaction: any) {
-    try {
-      const result = await this.ethereum.request({
-        method: 'eth_signTransaction',
-        params: [transaction]
-      })
-
-      return result
-    } catch (error) {
-      console.log(error)
-      throw error
-    }
-  }
 }

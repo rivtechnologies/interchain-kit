@@ -1,6 +1,5 @@
 
 import { AssetList, Chain } from '@chain-registry/v2-types';
-import { OfflineSigner } from '@interchainjs/cosmos/types/wallet';
 import { SignType, Wallet, WalletAccount } from '../types';
 import { BaseWallet } from './base-wallet';
 import { CosmosWallet } from './cosmos-wallet';
@@ -15,8 +14,8 @@ export class MultiChainWallet extends BaseWallet {
   constructor(info?: Wallet, networkWalletMap?: Map<Chain['chainType'], BaseWallet>) {
     super(info);
 
-    this.networkWalletMap.set('cosmos', new CosmosWallet(info));
-    this.networkWalletMap.set('eip155', new EthereumWallet(info));
+    // this.networkWalletMap.set('cosmos', new CosmosWallet(info));
+    // this.networkWalletMap.set('eip155', new EthereumWallet(info));
 
     if (networkWalletMap) {
       networkWalletMap.forEach((wallet, key) => {
@@ -52,32 +51,22 @@ export class MultiChainWallet extends BaseWallet {
     })
   }
   getWalletByChainType(chainType: Chain['chainType']) {
-    return this.networkWalletMap.get(chainType);
+    const wallet = this.networkWalletMap.get(chainType);
+    if (!wallet) {
+      throw new Error('Unsupported chain type')
+    }
+    return wallet;
   }
-  async connect(chainId: Chain['chainId'] | Chain['chainId'][]): Promise<void> {
-    const chainIds = Array.isArray(chainId) ? chainId : [chainId];
-    await Promise.all(chainIds.map(async chainId => {
-      try {
-        const chain = this.getChainById(chainId);
-        const networkWallet = this.getWalletByChainType(chain.chainType);
-        await networkWallet.connect(chainId);
-      } catch (error) {
-        this.errorMessage = (error as any).message
-        await this.addSuggestChain(chainId as string)
-      }
-    }))
+  async connect(chainId: Chain['chainId']): Promise<void> {
+    const chain = this.getChainById(chainId);
+    console.log('chain', chain.chainType, this.networkWalletMap)
+    const networkWallet = this.getWalletByChainType(chain.chainType);
+    await networkWallet.connect(chainId);
   }
-  async disconnect(chainId: Chain['chainId'] | Chain['chainId'][]): Promise<void> {
-    const chainIds = Array.isArray(chainId) ? chainId : [chainId];
-    await Promise.all(chainIds.map(async chainId => {
-      try {
-        const chain = this.getChainById(chainId);
-        const networkWallet = this.getWalletByChainType(chain.chainType);
-        await networkWallet.disconnect(chainId);
-      } catch (error) {
-        this.errorMessage = (error as any).message
-      }
-    }))
+  async disconnect(chainId: Chain['chainId']): Promise<void> {
+    const chain = this.getChainById(chainId);
+    const networkWallet = this.getWalletByChainType(chain.chainType);
+    await networkWallet.disconnect(chainId);
   }
   async getAccount(chainId: Chain['chainId']): Promise<WalletAccount> {
     const chain = this.getChainById(chainId);
@@ -99,5 +88,10 @@ export class MultiChainWallet extends BaseWallet {
     const chain = this.chainMap.get(chainId);
     const networkWallet = this.getWalletByChainType(chain.chainType);
     return networkWallet.addSuggestChain(chainId);
+  }
+  getProvider(chainId: string) {
+    const chain = this.getChainById(chainId);
+    const networkWallet = this.getWalletByChainType(chain.chainType);
+    return networkWallet.getProvider(chainId);
   }
 }

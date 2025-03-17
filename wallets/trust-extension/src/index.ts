@@ -4,11 +4,9 @@ import { trustExtensionInfo } from "./registry";
 
 export * from './registry'
 
-const NetworkWallet = new Map()
+const trustExtension = new MultiChainWallet(trustExtensionInfo);
 
-NetworkWallet.set('cosmos', new CosmosWallet(trustExtensionInfo))
-NetworkWallet.set('eip155', new EthereumWallet(trustExtensionInfo))
-
-const trustExtension = new MultiChainWallet(trustExtensionInfo, NetworkWallet);
+trustExtension.setNetworkWallet('cosmos', new CosmosWallet(trustExtensionInfo));
+trustExtension.setNetworkWallet('eip155', new EthereumWallet(trustExtensionInfo));
 
 export { trustExtension }

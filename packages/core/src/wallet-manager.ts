@@ -1,4 +1,4 @@
-import { AminoGenericOfflineSigner, DirectGenericOfflineSigner } from '@interchainjs/cosmos/types/wallet';
+import { ICosmosGenericOfflineSigner } from '@interchainjs/cosmos/types/wallet';
 import { HttpEndpoint } from '@interchainjs/types';
 import { Chain, AssetList } from '@chain-registry/v2-types'
 import { BaseWallet } from './wallets/base-wallet'
@@ -6,7 +6,8 @@ import { ChainName, DeviceType, DownloadInfo, EndpointOptions, Endpoints, OS, Si
 import { SigningOptions as InterchainSignerOptions } from '@interchainjs/cosmos/types/signing-client';
 import { SigningClient } from '@interchainjs/cosmos/signing-client'
 import Bowser from 'bowser';
-import { ChainNameNotExist, ChainNotExist, getValidRpcEndpoint, NoValidRpcEndpointFound, WalletNotExist } from './utils';
+import { ChainNameNotExist, ChainNotExist, getValidRpcEndpoint, isInstanceOf, NoValidRpcEndpointFound, WalletNotExist } from './utils';
+import { WCWallet } from './wc-wallet';
 
 export class WalletManager {
   chains: Chain[] = []
@@ -94,7 +95,7 @@ export class WalletManager {
     return this.assetLists.find(assetList => assetList.chainName === chainName)
   }
 
-  async connect(walletName: string, chainName: string) {
+  async connect(walletName: string, chainName: string, wcQRcodeUriCallback?: (uri: string) => void) {
     const wallet = this.getWalletByName(walletName)
     const chain = this.getChainByName(chainName)
 
@@ -105,14 +106,15 @@ export class WalletManager {
     if (!chain) {
       throw new ChainNameNotExist(chainName)
     }
+
+    if (isInstanceOf(wallet, WCWallet)) {
+      wallet.setOnPairingUriCreatedCallback(wcQRcodeUriCallback)
+    }
+
     try {
       await wallet.connect(chain.chainId)
     } catch (error) {
-      if ((error as any).message !== 'Request rejected') {
-        await wallet.addSuggestChain(chain, this.assetLists)
-      } else {
-        throw error
-      }
+      throw error
     }
   }
 
@@ -201,16 +203,13 @@ export class WalletManager {
     if (!chain) {
       throw new ChainNotExist(chainName)
     }
-    if (preferredSignType === 'amino') {
-      return new AminoGenericOfflineSigner(wallet.getOfflineSignerAmino(chain.chainId))
-    } else {
-      return new DirectGenericOfflineSigner(wallet.getOfflineSignerDirect(chain.chainId))
-    }
+
+    return wallet.getOfflineSigner(chain.chainId, preferredSignType)
   }
 
   async getSigningClient(walletName: string, chainName: ChainName): Promise<SigningClient> {
     const rpcEndpoint = await this.getRpcEndpoint(walletName, chainName)
-    const offlineSigner = await this.getOfflineSigner(walletName, chainName)
+    const offlineSigner = await this.getOfflineSigner(walletName, chainName) as ICosmosGenericOfflineSigner
     const signerOptions = await this.getSignerOptions(chainName)
     return SigningClient.connectWithSigner(rpcEndpoint, offlineSigner, signerOptions)
   }
