@@ -7,12 +7,13 @@ import {
 } from "@interchain-kit/react";
 import { useRef, useState } from "react";
 import { makeKeplrChainInfo } from "../utils";
-import { Chain, Asset } from "@chain-registry/v2-types";
+import { Chain, Asset, AssetList } from "@chain-registry/v2-types";
 import { coins } from "@cosmjs/amino";
 import { ChainInfo } from "@keplr-wallet/types";
 import { createGetBalance } from "interchainjs/cosmos/bank/v1beta1/query.rpc.func";
 import QRCode from "react-qr-code";
 import { createSend } from "interchainjs/cosmos/bank/v1beta1/tx.rpc.func";
+import { RpcClient } from "@interchainjs/cosmos/query/rpc";
 
 type BalanceProps = {
   address: string;
@@ -20,9 +21,10 @@ type BalanceProps = {
   chainName: string;
   chainId: string;
   chain: Chain;
+  assetList: AssetList;
 };
 
-const BalanceTd = ({ address, wallet, chain }: BalanceProps) => {
+const BalanceTd = ({ address, wallet, chain, assetList }: BalanceProps) => {
   const { rpcEndpoint } = useChainWallet(
     chain.chainName,
     wallet.info?.name as string
@@ -34,9 +36,10 @@ const BalanceTd = ({ address, wallet, chain }: BalanceProps) => {
   const handleBalanceQuery = async () => {
     setIsLoading(true);
     const balanceQuery = createGetBalance(rpcEndpoint as string);
+
     const balance = await balanceQuery({
       address,
-      denom: chain.staking?.stakingTokens[0].denom as string,
+      denom: assetList.assets[0].base,
     });
     setBalance(balance);
     setIsLoading(false);
@@ -66,7 +69,7 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
   const ref = useRef<HTMLInputElement>(null);
   const amountRef = useRef<HTMLInputElement>(null);
 
-  const { getSigningClient } = useChainWallet(
+  const { getSigningClient, assetList } = useChainWallet(
     chain.chainName,
     wallet.info?.name as string
   );
@@ -78,7 +81,9 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
 
     if (ref.current) {
       const recipientAddress = ref.current.value;
-      const denom = chain.staking?.stakingTokens[0].denom as string;
+      const denom =
+        (chain.staking?.stakingTokens[0].denom as string) ||
+        assetList.assets[0].base;
 
       const fee = {
         amount: coins(25000, denom),
@@ -152,10 +157,8 @@ const AddressTd = ({ wallet, chain }: SendTokenProps) => {
 };
 
 const ChainRow = ({ chain, wallet }: { chain: Chain; wallet: BaseWallet }) => {
-  const { address, rpcEndpoint, connect, disconnect, status } = useChainWallet(
-    chain.chainName,
-    wallet.info?.name as string
-  );
+  const { address, rpcEndpoint, connect, disconnect, status, assetList } =
+    useChainWallet(chain.chainName, wallet.info?.name as string);
   return (
     <tr>
       <td>
@@ -173,6 +176,7 @@ const ChainRow = ({ chain, wallet }: { chain: Chain; wallet: BaseWallet }) => {
         chainName={chain.chainName}
         wallet={wallet}
         chain={chain}
+        assetList={assetList}
       />
       <SendTokenTd address={address} wallet={wallet} chain={chain} />
     </tr>

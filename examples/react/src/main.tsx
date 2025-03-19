@@ -19,19 +19,20 @@ import { coin98Wallet } from "@interchain-kit/coin98-extension";
 import { ledgerWallet } from "@interchain-kit/ledger";
 import { cosmosExtensionMetaMask } from "@interchain-kit/cosmos-extension-metamask";
 import { xdefiWallet } from "@interchain-kit/xdefi-extension";
-
+import { compassWallet } from "@interchain-kit/compass-extension";
 import { leapCosmosExtensionMetaMask } from "@interchain-kit/leap-cosmos-extension-metamask";
 import { MockWallet } from "@interchain-kit/mock-wallet";
 import { starshipChain, starshipChain1 } from "./utils/starship.ts";
 import { ThemeProvider } from "@interchain-ui/react";
 
 const chainNames = [
-  "osmosistestnet",
+  // "osmosistestnet",
   // "osmosis",
-  "juno",
+  // "juno",
   // "cosmoshub",
   // "stargaze",
   // "noble",
+  "seitestnet2",
 ];
 // const chainNames = ["osmosistestnet"];
 // const chainNames = ["cosmoshub"];
@@ -76,16 +77,17 @@ const _wallets: BaseWallet[] = [
   // mock1Wallet,
   // mock2Wallet,
   keplrWallet,
-  leapWallet,
+  // leapWallet,
   // cosmostationWallet,
   // stationWallet,
   // galaxyStationWallet,
   // walletConnect,
   // ledgerWallet,
   // cosmosExtensionMetaMask,
-  walletConnect,
+  // walletConnect,
   // ledgerWallet,
   // leapCosmosExtensionMetaMask,
+  compassWallet,
 ];
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
