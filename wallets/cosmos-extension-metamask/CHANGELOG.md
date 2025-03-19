@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.206](https://github.com/1/1/compare/@interchain-kit/cosmos-extension-metamask@0.2.205...@interchain-kit/cosmos-extension-metamask@0.2.206) (2025-03-19)
+
+**Note:** Version bump only for package @interchain-kit/cosmos-extension-metamask
+
 ## [0.2.205](https://github.com/1/1/compare/@interchain-kit/cosmos-extension-metamask@0.2.204...@interchain-kit/cosmos-extension-metamask@0.2.205) (2025-02-20)
 
 **Note:** Version bump only for package @interchain-kit/cosmos-extension-metamask
