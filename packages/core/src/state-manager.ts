@@ -1,5 +1,5 @@
 
-import { SigningOptions as InterchainSignerOptions } from '@interchainjs/cosmos/types/signing-client';
+import { SigningOptions as InterchainSigningOptions } from '@interchainjs/cosmos/types/signing-client';
 import { HttpEndpoint } from '@interchainjs/types';
 import { createStore } from "zustand"
 import { EndpointOptions, WalletAccount, WalletState } from "./types"
@@ -22,7 +22,7 @@ export type InterchainStore = {
   chains: Chain[]
   assetLists: AssetList[]
   wallets: BaseWallet[]
-  signerOptions: InterchainSignerOptions[]
+  signerOptions: InterchainSigningOptions[]
   endpointOptions: EndpointOptions[]
 
   chainWalletState: ChainWalletState[]

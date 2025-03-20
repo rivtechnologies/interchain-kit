@@ -3,7 +3,7 @@ import { HttpEndpoint } from '@interchainjs/types';
 import { Chain, AssetList } from '@chain-registry/v2-types'
 import { BaseWallet } from './base-wallet'
 import { ChainName, DeviceType, DownloadInfo, EndpointOptions, Endpoints, OS, SignerOptions, SignType } from './types'
-import { SigningOptions as InterchainSignerOptions } from '@interchainjs/cosmos/types/signing-client';
+import { SigningOptions as InterchainSigningOptions } from '@interchainjs/cosmos/types/signing-client';
 import { SigningClient } from '@interchainjs/cosmos/signing-client'
 import Bowser from 'bowser';
 import { ChainNameNotExist, ChainNotExist, getValidRpcEndpoint, NoValidRpcEndpointFound, WalletNotExist } from './utils';
@@ -16,7 +16,7 @@ export class WalletManager {
   endpointOptions: EndpointOptions | undefined
 
   preferredSignTypeMap: Record<Chain['chainName'], SignType> = {}
-  signerOptionMap: Record<Chain['chainName'], InterchainSignerOptions> = {}
+  signerOptionMap: Record<Chain['chainName'], InterchainSigningOptions> = {}
   endpointOptionsMap: Record<Chain['chainName'], Endpoints> = {}
 
   constructor(
@@ -173,15 +173,20 @@ export class WalletManager {
     return this.preferredSignTypeMap[chainName] || 'direct'
   }
 
-  getSignerOptions(chainName: string): InterchainSignerOptions {
-    const signerOptions = this.signerOptionMap[chainName]
+  getSignerOptions(chainName: string): InterchainSigningOptions {
+    const chain = this.getChainByName(chainName)
+    const signingOptions = this.signerOptionMap[chainName]
 
-    const options: InterchainSignerOptions = {
+    const options: InterchainSigningOptions = {
       broadcast: {
         checkTx: true,
         deliverTx: false,
       },
-      ...signerOptions,
+      ...signingOptions,
+      signerOptions: {
+        prefix: chain.bech32Prefix,
+        ...signingOptions?.signerOptions,
+      }
     }
     return options
   }

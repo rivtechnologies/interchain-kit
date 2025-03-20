@@ -1,13 +1,13 @@
 import { AssetList, Chain } from "@chain-registry/v2-types"
 import { BaseWallet, clientNotExistError, EndpointOptions, Endpoints, SignerOptions, SignType, Wallet, WalletAccount, WalletManager, WalletState } from "@interchain-kit/core"
-import { SigningOptions as InterchainSignerOptions } from '@interchainjs/cosmos/types/signing-client';
+import { SigningOptions as InterchainSigningOptions } from '@interchainjs/cosmos/types/signing-client';
 import { HttpEndpoint } from '@interchainjs/types';
 import { createStore } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { persist, createJSONStorage } from 'zustand/middleware'
 
 const immerSyncUp = (newWalletManager: WalletManager) => {
-  return (draft: { chains: Chain[]; assetLists: AssetList[]; wallets: BaseWallet[]; signerOptions: SignerOptions; endpointOptions: EndpointOptions; signerOptionMap: Record<string, InterchainSignerOptions>; endpointOptionsMap: Record<string, Endpoints>; preferredSignTypeMap: Record<string, SignType>; }) => {
+  return (draft: { chains: Chain[]; assetLists: AssetList[]; wallets: BaseWallet[]; signerOptions: SignerOptions; endpointOptions: EndpointOptions; signerOptionMap: Record<string, InterchainSigningOptions>; endpointOptionsMap: Record<string, Endpoints>; preferredSignTypeMap: Record<string, SignType>; }) => {
     draft.chains = newWalletManager.chains
     draft.assetLists = newWalletManager.assetLists
     draft.wallets = newWalletManager.wallets

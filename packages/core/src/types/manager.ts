@@ -3,10 +3,10 @@ import { AssetList, Chain } from "@chain-registry/v2-types";
 import { ChainName } from './chain'
 import { SignType } from "./common";
 import { BaseWallet } from "../base-wallet";
-import { SigningOptions as InterchainSignerOptions } from '@interchainjs/cosmos/types/signing-client'
+import { SigningOptions as InterchainSigningOptions } from '@interchainjs/cosmos/types/signing-client'
 
 export interface SignerOptions {
-  signing?: (chain: Chain | ChainName) => InterchainSignerOptions | undefined;
+  signing?: (chain: Chain | ChainName) => InterchainSigningOptions | undefined;
   preferredSignType?: (chain: Chain | ChainName) => SignType | undefined; // using `amino` if undefined
 }
 
