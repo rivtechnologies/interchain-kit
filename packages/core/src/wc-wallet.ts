@@ -15,7 +15,7 @@ import { AminoSignResponse, StdSignature, DirectSignResponse } from '@interchain
 import { IGeneralOfflineSigner, StdSignDoc } from '@interchainjs/types'
 import { WalletConnectIcon } from './constant';
 import { Chain, AssetList } from '@chain-registry/v2-types';
-import UniversalProvider, { ConnectParams } from '@walletconnect/universal-provider';
+import UniversalProvider, { ConnectParams, UniversalProviderOpts } from '@walletconnect/universal-provider';
 
 
 export class WCWallet extends BaseWallet {
@@ -32,7 +32,9 @@ export class WCWallet extends BaseWallet {
 
   sessionToConnect: SessionTypes.Struct = null
 
-  walletConnectOption: SignClientTypes.Options
+  // walletConnectOption: SignClientTypes.Options
+
+  walletConnectOption: UniversalProviderOpts
 
   onPairingUriCreated: (uri: string) => void
 
@@ -52,7 +54,7 @@ export class WCWallet extends BaseWallet {
   override async init(): Promise<void> {
     this.events.removeAllListeners()
 
-    const defaultOption = {
+    const defaultOption: UniversalProviderOpts = {
       projectId: '15a12f05b38b78014b2bb06d77eecdc3',
       // optional parameters
       relayUrl: 'wss://relay.walletconnect.org',
@@ -166,7 +168,6 @@ export class WCWallet extends BaseWallet {
     }
 
     try {
-      console.log('start connect', this.sessionToConnect)
       this.provider.on("disconnect", (error) => {
         console.error("断开连接:", error);
       });

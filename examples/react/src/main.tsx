@@ -32,13 +32,13 @@ import {
 } from "./utils/eth-test-net.ts";
 
 const chainNames = [
-  "osmosistestnet",
+  // "osmosistestnet",
   // "osmosis",
   // "juno",
   // "cosmoshub",
   // "stargaze",
   // "noble",
-  // "ethereum",
+  "ethereum",
 ];
 // const chainNames = ["osmosistestnet"];
 // const chainNames = ["cosmoshub"];
@@ -66,7 +66,7 @@ const wallet2Mnemonic =
 // }))
 
 const bscethertestnet = {
-  chainId: "0x61",
+  chainId: "97",
   chainName: "Binance Smart Chain Testnet",
   nativeCurrency: {
     name: "BSC Testnet",
@@ -102,15 +102,15 @@ const sepoliaEthereumTestNet = {
 };
 
 const _chains = [
-  ...chains.filter((c) => chainNames.includes(c.chainName)),
-  // createChainFromEthereumChainInfo(bscethertestnet),
+  // ...chains.filter((c) => chainNames.includes(c.chainName)),
+  createChainFromEthereumChainInfo(bscethertestnet),
   // createChainFromEthereumChainInfo(goerliethereumtestnet),
   // createChainFromEthereumChainInfo(sepoliaEthereumTestNet),
 ];
 // const _chains = [starshipChain1]
 const _assetLists = [
-  ...assetLists.filter((a) => chainNames.includes(a.chainName)),
-  // createAssetListFromEthereumChainInfo(bscethertestnet),
+  // ...assetLists.filter((a) => chainNames.includes(a.chainName)),
+  createAssetListFromEthereumChainInfo(bscethertestnet),
   // createAssetListFromEthereumChainInfo(goerliethereumtestnet),
   // createAssetListFromEthereumChainInfo(sepoliaEthereumTestNet),
 ];
@@ -129,10 +129,10 @@ const _assetLists = [
 const _wallets: BaseWallet[] = [
   // mock1Wallet,
   // mock2Wallet,
-  // keplrWallet,
+  keplrWallet,
   // trustExtension,
   // metaMaskExtension,
-  leapWallet,
+  // leapWallet,
   // cosmostationWallet,
   // stationWallet,
   // galaxyStationWallet,

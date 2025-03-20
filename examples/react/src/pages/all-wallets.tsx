@@ -48,7 +48,8 @@ const BalanceTd = ({ address, wallet, chain }: BalanceProps) => {
         // await wallet.personalSign("test", address);
 
         const provider = wallet.getProvider();
-        const ethersProvider = new ethers.BrowserProvider(provider);
+        // const ethersProvider = new ethers.BrowserProvider(provider);
+        const ethersProvider = new ethers.providers.Web3Provider(provider);
         const result = await ethersProvider.getBalance(address, "latest");
         const balanceInWei = result;
         balance = { balance: { amount: balanceInWei.toString() } };
@@ -63,7 +64,8 @@ const BalanceTd = ({ address, wallet, chain }: BalanceProps) => {
     }
 
     if (isInstanceOf(wallet, EthereumWallet)) {
-      const provider = new ethers.BrowserProvider(wallet.getProvider());
+      // const provider = new ethers.BrowserProvider(wallet.getProvider());
+      const provider = new ethers.providers.Web3Provider(wallet.getProvider());
       const result = await provider.getBalance(address);
       balance = { balance: { amount: result.toString() } };
     }
@@ -72,7 +74,10 @@ const BalanceTd = ({ address, wallet, chain }: BalanceProps) => {
       if (chain.chainType === "eip155") {
         const ethWallet = wallet.getWalletByChainType("eip155");
         if (isInstanceOf(ethWallet, EthereumWallet)) {
-          const provider = new ethers.BrowserProvider(ethWallet.getProvider());
+          // const provider = new ethers.BrowserProvider(ethWallet.getProvider());
+          const provider = new ethers.providers.Web3Provider(
+            ethWallet.getProvider()
+          );
           const result = await provider.getBalance(address);
           balance = { balance: { amount: result.toString() } };
         }
@@ -129,26 +134,32 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
       from: address,
       to: toAddressRef.current.value,
       value: `0x${parseInt(amountRef.current.value).toString(16)}`,
-      // data: "0x",
+      data: "0x",
     };
 
     if (isInstanceOf(wallet, WCWallet)) {
       if (chain.chainType === "eip155") {
-        const provider = new ethers.BrowserProvider(wallet.getProvider());
+        const provider = wallet.getProvider();
+
+        // const provider = new ethers.BrowserProvider(wallet.getProvider());
+        const ethProvider = new ethers.providers.Web3Provider(provider);
+
+        console.log(await ethProvider.getNetwork());
         // const provider = new ethers.JsonRpcProvider(
         //   "https://endpoints.omniatech.io/v1/eth/sepolia/public"
         // );
+        console.log(await provider.request({ method: "eth_accounts" }));
 
-        const signer = await provider.getSigner();
+        const signer = await ethProvider.getSigner();
 
         try {
           console.log(transaction);
 
           const txResponse = await signer.sendTransaction(transaction);
 
-          const txReceipt = await txResponse.wait();
-          console.log("Transaction hash:", txReceipt?.hash);
-          console.log(txResponse);
+          // const txReceipt = await txResponse.wait();
+          // console.log("Transaction hash:", txReceipt?.hash);
+          // console.log(txResponse);
         } catch (error) {
           console.log(error);
         }
@@ -201,9 +212,12 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
       if (chain.chainType === "eip155") {
         const ethWallet = wallet.getWalletByChainType("eip155");
         if (isInstanceOf(ethWallet, EthereumWallet)) {
-          console.log(ethWallet);
-          const provider = new ethers.BrowserProvider(ethWallet.getProvider());
-          const signer = await provider.getSigner();
+          const provider = ethWallet.getProvider();
+
+          // const provider = new ethers.BrowserProvider(ethWallet.getProvider());
+          const ethProvider = new ethers.providers.Web3Provider(provider);
+
+          const signer = await ethProvider.getSigner();
           try {
             // await ethWallet.switchChain(chain.chainId as string);
             const tx = await signer.sendTransaction(transaction);

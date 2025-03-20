@@ -43,7 +43,7 @@
     "@tanstack/react-query": "4",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.3",
-    "ethers": "^6.13.4",
+    "ethers": "5.8.0",
     "interchainjs": "0.0.1-alpha.31",
     "node-fetch": "^3.3.2",
     "postcss": "^8.4.47",
