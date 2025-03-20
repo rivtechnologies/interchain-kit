@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.207](https://github.com/interchain-kit/compass-extension/compare/@interchain-kit/compass-extension@0.2.206...@interchain-kit/compass-extension@0.2.207) (2025-03-20)
+
+**Note:** Version bump only for package @interchain-kit/compass-extension
+
 ## 0.2.206 (2025-03-19)
 
 **Note:** Version bump only for package @interchain-kit/compass-extension
