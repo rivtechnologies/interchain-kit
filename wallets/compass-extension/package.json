@@ -33,5 +33,6 @@
   "dependencies": {
     "@interchain-kit/core": "0.2.207"
   },
-  "keywords": []
+  "keywords": [],
+  "gitHead": "74ba6aca78de888649b4a23726e96dd0ad2b6827"
 }
