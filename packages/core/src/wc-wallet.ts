@@ -71,48 +71,6 @@ export class WCWallet extends BaseWallet {
     this.bindingEvent()
   }
 
-  async removePairing() {
-    const pairings = this.provider.client.pairing.getAll()
-
-    for (const pairing of pairings) {
-      await this.provider.client.pairing.delete(pairing.topic, {
-        code: 7001,
-        message: 'disconnect'
-      })
-    }
-  }
-
-  async removeSession() {
-    const sessions = this.provider.client.session.getAll()
-    for (const session of sessions) {
-      await this.provider.client.session.delete(session.topic, {
-        code: 6000,
-        message: 'user disconnect.'
-      })
-    }
-  }
-
-  getLatestSession(): SessionTypes.Struct | undefined {
-    return this.provider.client.session.getAll().pop()
-  }
-
-  getLatestPairing(): PairingTypes.Struct | undefined {
-    return this.provider.client.pairing.getAll({ active: true }).pop()
-  }
-
-  getActivePairing(): PairingTypes.Struct[] {
-    if (!this.provider.client) {
-      return []
-    }
-    const p = this.provider.client.pairing.getAll({ active: true })
-    console.log(p)
-    return p
-  }
-
-  setPairingToConnect(pairing: PairingTypes.Struct) {
-    this.pairingToConnect = pairing
-  }
-
   setOnPairingUriCreatedCallback(callback: (uri: string) => void) {
     this.onPairingUriCreated = callback
   }
@@ -120,6 +78,10 @@ export class WCWallet extends BaseWallet {
   async connect(chainIds: string) {
 
     // const chainIdsWithNS = Array.isArray(chainIds) ? chainIds.map((chainId) => `cosmos:${chainId}`) : [`cosmos:${chainIds}`]
+
+    if (this.session) {
+      return
+    }
 
     const _chainIds = Array.from(this.chainMap).map(([chainId, chain]) => chainId)
     const cosmosChainNS: string[] = []
@@ -136,7 +98,6 @@ export class WCWallet extends BaseWallet {
     })
 
     const connectParam: ConnectParams = {
-      pairingTopic: this.pairingToConnect?.topic,
       namespaces: {},
     }
 
@@ -169,23 +130,30 @@ export class WCWallet extends BaseWallet {
 
     try {
       this.provider.on("disconnect", (error) => {
-        console.error("断开连接:", error);
+        console.error("disconnect:", error);
       });
 
       this.provider.on("session_delete", (event) => {
-        console.log("会话被删除，清理状态", event);
+        console.log("session_delete:", event);
       });
 
       this.provider.on("session_event", (event) => {
-        console.log("收到 Session 事件:", event);
+        console.log("session_event:", event);
       });
+
+
+      this.provider.on('session_request', (event) => {
+        console.log('session_request', event)
+      })
 
       this.provider.on('display_uri', (uri: string) => {
         this.pairingUri = uri
         this.onPairingUriCreated && this.onPairingUriCreated(uri)
       })
-      console.log(connectParam)
-      await this.provider.connect(connectParam)
+
+      const session = await this.provider.connect(connectParam)
+
+      this.session = session
 
       this.pairingUri = null
 
@@ -198,6 +166,7 @@ export class WCWallet extends BaseWallet {
 
   async disconnect(): Promise<void> {
     await this.provider.client.session.delete(this.provider?.session?.topic, { code: 6000, message: 'user disconnect!!' })
+    this.session = null
     // await this.provider.disconnect()
     // this.provider.client.pairing.delete(this.pairingToConnect.topic, { code: 6000, message: 'user disconnect!!' })
     // await this.provider.client.disconnect({ topic: this.sessionToConnect.topic, reason: { code: 6000, message: 'user disconnect!!' } })

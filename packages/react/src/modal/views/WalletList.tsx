@@ -1,7 +1,7 @@
 import { ConnectModalHead, ConnectModalWalletList } from "@interchain-ui/react";
 import { useWalletModal } from "../provider";
 import { useWalletManager } from "../../hooks";
-import { BaseWallet, WCWallet } from "@interchain-kit/core";
+import { BaseWallet, isInstanceOf, WCWallet } from "@interchain-kit/core";
 import { Wallet as InterchainUIWalletType } from "@interchain-ui/react";
 
 export const WalletListHeader = () => {
@@ -25,6 +25,17 @@ export const WalletListContent = ({
 
   const wallets: InterchainUIWalletType[] = walletManager.wallets.map(
     (w: BaseWallet) => {
+      if (isInstanceOf(w, WCWallet) && w.session) {
+        return {
+          name: w.session.peer.metadata?.name,
+          prettyName: `${w.session.peer.metadata?.name} - Mobile`,
+          logo: w.session.peer.metadata?.icons?.[0],
+          mobileDisabled: true,
+          shape: "list" as "list",
+          originalWallet: { ...w, session: w.session },
+          subLogo: w.info.logo as string,
+        };
+      }
       return {
         name: w.info.name,
         prettyName: w.info.prettyName,
@@ -40,30 +51,10 @@ export const WalletListContent = ({
     }
   );
 
-  const wcWallet = walletManager.wallets.find(
-    (w) => w.info.mode === "wallet-connect"
-  ) as WCWallet;
-
-  if (wcWallet) {
-    // const activePairings = wcWallet.getActivePairing();
-    // activePairings.forEach((pairing) => {
-    //   wallets.push({
-    //     name: pairing?.peerMetadata?.name,
-    //     prettyName: pairing?.peerMetadata?.name,
-    //     logo: pairing?.peerMetadata?.icons?.[0],
-    //     mobileDisabled: true,
-    //     shape: "list" as "list",
-    //     originalWallet: { ...wcWallet, pairing },
-    //     subLogo: wcWallet.info.logo as string,
-    //   });
-    // });
-  }
-
   return (
     <ConnectModalWalletList
       wallets={wallets}
       onWalletItemClick={(w) => {
-        // wcWallet.setPairingToConnect(w?.pairing);
         onSelectWallet(w);
       }}
     />

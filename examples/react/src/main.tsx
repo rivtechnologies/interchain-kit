@@ -31,14 +31,14 @@ import {
   createChainFromEthereumChainInfo,
 } from "./utils/eth-test-net.ts";
 
-const chainNames = [
+const chainNames: string[] = [
   // "osmosistestnet",
-  // "osmosis",
+  "osmosis",
   // "juno",
   // "cosmoshub",
   // "stargaze",
   // "noble",
-  "ethereum",
+  // "ethereum",
 ];
 // const chainNames = ["osmosistestnet"];
 // const chainNames = ["cosmoshub"];
@@ -102,15 +102,15 @@ const sepoliaEthereumTestNet = {
 };
 
 const _chains = [
-  // ...chains.filter((c) => chainNames.includes(c.chainName)),
-  createChainFromEthereumChainInfo(bscethertestnet),
+  ...chains.filter((c) => chainNames.includes(c.chainName)),
+  // createChainFromEthereumChainInfo(bscethertestnet),
   // createChainFromEthereumChainInfo(goerliethereumtestnet),
   // createChainFromEthereumChainInfo(sepoliaEthereumTestNet),
 ];
 // const _chains = [starshipChain1]
 const _assetLists = [
-  // ...assetLists.filter((a) => chainNames.includes(a.chainName)),
-  createAssetListFromEthereumChainInfo(bscethertestnet),
+  ...assetLists.filter((a) => chainNames.includes(a.chainName)),
+  // createAssetListFromEthereumChainInfo(bscethertestnet),
   // createAssetListFromEthereumChainInfo(goerliethereumtestnet),
   // createAssetListFromEthereumChainInfo(sepoliaEthereumTestNet),
 ];
