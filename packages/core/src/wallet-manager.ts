@@ -118,7 +118,7 @@ export class WalletManager {
     }
   }
 
-  disconnect(walletName: string, chainName: string) {
+  async disconnect(walletName: string, chainName: string) {
     const wallet = this.getWalletByName(walletName)
     const chain = this.getChainByName(chainName)
 

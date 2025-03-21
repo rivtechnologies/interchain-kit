@@ -101,7 +101,7 @@ export interface WalletAccount extends AccountData {
   isSmartContract?: boolean;
 }
 
-export declare enum BroadcastMode {
+export enum BroadcastMode {
   /** Return after tx commit */
   Block = 'block',
   /** Return after CheckTx */
