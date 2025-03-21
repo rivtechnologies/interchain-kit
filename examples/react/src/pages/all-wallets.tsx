@@ -89,7 +89,9 @@ const BalanceTd = ({ address, wallet, chain, assetList }: BalanceProps) => {
         const balanceQuery = createGetBalance(rpcEndpoint as string);
         balance = await balanceQuery({
           address,
-          denom: chain.staking?.stakingTokens[0].denom as string,
+          denom:
+            (chain.staking?.stakingTokens[0].denom as string) ||
+            assetList.assets[0].base,
         });
       }
     }
@@ -170,7 +172,9 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
         const signingClient = await getSigningClient();
         const txSend = createSend(signingClient);
         const recipientAddress = toAddressRef.current.value;
-        const denom = chain.staking?.stakingTokens[0].denom as string;
+        const denom =
+          (chain.staking?.stakingTokens[0].denom as string) ||
+          assetList.assets[0].base;
 
         const fee = {
           amount: coins(25000, denom),
@@ -234,7 +238,9 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
         const signingClient = await getSigningClient();
         const txSend = createSend(signingClient);
         const recipientAddress = toAddressRef.current.value;
-        const denom = chain.staking?.stakingTokens[0].denom as string;
+        const denom =
+          (chain.staking?.stakingTokens[0].denom as string) ||
+          assetList.assets[0].base;
 
         const fee = {
           amount: coins(25000, denom),
