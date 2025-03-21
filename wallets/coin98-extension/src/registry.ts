@@ -3,6 +3,7 @@ import { ICON } from "./constant";
 
 export const Coin98ExtensionInfo: Wallet = {
   windowKey: 'coin98.keplr',
+  ethereumKey: 'coin98.provider',
   name: 'coin98-extension',
   prettyName: 'Coin98',
   logo: ICON,

@@ -37,6 +37,8 @@ export interface AppUrl {
 
 export interface Wallet {
   windowKey?: string,
+  ethereumKey?: string,
+  walletIdentifyKey?: string,
   name: string;
   mode: WalletMode;
   prettyName: string;

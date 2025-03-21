@@ -43,6 +43,7 @@
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.3",
     "interchainjs": "^1.9.16",
+    "ethers": "5.8.0",
     "node-fetch": "^3.3.2",
     "postcss": "^8.4.47",
     "qrcode.react": "^3.1.0",

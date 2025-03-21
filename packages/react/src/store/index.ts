@@ -32,6 +32,7 @@ export interface InterchainStore extends WalletManager {
   chainWalletState: ChainWalletState[]
   currentWalletName: string
   currentChainName: string
+  walletConnectQRCodeUri: string
   setCurrentChainName: (chainName: string) => void
   setCurrentWalletName: (walletName: string) => void
   getDraftChainWalletState: (state: InterchainStore, walletName: string, chainName: string) => ChainWalletState
@@ -66,6 +67,8 @@ export const createInterchainStore = (walletManager: WalletManager) => {
     preferredSignTypeMap: { ...walletManager.preferredSignTypeMap },
     signerOptionMap: { ...walletManager.signerOptionMap },
     endpointOptionsMap: { ...walletManager.endpointOptionsMap },
+
+    walletConnectQRCodeUri: '',
 
     updateChainWalletState: (walletName: string, chainName: string, data: Partial<ChainWalletState>) => {
       set(draft => {
@@ -168,7 +171,11 @@ export const createInterchainStore = (walletManager: WalletManager) => {
     connect: async (walletName: string, chainName: string) => {
       get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Connecting })
       try {
-        await walletManager.connect(walletName, chainName)
+        await walletManager.connect(walletName, chainName, (uri) => {
+          set(draft => {
+            draft.walletConnectQRCodeUri = uri
+          })
+        })
         set(draft => {
           draft.currentChainName = chainName
           draft.currentWalletName = walletName
