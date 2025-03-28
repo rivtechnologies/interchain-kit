@@ -1,4 +1,3 @@
-import { EthereumGenericOfflineSigner } from '@interchainjs/ethereum/types/wallet';
 import { Chain } from "@chain-registry/v2-types";
 import { WalletAccount } from "../types";
 import { BaseWallet } from "./base-wallet";
@@ -27,7 +26,7 @@ export class EthereumWallet extends BaseWallet {
         params: [{ chainId }],
       })
     } catch (error) {
-      if ((error as any).message.includes("Unrecognized chain ID")) {
+      if (!(error as any).message.includes("reject")) {
         await this.addSuggestChain(chainId as string)
       }
     }
@@ -81,7 +80,7 @@ export class EthereumWallet extends BaseWallet {
     const network: EthereumNetwork = {
       chainId: chain.chainId,
       chainName: chain.chainName,
-      rpcUrls: chain.apis.rpc.map(api => api.address),
+      rpcUrls: chain.apis?.rpc.map(api => api.address),
       nativeCurrency: {
         name: chain.chainName,
         symbol: assetList.assets[0].symbol,

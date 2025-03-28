@@ -49,9 +49,12 @@ const BalanceTd = ({ address, wallet, chain, assetList }: BalanceProps) => {
       if (chain.chainType === "eip155") {
         // await wallet.personalSign("test", address);
 
-        const provider = wallet.getProvider();
+        // const provider = wallet.getProvider();
         // const ethersProvider = new ethers.BrowserProvider(provider);
-        const ethersProvider = new ethers.providers.Web3Provider(provider);
+        // const ethersProvider = new ethers.providers.Web3Provider(provider);
+        const ethersProvider = new ethers.providers.JsonRpcProvider(
+          rpcEndpoint
+        );
         const result = await ethersProvider.getBalance(address, "latest");
         const balanceInWei = result;
         balance = { balance: { amount: balanceInWei.toString() } };
@@ -67,7 +70,8 @@ const BalanceTd = ({ address, wallet, chain, assetList }: BalanceProps) => {
 
     if (isInstanceOf(wallet, EthereumWallet)) {
       // const provider = new ethers.BrowserProvider(wallet.getProvider());
-      const provider = new ethers.providers.Web3Provider(wallet.getProvider());
+      // const provider = new ethers.providers.Web3Provider(wallet.getProvider());
+      const provider = new ethers.providers.JsonRpcProvider(rpcEndpoint);
       const result = await provider.getBalance(address);
       balance = { balance: { amount: result.toString() } };
     }
@@ -77,9 +81,11 @@ const BalanceTd = ({ address, wallet, chain, assetList }: BalanceProps) => {
         const ethWallet = wallet.getWalletByChainType("eip155");
         if (isInstanceOf(ethWallet, EthereumWallet)) {
           // const provider = new ethers.BrowserProvider(ethWallet.getProvider());
-          const provider = new ethers.providers.Web3Provider(
-            ethWallet.getProvider()
-          );
+          // const provider = new ethers.providers.Web3Provider(
+          //   ethWallet.getProvider()
+          // );
+          const provider = new ethers.providers.JsonRpcProvider(rpcEndpoint);
+          await ethWallet.switchChain(chain.chainId as string);
           const result = await provider.getBalance(address);
           balance = { balance: { amount: result.toString() } };
         }
@@ -161,9 +167,9 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
 
           const txResponse = await signer.sendTransaction(transaction);
 
-          // const txReceipt = await txResponse.wait();
-          // console.log("Transaction hash:", txReceipt?.hash);
-          // console.log(txResponse);
+          const txReceipt = await txResponse.wait();
+          console.log("Transaction hash:", txReceipt?.hash);
+          console.log(txResponse);
         } catch (error) {
           console.log(error);
         }
@@ -219,9 +225,11 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
         const ethWallet = wallet.getWalletByChainType("eip155");
         if (isInstanceOf(ethWallet, EthereumWallet)) {
           const provider = ethWallet.getProvider();
-
+          console.log(provider);
           // const provider = new ethers.BrowserProvider(ethWallet.getProvider());
           const ethProvider = new ethers.providers.Web3Provider(provider);
+
+          console.log(await ethProvider.getNetwork());
 
           const signer = await ethProvider.getSigner();
           try {

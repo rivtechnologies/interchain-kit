@@ -4,6 +4,6 @@
     "outDir": "dist",
     "rootDir": "src/"
   },
-  "include": ["src/**/*.ts", "__tests__/extension-wallet.test.ts"],
+  "include": ["src/**/*.ts", "__tests__/wallets/extension-wallet.test.ts"],
   "exclude": ["dist", "node_modules", "**/*.spec.*", "**/*.test.*"]
 }

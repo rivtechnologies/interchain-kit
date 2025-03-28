@@ -1,75 +1,86 @@
-import { isValidRpcEndpoint, getValidRpcEndpoint, isValidRestEndpoint, getValidRestEndpoint } from '../../src/utils/endpoint';
-import axios from 'axios';
+import { isValidRpcEndpoint, getValidRpcEndpoint, RpcInfo } from '../../src/utils/endpoint';
 
-jest.mock('axios');
-const mockedAxios = axios as jest.Mocked<typeof axios>;
+describe('endpoint utility functions', () => {
+  const mockFetch = jest.fn();
 
-describe('Endpoint Utils', () => {
+  beforeAll(() => {
+    global.fetch = mockFetch;
+  });
+
+  afterEach(() => {
+    mockFetch.mockClear();
+  });
+
+  afterAll(() => {
+    delete global.fetch;
+  });
+
   describe('isValidRpcEndpoint', () => {
-    it('should return true for a valid RPC endpoint', async () => {
-      mockedAxios.get.mockImplementationOnce(() => Promise.resolve({ status: 200 }));
-      const result = await isValidRpcEndpoint('http://valid-endpoint');
+    it('should return true for a valid cosmos RPC endpoint', async () => {
+      mockFetch.mockResolvedValueOnce({ status: 200 });
+
+      const result = await isValidRpcEndpoint('https://valid-cosmos-endpoint.com', 'cosmos');
+      expect(result).toBe(true);
+      expect(mockFetch).toHaveBeenCalledWith('https://valid-cosmos-endpoint.com', expect.any(Object));
+    });
+
+    it('should return false for an invalid cosmos RPC endpoint', async () => {
+      mockFetch.mockRejectedValueOnce(new Error('Network error'));
+
+      const result = await isValidRpcEndpoint('https://invalid-cosmos-endpoint.com', 'cosmos');
+      expect(result).toBe(false);
+    });
+
+    it('should return true for a valid eip155 RPC endpoint', async () => {
+      mockFetch.mockResolvedValueOnce({ status: 200 });
+
+      const result = await isValidRpcEndpoint('https://valid-eip155-endpoint.com', 'eip155');
       expect(result).toBe(true);
     });
 
-    it('should return false for an invalid RPC endpoint', async () => {
-      mockedAxios.get.mockImplementationOnce(() => Promise.reject(new Error('Network Error')));
-      const result = await isValidRpcEndpoint('http://invalid-endpoint');
-      expect(result).toBe(false);
+    it('should throw an error for unsupported chain types', async () => {
+      await expect(isValidRpcEndpoint('https://unsupported-endpoint.com', 'unsupported' as any)).rejects.toThrow(
+        'unsupported chain type'
+      );
     });
   });
 
   describe('getValidRpcEndpoint', () => {
-    it('should return the first valid RPC endpoint', async () => {
-      mockedAxios.get.mockImplementationOnce(() => Promise.resolve({ status: 200 }));
-      const endpoints = ['http://valid-endpoint', 'http://another-endpoint'];
+    it('should return the first valid endpoint', async () => {
+      const endpoints: RpcInfo[] = [
+        { endpoint: 'https://invalid-endpoint.com', chainType: 'cosmos' },
+        { endpoint: 'https://valid-endpoint.com', chainType: 'cosmos' },
+      ];
+
+      mockFetch
+        .mockRejectedValueOnce(new Error('Network error')) // First endpoint fails
+        .mockResolvedValueOnce({ status: 200 }); // Second endpoint succeeds
+
       const result = await getValidRpcEndpoint(endpoints);
-      expect(result).toBe('http://valid-endpoint');
+      expect(result).toBe('https://valid-endpoint.com');
     });
 
-    it('should return an empty string if no valid RPC endpoint is found', async () => {
-      mockedAxios.get.mockImplementation(() => Promise.reject(new Error('Network Error')));
-      const endpoints = ['http://invalid-endpoint', 'http://another-invalid-endpoint'];
+    it('should return an empty string if no valid endpoints are found', async () => {
+      const endpoints: RpcInfo[] = [
+        { endpoint: 'https://invalid-endpoint-1.com', chainType: 'cosmos' },
+        { endpoint: 'https://invalid-endpoint-2.com', chainType: 'cosmos' },
+      ];
+
+      mockFetch.mockRejectedValue(new Error('Network error'));
+
       const result = await getValidRpcEndpoint(endpoints);
       expect(result).toBe('');
     });
-  });
 
-  describe('isValidRestEndpoint', () => {
-    it('should return true for a valid REST endpoint', async () => {
-      global.fetch = jest.fn().mockResolvedValueOnce({ status: 200 });
-      const result = await isValidRestEndpoint('http://valid-endpoint');
-      expect(result).toBe(true);
-    });
+    it('should handle timeout errors gracefully', async () => {
+      const endpoints: RpcInfo[] = [
+        { endpoint: 'https://timeout-endpoint.com', chainType: 'cosmos' },
+      ];
 
-    it('should return false for an invalid REST endpoint', async () => {
-      global.fetch = jest.fn().mockRejectedValueOnce(new Error('Network Error'));
-      const result = await isValidRestEndpoint('http://invalid-endpoint');
-      expect(result).toBe(false);
-    });
-  });
+      mockFetch.mockImplementation(() => new Promise((resolve) => setTimeout(() => resolve({ status: 200 }), 2000)));
 
-  describe('getValidRestEndpoint', () => {
-    it('should return the first valid REST endpoint', async () => {
-      global.fetch = jest.fn().mockResolvedValueOnce({ status: 200 });
-      const endpoints = ['http://valid-endpoint', 'http://another-endpoint'];
-      const result = await getValidRestEndpoint(endpoints);
-      expect(result).toBe('http://valid-endpoint');
-    });
-
-    it('should return an empty string if no valid REST endpoint is found', async () => {
-      global.fetch = jest.fn().mockRejectedValue(new Error('Network Error'));
-      const endpoints = ['http://invalid-endpoint', 'http://another-invalid-endpoint'];
-      const result = await getValidRestEndpoint(endpoints);
+      const result = await getValidRpcEndpoint(endpoints);
       expect(result).toBe('');
-    });
-
-    it('should handle HttpEndpoint objects for REST endpoints', async () => {
-      const endpoint = { url: 'http://valid-endpoint', headers: { 'Authorization': 'Bearer token' } };
-      global.fetch = jest.fn().mockResolvedValueOnce({ status: 200 });
-      const result = await isValidRestEndpoint(endpoint);
-      expect(result).toBe(true);
     });
   });
 });
-

@@ -3,7 +3,6 @@ import { AssetList, Chain } from '@chain-registry/v2-types';
 import { SignType, Wallet, WalletAccount } from '../types';
 import { BaseWallet } from './base-wallet';
 import { CosmosWallet } from './cosmos-wallet';
-import { EthereumWallet } from './ethereum-wallet';
 import { isInstanceOf } from '../utils';
 
 export class MultiChainWallet extends BaseWallet {
@@ -46,9 +45,7 @@ export class MultiChainWallet extends BaseWallet {
   async init(): Promise<void> {
     const wallets = Array.from(this.networkWalletMap.values());
 
-    await Promise.all(wallets.map(async wallet => wallet.init())).catch(error => {
-      this.errorMessage = (error as any).message
-    })
+    await Promise.all(wallets.map(async wallet => wallet.init()))
   }
   getWalletByChainType(chainType: Chain['chainType']) {
     const wallet = this.networkWalletMap.get(chainType);
@@ -59,7 +56,6 @@ export class MultiChainWallet extends BaseWallet {
   }
   async connect(chainId: Chain['chainId']): Promise<void> {
     const chain = this.getChainById(chainId);
-    console.log('chain', chain.chainType, this.networkWalletMap)
     const networkWallet = this.getWalletByChainType(chain.chainType);
     await networkWallet.connect(chainId);
   }

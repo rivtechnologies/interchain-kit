@@ -7,6 +7,20 @@ import { chainRegistryChainToKeplr } from '@chain-registry/v2-keplr';
 
 export class CosmosWallet extends BaseWallet {
 
+  defaultSignOptions = {
+    preferNoSetFee: false,
+    preferNoSetMemo: true,
+    disableBalanceCheck: false,
+  }
+
+  setSignOptions(options: SignOptions) {
+    this.defaultSignOptions = {
+      preferNoSetFee: options.preferNoSetFee,
+      preferNoSetMemo: options.preferNoSetMemo,
+      disableBalanceCheck: options.disableBalanceCheck
+    }
+  }
+
   async init(): Promise<void> {
     try {
       this.client = await getClientFromExtension(this.info.windowKey)
@@ -43,32 +57,32 @@ export class CosmosWallet extends BaseWallet {
       return new AminoGenericOfflineSigner({
         getAccounts: async () => [await this.getAccount(chainId)],
         signAmino: async (signer, signDoc) => {
-          return this.client.signAmino(chainId, signer, signDoc)
+          return this.signAmino(chainId, signer, signDoc, this.defaultSignOptions)
         }
       }) as IGenericOfflineSigner
     } else {
       return new DirectGenericOfflineSigner({
         getAccounts: async () => [await this.getAccount(chainId)],
         signDirect: async (signer, signDoc) => {
-          return this.client.signDirect(chainId, signer, signDoc)
+          return this.signDirect(chainId, signer, signDoc, this.defaultSignOptions)
         }
       }) as IGenericOfflineSigner
     }
   }
   async signAmino(chainId: string, signer: string, signDoc: StdSignDoc, signOptions?: SignOptions): Promise<AminoSignResponse> {
-    throw new Error('Method not implemented.');
+    return this.client.signAmino(chainId, signer, signDoc, signOptions)
   }
-  signArbitrary(chainId: string, signer: string, data: string | Uint8Array): Promise<StdSignature> {
-    throw new Error('Method not implemented.');
+  async signArbitrary(chainId: string, signer: string, data: string | Uint8Array): Promise<StdSignature> {
+    return this.client.signArbitrary(chainId, signer, data)
   }
   verifyArbitrary(chainId: string, signer: string, data: string | Uint8Array): Promise<boolean> {
-    throw new Error('Method not implemented.');
+    return this.client.verifyArbitrary(chainId, signer, data)
   }
   async signDirect(chainId: string, signer: string, signDoc: DirectSignDoc, signOptions?: SignOptions): Promise<DirectSignResponse> {
-    throw new Error('Method not implemented.');
+    return this.client.signDirect(chainId, signer, signDoc, signOptions)
   }
   async sendTx(chainId: string, tx: Uint8Array, mode: BroadcastMode): Promise<Uint8Array> {
-    throw new Error('Method not implemented.');
+    return this.client.sendTx(chainId, tx, mode)
   }
   async addSuggestChain(chainId: string): Promise<void> {
     const chain = this.chainMap.get(chainId)

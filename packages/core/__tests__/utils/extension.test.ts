@@ -96,6 +96,6 @@ describe('getClientFromExtension', () => {
     });
     document.dispatchEvent(new Event('readystatechange'));
 
-    await expect(promise).rejects.toBe(clientNotExistError.message);
+    await expect(promise).rejects.toBe(clientNotExistError);
   });
 });
