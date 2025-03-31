@@ -1,13 +1,13 @@
 import { AssetList, Chain } from "@chain-registry/v2-types"
-import { BaseWallet, EndpointOptions, Endpoints, SignerOptions, SignType, Wallet, WalletAccount, WalletManager, WalletState } from "@interchain-kit/core"
-import { SignerOptions as InterchainSignerOptions } from '@interchainjs/cosmos/types/signing-client';
+import { BaseWallet, clientNotExistError, EndpointOptions, Endpoints, SignerOptions, SignType, Wallet, WalletAccount, WalletManager, WalletState } from "@interchain-kit/core"
+import { SigningOptions as InterchainSigningOptions } from '@interchainjs/cosmos/types/signing-client';
 import { HttpEndpoint } from '@interchainjs/types';
 import { createStore } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { persist, createJSONStorage } from 'zustand/middleware'
 
 const immerSyncUp = (newWalletManager: WalletManager) => {
-  return (draft: { chains: Chain[]; assetLists: AssetList[]; wallets: BaseWallet[]; signerOptions: SignerOptions; endpointOptions: EndpointOptions; signerOptionMap: Record<string, InterchainSignerOptions>; endpointOptionsMap: Record<string, Endpoints>; preferredSignTypeMap: Record<string, SignType>; }) => {
+  return (draft: { chains: Chain[]; assetLists: AssetList[]; wallets: BaseWallet[]; signerOptions: SignerOptions; endpointOptions: EndpointOptions; signerOptionMap: Record<string, InterchainSigningOptions>; endpointOptionsMap: Record<string, Endpoints>; preferredSignTypeMap: Record<string, SignType>; }) => {
     draft.chains = newWalletManager.chains
     draft.assetLists = newWalletManager.assetLists
     draft.wallets = newWalletManager.wallets
@@ -19,13 +19,12 @@ const immerSyncUp = (newWalletManager: WalletManager) => {
   }
 }
 
-type ChainWalletState = {
+export type ChainWalletState = {
   chainName: string,
   walletName: string,
   walletState: WalletState,
   rpcEndpoint: string | HttpEndpoint
   errorMessage: string
-  signerOption: InterchainSignerOptions
   account: WalletAccount
 }
 
@@ -33,6 +32,7 @@ export interface InterchainStore extends WalletManager {
   chainWalletState: ChainWalletState[]
   currentWalletName: string
   currentChainName: string
+  walletConnectQRCodeUri: string
   setCurrentChainName: (chainName: string) => void
   setCurrentWalletName: (walletName: string) => void
   getDraftChainWalletState: (state: InterchainStore, walletName: string, chainName: string) => ChainWalletState
@@ -53,23 +53,9 @@ export const createInterchainStore = (walletManager: WalletManager) => {
   const { chains, assetLists, wallets, signerOptions, endpointOptions } = walletManager
   // const walletManager = new WalletManager(chains, assetLists, wallets, signerOptions, endpointOptions)
 
-  const chainWalletState: ChainWalletState[] = []
-  wallets.forEach(wallet => {
-    chains.forEach(chain => {
-      chainWalletState.push({
-        chainName: chain.chainName,
-        walletName: wallet.info.name,
-        walletState: WalletState.Disconnected,
-        rpcEndpoint: "",
-        errorMessage: "",
-        signerOption: undefined,
-        account: undefined
-      })
-    })
-  })
 
   return createStore(persist(immer<InterchainStore>((set, get) => ({
-    chainWalletState,
+    chainWalletState: [],
     currentWalletName: '',
     currentChainName: '',
     chains: [...walletManager.chains],
@@ -82,6 +68,8 @@ export const createInterchainStore = (walletManager: WalletManager) => {
     signerOptionMap: { ...walletManager.signerOptionMap },
     endpointOptionsMap: { ...walletManager.endpointOptionsMap },
 
+    walletConnectQRCodeUri: '',
+
     updateChainWalletState: (walletName: string, chainName: string, data: Partial<ChainWalletState>) => {
       set(draft => {
         let targetIndex = draft.chainWalletState.findIndex(cws => cws.walletName === walletName && cws.chainName === chainName)
@@ -89,7 +77,52 @@ export const createInterchainStore = (walletManager: WalletManager) => {
       })
     },
 
-    init: () => walletManager.init(),
+    init: async () => {
+      const existedChainWalletStatesMap = new Map(get().chainWalletState.map(cws => [cws.walletName + cws.chainName, cws]))
+      wallets.forEach(wallet => {
+        chains.forEach(chain => {
+          if (!existedChainWalletStatesMap.has(wallet.info.name + chain.chainName)) {
+            set(draft => {
+              draft.chainWalletState.push({
+                chainName: chain.chainName,
+                walletName: wallet.info.name,
+                walletState: WalletState.Disconnected,
+                rpcEndpoint: "",
+                errorMessage: "",
+                account: undefined
+              })
+            })
+          }
+        })
+      })
+
+      const NotExistWallets: string[] = []
+      const ExistWallets: string[] = []
+      await Promise.all(get().wallets.map(async wallet => {
+        try {
+          await wallet.init()
+          ExistWallets.push(wallet.info.name)
+        } catch (error) {
+          if (error === clientNotExistError) {
+            NotExistWallets.push(wallet.info.name)
+          }
+        }
+      }))
+      set(draft => {
+        draft.chainWalletState = draft.chainWalletState.map(cws => {
+          if (NotExistWallets.includes(cws.walletName)) {
+            return { ...cws, walletState: WalletState.NotExist }
+          }
+          return cws
+        })
+        draft.chainWalletState = draft.chainWalletState.map(cws => {
+          if (ExistWallets.includes(cws.walletName)) {
+            return { ...cws, walletState: cws.walletState === WalletState.NotExist ? WalletState.Disconnected : cws.walletState }
+          }
+          return cws
+        })
+      })
+    },
 
     setCurrentChainName: (chainName: string) => {
       set(draft => { draft.currentChainName = chainName })
@@ -118,6 +151,7 @@ export const createInterchainStore = (walletManager: WalletManager) => {
       set(draft => {
         chains.forEach(newChain => {
           const existChain = draft.chains.find(c => c.chainId === newChain.chainId)
+
           if (!existChain) {
             draft.chains.push(newChain)
             const assetList = assetLists.find(a => a.chainName === newChain.chainName)
@@ -128,9 +162,8 @@ export const createInterchainStore = (walletManager: WalletManager) => {
                 chainName: newChain.chainName,
                 walletName: w.info.name,
                 walletState: WalletState.Disconnected,
-                rpcEndpoint: endpointOptions?.endpoints?.[newChain.chainName]?.rpc?.[0],
+                rpcEndpoint: endpointOptions.endpoints[newChain.chainName]?.rpc?.[0] || '',
                 errorMessage: "",
-                signerOption: signerOptions?.signing?.(newChain.chainName),
                 account: undefined
               })
             })
@@ -144,12 +177,26 @@ export const createInterchainStore = (walletManager: WalletManager) => {
     },
 
     connect: async (walletName: string, chainName: string) => {
-      get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Connecting })
+      const state = get().getChainWalletState(walletName, chainName)?.walletState
+      if (state === WalletState.NotExist) {
+        return
+      }
+
+      if (walletName === 'WalletConnect' && state === WalletState.Connected) {
+        return
+      }
+
+      set(draft => {
+        draft.currentChainName = chainName
+        draft.currentWalletName = walletName
+        draft.walletConnectQRCodeUri = ''
+      })
+      get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Connecting, errorMessage: '' })
       try {
-        await walletManager.connect(walletName, chainName)
-        set(draft => {
-          draft.currentChainName = chainName
-          draft.currentWalletName = walletName
+        await walletManager.connect(walletName, chainName, (uri) => {
+          set(draft => {
+            draft.walletConnectQRCodeUri = uri
+          })
         })
         get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Connected })
       } catch (error) {
@@ -160,6 +207,7 @@ export const createInterchainStore = (walletManager: WalletManager) => {
         get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Disconnected, errorMessage: (error as any).message })
       }
     },
+
     disconnect: async (walletName: string, chainName: string) => {
       try {
         await walletManager.disconnect(walletName, chainName)
@@ -223,7 +271,7 @@ export const createInterchainStore = (walletManager: WalletManager) => {
       currentChainName: state.currentChainName
     }),
     onRehydrateStorage: (state) => {
-      // console.log('interchain-kit store hydration starts')
+      console.log('interchain-kit store hydration starts')
 
       // optional
       return (state, error) => {
@@ -237,4 +285,3 @@ export const createInterchainStore = (walletManager: WalletManager) => {
   }))
 
 }
-

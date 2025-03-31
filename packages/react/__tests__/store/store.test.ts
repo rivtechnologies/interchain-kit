@@ -1,6 +1,6 @@
 import { AssetList, Chain } from '@chain-registry/v2-types';
 import { createInterchainStore, InterchainStore } from '../../src/store/store';
-import { WalletManager, WalletState, SignerOptions, EndpointOptions } from '@interchain-kit/core';
+import { WalletManager, WalletState, SignerOptions, EndpointOptions, clientNotExistError } from '@interchain-kit/core';
 
 const localStorageMock: Storage = (() => {
   let store: { [key: string]: string } = {};
@@ -26,17 +26,16 @@ Object.defineProperties(global, {
     writable: true
   }
 })
-
 describe('InterchainStore', () => {
   let walletManager: WalletManager;
   let store: InterchainStore;
   let useStore: ReturnType<typeof createInterchainStore>;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     walletManager = {
       chains: [{ chainName: 'chain1', chainId: '1' }] as Chain[],
       assetLists: [{ chainName: 'chain1', assets: [] }] as AssetList[],
-      wallets: [{ info: { name: 'wallet1' } }] as any[],
+      wallets: [{ info: { name: 'wallet1' }, init: jest.fn() }, { info: { name: "WalletConnect" }, init: jest.fn() }] as any[],
       signerOptions: {} as SignerOptions,
       endpointOptions: {} as EndpointOptions,
       preferredSignTypeMap: {},
@@ -60,7 +59,9 @@ describe('InterchainStore', () => {
       addChains: jest.fn(),
     } as unknown as WalletManager;
 
-    store = createInterchainStore(walletManager).getState();
+    store = createInterchainStore(walletManager).getState()
+
+    await store.init()
     useStore = createInterchainStore(walletManager);
   });
 
@@ -92,12 +93,69 @@ describe('InterchainStore', () => {
     expect(state?.walletState).toBe(WalletState.Connected);
   });
 
-  it('should connect to a wallet', async () => {
-    (walletManager.connect as jest.Mock).mockResolvedValueOnce(undefined);
+  it('should connect to a wallet and update wallet state correctly', async () => {
+    (walletManager.connect as jest.Mock).mockImplementationOnce(async (walletName, chainName, onUri) => {
+      if (walletName === 'WalletConnect') {
+        onUri('wc:mock-uri');
+      }
+    });
+
     await useStore.getState().connect('wallet1', 'chain1');
+    expect(walletManager.connect).toHaveBeenCalledWith('wallet1', 'chain1', expect.any(Function));
     expect(useStore.getState().currentChainName).toBe('chain1');
     expect(useStore.getState().currentWalletName).toBe('wallet1');
     const state = useStore.getState().getChainWalletState('wallet1', 'chain1');
+    expect(state?.walletState).toBe(WalletState.Connected);
+    expect(state?.errorMessage).toBe('');
+  });
+
+  it('should handle WalletConnect URI during connection', async () => {
+    (walletManager.connect as jest.Mock).mockImplementationOnce(async (walletName, chainName, onUri) => {
+      if (walletName === 'WalletConnect') {
+        onUri('wc:mock-uri');
+      }
+    });
+
+    await useStore.getState().connect('WalletConnect', 'chain1');
+    expect(walletManager.connect).toHaveBeenCalledWith('WalletConnect', 'chain1', expect.any(Function));
+    expect(useStore.getState().walletConnectQRCodeUri).toBe('wc:mock-uri');
+    const state = useStore.getState().getChainWalletState('WalletConnect', 'chain1');
+    expect(state?.walletState).toBe(WalletState.Connected);
+  });
+
+  it('should handle rejected connection request', async () => {
+    (walletManager.connect as jest.Mock).mockRejectedValueOnce(new Error('Request rejected'));
+
+    await useStore.getState().connect('wallet1', 'chain1');
+    const state = useStore.getState().getChainWalletState('wallet1', 'chain1');
+    expect(state?.walletState).toBe(WalletState.Rejected);
+    expect(state?.errorMessage).toBe('Request rejected');
+  });
+
+  it('should handle connection error with a specific message', async () => {
+    (walletManager.connect as jest.Mock).mockRejectedValueOnce(new Error('Specific connection error'));
+
+    await useStore.getState().connect('wallet1', 'chain1');
+    const state = useStore.getState().getChainWalletState('wallet1', 'chain1');
+    expect(state?.walletState).toBe(WalletState.Disconnected);
+    expect(state?.errorMessage).toBe('Specific connection error');
+  });
+
+  it('should not connect if wallet state is NotExist', async () => {
+    useStore.getState().updateChainWalletState('wallet1', 'chain1', { walletState: WalletState.NotExist });
+
+    await useStore.getState().connect('wallet1', 'chain1');
+    expect(walletManager.connect).not.toHaveBeenCalled();
+    const state = useStore.getState().getChainWalletState('wallet1', 'chain1');
+    expect(state?.walletState).toBe(WalletState.NotExist);
+  });
+
+  it('should not reconnect WalletConnect if already connected', async () => {
+    useStore.getState().updateChainWalletState('WalletConnect', 'chain1', { walletState: WalletState.Connected });
+
+    await useStore.getState().connect('WalletConnect', 'chain1');
+    expect(walletManager.connect).not.toHaveBeenCalled();
+    const state = useStore.getState().getChainWalletState('WalletConnect', 'chain1');
     expect(state?.walletState).toBe(WalletState.Connected);
   });
 
@@ -150,8 +208,103 @@ describe('InterchainStore', () => {
     expect(useStore.getState().chains).toContainEqual(newChains[0]);
     expect(useStore.getState().assetLists).toContainEqual(newAssetLists[0]);
     expect(useStore.getState().signerOptionMap).toEqual({ chain2: 'prefix' });
-    expect(useStore.getState().endpointOptionsMap).toEqual({ chain2: newEndpointOptions.endpoints.chain2 });
-    expect(useStore.getState().getChainWalletState('wallet1', 'chain2').signerOption).toBe('prefix');
-    expect(useStore.getState().getChainWalletState('wallet1', 'chain2').rpcEndpoint).toBe('http://localhost:26657');
+    expect(useStore.getState().endpointOptionsMap).toEqual({ chain2: newEndpointOptions.endpoints?.chain2 ?? {} });
+    expect(useStore.getState().getChainWalletState('wallet1', 'chain2')?.rpcEndpoint).toBe('http://localhost:26657');
   });
+
+  it('should not reconnect WalletConnect if already connected', async () => {
+    useStore.getState().updateChainWalletState('WalletConnect', 'chain1', { walletState: WalletState.Connected });
+
+    await useStore.getState().connect('WalletConnect', 'chain1');
+    expect(walletManager.connect).not.toHaveBeenCalled();
+    const state = useStore.getState().getChainWalletState('WalletConnect', 'chain1');
+    expect(state?.walletState).toBe(WalletState.Connected);
+  });
+
+  it('should initialize chainWalletState with disconnected wallets for all chains', async () => {
+    await useStore.getState().init();
+    const chainWalletState = useStore.getState().chainWalletState;
+
+    expect(chainWalletState).toEqual([{ "chainName": "chain1", "errorMessage": "", "rpcEndpoint": "", "walletName": "wallet1", "walletState": "Disconnected" }, { "chainName": "chain1", "errorMessage": "", "rpcEndpoint": "", "walletName": "WalletConnect", "walletState": "Disconnected" }]);
+  });
+
+  it('should set wallet state to NotExist for wallets that do not exist', async () => {
+    (walletManager.wallets[0].init as jest.Mock).mockRejectedValueOnce(clientNotExistError);
+
+    await useStore.getState().init();
+    const chainWalletState = useStore.getState().chainWalletState;
+
+    expect(chainWalletState).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          chainName: 'chain1',
+          walletName: 'wallet1',
+          walletState: WalletState.NotExist,
+        }),
+      ])
+    );
+  });
+
+  it('should set wallet state to Disconnected for wallets that exist', async () => {
+    (walletManager.wallets[0].init as jest.Mock).mockResolvedValueOnce(undefined);
+
+    await useStore.getState().init();
+    const chainWalletState = useStore.getState().chainWalletState;
+
+    expect(chainWalletState).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          chainName: 'chain1',
+          walletName: 'wallet1',
+          walletState: WalletState.Disconnected,
+        }),
+      ])
+    );
+  });
+
+  it('should handle a mix of existing and non-existing wallets', async () => {
+    (walletManager.wallets[0].init as jest.Mock).mockRejectedValueOnce(clientNotExistError);
+    (walletManager.wallets[1].init as jest.Mock).mockResolvedValueOnce(undefined);
+
+    await useStore.getState().init();
+    const chainWalletState = useStore.getState().chainWalletState;
+
+    expect(chainWalletState).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          chainName: 'chain1',
+          walletName: 'wallet1',
+          walletState: WalletState.NotExist,
+        }),
+        expect.objectContaining({
+          chainName: 'chain1',
+          walletName: 'WalletConnect',
+          walletState: WalletState.Disconnected,
+        }),
+      ])
+    );
+  });
+
+  it('should set wallet state to Disconnected for wallets that not exist before', async () => {
+    useStore.getState().updateChainWalletState('wallet1', 'chain1', { walletState: WalletState.NotExist });
+
+    (walletManager.wallets[0].init as jest.Mock).mockResolvedValueOnce(undefined);
+
+    await useStore.getState().init();
+    const chainWalletState = useStore.getState().chainWalletState;
+
+    expect(chainWalletState).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          chainName: 'chain1',
+          walletName: 'wallet1',
+          walletState: WalletState.Disconnected,
+        }),
+      ])
+    );
+
+  })
+
+
+
 });

@@ -1,3 +1,4 @@
+import React from "react";
 import {
   ConnectedContent,
   ConnectedHeader,
@@ -15,8 +16,42 @@ import {
 import { useWalletModal } from "./provider";
 import { useChainWallet, useWalletManager } from "../hooks";
 import { useEffect, useMemo, useState } from "react";
-import { ExtensionWallet, WalletState, WCWallet } from "@interchain-kit/core";
-import { ConnectModal } from "@interchain-ui/react";
+import {
+  ExtensionWallet,
+  WalletState,
+  WCWallet,
+  BaseWallet,
+  isInstanceOf,
+  DownloadInfo,
+} from "@interchain-kit/core";
+import {
+  ConnectModal,
+  Wallet as InterchainUIWalletType,
+} from "@interchain-ui/react";
+
+export type WalletModalProps = {
+  shouldShowList: boolean;
+  isOpen: boolean;
+  walletConnectQRCodeUri: string | null;
+  wallets: InterchainUIWalletType[];
+  username: string;
+  address: string;
+  currentWallet?: BaseWallet;
+  isConnecting: boolean;
+  isConnected: boolean;
+  isRejected: boolean;
+  isDisconnected: boolean;
+  isNotExist: boolean;
+  errorMessage: string;
+  open: () => void;
+  close: () => void;
+  disconnect: () => void;
+  onSelectWallet: (wallet: BaseWallet) => void;
+  onBack: () => void;
+  onReconnect: () => void;
+  getDownloadLink: (walletName: string) => DownloadInfo;
+  getEnv: () => { browser?: string; device?: string; os?: string };
+};
 
 type ModalType =
   | "wallet-list"
@@ -26,130 +61,129 @@ type ModalType =
   | "not-exist"
   | "qr-code";
 
-export const WalletModal = () => {
-  const {
-    currentWalletName,
-    currentChainName,
-    wallets,
-    connect,
-    getAccount,
-    setCurrentWalletName,
-    walletConnectQRCodeUri,
-  } = useWalletManager();
-
-  const { modalIsOpen, open, close } = useWalletModal();
-  const [modalType, setModalType] = useState<ModalType>("wallet-list");
-  const [selectedWallet, setSelectedWallet] = useState<any>(null);
-
-  const { chain, status, wallet } = useChainWallet(
-    currentChainName,
-    currentWalletName
-  );
-
-  const handleConnect = async () => {
-    try {
-      await connect(selectedWallet?.info?.name, chain.chainName);
-      await getAccount(selectedWallet?.info?.name, chain.chainName);
-      setSelectedWallet(null);
-    } catch (error) {
-      console.error("Failed to connect wallet:", error);
+export const WalletModal = ({
+  shouldShowList,
+  isOpen,
+  walletConnectQRCodeUri,
+  wallets,
+  username,
+  address,
+  currentWallet,
+  isConnecting,
+  isConnected,
+  isRejected,
+  isDisconnected,
+  isNotExist,
+  errorMessage,
+  open,
+  close,
+  disconnect,
+  onSelectWallet,
+  onBack,
+  onReconnect,
+  getDownloadLink,
+  getEnv,
+}: WalletModalProps) => {
+  const { header, content } = useMemo(() => {
+    if (shouldShowList || isDisconnected) {
+      return {
+        header: <WalletListHeader close={close} />,
+        content: (
+          <WalletListContent
+            onSelectWallet={onSelectWallet}
+            wallets={wallets}
+          />
+        ),
+      };
     }
-  };
-
-  useEffect(() => {
-    if (selectedWallet && currentWalletName && currentChainName) {
-      handleConnect();
+    if (
+      currentWallet &&
+      walletConnectQRCodeUri &&
+      currentWallet.info.name === "WalletConnect"
+    ) {
+      return {
+        header: (
+          <QRCodeHeader wallet={currentWallet} close={close} onBack={onBack} />
+        ),
+        content: (
+          <QRCodeContent
+            walletConnectQRCodeUri={walletConnectQRCodeUri}
+            errorMessage={errorMessage}
+            onReconnect={onReconnect}
+          />
+        ),
+      };
     }
-  }, [selectedWallet]);
-
-  const handleSelectWallet = async (selectedWallet: any) => {
-    setSelectedWallet(selectedWallet);
-    setCurrentWalletName(selectedWallet?.info?.name);
-  };
-
-  useEffect(() => {
-    if (!selectedWallet) {
-      setModalType("wallet-list");
+    if (currentWallet && isNotExist) {
+      return {
+        header: (
+          <NotExistHeader
+            wallet={currentWallet}
+            close={close}
+            onBack={onBack}
+          />
+        ),
+        content: (
+          <NotExistContent
+            wallet={currentWallet}
+            getDownloadLink={getDownloadLink}
+            getEnv={getEnv}
+          />
+        ),
+      };
     }
-    if (currentWalletName && currentChainName) {
-      if (status === WalletState.Connecting) {
-        setModalType("connecting");
-      }
-      if (status === WalletState.Connected) {
-        setModalType("connected");
-      }
-      if (status === WalletState.Rejected) {
-        setModalType("reject");
-      }
-      if (status === WalletState.Disconnected) {
-        setModalType("wallet-list");
-      }
-      if (walletConnectQRCodeUri) {
-        setModalType("qr-code");
-      }
+    if (currentWallet && isRejected) {
+      return {
+        header: (
+          <RejectHeader wallet={currentWallet} close={close} onBack={onBack} />
+        ),
+        content: (
+          <RejectContent wallet={currentWallet} onReconnect={onReconnect} />
+        ),
+      };
+    }
+    if (currentWallet && isConnected) {
+      return {
+        header: (
+          <ConnectedHeader
+            wallet={currentWallet}
+            onBack={onBack}
+            close={close}
+          />
+        ),
+        content: (
+          <ConnectedContent
+            wallet={currentWallet}
+            username={username}
+            address={address}
+            disconnect={disconnect}
+          />
+        ),
+      };
+    }
+    if (currentWallet && isConnecting) {
+      return {
+        header: (
+          <ConnectingHeader
+            wallet={currentWallet}
+            close={close}
+            onBack={onBack}
+          />
+        ),
+        content: <ConnectingContent wallet={currentWallet} />,
+      };
     }
   }, [
-    currentWalletName,
-    currentChainName,
-    status,
-    modalIsOpen,
-    selectedWallet,
+    currentWallet,
+    isConnected,
+    isConnecting,
+    address,
+    shouldShowList,
     walletConnectQRCodeUri,
   ]);
 
-  const goBackList = () => setModalType("wallet-list");
-
-  const { header, content } = useMemo(() => {
-    switch (modalType) {
-      case "wallet-list":
-        return {
-          header: <WalletListHeader />,
-          content: <WalletListContent onSelectWallet={handleSelectWallet} />,
-        };
-      case "connecting":
-        return {
-          header: <ConnectingHeader wallet={wallet} onBack={goBackList} />,
-          content: <ConnectingContent wallet={wallet} />,
-        };
-      case "connected":
-        return {
-          header: <ConnectedHeader wallet={wallet} onBack={goBackList} />,
-          content: <ConnectedContent afterDisconnect={goBackList} />,
-        };
-      case "reject":
-        return {
-          header: <RejectHeader wallet={wallet} onBack={goBackList} />,
-          content: (
-            <RejectContent
-              wallet={wallet}
-              onReconnect={() => {
-                setModalType("connecting");
-                wallet.connect(chain.chainId);
-                wallet.getAccount(chain.chainId);
-              }}
-            />
-          ),
-        };
-      case "not-exist":
-        return {
-          header: <NotExistHeader wallet={wallet} onBack={goBackList} />,
-          content: <NotExistContent wallet={wallet} />,
-        };
-      case "qr-code":
-        return {
-          header: <QRCodeHeader onBack={goBackList} />,
-          content: <QRCodeContent />,
-        };
-    }
-  }, [modalType]);
-
   return (
-    <ConnectModal
-      isOpen={modalIsOpen}
-      header={header}
-      onOpen={open}
-      onClose={close}
-    >
+    <ConnectModal isOpen={isOpen} header={header} onOpen={open} onClose={close}>
       {content}
     </ConnectModal>
   );

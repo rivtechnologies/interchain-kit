@@ -33,5 +33,5 @@ export abstract class BaseWallet {
   abstract getOfflineSigner(chainId: Chain['chainId'], preferredSignType: SignType): Promise<IGenericOfflineSigner>
 
   abstract addSuggestChain(chainId: Chain['chainId']): Promise<void>
-  abstract getProvider(chainId: Chain['chainId']): any
+  abstract getProvider(chainId: Chain['chainId']): unknown
 }

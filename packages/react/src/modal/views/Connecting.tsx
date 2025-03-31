@@ -1,17 +1,16 @@
 import { ConnectModalHead, ConnectModalStatus } from "@interchain-ui/react";
-import { useWalletManager } from "../../hooks";
 import { useWalletModal } from "../provider";
 import { BaseWallet } from "@interchain-kit/core";
 
 export const ConnectingHeader = ({
   wallet,
+  close,
   onBack,
 }: {
   wallet: BaseWallet;
+  close: () => void;
   onBack: () => void;
 }) => {
-  const { close } = useWalletModal();
-
   return (
     <ConnectModalHead
       title={wallet.info.prettyName}

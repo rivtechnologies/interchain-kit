@@ -1,20 +1,18 @@
-import { Algo, SimpleAccount, Wallet, WcEventTypes, WcProviderEventType } from './types/wallet';
+import { Algo, Wallet, WcEventTypes, WcProviderEventType } from './types/wallet';
 import { BaseWallet } from "./wallets/base-wallet";
-import { WalletAccount, SignOptions, DirectSignDoc, BroadcastMode } from "./types";
-import { SignClient } from '@walletconnect/sign-client';
-import { EngineTypes, PairingTypes, SessionTypes, SignClientTypes } from '@walletconnect/types';
+import { WalletAccount, SignOptions, DirectSignDoc, BroadcastMode, SignType } from "./types";
+import { PairingTypes, SessionTypes, SignClientTypes } from '@walletconnect/types';
 import { Buffer } from 'buffer'
 import {
   AminoGenericOfflineSigner,
   DirectGenericOfflineSigner,
-  OfflineAminoSigner,
-  OfflineDirectSigner,
-  OfflineSigner,
+  IAminoGenericOfflineSigner,
+  IDirectGenericOfflineSigner,
 } from '@interchainjs/cosmos/types/wallet';
 import { AminoSignResponse, StdSignature, DirectSignResponse } from '@interchainjs/cosmos/types/wallet';
-import { IGeneralOfflineSigner, StdSignDoc } from '@interchainjs/types'
+import { IGenericOfflineSigner, StdSignDoc } from '@interchainjs/types'
 import { WalletConnectIcon } from './constant';
-import { Chain, AssetList } from '@chain-registry/v2-types';
+import { Chain } from '@chain-registry/v2-types';
 import UniversalProvider, { ConnectParams, UniversalProviderOpts } from '@walletconnect/universal-provider';
 
 
@@ -129,28 +127,6 @@ export class WCWallet extends BaseWallet {
     }
 
     try {
-      this.provider.on("disconnect", (error) => {
-        console.error("disconnect:", error);
-      });
-
-      this.provider.on("session_delete", (event) => {
-        console.log("session_delete:", event);
-      });
-
-      this.provider.on("session_event", (event) => {
-        console.log("session_event:", event);
-      });
-
-
-      this.provider.on('session_request', (event) => {
-        console.log('session_request', event)
-      })
-
-      this.provider.on('display_uri', (uri: string) => {
-        this.pairingUri = uri
-        this.onPairingUriCreated && this.onPairingUriCreated(uri)
-      })
-
       const session = await this.provider.connect(connectParam)
 
       this.session = session
@@ -165,9 +141,9 @@ export class WCWallet extends BaseWallet {
   }
 
   async disconnect(): Promise<void> {
-    await this.provider.client.session.delete(this.provider?.session?.topic, { code: 6000, message: 'user disconnect!!' })
+    // await this.provider.client.session.delete(this.provider?.session?.topic, { code: 6000, message: 'user disconnect!!' })
     this.session = null
-    // await this.provider.disconnect()
+    await this.provider.disconnect()
     // this.provider.client.pairing.delete(this.pairingToConnect.topic, { code: 6000, message: 'user disconnect!!' })
     // await this.provider.client.disconnect({ topic: this.sessionToConnect.topic, reason: { code: 6000, message: 'user disconnect!!' } })
     // await this.provider.client.pairing.delete(this.pairingToConnect.topic, { code: 6000, message: 'user disconnect!!' })
@@ -238,24 +214,22 @@ export class WCWallet extends BaseWallet {
     }
   }
 
-  async getOfflineSignerAmino(chainId: string): IGeneralOfflineSigner {
-    return new AminoGenericOfflineSigner({
-      getAccounts: async () => [await this.getAccount(chainId)],
-      signAmino: (signerAddress: string, signDoc: StdSignDoc) =>
-        this.signAmino(chainId, signerAddress, signDoc),
-    })
-  }
-
-  async getOfflineSignerDirect(chainId: string): IGeneralOfflineSigner {
-    return new DirectGenericOfflineSigner({
-      getAccounts: async () => [await this.getAccount(chainId)],
-      signDirect: (signerAddress: string, signDoc: DirectSignDoc) =>
-        this.signDirect(chainId, signerAddress, signDoc),
-    })
-  }
-
-  getOfflineSigner(chainId: string): IGeneralOfflineSigner {
-    return this.getOfflineSignerAmino(chainId)
+  async getOfflineSigner(chainId: string, preferredSignType?: SignType) {
+    if (preferredSignType === 'amino') {
+      return new AminoGenericOfflineSigner({
+        getAccounts: async () => [await this.getAccount(chainId)],
+        signAmino: async (signer, signDoc) => {
+          return this.signAmino(chainId, signer, signDoc)
+        }
+      }) as IGenericOfflineSigner
+    } else if (preferredSignType === 'direct') {
+      return new DirectGenericOfflineSigner({
+        getAccounts: async () => [await this.getAccount(chainId)],
+        signDirect: async (signer, signDoc) => {
+          return this.signDirect(chainId, signer, signDoc)
+        }
+      }) as IGenericOfflineSigner
+    }
   }
 
   async signAmino(chainId: string, signer: string, signDoc: StdSignDoc, signOptions?: SignOptions): Promise<AminoSignResponse> {
@@ -305,7 +279,6 @@ export class WCWallet extends BaseWallet {
         accountNumber: signDoc.accountNumber.toString(),
       },
     };
-
     // return this.signClient.request({
     //   topic: this.session.topic,
     //   chainId: `cosmos:${chainId}`,
@@ -333,6 +306,29 @@ export class WCWallet extends BaseWallet {
   }
 
   bindingEvent(): void {
+
+    this.provider.on("disconnect", (error: { message: string; code: number }) => {
+      console.error("disconnect:", error);
+    });
+
+    this.provider.on("session_delete", (error: { message: string; code: number }) => {
+      console.log("session_delete:", event);
+    });
+
+    this.provider.on("session_event", (error: { message: string; code: number }) => {
+      console.log("session_event:", event);
+    });
+
+
+    this.provider.on('session_request', (error: { message: string; code: number }) => {
+      console.log('session_request', event)
+    })
+
+    this.provider.on('display_uri', (uri: string) => {
+      this.pairingUri = uri
+      this.onPairingUriCreated && this.onPairingUriCreated(uri)
+    })
+
     this.events.removeAllListeners()
     const events = [...Object.keys(WcEventTypes), ...Object.keys(WcProviderEventType)]
     // for (const event of events) {
@@ -353,7 +349,7 @@ export class WCWallet extends BaseWallet {
 
     for (const event of events) {
       // console.log(event)
-      this.signClient.on(event as any, (data: any) => {
+      this.provider.on(event as any, (data: any) => {
         console.log(event, data)
       })
     }
@@ -361,16 +357,16 @@ export class WCWallet extends BaseWallet {
   }
 
   unbindingEvent(): void {
-    this.signClient.events.removeAllListeners('session_event')
+    this.provider.events.removeAllListeners('session_event')
     this.events.removeAllListeners()
   }
 
   async ping() {
-    if (!this.signClient) {
+    if (!this.provider) {
       return
     }
     try {
-      await this.signClient.ping({
+      await this.provider.client.ping({
         topic: this.session.topic
       })
       return 'success'

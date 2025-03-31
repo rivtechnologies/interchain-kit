@@ -6,7 +6,7 @@ import { ChainName, DeviceType, DownloadInfo, EndpointOptions, Endpoints, OS, Si
 import { SigningOptions as InterchainSigningOptions } from '@interchainjs/cosmos/types/signing-client';
 import { SigningClient } from '@interchainjs/cosmos/signing-client'
 import Bowser from 'bowser';
-import { ChainNameNotExist, ChainNotExist, getValidRpcEndpoint, isInstanceOf, NoValidRpcEndpointFound, WalletNotExist } from './utils';
+import { ChainNameNotExist, ChainNotExist, getValidRpcEndpoint, isInstanceOf, NoValidRpcEndpointFound, RpcInfo, WalletNotExist } from './utils';
 import { WCWallet } from './wc-wallet';
 
 export class WalletManager {
@@ -154,6 +154,7 @@ export class WalletManager {
     const chain = this.getChainByName(chainName)
 
     let rpcEndpoint: string | HttpEndpoint = ''
+
     const providerRpcEndpoints = this.endpointOptions?.endpoints[chain.chainName]?.rpc || []
     // const walletRpcEndpoints = wallet?.info?.endpoints?.[chain.chainName]?.rpc || []
     const chainRpcEndpoints = chain.apis.rpc.map(url => url.address)
@@ -164,7 +165,9 @@ export class WalletManager {
       return rpcEndpoint
     }
 
-    const validRpcEndpoint = await getValidRpcEndpoint([...providerRpcEndpoints, ...chainRpcEndpoints])
+    const rpcInfos = [...providerRpcEndpoints, ...chainRpcEndpoints].map(endpoint => ({ chainType: chain.chainType, endpoint }))
+
+    const validRpcEndpoint = await getValidRpcEndpoint(rpcInfos)
 
     if (validRpcEndpoint === '') {
       throw new NoValidRpcEndpointFound()

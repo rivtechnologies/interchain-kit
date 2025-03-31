@@ -1,6 +1,6 @@
 import { WalletManager } from '../src/wallet-manager';
 import { Chain, AssetList } from '@chain-registry/v2-types';
-import { BaseWallet } from '../src/base-wallet';
+import { BaseWallet } from '../src/wallets/base-wallet';
 import { SignerOptions, EndpointOptions, SignType } from '../src/types';
 import { WalletNotExist, ChainNameNotExist, NoValidRpcEndpointFound } from '../src/utils';
 
@@ -196,21 +196,6 @@ describe('WalletManager', () => {
   it('should get signer options', () => {
     const options = walletManager.getSignerOptions(chain1.chainName);
     expect(options.signerOptions?.prefix).toBe(signerOptions.signing?.(chain1.chainName as string)?.signerOptions?.prefix);
-  });
-
-  it('should get offline signer', async () => {
-    const mockAminoOfflineSigner = {
-      getAccounts: jest.fn(),
-      signAmino: jest.fn()
-    }
-    const mockDirectOfflineSigner = {
-      getAccounts: jest.fn(),
-      signDirect: jest.fn()
-    }
-    wallet1.getOfflineSignerAmino = jest.fn().mockReturnValue(Promise.resolve(mockAminoOfflineSigner));
-    wallet1.getOfflineSignerDirect = jest.fn().mockReturnValue(Promise.resolve(mockDirectOfflineSigner));
-    const signer = await walletManager.getOfflineSigner(wallet1.info?.name as string, chain1.chainName as string);
-    expect(signer).toBeInstanceOf(AminoGenericOfflineSigner);
   });
 
   it('should get signing client', async () => {

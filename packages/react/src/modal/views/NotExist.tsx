@@ -1,7 +1,7 @@
 import { ConnectModalHead, ConnectModalStatus } from "@interchain-ui/react";
 import { useWalletManager } from "../../hooks"; // replace with the actual path
 import { useWalletModal } from "../provider";
-import { BaseWallet } from "@interchain-kit/core";
+import { BaseWallet, DownloadInfo } from "@interchain-kit/core";
 import { useMemo } from "react";
 import { FaAndroid } from "@react-icons/all-files/fa/FaAndroid";
 import { GoDesktopDownload } from "@react-icons/all-files/go/GoDesktopDownload";
@@ -11,12 +11,13 @@ import { RiChromeFill } from "@react-icons/all-files/ri/RiChromeFill";
 
 export const NotExistHeader = ({
   wallet,
+  close,
   onBack,
 }: {
   wallet: BaseWallet;
+  close: () => void;
   onBack: () => void;
 }) => {
-  const { close } = useWalletModal();
   return (
     <ConnectModalHead
       title={wallet?.info?.prettyName || ""}
@@ -28,11 +29,17 @@ export const NotExistHeader = ({
   );
 };
 
-export const NotExistContent = ({ wallet }: { wallet: BaseWallet }) => {
-  const walletManager = useWalletManager();
-
+export const NotExistContent = ({
+  wallet,
+  getDownloadLink,
+  getEnv,
+}: {
+  wallet: BaseWallet;
+  getDownloadLink: (walletName: string) => DownloadInfo;
+  getEnv: () => { browser?: string; device?: string; os?: string };
+}) => {
   const downloadLink = useMemo(() => {
-    return walletManager.getDownloadLink(wallet.info.name);
+    return getDownloadLink(wallet.info.name);
   }, [wallet?.info?.name]);
 
   const onInstall = () => {
@@ -41,7 +48,7 @@ export const NotExistContent = ({ wallet }: { wallet: BaseWallet }) => {
     }
   };
 
-  const IconComp = getIcon(walletManager.getEnv());
+  const IconComp = getIcon(getEnv());
 
   return (
     <ConnectModalStatus

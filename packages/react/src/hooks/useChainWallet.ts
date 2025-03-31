@@ -16,11 +16,10 @@ export const useChainWallet = (chainName: string, walletName: string): UseChainW
   return {
     //for migration cosmos kit
     connect: async () => {
-      await connect(walletName, chainName)
       setCurrentWalletName(walletName)
       setCurrentChainName(chainName)
+      await connect(walletName, chainName)
       await getAccount(walletName, chainName)
-
     },
     disconnect: () => disconnect(walletName, chainName),
     getRpcEndpoint: () => getRpcEndpoint(walletName, chainName),
@@ -33,7 +32,7 @@ export const useChainWallet = (chainName: string, walletName: string): UseChainW
     chain,
     assetList,
     address: chainWalletStateToShow?.account?.address,
-    wallet: new ChainWallet(wallet, () => connect(walletName, chainName), () => disconnect(walletName, chainName), () => getAccount(walletName, chainName)),
+    wallet: wallet ? new ChainWallet(wallet, () => connect(walletName, chainName), () => disconnect(walletName, chainName), () => getAccount(walletName, chainName)) : null,
     rpcEndpoint: chainWalletStateToShow?.rpcEndpoint,
     getSigningClient: () => getSigningClient(walletName, chainName),
   }

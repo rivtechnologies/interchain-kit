@@ -6,12 +6,13 @@ import { BaseWallet } from "@interchain-kit/core";
 
 export const RejectHeader = ({
   wallet,
+  close,
   onBack,
 }: {
   wallet: BaseWallet;
+  close: () => void;
   onBack: () => void;
 }) => {
-  const { close } = useWalletModal();
   return (
     <ConnectModalHead
       title={wallet?.info?.prettyName}

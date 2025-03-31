@@ -1,0 +1,119 @@
+import { createMockChain } from './../helpers/mock-chain-factory';
+import { CosmosWallet } from '../../src/wallets/cosmos-wallet';
+import { BaseWallet } from '../../src/wallets/base-wallet';
+import { getClientFromExtension } from '../../src/utils';
+import { chainRegistryChainToKeplr } from '@chain-registry/v2-keplr';
+import { chain as cosmosChain, assetList as cosmosAssetList } from '@chain-registry/v2/mainnet/cosmoshub'
+
+jest.mock('../../src/utils', () => ({
+    getClientFromExtension: jest.fn(),
+}));
+
+jest.mock('@chain-registry/v2-keplr', () => ({
+    chainRegistryChainToKeplr: jest.fn(),
+}));
+
+describe('CosmosWallet', () => {
+    let wallet: CosmosWallet;
+
+    beforeEach(() => {
+        wallet = new CosmosWallet({
+            windowKey: 'keplr',
+            name: 'cosmosTestWallet',
+            mode: 'extension',
+            prettyName: 'Cosmos Test Wallet',
+        });
+        wallet.setChainMap([cosmosChain]);
+        wallet.assetLists = [cosmosAssetList];
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it('should initialize the wallet by getting the client from extension', async () => {
+        const mockClient = { enable: jest.fn() };
+        (getClientFromExtension as jest.Mock).mockResolvedValue(mockClient);
+
+        await wallet.init();
+
+        expect(getClientFromExtension).toHaveBeenCalledWith('keplr');
+        expect(wallet.client).toBe(mockClient);
+    });
+
+    it('should throw an error if initialization fails', async () => {
+        const errorMessage = 'Failed to get client';
+        (getClientFromExtension as jest.Mock).mockRejectedValue(new Error(errorMessage));
+
+        await expect(wallet.init()).rejects.toThrow(errorMessage);
+        expect(wallet.errorMessage).toBe(errorMessage);
+    });
+
+    it('should connect to a chain', async () => {
+        const mockClient = { enable: jest.fn() };
+        wallet.client = mockClient;
+
+        await wallet.connect('cosmoshub-4');
+
+        expect(mockClient.enable).toHaveBeenCalledWith('cosmoshub-4');
+    });
+
+    it('should suggest a chain if connection fails with a specific error', async () => {
+        const mockClient = {
+            enable: jest.fn().mockRejectedValue(new Error('some error')),
+            experimentalSuggestChain: jest.fn(),
+        };
+        wallet.client = mockClient;
+
+        (chainRegistryChainToKeplr as jest.Mock).mockReturnValue({ chainId: 'cosmoshub-4' });
+
+        await expect(wallet.connect('cosmoshub-4')).rejects.toThrow('some error');
+        expect(mockClient.experimentalSuggestChain).toHaveBeenCalledWith({ chainId: 'cosmoshub-4' });
+    });
+
+    it('should disconnect from a chain', async () => {
+        const mockClient = { disable: jest.fn() };
+        wallet.client = mockClient;
+
+        await wallet.disconnect('cosmoshub-4');
+
+        expect(mockClient.disable).toHaveBeenCalledWith('cosmoshub-4');
+    });
+
+    it('should get account details', async () => {
+        const mockClient = {
+            getKey: jest.fn().mockResolvedValue({
+                name: 'test-user',
+                bech32Address: 'cosmos1address',
+                algo: 'secp256k1',
+                pubKey: new Uint8Array([1, 2, 3]),
+                isNanoLedger: false,
+            }),
+        };
+        wallet.client = mockClient;
+
+        const account = await wallet.getAccount('cosmoshub-4');
+
+        expect(mockClient.getKey).toHaveBeenCalledWith('cosmoshub-4');
+        expect(account).toEqual({
+            username: 'test-user',
+            address: 'cosmos1address',
+            algo: 'secp256k1',
+            pubkey: new Uint8Array([1, 2, 3]),
+            isNanoLedger: false,
+        });
+    });
+
+    it('should add a suggested chain', async () => {
+        const mockClient = { experimentalSuggestChain: jest.fn() };
+        wallet.client = mockClient;
+        wallet.chainMap.set('cosmoshub-4', cosmosChain);
+
+        (chainRegistryChainToKeplr as jest.Mock).mockReturnValue({ chainId: 'cosmoshub-4' });
+
+        await wallet.addSuggestChain('cosmoshub-4');
+
+        expect(chainRegistryChainToKeplr).toHaveBeenCalledWith(cosmosChain, [cosmosAssetList]);
+        expect(mockClient.experimentalSuggestChain).toHaveBeenCalledWith({ chainId: 'cosmoshub-4' });
+    });
+});
