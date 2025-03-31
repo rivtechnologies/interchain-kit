@@ -1,5 +1,3 @@
-
-import { Wallet } from "../types";
 import { clientNotExistError, getClientFromExtension } from "../utils";
 import { MultiChainWallet } from "./multichain-wallet";
 

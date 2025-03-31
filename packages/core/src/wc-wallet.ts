@@ -127,28 +127,6 @@ export class WCWallet extends BaseWallet {
     }
 
     try {
-      this.provider.on("disconnect", (error: { message: string; code: number }) => {
-        console.error("disconnect:", error);
-      });
-
-      this.provider.on("session_delete", (error: { message: string; code: number }) => {
-        console.log("session_delete:", event);
-      });
-
-      this.provider.on("session_event", (error: { message: string; code: number }) => {
-        console.log("session_event:", event);
-      });
-
-
-      this.provider.on('session_request', (error: { message: string; code: number }) => {
-        console.log('session_request', event)
-      })
-
-      this.provider.on('display_uri', (uri: string) => {
-        this.pairingUri = uri
-        this.onPairingUriCreated && this.onPairingUriCreated(uri)
-      })
-
       const session = await this.provider.connect(connectParam)
 
       this.session = session
@@ -163,9 +141,9 @@ export class WCWallet extends BaseWallet {
   }
 
   async disconnect(): Promise<void> {
-    await this.provider.client.session.delete(this.provider?.session?.topic, { code: 6000, message: 'user disconnect!!' })
+    // await this.provider.client.session.delete(this.provider?.session?.topic, { code: 6000, message: 'user disconnect!!' })
     this.session = null
-    // await this.provider.disconnect()
+    await this.provider.disconnect()
     // this.provider.client.pairing.delete(this.pairingToConnect.topic, { code: 6000, message: 'user disconnect!!' })
     // await this.provider.client.disconnect({ topic: this.sessionToConnect.topic, reason: { code: 6000, message: 'user disconnect!!' } })
     // await this.provider.client.pairing.delete(this.pairingToConnect.topic, { code: 6000, message: 'user disconnect!!' })
@@ -301,7 +279,6 @@ export class WCWallet extends BaseWallet {
         accountNumber: signDoc.accountNumber.toString(),
       },
     };
-
     // return this.signClient.request({
     //   topic: this.session.topic,
     //   chainId: `cosmos:${chainId}`,
@@ -329,6 +306,29 @@ export class WCWallet extends BaseWallet {
   }
 
   bindingEvent(): void {
+
+    this.provider.on("disconnect", (error: { message: string; code: number }) => {
+      console.error("disconnect:", error);
+    });
+
+    this.provider.on("session_delete", (error: { message: string; code: number }) => {
+      console.log("session_delete:", event);
+    });
+
+    this.provider.on("session_event", (error: { message: string; code: number }) => {
+      console.log("session_event:", event);
+    });
+
+
+    this.provider.on('session_request', (error: { message: string; code: number }) => {
+      console.log('session_request', event)
+    })
+
+    this.provider.on('display_uri', (uri: string) => {
+      this.pairingUri = uri
+      this.onPairingUriCreated && this.onPairingUriCreated(uri)
+    })
+
     this.events.removeAllListeners()
     const events = [...Object.keys(WcEventTypes), ...Object.keys(WcProviderEventType)]
     // for (const event of events) {
