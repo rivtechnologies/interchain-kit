@@ -59,7 +59,6 @@ export class MultiChainWallet extends BaseWallet {
   }
   async connect(chainId: Chain['chainId']): Promise<void> {
     const chain = this.getChainById(chainId);
-    console.log('chain', chain.chainType, this.networkWalletMap)
     const networkWallet = this.getWalletByChainType(chain.chainType);
     await networkWallet.connect(chainId);
   }

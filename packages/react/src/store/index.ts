@@ -252,14 +252,14 @@ export const createInterchainStore = (walletManager: WalletManager) => {
       currentChainName: state.currentChainName
     }),
     onRehydrateStorage: (state) => {
-      console.log('interchain-kit store hydration starts')
+      // console.log('interchain-kit store hydration starts')
 
       // optional
       return (state, error) => {
         if (error) {
           console.log('an error happened during hydration', error)
         } else {
-          console.log('interchain-kit store hydration finished')
+          // console.log('interchain-kit store hydration finished')
         }
       }
     },
