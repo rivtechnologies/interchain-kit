@@ -3,6 +3,7 @@ import { useWalletModal } from "../modal";
 import { useWalletManager } from './useWalletManager';
 import { ChainNameNotExist } from '@interchain-kit/core';
 import { ChainWallet } from '../store/chain-wallet';
+import { useSigningClient } from './useSigningClient';
 
 export const useChain = (chainName: string): UseChainReturnType => {
 
@@ -19,6 +20,8 @@ export const useChain = (chainName: string): UseChainReturnType => {
 
   const chainWalletStateToShow = getChainWalletState(currentWalletName, chainName)
   const { open, close } = useWalletModal()
+
+  const { signingClient, isLoading: isSigningClientLoading, error: signingClientError } = useSigningClient(chainName, currentWalletName)
 
   return {
     //for migration cosmos kit
@@ -45,6 +48,11 @@ export const useChain = (chainName: string): UseChainReturnType => {
     wallet: new ChainWallet(wallet, () => connect(currentWalletName, chainName), () => disconnect(currentWalletName, chainName), () => getAccount(currentWalletName, chainName)),
     rpcEndpoint: chainWalletStateToShow?.rpcEndpoint,
     getSigningClient: () => getSigningClient(currentWalletName, chainName),
+
+    signingClient,
+    isSigningClientLoading,
+    signingClientError,
+
   }
 
 }

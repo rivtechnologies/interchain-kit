@@ -1,6 +1,7 @@
 import { useWalletManager } from "./useWalletManager"
 import { UseChainWalletReturnType } from "../types/chain"
 import { ChainWallet } from "../store/chain-wallet"
+import { useSigningClient } from "./useSigningClient"
 
 export const useChainWallet = (chainName: string, walletName: string): UseChainWalletReturnType => {
   const { assetLists, disconnect, setCurrentChainName, setCurrentWalletName, getChainByName, getWalletByName, getChainWalletState, getChainLogoUrl, connect, getSigningClient, getRpcEndpoint, getAccount } = useWalletManager()
@@ -12,6 +13,8 @@ export const useChainWallet = (chainName: string, walletName: string): UseChainW
   const assetList = assetLists.find(a => a.chainName === chainName)
 
   const chainWalletStateToShow = getChainWalletState(walletName, chainName)
+
+  const { signingClient, isLoading: isSigningClientLoading, error: signingClientError } = useSigningClient(chainName, walletName)
 
   return {
     //for migration cosmos kit
@@ -34,5 +37,9 @@ export const useChainWallet = (chainName: string, walletName: string): UseChainW
     wallet: wallet ? new ChainWallet(wallet, () => connect(walletName, chainName), () => disconnect(walletName, chainName), () => getAccount(walletName, chainName)) : null,
     rpcEndpoint: chainWalletStateToShow?.rpcEndpoint,
     getSigningClient: () => getSigningClient(walletName, chainName),
+
+    signingClient,
+    isSigningClientLoading,
+    signingClientError,
   }
 }

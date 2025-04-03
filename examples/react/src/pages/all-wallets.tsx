@@ -130,10 +130,14 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
   const toAddressRef = useRef<HTMLInputElement>(null);
   const amountRef = useRef<HTMLInputElement>(null);
 
-  const { getSigningClient, assetList } = useChainWallet(
+  const { assetList, signingClient, isSigningClientLoading } = useChainWallet(
     chain.chainName,
     wallet.info?.name as string
   );
+
+  if (isSigningClientLoading || !signingClient) {
+    return;
+  }
 
   const handleSendToken = async () => {
     if (!toAddressRef.current || !amountRef.current) {
@@ -175,7 +179,6 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
         }
       }
       if (chain.chainType === "cosmos") {
-        const signingClient = await getSigningClient();
         const txSend = createSend(signingClient);
         const recipientAddress = toAddressRef.current.value;
         const denom =
@@ -243,7 +246,6 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
       }
 
       if (chain.chainType === "cosmos") {
-        const signingClient = await getSigningClient();
         const txSend = createSend(signingClient);
         const recipientAddress = toAddressRef.current.value;
         const denom =

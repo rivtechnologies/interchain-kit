@@ -23,6 +23,11 @@ export type UseChainReturnType = {
   wallet: ChainWallet<BaseWallet>,
   rpcEndpoint: string | HttpEndpoint
   getSigningClient: () => Promise<SigningClient>
+
+  signingClient: SigningClient | null
+  isSigningClientLoading: boolean
+  signingClientError: Error | unknown | null
+
 } & CosmosKitUseChainReturnType
 
 export type UseChainWalletReturnType = Omit<UseChainReturnType, 'openView' | 'closeView'>
