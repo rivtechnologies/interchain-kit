@@ -35,8 +35,8 @@
     "@chain-registry/v2": "^1.71.71",
     "@chain-registry/v2-keplr": "^0.0.72",
     "@chain-registry/v2-types": "^0.53.40",
-    "@interchainjs/cosmos": "1.9.16",
-    "@interchainjs/cosmos-types": "1.9.16",
+    "@interchainjs/cosmos": "1.10.1",
+    "@interchainjs/cosmos-types": "1.10.1",
     "@ledgerhq/hw-app-cosmos": "^6.30.4",
     "@ledgerhq/hw-transport": "^6.31.4",
     "@ledgerhq/hw-transport-webhid": "^6.30.0",
@@ -46,7 +46,7 @@
     "@walletconnect/universal-provider": "^2.19.1",
     "bowser": "^2.11.0",
     "buffer": "^6.0.3",
-    "interchainjs": "1.9.16",
+    "interchainjs": "1.10.1",
     "long": "^5.2.3"
   },
   "devDependencies": {
