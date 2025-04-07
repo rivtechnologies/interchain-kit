@@ -10,29 +10,31 @@ export const useSigningClient = (chainName: string, walletName: string) => {
 
   const chainWalletState = getChainWalletState(walletName, chainName)
 
-  const handleGetSigningClient = async () => {
-    if (!chainName || !walletName || !(chainWalletState.walletState === WalletState.Connected)) {
-      setIsLoading(false)
-      return
-    }
-    setIsLoading(true)
-    try {
-      const client = await getSigningClient(walletName, chainName)
-      setSigningClient(client)
-      setError(null)
-
-    } catch (error) {
-      setError((error as any).message)
-      setSigningClient(null)
-
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
   useEffect(() => {
+    const handleGetSigningClient = async () => {
+
+      if (!chainName || !walletName || !(chainWalletState?.walletState === WalletState.Connected) || !chainWalletState?.rpcEndpoint) {
+        setIsLoading(false)
+        return
+      }
+      setIsLoading(true)
+      try {
+        const client = await getSigningClient(walletName, chainName)
+        setSigningClient(client)
+        setError(null)
+
+      } catch (error) {
+        console.log("Error getting signing client", error)
+        setError((error as any).message)
+        setSigningClient(null)
+
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
     handleGetSigningClient()
-  }, [chainName, walletName, chainWalletState?.walletState])
+  }, [chainName, walletName, chainWalletState?.walletState, chainWalletState?.rpcEndpoint])
 
   return {
     signingClient,
