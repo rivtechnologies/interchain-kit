@@ -19,7 +19,6 @@ export const useChainWallet = (chainName: string, walletName: string): UseChainW
       setCurrentWalletName(walletName)
       setCurrentChainName(chainName)
       await connect(walletName, chainName)
-      await getAccount(walletName, chainName)
     },
     disconnect: () => disconnect(walletName, chainName),
     getRpcEndpoint: () => getRpcEndpoint(walletName, chainName),
