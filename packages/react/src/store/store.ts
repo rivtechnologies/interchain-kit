@@ -240,9 +240,13 @@ export const createInterchainStore = (walletManager: WalletManager) => {
       }
     },
     getAccount: async (walletName: string, chainName: string) => {
-      const account = await walletManager.getAccount(walletName, chainName)
-      get().updateChainWalletState(walletName, chainName, { account })
-      return account
+      try {
+        const account = await walletManager.getAccount(walletName, chainName)
+        get().updateChainWalletState(walletName, chainName, { account })
+        return account
+      } catch (error) {
+        console.log(error)
+      }
     },
     getRpcEndpoint: async (walletName: string, chainName: string) => {
       const rpcEndpoint = await walletManager.getRpcEndpoint(walletName, chainName)

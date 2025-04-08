@@ -22,8 +22,10 @@ import { xdefiWallet } from "@interchain-kit/xdefi-extension";
 import { compassWallet } from "@interchain-kit/compass-extension";
 import { trustExtension } from "@interchain-kit/trust-extension";
 import { leapCosmosExtensionMetaMask } from "@interchain-kit/leap-cosmos-extension-metamask";
+import { xdefinWallet } from "@interchain-kit/xdefi-extension";
 // import { MockWallet } from "@interchain-kit/mock-wallet";
 import { metaMaskExtension } from "@interchain-kit/metamask-extension";
+import { exodusWallet } from "@interchain-kit/exodus-extension";
 import { starshipChain, starshipChain1 } from "./utils/starship.ts";
 import { ThemeProvider } from "@interchain-ui/react";
 import { Chain } from "@chain-registry/v2-types";
@@ -31,9 +33,13 @@ import {
   createAssetListFromEthereumChainInfo,
   createChainFromEthereumChainInfo,
 } from "./utils/eth-test-net.ts";
+import {
+  createStarshipChain,
+  createStarshipAssetList,
+} from "./utils/osmo-test-net.ts";
 
 const chainNames: string[] = [
-  "osmosistestnet",
+  // "osmosistestnet",
   // "osmosis",
   // "juno",
   // "cosmoshub",
@@ -41,6 +47,7 @@ const chainNames: string[] = [
   // "noble",
   // "seitestnet2",
   // "ethereum",
+  // "cosmoshubtestnet",
 ];
 // const chainNames = ["osmosistestnet"];
 // const chainNames = ["cosmoshub"];
@@ -69,6 +76,7 @@ const wallet2Mnemonic =
 
 const bscethertestnet = {
   chainId: "97",
+  // chainId: "0x61",
   chainName: "Binance Smart Chain Testnet",
   nativeCurrency: {
     name: "BSC Testnet",
@@ -94,7 +102,7 @@ const goerliethereumtestnet = {
 const sepoliaEthereumTestNet = {
   chainId: "0xaa36a7", // Sepolia Testnet
   chainName: "Sepolia Testnet",
-  rpcUrls: ["https://endpoints.omniatech.io/v1/eth/sepolia/public"],
+  rpcUrls: ["https://gateway.tenderly.co/public/sepolia"],
   nativeCurrency: {
     name: "Sepolia ETH",
     symbol: "USDC",
@@ -108,6 +116,12 @@ const _chains = [
   // createChainFromEthereumChainInfo(bscethertestnet),
   // createChainFromEthereumChainInfo(goerliethereumtestnet),
   // createChainFromEthereumChainInfo(sepoliaEthereumTestNet),
+  createStarshipChain(
+    "test-osmosis-1",
+    "osmosis",
+    "http://localhost:26657",
+    "http://localhost:1317"
+  ),
 ];
 // const _chains = [starshipChain1]
 const _assetLists = [
@@ -115,6 +129,7 @@ const _assetLists = [
   // createAssetListFromEthereumChainInfo(bscethertestnet),
   // createAssetListFromEthereumChainInfo(goerliethereumtestnet),
   // createAssetListFromEthereumChainInfo(sepoliaEthereumTestNet),
+  createStarshipAssetList("osmosis"),
 ];
 
 // const mock1Wallet = new MockWallet(wallet1Mnemonic, _chains, {
@@ -143,8 +158,12 @@ const _wallets: BaseWallet[] = [
   // ledgerWallet,
   // leapCosmosExtensionMetaMask,
   // compassWallet,
-  // trustExtension,
+  trustExtension,
   // metaMaskExtension,
+  // okxWallet,
+  // xdefiWallet,
+  // exodusWallet,
+  // coin98Wallet,
 ];
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

@@ -33,6 +33,7 @@ export class CosmosWallet extends BaseWallet {
     try {
       await this.client.enable(chainId)
     } catch (error) {
+      console.log('error', error)
       if ((error as any).message !== `Request rejected`) {
         await this.addSuggestChain(chainId)
       } else {

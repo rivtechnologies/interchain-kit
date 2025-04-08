@@ -1,9 +1,15 @@
+import { CosmosWallet, EthereumWallet, ExtensionWallet } from "@interchain-kit/core";
 import { XdefiWallet } from "./extension";
 import { xdefiExtensionInfo } from "./registry";
 
-const xdefiWallet = new XdefiWallet(xdefiExtensionInfo)
+
 
 export * from './constant'
 export * from './registry'
+
+const xdefiWallet = new ExtensionWallet(xdefiExtensionInfo)
+
+xdefiWallet.setNetworkWallet('cosmos', new CosmosWallet(xdefiExtensionInfo))
+xdefiWallet.setNetworkWallet('eip155', new EthereumWallet(xdefiExtensionInfo))
 
 export { xdefiWallet }

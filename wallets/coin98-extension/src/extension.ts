@@ -1,4 +1,4 @@
-import { CosmosWallet, EthereumWallet, ExtensionWallet, MultiChainWallet } from '@interchain-kit/core';
+import { CosmosWallet, EthereumWallet, MultiChainWallet } from '@interchain-kit/core';
 import { Coin98ExtensionInfo } from './registry';
 
 const coin98Wallet = new MultiChainWallet(Coin98ExtensionInfo)

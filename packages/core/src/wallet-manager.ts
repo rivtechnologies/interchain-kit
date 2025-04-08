@@ -18,7 +18,7 @@ export class WalletManager {
 
   preferredSignTypeMap: Record<Chain['chainName'], SignType> = {}
   signerOptionMap: Record<Chain['chainName'], InterchainSigningOptions> = {}
-  endpointOptionsMap: Record<Chain['chainName'], Endpoints> = {}
+  endpointOptionsMap: Record<Chain['chainName'], Partial<Endpoints & { rpcPromise: Promise<unknown> }>> = {}
 
   constructor(
     chains: Chain[],
@@ -181,29 +181,53 @@ export class WalletManager {
 
     const chain = this.getChainByName(chainName)
 
-    let rpcEndpoint: string | HttpEndpoint = ''
+    if (!chain) {
+      throw new ChainNameNotExist(chainName)
+    }
 
-    const providerRpcEndpoints = this.endpointOptions?.endpoints[chain.chainName]?.rpc || []
-    // const walletRpcEndpoints = wallet?.info?.endpoints?.[chain.chainName]?.rpc || []
-    const chainRpcEndpoints = chain.apis.rpc.map(url => url.address)
+    if (!this.endpointOptionsMap[chainName]) {
+      this.endpointOptionsMap[chainName] = { rpc: [] }
+    }
 
-    if (providerRpcEndpoints?.[0]) {
-      rpcEndpoint = providerRpcEndpoints[0]
-      this.endpointOptionsMap?.[chainName]?.rpc.push(rpcEndpoint)
+    if (this.endpointOptionsMap[chainName].rpcPromise) {
+      return this.endpointOptionsMap[chainName].rpcPromise
+    }
+
+    const rpcPromise = (async () => {
+      let rpcEndpoint: string | HttpEndpoint = ''
+
+      const providerRpcEndpoints = this.endpointOptions?.endpoints[chain.chainName]?.rpc || []
+      const chainRpcEndpoints = chain.apis.rpc.map(url => url.address)
+
+      if (providerRpcEndpoints?.[0]) {
+        rpcEndpoint = providerRpcEndpoints[0]
+        this.endpointOptionsMap[chainName].rpc.push(rpcEndpoint)
+        return rpcEndpoint
+      }
+
+      const rpcInfos = [...providerRpcEndpoints, ...chainRpcEndpoints].map(endpoint => ({ chainType: chain.chainType, endpoint }))
+
+      const validRpcEndpoint = await getValidRpcEndpoint(rpcInfos)
+
+      if (validRpcEndpoint === '') {
+        throw new NoValidRpcEndpointFound()
+      }
+
+      rpcEndpoint = validRpcEndpoint
+      this.endpointOptionsMap[chainName].rpc.push(rpcEndpoint)
       return rpcEndpoint
+    })()
+
+    this.endpointOptionsMap[chainName].rpcPromise = rpcPromise
+
+    try {
+      const result = await rpcPromise
+      delete this.endpointOptionsMap[chainName].rpcPromise
+      return result
+    } catch (error) {
+      delete this.endpointOptionsMap[chainName].rpcPromise
+      throw error
     }
-
-    const rpcInfos = [...providerRpcEndpoints, ...chainRpcEndpoints].map(endpoint => ({ chainType: chain.chainType, endpoint }))
-
-    const validRpcEndpoint = await getValidRpcEndpoint(rpcInfos)
-
-    if (validRpcEndpoint === '') {
-      throw new NoValidRpcEndpointFound()
-    }
-
-    rpcEndpoint = validRpcEndpoint
-    this.endpointOptionsMap?.[chainName]?.rpc.push(rpcEndpoint)
-    return rpcEndpoint
   }
 
   getPreferSignType(chainName: string) {

@@ -130,13 +130,14 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
   const toAddressRef = useRef<HTMLInputElement>(null);
   const amountRef = useRef<HTMLInputElement>(null);
 
-  const { assetList, signingClient, isSigningClientLoading } = useChainWallet(
-    chain.chainName,
-    wallet.info?.name as string
-  );
+  const { assetList, signingClient, isSigningClientLoading, rpcEndpoint } =
+    useChainWallet(chain.chainName, wallet.info?.name as string);
 
-  if (isSigningClientLoading || !signingClient) {
-    return;
+  if (
+    chain.chainType === "cosmos" &&
+    (isSigningClientLoading || !signingClient)
+  ) {
+    return <td>loading...</td>;
   }
 
   const handleSendToken = async () => {
@@ -148,7 +149,7 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
       from: address,
       to: toAddressRef.current.value,
       value: `0x${parseInt(amountRef.current.value).toString(16)}`,
-      data: "0x",
+      // data: "0x",
     };
 
     if (isInstanceOf(wallet, WCWallet)) {
@@ -228,10 +229,12 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
         const ethWallet = wallet.getWalletByChainType("eip155");
         if (isInstanceOf(ethWallet, EthereumWallet)) {
           const provider = ethWallet.getProvider();
-          console.log(provider);
           // const provider = new ethers.BrowserProvider(ethWallet.getProvider());
           const ethProvider = new ethers.providers.Web3Provider(provider);
+          // const ethProvider = new ethers.providers.JsonRpcProvider(rpcEndpoint);
 
+          // await ethWallet.switchChain(chain.chainId as string);
+          console.log(provider);
           console.log(await ethProvider.getNetwork());
 
           const signer = await ethProvider.getSigner();

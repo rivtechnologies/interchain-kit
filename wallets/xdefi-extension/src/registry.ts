@@ -5,6 +5,8 @@ export const xdefiExtensionInfo: Wallet = {
   name: 'xdefi-extension',
   prettyName: 'XDEFI',
   windowKey: 'xfi.keplr',
+  walletIdentifyKey: 'xfi.keplr.isXDEFI',
+  ethereumKey: 'xfi.ethereum',
   logo: ICON,
   mode: 'extension',
   downloads: [
