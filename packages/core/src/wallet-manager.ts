@@ -42,6 +42,7 @@ export class WalletManager {
 
     this.wallets.forEach(wallet => {
       wallet.setChainMap(this.chains)
+      wallet.setAssetLists(this.assetLists)
     })
   }
 

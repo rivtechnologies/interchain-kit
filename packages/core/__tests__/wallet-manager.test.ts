@@ -93,6 +93,16 @@ describe('WalletManager', () => {
 
   });
 
+  it('should set assetLists for wallets, after walletManager constructor', () => {
+    expect(wallet1.assetLists).toStrictEqual([assetList1, assetList2]);
+    expect(wallet2.assetLists).toStrictEqual([assetList1, assetList2]);
+  })
+
+  it('should set chainMap for wallets, after walletManager constructor', () => {
+    expect(wallet1.chainMap.get(chain1.chainId)).toEqual(chain1);
+    expect(wallet2.chainMap.get(chain1.chainId)).toEqual(chain1);
+  });
+
   it('should initialize wallets', async () => {
     wallet1.init = jest.fn();
     wallet2.init = jest.fn();
