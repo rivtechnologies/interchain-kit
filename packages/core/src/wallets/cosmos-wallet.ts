@@ -35,9 +35,9 @@ export class CosmosWallet extends BaseWallet {
     } catch (error) {
       if ((error as any).message !== `Request rejected`) {
         await this.addSuggestChain(chainId)
-        return
+      } else {
+        throw error
       }
-      throw error
     }
   }
   async disconnect(chainId: string): Promise<void> {
