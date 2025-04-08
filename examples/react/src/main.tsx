@@ -39,7 +39,7 @@ import {
 } from "./utils/osmo-test-net.ts";
 
 const chainNames: string[] = [
-  // "osmosistestnet",
+  "osmosistestnet",
   // "osmosis",
   // "juno",
   // "cosmoshub",
