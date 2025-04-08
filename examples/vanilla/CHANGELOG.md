@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.214](https://github.com/hyperweb-io/interchain-kit/compare/@interchain-kit/vanilla-examples@0.2.213...@interchain-kit/vanilla-examples@0.2.214) (2025-04-08)
+
+**Note:** Version bump only for package @interchain-kit/vanilla-examples
+
 ## [0.2.213](https://github.com/hyperweb-io/interchain-kit/compare/@interchain-kit/vanilla-examples@0.2.212...@interchain-kit/vanilla-examples@0.2.213) (2025-04-08)
 
 **Note:** Version bump only for package @interchain-kit/vanilla-examples

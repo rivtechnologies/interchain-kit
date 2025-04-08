@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/trust-extension",
-  "version": "0.2.213",
+  "version": "0.2.214",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector",
   "main": "index.js",
