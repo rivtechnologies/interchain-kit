@@ -141,7 +141,7 @@ export const createInterchainStore = (walletManager: WalletManager) => {
       return get().chainWalletState.find(cws => cws.walletName === walletName && cws.chainName === chainName)
     },
 
-    addChains: (chains: Chain[], assetLists: AssetList[], signerOptions: SignerOptions, endpointOptions: EndpointOptions) => {
+    addChains: (chains: Chain[], assetLists: AssetList[], signerOptions?: SignerOptions, endpointOptions?: EndpointOptions) => {
       walletManager.addChains(chains, assetLists, signerOptions, endpointOptions)
       // console.log(walletManager.chains, walletManager.assetLists)
       // set(immerSyncUp(walletManager))
@@ -162,12 +162,17 @@ export const createInterchainStore = (walletManager: WalletManager) => {
                 chainName: newChain.chainName,
                 walletName: w.info.name,
                 walletState: WalletState.Disconnected,
-                rpcEndpoint: endpointOptions.endpoints[newChain.chainName]?.rpc?.[0] || '',
+                rpcEndpoint: endpointOptions?.endpoints[newChain.chainName]?.rpc?.[0] || '',
                 errorMessage: "",
                 account: undefined
               })
             })
+          } else {
+            draft.updateChainWalletState(newChain.chainName, newChain.chainName, {
+              rpcEndpoint: endpointOptions?.endpoints[newChain.chainName]?.rpc?.[0] || '',
+            })
           }
+
 
           draft.signerOptionMap[newChain.chainName] = signerOptions?.signing?.(newChain.chainName)
           draft.endpointOptionsMap[newChain.chainName] = endpointOptions?.endpoints?.[newChain.chainName]

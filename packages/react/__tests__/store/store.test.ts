@@ -305,6 +305,29 @@ describe('InterchainStore', () => {
 
   })
 
+  it('should add a new chain without signerOptions and endpointOptions', () => {
+    const newChains = [{ chainName: 'chain2', chainId: '2' }] as Chain[];
+    const newAssetLists = [{ chainName: 'chain2', assets: [] }] as AssetList[];
+    useStore.getState().addChains(newChains, newAssetLists);
+    expect(walletManager.addChains).toHaveBeenCalledWith(newChains, newAssetLists, undefined, undefined);
+  });
 
+  it('should update endpoints if use addChains to add newChain', () => {
+    const newChains = [{ chainName: 'chain2', chainId: '2' }] as Chain[];
+    const newAssetLists = [{ chainName: 'chain2', assets: [] }] as AssetList[];
+    const newSignerOptions = {
+      signing: jest.fn().mockReturnValue('prefix'),
+    } as SignerOptions;
+    const newEndpointOptions = {
+      endpoints: { chain2: { rpc: ['http://localhost:26657'] } },
+    } as EndpointOptions;
+    useStore.getState().addChains(newChains, newAssetLists, newSignerOptions, newEndpointOptions);
+    expect(useStore.getState().endpointOptionsMap).toEqual({ chain2: newEndpointOptions.endpoints?.chain2 ?? {} });
 
+    const newEndpointOptionss = {
+      endpoints: { chain2: { rpc: ['http://localhost:26668'] } },
+    } as EndpointOptions;
+    useStore.getState().addChains(newChains, newAssetLists, newSignerOptions, newEndpointOptionss);
+    expect(useStore.getState().endpointOptionsMap).toEqual({ chain2: newEndpointOptionss.endpoints?.chain2 ?? {} });
+  })
 });

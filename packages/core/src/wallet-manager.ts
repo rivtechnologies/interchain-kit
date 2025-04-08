@@ -70,6 +70,9 @@ export class WalletManager {
         this.chains.push(newChain)
         const assetList = assetLists.find(a => a.chainName === newChain.chainName)
         this.assetLists.push(assetList)
+        this.wallets.forEach(wallet => {
+          wallet.addChain(newChain)
+        })
       }
 
       this.signerOptionMap[newChain.chainName] = signerOptions?.signing?.(newChain.chainName)

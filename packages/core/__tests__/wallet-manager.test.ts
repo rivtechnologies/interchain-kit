@@ -243,6 +243,14 @@ describe('WalletManager', () => {
     expect(chain).toBeUndefined();
   });
 
+  it('new chains should be added into chainMaps of wallet, after addChains', () => {
+    const newChain = createMockChain({ chainName: 'chainToAdd', chainId: '3', rpcEndpoint: [{ address: 'http://localhost:26659' }], chainType: 'cosmos' });
+    const newAssetList = createMockAssetList({ chainName: 'chainToAdd', assets: [] });
+    walletManager.addChains([newChain], [newAssetList], signerOptions, endpointOptions);
+    expect(wallet1.chainMap.get(newChain.chainId)).toEqual(newChain);
+    expect(wallet2.chainMap.get(newChain.chainId)).toEqual(newChain);
+  })
+
 });
 
 
