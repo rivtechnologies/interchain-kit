@@ -204,6 +204,8 @@ export const createInterchainStore = (walletManager: WalletManager) => {
           })
         })
         get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Connected })
+
+        await get().getAccount(walletName, chainName)
       } catch (error) {
         if ((error as any).message === 'Request rejected') {
           get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Rejected, errorMessage: (error as any).message })

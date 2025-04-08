@@ -1,4 +1,3 @@
-import React from "react";
 import {
   ConnectedContent,
   ConnectedHeader,
@@ -13,17 +12,8 @@ import {
   WalletListContent,
   WalletListHeader,
 } from "./views";
-import { useWalletModal } from "./provider";
-import { useChainWallet, useWalletManager } from "../hooks";
-import { useEffect, useMemo, useState } from "react";
-import {
-  ExtensionWallet,
-  WalletState,
-  WCWallet,
-  BaseWallet,
-  isInstanceOf,
-  DownloadInfo,
-} from "@interchain-kit/core";
+import { useMemo } from "react";
+import { BaseWallet, DownloadInfo } from "@interchain-kit/core";
 import {
   ConnectModal,
   Wallet as InterchainUIWalletType,

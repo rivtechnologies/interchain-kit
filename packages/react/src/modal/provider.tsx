@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { WalletModal } from "./modal";
 import { WalletState } from "@interchain-kit/core";
 import { useChainWallet, useWalletManager } from "../hooks";
@@ -23,10 +23,6 @@ export const WalletModalProvider = ({
   const open = () => setModalIsOpen(true);
   const close = () => setModalIsOpen(false);
 
-  const [walletNameToConnect, setWalletNameToConnect] = useState<string | null>(
-    null
-  );
-
   const {
     chains,
     wallets,
@@ -36,9 +32,11 @@ export const WalletModalProvider = ({
     walletConnectQRCodeUri,
     getDownloadLink,
     getEnv,
+    connect,
+    getAccount,
   } = useWalletManager();
 
-  const { wallet, status, connect, disconnect, username, address, message } =
+  const { wallet, status, disconnect, username, address, message } =
     useChainWallet(currentChainName || chains[0].chainName, currentWalletName);
 
   const [shouldShowList, setShouldShowList] = useState(
@@ -49,25 +47,16 @@ export const WalletModalProvider = ({
     transferToWalletUISchema
   );
 
-  useEffect(() => {
-    const handleConnect = async () => {
-      if (walletNameToConnect) {
-        try {
-          await connect();
-          setWalletNameToConnect(null);
-          setShouldShowList(false);
-        } catch (error) {
-          console.error("Error connecting to wallet:", error);
-          throw error;
-        }
-      }
-    };
-    handleConnect();
-  }, [walletNameToConnect]);
-
   const handleCloseModal = () => {
     close();
     setShouldShowList(false);
+  };
+
+  const handleConnectWallet = async (walletName: string) => {
+    const chainToConnect = currentChainName || chains[0].chainName;
+    setShouldShowList(false);
+    setCurrentWalletName(walletName);
+    await connect(walletName, chainToConnect);
   };
 
   return (
@@ -90,12 +79,9 @@ export const WalletModalProvider = ({
         isDisconnected={status === WalletState.Disconnected}
         isNotExist={status === WalletState.NotExist}
         errorMessage={message}
-        onSelectWallet={(w) => {
-          setWalletNameToConnect(w.info.name);
-          setCurrentWalletName(w.info.name);
-        }}
+        onSelectWallet={(w) => handleConnectWallet(w.info.name)}
         onBack={() => setShouldShowList(true)} // Add other required props with appropriate default or mock values
-        onReconnect={connect}
+        onReconnect={() => handleConnectWallet(currentWalletName)}
         getDownloadLink={() => getDownloadLink(wallet?.info.name)}
         getEnv={getEnv}
       />

@@ -330,4 +330,16 @@ describe('InterchainStore', () => {
     useStore.getState().addChains(newChains, newAssetLists, newSignerOptions, newEndpointOptionss);
     expect(useStore.getState().endpointOptionsMap).toEqual({ chain2: newEndpointOptionss.endpoints?.chain2 ?? {} });
   })
+
+  it('should update wallet state to Connected and fetch account after connection', async () => {
+    const account = { address: 'address1' };
+    (walletManager.getAccount as jest.Mock).mockResolvedValueOnce(account);
+
+    await useStore.getState().connect('wallet1', 'chain1');
+
+    const state = useStore.getState().getChainWalletState('wallet1', 'chain1');
+    expect(state?.walletState).toBe(WalletState.Connected);
+    expect(walletManager.getAccount).toHaveBeenCalledWith('wallet1', 'chain1');
+    expect(state?.account).toBe(account);
+  });
 });
