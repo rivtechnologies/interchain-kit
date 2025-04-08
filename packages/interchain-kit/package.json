@@ -1,6 +1,6 @@
 {
   "name": "interchain-kit",
-  "version": "0.2.212",
+  "version": "0.2.214",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "Universal wallet connector for the interchain",
   "main": "index.js",
@@ -29,5 +29,5 @@
     "test:watch": "jest --watch"
   },
   "keywords": [],
-  "gitHead": "74ba6aca78de888649b4a23726e96dd0ad2b6827"
+  "gitHead": "69acee3506ab58fb0fc9c2c9456b3522c8f103d3"
 }

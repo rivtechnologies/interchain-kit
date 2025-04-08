@@ -58,7 +58,7 @@ describe('CosmosWallet', () => {
         expect(mockClient.enable).toHaveBeenCalledWith('cosmoshub-4');
     });
 
-    it('should suggest a chain if connection fails with a specific error', async () => {
+    it('should suggest a chain if connection fails with not "Request rejected"', async () => {
         const mockClient = {
             enable: jest.fn().mockRejectedValue(new Error('some error')),
             experimentalSuggestChain: jest.fn(),
@@ -67,9 +67,22 @@ describe('CosmosWallet', () => {
 
         (chainRegistryChainToKeplr as jest.Mock).mockReturnValue({ chainId: 'cosmoshub-4' });
 
-        await expect(wallet.connect('cosmoshub-4')).rejects.toThrow('some error');
+        await wallet.connect('cosmoshub-4');
+
         expect(mockClient.experimentalSuggestChain).toHaveBeenCalledWith({ chainId: 'cosmoshub-4' });
     });
+
+    it('should not suggest a chain if connection fails with "Request rejected"', async () => {
+        const mockClient = {
+            enable: jest.fn().mockRejectedValue(new Error('Request rejected')),
+            experimentalSuggestChain: jest.fn(),
+        };
+        wallet.client = mockClient;
+
+        await expect(wallet.connect('cosmoshub-4')).rejects.toThrow('Request rejected');
+
+        expect(mockClient.experimentalSuggestChain).not.toHaveBeenCalled();
+    })
 
     it('should disconnect from a chain', async () => {
         const mockClient = { disable: jest.fn() };
@@ -115,5 +128,15 @@ describe('CosmosWallet', () => {
 
         expect(chainRegistryChainToKeplr).toHaveBeenCalledWith(cosmosChain, [cosmosAssetList]);
         expect(mockClient.experimentalSuggestChain).toHaveBeenCalledWith({ chainId: 'cosmoshub-4' });
+    });
+
+    it('should throw an error if adding a suggested chain fails', async () => {
+        const mockClient = { experimentalSuggestChain: jest.fn().mockRejectedValue(new Error('suggestion error')) };
+        wallet.client = mockClient;
+        wallet.chainMap.set('cosmoshub-4', cosmosChain);
+
+        (chainRegistryChainToKeplr as jest.Mock).mockReturnValue({ chainId: 'cosmoshub-4' });
+
+        await expect(wallet.addSuggestChain('cosmoshub-4')).rejects.toThrow('suggestion error');
     });
 });

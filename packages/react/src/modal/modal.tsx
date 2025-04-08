@@ -173,14 +173,10 @@ export const WalletModal = ({
         content: <ConnectingContent wallet={currentWallet} />,
       };
     }
-
     return {
       header: <WalletListHeader close={close} />,
       content: (
-        <WalletListContent
-          onSelectWallet={onSelectWallet}
-          wallets={wallets}
-        />
+        <WalletListContent onSelectWallet={onSelectWallet} wallets={wallets} />
       ),
     };
   }, [

@@ -35,8 +35,9 @@ export class CosmosWallet extends BaseWallet {
     } catch (error) {
       if ((error as any).message !== `Request rejected`) {
         await this.addSuggestChain(chainId)
+      } else {
+        throw error
       }
-      throw error
     }
   }
   async disconnect(chainId: string): Promise<void> {
@@ -87,7 +88,12 @@ export class CosmosWallet extends BaseWallet {
   async addSuggestChain(chainId: string): Promise<void> {
     const chain = this.chainMap.get(chainId)
     const chainInfo = chainRegistryChainToKeplr(chain, this.assetLists)
-    return this.client.experimentalSuggestChain(chainInfo);
+    try {
+      await this.client.experimentalSuggestChain(chainInfo)
+    } catch (error) {
+      console.log('add suggest chain error', error)
+      throw error
+    }
   }
   async getProvider() {
     return this.client

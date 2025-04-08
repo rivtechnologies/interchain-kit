@@ -50,16 +50,19 @@ export const WalletModalProvider = ({
   );
 
   useEffect(() => {
-    if (walletNameToConnect) {
-      try {
-        connect();
-        setWalletNameToConnect(null);
-        setShouldShowList(false);
-      } catch (error) {
-        console.error("Error connecting to wallet:", error);
-        throw error;
+    const handleConnect = async () => {
+      if (walletNameToConnect) {
+        try {
+          await connect();
+          setWalletNameToConnect(null);
+          setShouldShowList(false);
+        } catch (error) {
+          console.error("Error connecting to wallet:", error);
+          throw error;
+        }
       }
-    }
+    };
+    handleConnect();
   }, [walletNameToConnect]);
 
   const handleCloseModal = () => {
