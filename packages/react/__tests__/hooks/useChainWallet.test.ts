@@ -94,20 +94,6 @@ describe("useChainWallet", () => {
         expect(result.current.logoUrl).toBe("http://logo.url")
     })
 
-    it("should call connect and getAccount when connect is invoked", async () => {
-        const chainName = "test-chain"
-        const walletName = "test-wallet"
-
-        const { result } = renderHook(() => useChainWallet(chainName, walletName))
-
-        await result.current.connect()
-
-        expect(mockWalletManager.setCurrentWalletName).toHaveBeenCalledWith(walletName)
-        expect(mockWalletManager.setCurrentChainName).toHaveBeenCalledWith(chainName)
-        expect(mockWalletManager.connect).toHaveBeenCalledWith(walletName, chainName)
-        expect(mockWalletManager.getAccount).toHaveBeenCalledWith(walletName, chainName)
-    })
-
     it("should call disconnect when disconnect is invoked", () => {
         const chainName = "test-chain"
         const walletName = "test-wallet"

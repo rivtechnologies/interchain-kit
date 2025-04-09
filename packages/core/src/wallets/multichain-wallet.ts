@@ -8,7 +8,6 @@ import { isInstanceOf } from '../utils';
 export class MultiChainWallet extends BaseWallet {
 
   networkWalletMap: Map<Chain['chainType'], BaseWallet> = new Map()
-  chainMap: Map<Chain['chainId'], Chain> = new Map()
 
   constructor(info?: Wallet, networkWalletMap?: Map<Chain['chainType'], BaseWallet>) {
     super(info);
@@ -33,6 +32,13 @@ export class MultiChainWallet extends BaseWallet {
     this.chainMap = new Map(chains.map(chain => [chain.chainId, chain]))
     this.networkWalletMap.forEach(wallet => {
       wallet.setChainMap(chains)
+    })
+  }
+
+  addChain(chain: Chain): void {
+    this.chainMap.set(chain.chainId, chain);
+    this.networkWalletMap.forEach(wallet => {
+      wallet.addChain(chain)
     })
   }
 

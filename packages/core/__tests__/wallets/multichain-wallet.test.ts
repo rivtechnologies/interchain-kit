@@ -10,6 +10,7 @@ describe('MultiChainWallet', () => {
     beforeEach(() => {
         mockBaseWallet = {
             setChainMap: jest.fn(),
+            addChain: jest.fn(),
             setAssetLists: jest.fn(),
             init: jest.fn(),
             connect: jest.fn(),
@@ -42,6 +43,16 @@ describe('MultiChainWallet', () => {
         expect(multiChainWallet.chainMap.size).toBe(2);
         expect(mockBaseWallet.setChainMap).toHaveBeenCalledWith(chains);
     });
+
+    it('should add chain and propagate to network wallets', () => {
+        const chain: Chain = { chainId: 'cosmoshub-4', chainType: 'cosmos', chainName: 'Cosmos Hub' };
+
+        multiChainWallet.setNetworkWallet('cosmos', mockBaseWallet);
+        multiChainWallet.addChain(chain);
+
+        expect(multiChainWallet.chainMap.get(chain.chainId)).toBe(chain);
+        expect(mockBaseWallet.addChain).toHaveBeenCalledWith(chain);
+    })
 
     it('should initialize all network wallets', async () => {
         multiChainWallet.setNetworkWallet('cosmos', mockBaseWallet);
@@ -109,4 +120,5 @@ describe('MultiChainWallet', () => {
         expect(provider).toBe('mockProvider');
         expect(mockBaseWallet.getProvider).toHaveBeenCalledWith(chain.chainId);
     });
+
 });

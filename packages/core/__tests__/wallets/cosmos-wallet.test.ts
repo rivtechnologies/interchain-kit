@@ -139,4 +139,6 @@ describe('CosmosWallet', () => {
 
         await expect(wallet.addSuggestChain('cosmoshub-4')).rejects.toThrow('suggestion error');
     });
+
+
 });

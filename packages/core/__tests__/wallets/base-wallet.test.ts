@@ -63,4 +63,25 @@ describe("BaseWallet", () => {
     const account = await wallet.getAccount("test-chain-id");
     expect(account.address).toBe("test-address");
   });
+
+  it('should set chain map', () => {
+    const chains: Chain[] = [
+      { chainId: 'chain-1', chainName: 'Chain 1' } as Chain,
+      { chainId: 'chain-2', chainName: 'Chain 2' } as Chain,
+    ];
+    wallet.setChainMap(chains);
+    expect(wallet.chainMap.size).toBe(2);
+    expect(wallet.chainMap.get('chain-1')?.chainName).toBe('Chain 1');
+  })
+
+  it('should addChain', () => {
+    const chain: Chain = { chainId: 'chain-3', chainName: 'Chain 3' } as Chain;
+    wallet.addChain(chain);
+    expect(wallet.chainMap.size).toBe(1);
+    expect(wallet.chainMap.get('chain-3')?.chainName).toBe('Chain 3');
+  })
+
+
+
+
 });

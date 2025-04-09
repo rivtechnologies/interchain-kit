@@ -9,7 +9,7 @@ export abstract class BaseWallet {
   errorMessage: string
   walletState: WalletState
   events: EventEmitter<WalletEvents> = new EventEmitter()
-  chainMap: Map<Chain['chainId'], Chain>
+  chainMap: Map<Chain['chainId'], Chain> = new Map()
   assetLists: AssetList[] = []
   client: any
   constructor(info: Wallet) {
