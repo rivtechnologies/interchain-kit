@@ -168,7 +168,7 @@ export const createInterchainStore = (walletManager: WalletManager) => {
               })
             })
           } else {
-            draft.updateChainWalletState(newChain.chainName, newChain.chainName, {
+            draft.updateChainWalletState(, newChain.chainName, {
               rpcEndpoint: endpointOptions?.endpoints[newChain.chainName]?.rpc?.[0] || '',
             })
           }
