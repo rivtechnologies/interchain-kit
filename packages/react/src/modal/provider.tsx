@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { WalletModal } from "./modal";
 import { WalletState } from "@interchain-kit/core";
 import { useChainWallet, useWalletManager } from "../hooks";
@@ -52,8 +52,14 @@ export const WalletModalProvider = ({
     setShouldShowList(false);
   };
 
+  const currentChainNameRef = useRef("");
+
+  useEffect(() => {
+    currentChainNameRef.current = currentChainName;
+  }, [currentChainName]);
+
   const handleConnectWallet = async (walletName: string) => {
-    const chainToConnect = currentChainName || chains[0].chainName;
+    const chainToConnect = currentChainNameRef.current || chains[0].chainName;
     setShouldShowList(false);
     setCurrentWalletName(walletName);
     await connect(walletName, chainToConnect);
