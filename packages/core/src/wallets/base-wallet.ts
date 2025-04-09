@@ -25,7 +25,11 @@ export abstract class BaseWallet {
     this.assetLists = assetLists
   }
   getChainById(chainId: Chain['chainId']): Chain {
-    return this.chainMap.get(chainId);
+    const chain = this.chainMap.get(chainId);
+    if (!chain) {
+      throw new Error(`Chain ${chainId} not found in wallet ${this.info.name}`)
+    }
+    return chain
   }
   abstract init(): Promise<void>
   abstract connect(chainId: Chain['chainId']): Promise<void>

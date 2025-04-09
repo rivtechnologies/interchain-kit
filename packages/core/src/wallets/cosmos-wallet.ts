@@ -86,7 +86,7 @@ export class CosmosWallet extends BaseWallet {
     return this.client.sendTx(chainId, tx, mode)
   }
   async addSuggestChain(chainId: string): Promise<void> {
-    const chain = this.chainMap.get(chainId)
+    const chain = this.getChainById(chainId)
     const chainInfo = chainRegistryChainToKeplr(chain, this.assetLists)
     try {
       await this.client.experimentalSuggestChain(chainInfo)
