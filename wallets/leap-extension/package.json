@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/leap-extension",
-  "version": "0.2.217",
+  "version": "0.2.218",
   "author": "Cosmology <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector",
   "main": "index.js",
@@ -32,7 +32,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@interchain-kit/core": "0.2.217"
+    "@interchain-kit/core": "0.2.218"
   },
   "gitHead": "9da28c63eb7dce67184ecc6222105eb6420c2df4"
 }
