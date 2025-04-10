@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/cosmos-extension-metamask",
-  "version": "0.2.219",
+  "version": "0.2.220",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector for cosmos extension metamask",
   "main": "index.js",
@@ -33,7 +33,7 @@
   "keywords": [],
   "dependencies": {
     "@chain-registry/v2-types": "^0.53.15",
-    "@interchain-kit/core": "0.2.219"
+    "@interchain-kit/core": "0.2.220"
   },
   "gitHead": "663870532ecb5ac1613247ec93fcb0cb2e634f13"
 }
