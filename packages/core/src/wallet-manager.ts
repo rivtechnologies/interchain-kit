@@ -197,7 +197,7 @@ export class WalletManager {
       let rpcEndpoint: string | HttpEndpoint = ''
 
       const providerRpcEndpoints = this.endpointOptions?.endpoints[chain.chainName]?.rpc || []
-      const chainRpcEndpoints = chain.apis.rpc.map(url => url.address)
+      const chainRpcEndpoints = chain.apis?.rpc.map(url => url.address)
 
       if (providerRpcEndpoints?.[0]) {
         rpcEndpoint = providerRpcEndpoints[0]

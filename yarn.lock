@@ -2628,6 +2628,28 @@
     interchainjs "0.0.1-beta.14"
     long "^5.2.3"
 
+"@interchain-kit/core@0.2.211":
+  version "0.2.211"
+  resolved "https://registry.yarnpkg.com/@interchain-kit/core/-/core-0.2.211.tgz#9ed1f29466191d06c1479b82dd9031d90b9ff746"
+  integrity sha512-rUNs+2/liPy0w/ii4mJYGF8csyHIar3kWKIDhnxQpnxJ7rWKxM91xbL913uBo+BIFH6C3ch6k3RVyEwowq/rdw==
+  dependencies:
+    "@chain-registry/v2" "^1.71.71"
+    "@chain-registry/v2-keplr" "^0.0.72"
+    "@chain-registry/v2-types" "^0.53.40"
+    "@interchainjs/cosmos" "1.10.1"
+    "@interchainjs/cosmos-types" "1.10.1"
+    "@ledgerhq/hw-app-cosmos" "^6.30.4"
+    "@ledgerhq/hw-transport" "^6.31.4"
+    "@ledgerhq/hw-transport-webhid" "^6.30.0"
+    "@ledgerhq/hw-transport-webusb" "^6.29.4"
+    "@walletconnect/sign-client" "^2.19.1"
+    "@walletconnect/types" "^2.19.1"
+    "@walletconnect/universal-provider" "^2.19.1"
+    bowser "^2.11.0"
+    buffer "^6.0.3"
+    interchainjs "1.10.1"
+    long "^5.2.3"
+
 "@interchain-kit/core@^0.0.1-beta.39":
   version "0.0.1-beta.64"
   resolved "https://registry.yarnpkg.com/@interchain-kit/core/-/core-0.0.1-beta.64.tgz#766f11074df54910ea8657b075723f161669f921"
@@ -2763,6 +2785,13 @@
     react-dom "^18.3.1"
     zustand "^5.0.3"
 
+"@interchain-kit/trust-extension@0.2.211":
+  version "0.2.211"
+  resolved "https://registry.yarnpkg.com/@interchain-kit/trust-extension/-/trust-extension-0.2.211.tgz#a02d6f4475cef1f2ecd90fa96c07d57b85f900e2"
+  integrity sha512-0hjMusdNMoNrh5rfX5+VPFpt4/Y9jvoS0vlTsDmOApNQamqqPoZoOLqEua62NDxOkDox3E2CUQL3uX3KWDg1vQ==
+  dependencies:
+    "@interchain-kit/core" "^0.0.1-beta.39"
+
 "@interchain-kit/vue@^0.1.0":
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@interchain-kit/vue/-/vue-0.1.0.tgz#6adb6eda8b711bf6d45ddabf9b67688fb348cf00"
@@ -2816,7 +2845,7 @@
     react-stately "^3.32.2"
     zustand "^4.5.5"
 
-"@interchain-ui/react@1.26.3", "@interchain-ui/react@^1.23.31":
+"@interchain-ui/react@^1.23.31":
   version "1.26.3"
   resolved "https://registry.yarnpkg.com/@interchain-ui/react/-/react-1.26.3.tgz#71c18d95a43eb57b2b3b2ecc256a24e4edc73cd9"
   integrity sha512-kvGOZaSDJLNxtxieiyPMHOzxBGkpHR/BCpg/UEMDl2l7nLoPrygB/Oux1QEv/cwkw8GvepOBM7pzfJf8xk1IbQ==

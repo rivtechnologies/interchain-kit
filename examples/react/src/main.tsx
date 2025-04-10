@@ -39,7 +39,8 @@ import {
 } from "./utils/osmo-test-net.ts";
 
 const chainNames: string[] = [
-  "osmosistestnet",
+  // "injectivetestnet",
+  // "osmosistestnet",
   // "osmosis",
   // "juno",
   // "cosmoshub",
@@ -115,21 +116,21 @@ const _chains = [
   ...chains.filter((c) => chainNames.includes(c.chainName)),
   // createChainFromEthereumChainInfo(bscethertestnet),
   // createChainFromEthereumChainInfo(goerliethereumtestnet),
-  // createChainFromEthereumChainInfo(sepoliaEthereumTestNet),
-  createStarshipChain(
-    "test-osmosis-1",
-    "osmosis",
-    "http://localhost:26657",
-    "http://localhost:1317"
-  ),
+  createChainFromEthereumChainInfo(sepoliaEthereumTestNet),
+  // createStarshipChain(
+  //   "test-osmosis-1",
+  //   "osmosis",
+  //   "http://localhost:26657",
+  //   "http://localhost:1317"
+  // ),
 ];
 // const _chains = [starshipChain1]
 const _assetLists = [
   ...assetLists.filter((a) => chainNames.includes(a.chainName)),
   // createAssetListFromEthereumChainInfo(bscethertestnet),
   // createAssetListFromEthereumChainInfo(goerliethereumtestnet),
-  // createAssetListFromEthereumChainInfo(sepoliaEthereumTestNet),
-  createStarshipAssetList("osmosis"),
+  createAssetListFromEthereumChainInfo(sepoliaEthereumTestNet),
+  // createStarshipAssetList("osmosis"),
 ];
 
 // const mock1Wallet = new MockWallet(wallet1Mnemonic, _chains, {
@@ -146,9 +147,9 @@ const _assetLists = [
 const _wallets: BaseWallet[] = [
   // mock1Wallet,
   // mock2Wallet,
-  keplrWallet,
+  // keplrWallet,
   // leapWallet,
-  // cosmostationWallet,
+  cosmostationWallet,
   // stationWallet,
   // galaxyStationWallet,
   // walletConnect,
@@ -158,12 +159,12 @@ const _wallets: BaseWallet[] = [
   // ledgerWallet,
   // leapCosmosExtensionMetaMask,
   // compassWallet,
-  trustExtension,
+  // trustExtension,
   // metaMaskExtension,
   // okxWallet,
   // xdefiWallet,
   // exodusWallet,
-  // coin98Wallet,
+  coin98Wallet,
 ];
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

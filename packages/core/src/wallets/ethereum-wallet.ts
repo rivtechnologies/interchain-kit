@@ -21,9 +21,17 @@ export class EthereumWallet extends BaseWallet {
   }
   async connect(chainId: Chain["chainId"]): Promise<void> {
     try {
+      const accounts = await this.ethereum.request({
+        method: "eth_requestAccounts",
+        params: [{ chainId }],
+      })
+      const chainIdd = await this.ethereum.request({
+        method: "eth_chainId",
+        params: [],
+      })
       await this.ethereum.request({
         method: "wallet_switchEthereumChain",
-        params: [{ chainId }],
+        params: [{ chainId: chainIdd }],
       })
     } catch (error) {
       if (!(error as any).message.includes("reject")) {
@@ -103,4 +111,15 @@ export class EthereumWallet extends BaseWallet {
     return this.ethereum
   }
 
+
+  async sendTransaction(transactionParameters: any) {
+    // 发送交易请求
+    const txHash = await this.ethereum.request({
+      method: 'eth_sendTransaction',
+      params: [transactionParameters],
+    });
+
+    console.log('transactionHash:', txHash);
+    return txHash;
+  }
 }

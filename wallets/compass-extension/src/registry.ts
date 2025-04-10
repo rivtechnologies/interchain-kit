@@ -12,7 +12,7 @@ export const compassExtensionInfo: Wallet = {
     {
       device: 'desktop',
       browser: 'chrome',
-      link: 'https://chrome.google.com/webstore/detail/keplr/dmkamcknogkgcdfhhbddcghachkejeap?hl=en',
+      link: 'https://chrome.google.com/webstore/detail/compass-wallet-for-sei/anokgmphncpekkhclmingpimjmcooifb?hl=en',
     },
     {
       device: 'desktop',

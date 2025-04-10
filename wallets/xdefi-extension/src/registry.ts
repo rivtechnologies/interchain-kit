@@ -13,10 +13,10 @@ export const xdefiExtensionInfo: Wallet = {
     {
       device: 'desktop',
       browser: 'chrome',
-      link: 'https://chrome.google.com/webstore/detail/xdefi-wallet/hmeobnfnfcmdkdcmlblgagmfpfboieaf',
+      link: 'https://chrome.google.com/webstore/detail/ctrl-wallet/hmeobnfnfcmdkdcmlblgagmfpfboieaf',
     },
     {
-      link: 'https://chrome.google.com/webstore/detail/xdefi-wallet/hmeobnfnfcmdkdcmlblgagmfpfboieaf',
+      link: 'https://chrome.google.com/webstore/detail/ctrl-wallet/hmeobnfnfcmdkdcmlblgagmfpfboieaf',
     },
   ],
 };

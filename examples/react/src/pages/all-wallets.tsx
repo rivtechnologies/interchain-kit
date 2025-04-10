@@ -234,13 +234,15 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
           // const ethProvider = new ethers.providers.JsonRpcProvider(rpcEndpoint);
 
           // await ethWallet.switchChain(chain.chainId as string);
-          console.log(provider);
-          console.log(await ethProvider.getNetwork());
+          // console.log(provider);
+          // console.log(await ethProvider.getNetwork());
+          console.log({ transaction });
 
           const signer = await ethProvider.getSigner();
           try {
             // await ethWallet.switchChain(chain.chainId as string);
-            const tx = await signer.sendTransaction(transaction);
+            // const tx = await signer.sendTransaction(transaction);
+            const tx = await ethWallet.sendTransaction(transaction);
             console.log(tx);
           } catch (error) {
             console.log(error);

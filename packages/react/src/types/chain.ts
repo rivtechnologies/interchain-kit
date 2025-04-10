@@ -21,12 +21,15 @@ export type UseChainReturnType = {
   assetList: AssetList,
   address: string,
   wallet: ChainWallet<BaseWallet>,
-  rpcEndpoint: string | HttpEndpoint
+  rpcEndpoint: string | HttpEndpoint | unknown
   getSigningClient: () => Promise<SigningClient>
 
   signingClient: SigningClient | null
   isSigningClientLoading: boolean
   signingClientError: Error | unknown | null
+
+  isRpcEndpointLoading: boolean,
+  rpcEndpointError: Error | null,
 
 } & CosmosKitUseChainReturnType
 

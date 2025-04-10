@@ -15,7 +15,7 @@ export const Coin98ExtensionInfo: Wallet = {
       device: 'desktop',
       browser: 'chrome',
       link:
-        'https://chrome.google.com/webstore/detail/aeachknmefphepccionboohckonoeemg',
+        'https://chrome.google.com/webstore/detail/coin98-wallet-extension-c/aeachknmefphepccionboohckonoeemg',
     },
     {
       link: 'https://coin98.com/wallet',

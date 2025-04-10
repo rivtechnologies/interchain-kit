@@ -14,7 +14,7 @@ export const trustExtensionInfo: Wallet = {
       device: 'desktop',
       browser: 'chrome',
       link:
-        'https://chrome.google.com/webstore/detail/trust-wallet/aiifbnbfobpmeekipheeijimdpnlpgpp',
+        'https://chrome.google.com/webstore/detail/trust-wallet/egjidjbpglichdcondbcbdnbeeppgdph',
     },
     {
       device: 'desktop',
