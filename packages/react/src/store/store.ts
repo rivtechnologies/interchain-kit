@@ -141,44 +141,60 @@ export const createInterchainStore = (walletManager: WalletManager) => {
       return get().chainWalletState.find(cws => cws.walletName === walletName && cws.chainName === chainName)
     },
 
-    addChains: (chains: Chain[], assetLists: AssetList[], signerOptions?: SignerOptions, endpointOptions?: EndpointOptions) => {
-      walletManager.addChains(chains, assetLists, signerOptions, endpointOptions)
+    addChains: async (newChains: Chain[], newAssetLists: AssetList[], newSignerOptions?: SignerOptions, newEndpointOptions?: EndpointOptions) => {
+      await walletManager.addChains(newChains, newAssetLists, newSignerOptions, newEndpointOptions)
       // console.log(walletManager.chains, walletManager.assetLists)
       // set(immerSyncUp(walletManager))
       // set(draft => {
       //   draft.chains = walletManager.chains
       // })
+
+
       set(draft => {
-        chains.forEach(newChain => {
-          const existChain = draft.chains.find(c => c.chainId === newChain.chainId)
 
-          if (!existChain) {
+        const existedChainMap = new Map(get().chains.map(chain => [chain.chainName, chain]))
+
+        const newAssetListMap = new Map(newAssetLists.map(assetList => [assetList.chainName, assetList]))
+
+        newChains.forEach(newChain => {
+          if (!existedChainMap.has(newChain.chainName)) {
             draft.chains.push(newChain)
-            const assetList = assetLists.find(a => a.chainName === newChain.chainName)
-            draft.assetLists.push(assetList)
+            draft.assetLists.push(newAssetListMap.get(newChain.chainName)!)
+          }
+          draft.signerOptionMap[newChain.chainName] = newSignerOptions?.signing(newChain.chainName)
+          draft.endpointOptionsMap[newChain.chainName] = newEndpointOptions?.endpoints?.[newChain.chainName]
+        })
 
-            draft.wallets.forEach(w => {
+        get().chains.forEach(chain => {
+
+          draft.signerOptionMap[chain.chainName] = {
+            ...get().signerOptionMap[chain.chainName],
+            ...newSignerOptions?.signing(chain.chainName)
+          }
+
+          draft.endpointOptionsMap[chain.chainName] = {
+            ...get().endpointOptionsMap[chain.chainName],
+            ...newEndpointOptions?.endpoints?.[chain.chainName]
+          }
+        })
+
+        const existedChainWalletStatesMap = new Map(get().chainWalletState.map(cws => [cws.walletName + cws.chainName, cws]))
+
+        get().wallets.forEach(wallet => {
+          newChains.forEach(newChain => {
+            if (!existedChainWalletStatesMap.has(wallet.info.name + newChain.chainName)) {
               draft.chainWalletState.push({
                 chainName: newChain.chainName,
-                walletName: w.info.name,
+                walletName: wallet.info.name,
                 walletState: WalletState.Disconnected,
-                rpcEndpoint: endpointOptions?.endpoints[newChain.chainName]?.rpc?.[0] || '',
+                rpcEndpoint: "",
                 errorMessage: "",
                 account: undefined
               })
-            })
-          } else {
-            draft.updateChainWalletState(, newChain.chainName, {
-              rpcEndpoint: endpointOptions?.endpoints[newChain.chainName]?.rpc?.[0] || '',
-            })
-          }
-
-
-          draft.signerOptionMap[newChain.chainName] = signerOptions?.signing?.(newChain.chainName)
-          draft.endpointOptionsMap[newChain.chainName] = endpointOptions?.endpoints?.[newChain.chainName]
+            }
+          })
         })
       })
-
     },
 
     connect: async (walletName: string, chainName: string) => {
@@ -229,10 +245,7 @@ export const createInterchainStore = (walletManager: WalletManager) => {
       return account
     },
     getRpcEndpoint: async (walletName: string, chainName: string) => {
-      const exist = get().getChainWalletState(walletName, chainName).rpcEndpoint
-      if (exist) return exist
       const rpcEndpoint = await walletManager.getRpcEndpoint(walletName, chainName)
-      get().updateChainWalletState(walletName, chainName, { rpcEndpoint })
       return rpcEndpoint
     },
     getChainLogoUrl(chainName) {

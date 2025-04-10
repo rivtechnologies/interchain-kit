@@ -189,27 +189,6 @@ describe('InterchainStore', () => {
     (walletManager.getRpcEndpoint as jest.Mock).mockResolvedValueOnce(rpcEndpoint);
     const result = await useStore.getState().getRpcEndpoint('wallet1', 'chain1');
     expect(result).toBe(rpcEndpoint);
-    const state = useStore.getState().getChainWalletState('wallet1', 'chain1');
-    expect(state?.rpcEndpoint).toBe(rpcEndpoint);
-  });
-
-  it('should add chains', () => {
-    const newChains = [{ chainName: 'chain2', chainId: '2' }] as Chain[];
-    const newAssetLists = [{ chainName: 'chain2', assets: [] }] as AssetList[];
-    const signingMock = jest.fn().mockReturnValue('prefix');
-    const newSignerOptions = {
-      signing: signingMock,
-    } as SignerOptions;
-    const newEndpointOptions = {
-      endpoints: { chain2: { rpc: ['http://localhost:26657'] } },
-    } as EndpointOptions;
-    useStore.getState().addChains(newChains, newAssetLists, newSignerOptions, newEndpointOptions);
-    expect(walletManager.addChains).toHaveBeenCalledWith(newChains, newAssetLists, newSignerOptions, newEndpointOptions);
-    expect(useStore.getState().chains).toContainEqual(newChains[0]);
-    expect(useStore.getState().assetLists).toContainEqual(newAssetLists[0]);
-    expect(useStore.getState().signerOptionMap).toEqual({ chain2: 'prefix' });
-    expect(useStore.getState().endpointOptionsMap).toEqual({ chain2: newEndpointOptions.endpoints?.chain2 ?? {} });
-    expect(useStore.getState().getChainWalletState('wallet1', 'chain2')?.rpcEndpoint).toBe('http://localhost:26657');
   });
 
   it('should not reconnect WalletConnect if already connected', async () => {
@@ -312,23 +291,39 @@ describe('InterchainStore', () => {
     expect(walletManager.addChains).toHaveBeenCalledWith(newChains, newAssetLists, undefined, undefined);
   });
 
-  it('should update endpoints if use addChains to add newChain', () => {
+  it('should update endpoints if use addChains to add newChain', async () => {
     const newChains = [{ chainName: 'chain2', chainId: '2' }] as Chain[];
     const newAssetLists = [{ chainName: 'chain2', assets: [] }] as AssetList[];
     const newSignerOptions = {
-      signing: jest.fn().mockReturnValue('prefix'),
+      signing: jest.fn().mockReturnValue({ gasPrice: '1000' }),
     } as SignerOptions;
     const newEndpointOptions = {
       endpoints: { chain2: { rpc: ['http://localhost:26657'] } },
     } as EndpointOptions;
-    useStore.getState().addChains(newChains, newAssetLists, newSignerOptions, newEndpointOptions);
-    expect(useStore.getState().endpointOptionsMap).toEqual({ chain2: newEndpointOptions.endpoints?.chain2 ?? {} });
+    await useStore.getState().addChains(newChains, newAssetLists, newSignerOptions, newEndpointOptions);
+    expect(useStore.getState().chains).toContainEqual(newChains[0]);
+    expect(useStore.getState().assetLists).toContainEqual(newAssetLists[0]);
+    expect(useStore.getState().signerOptionMap).toEqual(expect.objectContaining({ chain2: { gasPrice: '1000' } }));
+    expect(useStore.getState().endpointOptionsMap).toEqual(expect.objectContaining({ chain2: newEndpointOptions.endpoints?.chain2 }));
 
+    const newSignerOptionss = {
+      signing: jest.fn().mockImplementation((chainName: string) => {
+        return {
+          'chain1': { gasPrice: '3000' },
+          'chain2': { gasPrice: '4000' },
+        }[chainName]
+      }),
+    } as SignerOptions;
     const newEndpointOptionss = {
-      endpoints: { chain2: { rpc: ['http://localhost:26668'] } },
+      endpoints: {
+        chain2: { rpc: ['http://localhost:26668'] },
+        chain1: { rpc: ['http://localhost:27774'] }
+      },
     } as EndpointOptions;
-    useStore.getState().addChains(newChains, newAssetLists, newSignerOptions, newEndpointOptionss);
-    expect(useStore.getState().endpointOptionsMap).toEqual({ chain2: newEndpointOptionss.endpoints?.chain2 ?? {} });
+
+    await useStore.getState().addChains(newChains, newAssetLists, newSignerOptionss, newEndpointOptionss);
+    expect(useStore.getState().signerOptionMap).toEqual(expect.objectContaining({ chain1: { gasPrice: '3000' }, chain2: { gasPrice: '4000' } }));
+    expect(useStore.getState().endpointOptionsMap).toEqual(expect.objectContaining({ chain2: newEndpointOptionss.endpoints?.chain2, chain1: newEndpointOptionss.endpoints?.chain1 }));
   })
 
   it('should update wallet state to Connected and fetch account after connection', async () => {
@@ -341,5 +336,62 @@ describe('InterchainStore', () => {
     expect(state?.walletState).toBe(WalletState.Connected);
     expect(walletManager.getAccount).toHaveBeenCalledWith('wallet1', 'chain1');
     expect(state?.account).toBe(account);
+  });
+
+  it('should add new chain wallet states for new chains and wallets', async () => {
+    const newChains = [{ chainName: 'chain2', chainId: '2' }] as Chain[];
+    const newAssetLists = [{ chainName: 'chain2', assets: [] }] as AssetList[];
+
+    await useStore.getState().addChains(newChains, newAssetLists);
+
+    const chainWalletState = useStore.getState().chainWalletState;
+
+    expect(chainWalletState).toEqual([
+      {
+        "chainName": "chain1",
+        "errorMessage": "",
+        "rpcEndpoint": "",
+        "walletName": "wallet1",
+        "walletState": "Disconnected",
+      },
+      {
+        "chainName": "chain1",
+        "errorMessage": "",
+        "rpcEndpoint": "",
+        "walletName": "WalletConnect",
+        "walletState": "Disconnected",
+      },
+      {
+        "account": undefined,
+        "chainName": "chain2",
+        "errorMessage": "",
+        "rpcEndpoint": "",
+        "walletName": "wallet1",
+        "walletState": "Disconnected",
+      },
+      {
+        "account": undefined,
+        "chainName": "chain2",
+        "errorMessage": "",
+        "rpcEndpoint": "",
+        "walletName": "WalletConnect",
+        "walletState": "Disconnected",
+      },
+    ]);
+  });
+
+  it('should not duplicate chain wallet states for existing chains and wallets', async () => {
+    const newChains = [{ chainName: 'chain1', chainId: '1' }] as Chain[];
+    const newAssetLists = [{ chainName: 'chain1', assets: [] }] as AssetList[];
+
+    await useStore.getState().addChains(newChains, newAssetLists);
+
+    const chainWalletState = useStore.getState().chainWalletState;
+
+    // Ensure no duplicate entries for chain1 and wallet1
+    const filteredStates = chainWalletState.filter(
+      (cws) => cws.chainName === 'chain1' && cws.walletName === 'wallet1'
+    );
+    expect(filteredStates.length).toBe(1);
   });
 });

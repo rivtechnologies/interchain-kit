@@ -24,6 +24,9 @@ export abstract class BaseWallet {
   setAssetLists(assetLists: AssetList[]) {
     this.assetLists = assetLists
   }
+  addAssetList(assetList: AssetList) {
+    this.assetLists.push(assetList)
+  }
   getChainById(chainId: Chain['chainId']): Chain {
     const chain = this.chainMap.get(chainId);
     if (!chain) {

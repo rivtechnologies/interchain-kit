@@ -63,22 +63,46 @@ export class WalletManager {
     return wm
   }
 
-  addChains(chains: Chain[], assetLists: AssetList[], signerOptions?: SignerOptions, endpointOptions?: EndpointOptions) {
+  async addChains(newChains: Chain[], newAssetLists: AssetList[], signerOptions?: SignerOptions, newEndpointOptions?: EndpointOptions) {
     const existChains = this.chains
-    chains.forEach(newChain => {
-      const existChain = existChains.find(c => c.chainId === newChain.chainId)
-      if (!existChain) {
+
+    const rpcEndpointTable = new Map<Chain['chainId'], string | HttpEndpoint>()
+
+
+    await Promise.all(newChains.map(async (newChain) => {
+
+
+      const rpcEndpoint = await getValidRpcEndpoint(newChain.apis.rpc.map(url => ({ chainType: newChain.chainType, endpoint: url.address })))
+
+      if (rpcEndpoint) {
+        rpcEndpointTable.set(newChain.chainId, rpcEndpoint)
+      }
+    }))
+
+    const existChainsTable = new Map(existChains.map(chain => [chain.chainId, chain]))
+    const newAssetListsTable = new Map(newAssetLists.map(assetList => [assetList.chainName, assetList]))
+
+    newChains.forEach(newChain => {
+
+      if (!existChainsTable.has(newChain.chainId)) {
+        const assetList = newAssetListsTable.get(newChain.chainName)
+
         this.chains.push(newChain)
-        const assetList = assetLists.find(a => a.chainName === newChain.chainName)
         this.assetLists.push(assetList)
+
         this.wallets.forEach(wallet => {
           wallet.addChain(newChain)
+          wallet.addAssetList(assetList)
         })
       }
 
       this.signerOptionMap[newChain.chainName] = signerOptions?.signing?.(newChain.chainName)
-      this.endpointOptionsMap[newChain.chainName] = endpointOptions?.endpoints?.[newChain.chainName]
+
+      this.endpointOptionsMap[newChain.chainName] = {
+        rpc: [newEndpointOptions?.endpoints?.[newChain.chainName]?.rpc?.[0] || rpcEndpointTable.get(newChain.chainId)],
+      }
     })
+
   }
 
   getChainLogoUrl(chainName: ChainName) {

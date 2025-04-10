@@ -2,7 +2,7 @@ import { WalletManager } from '../src/wallet-manager';
 import { Chain, AssetList } from '@chain-registry/v2-types';
 import { BaseWallet } from '../src/wallets/base-wallet';
 import { SignerOptions, EndpointOptions, SignType } from '../src/types';
-import { WalletNotExist, ChainNameNotExist, NoValidRpcEndpointFound } from '../src/utils';
+import { WalletNotExist, ChainNameNotExist, NoValidRpcEndpointFound, getValidRpcEndpoint } from '../src/utils';
 
 import { createMockAssetList } from './helpers/mock-asset-list-factory';
 import { createMockChain } from './helpers/mock-chain-factory';
@@ -10,6 +10,13 @@ import { createMockAccount, createMockWallet } from './helpers/mock-wallet-facto
 import { AminoGenericOfflineSigner } from '@interchainjs/cosmos/types/wallet';
 import { SigningClient } from '@interchainjs/cosmos/signing-client';
 import { createSignerOption } from './helpers/mock-setting-factory';
+
+jest.mock('../src/utils/endpoint.ts', () => {
+  return {
+    ...jest.requireActual('../src/utils/endpoint.ts'),
+    getValidRpcEndpoint: jest.fn()
+  };
+});
 
 describe('WalletManager', () => {
   (global as any).window = {
@@ -20,6 +27,7 @@ describe('WalletManager', () => {
     }
 
   };
+
 
 
   let chains: Chain[];
@@ -36,7 +44,11 @@ describe('WalletManager', () => {
   let assetList1: AssetList
   let assetList2: AssetList
 
+
+
   beforeEach(() => {
+
+
     chain1 = createMockChain({ chainName: 'chain-1', chainId: '1', rpcEndpoint: [{ address: 'http://localhost:26657' }], chainType: 'cosmos' });
     chain2 = createMockChain({ chainName: 'chain-2', chainId: '2', rpcEndpoint: [{ address: 'http://localhost:26658' }], chainType: 'cosmos' });
     assetList1 = createMockAssetList({
@@ -91,6 +103,8 @@ describe('WalletManager', () => {
 
     walletManager = new WalletManager(chains, assetLists, wallets, signerOptions, endpointOptions);
 
+
+    (getValidRpcEndpoint as jest.Mock).mockClear()
   });
 
   it('should set assetLists for wallets, after walletManager constructor', () => {
@@ -101,6 +115,15 @@ describe('WalletManager', () => {
   it('should set chainMap for wallets, after walletManager constructor', () => {
     expect(wallet1.chainMap.get(chain1.chainId)).toEqual(chain1);
     expect(wallet2.chainMap.get(chain1.chainId)).toEqual(chain1);
+  });
+
+  it('should have right signerOptions and endpointOptions for each chain', () => {
+    expect(walletManager.signerOptionMap[chain1.chainName]).toEqual(signerOptions.signing?.(chain1.chainName));
+    expect(walletManager.signerOptionMap[chain2.chainName]).toEqual(signerOptions.signing?.(chain2.chainName));
+    expect(walletManager.endpointOptionsMap[chain1.chainName]).toEqual(endpointOptions.endpoints?.[chain1.chainName]);
+    expect(walletManager.endpointOptionsMap[chain2.chainName]).toEqual(undefined);
+    expect(walletManager.preferredSignTypeMap[chain1.chainName]).toEqual('amino');
+    expect(walletManager.preferredSignTypeMap[chain2.chainName]).toEqual('direct');
   });
 
   it('should initialize wallets', async () => {
@@ -116,10 +139,10 @@ describe('WalletManager', () => {
     expect(wm).toBeInstanceOf(WalletManager);
   });
 
-  it('should add new chains', () => {
+  it('should add new chains', async () => {
     const newChain = createMockChain({ chainName: 'chainToAdd', chainId: '3', rpcEndpoint: [{ address: 'http://localhost:26659' }], chainType: 'cosmos' });
     const newAssetList = createMockAssetList({ chainName: 'chainToAdd', assets: [] });
-    walletManager.addChains([newChain], [newAssetList], signerOptions, endpointOptions);
+    await walletManager.addChains([newChain], [newAssetList], signerOptions, endpointOptions);
     expect(walletManager.chains).toContain(newChain);
     expect(walletManager.assetLists).toContain(newAssetList);
     expect(walletManager.signerOptionMap[newChain.chainName]).toEqual(signerOptions.signing?.(newChain.chainName));
@@ -185,6 +208,7 @@ describe('WalletManager', () => {
   });
 
   it('should throw error if no valid RPC endpoint found', async () => {
+    (getValidRpcEndpoint as jest.Mock).mockReturnValue(Promise.resolve(''));
     if (walletManager.endpointOptions?.endpoints?.['chain-1']) {
       walletManager.endpointOptions.endpoints['chain-1'].rpc = [];
     }
@@ -253,12 +277,78 @@ describe('WalletManager', () => {
     expect(chain).toBeUndefined();
   });
 
-  it('new chains should be added into chainMaps of wallet, after addChains', () => {
+  it('new chains should be added into chainMaps of wallet, after addChains', async () => {
     const newChain = createMockChain({ chainName: 'chainToAdd', chainId: '3', rpcEndpoint: [{ address: 'http://localhost:26659' }], chainType: 'cosmos' });
     const newAssetList = createMockAssetList({ chainName: 'chainToAdd', assets: [] });
-    walletManager.addChains([newChain], [newAssetList], signerOptions, endpointOptions);
+    await walletManager.addChains([newChain], [newAssetList], signerOptions, endpointOptions);
     expect(wallet1.chainMap.get(newChain.chainId)).toEqual(newChain);
     expect(wallet2.chainMap.get(newChain.chainId)).toEqual(newChain);
+  })
+
+  it('addChains should update right signerOptions for new chains', async () => {
+    const newChain = createMockChain({ chainName: 'chainToAdd', chainId: '3', rpcEndpoint: [{ address: 'http://localhost:26659' }], chainType: 'cosmos' });
+    const newAssetList = createMockAssetList({ chainName: 'chainToAdd', assets: [] });
+
+    const endpointOptions1 = {
+      endpoints: {
+        'chainToAdd': {
+          rpc: ['http://localhost:26679']
+        }
+      }
+    } as EndpointOptions
+
+    const signerOptions1 = {
+      signing: jest.fn().mockImplementation((chainName: string) => {
+        return {
+          'chainToAdd': {
+            gasPrice: '1000uatom',
+          }
+        }[chainName]
+      })
+    } as SignerOptions
+
+
+    await walletManager.addChains([newChain], [newAssetList], signerOptions1, endpointOptions1);
+    expect(walletManager.chains).toContain(newChain);
+    expect(walletManager.assetLists).toContain(newAssetList);
+    expect(walletManager.signerOptionMap[newChain.chainName]).toEqual({ gasPrice: '1000uatom' });
+    expect(walletManager.endpointOptionsMap[newChain.chainName]).toEqual({ rpc: ['http://localhost:26679'] });
+
+    const endpointOptions2 = {
+      endpoints: {
+        'chainToAdd': {
+          rpc: ['http://localhost:26659']
+        }
+      }
+    } as EndpointOptions
+
+    const signerOptions2 = {
+      signing: jest.fn().mockImplementation((chainName: string) => {
+        return {
+          'chainToAdd': {
+            gasPrice: '2000uatom',
+          }
+        }[chainName]
+      })
+    } as SignerOptions
+
+
+    await walletManager.addChains([newChain], [newAssetList], signerOptions2, endpointOptions2);
+    expect(walletManager.signerOptionMap[newChain.chainName]).toEqual({ gasPrice: '2000uatom' });
+    expect(walletManager.endpointOptionsMap[newChain.chainName]).toEqual({ rpc: ['http://localhost:26659'] });
+  })
+
+  it('addChains should update endpoint from chain rpc list', async () => {
+    (getValidRpcEndpoint as jest.Mock).mockReturnValue('https://rpc.example.com');
+
+    const newChain = createMockChain({ chainName: 'chainToAdd', chainId: '3', rpcEndpoint: [{ address: 'https://rpc.example.com' }], chainType: 'cosmos' });
+    const newAssetList = createMockAssetList({ chainName: 'chainToAdd', assets: [] });
+
+    await walletManager.addChains([newChain], [newAssetList]);
+    expect(walletManager.chains).toContain(newChain);
+    expect(walletManager.assetLists).toContain(newAssetList);
+    expect(walletManager.endpointOptionsMap[newChain.chainName]).toEqual({ rpc: ['https://rpc.example.com'] });
+
   })
 
 });
