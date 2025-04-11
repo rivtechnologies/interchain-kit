@@ -28,9 +28,6 @@ export type UseChainReturnType = {
   isSigningClientLoading: boolean
   signingClientError: Error | unknown | null
 
-  isRpcEndpointLoading: boolean,
-  rpcEndpointError: Error | null,
-
 } & CosmosKitUseChainReturnType
 
 export type UseChainWalletReturnType = Omit<UseChainReturnType, 'openView' | 'closeView'>

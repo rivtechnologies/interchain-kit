@@ -1,3 +1,4 @@
+import { SigningClient } from '@interchainjs/cosmos/signing-client';
 import { AssetList, Chain } from "@chain-registry/v2-types"
 import { BaseWallet, clientNotExistError, EndpointOptions, Endpoints, SignerOptions, SignType, Wallet, WalletAccount, WalletManager, WalletState } from "@interchain-kit/core"
 import { SigningOptions as InterchainSigningOptions } from '@interchainjs/cosmos/types/signing-client';
@@ -5,6 +6,7 @@ import { HttpEndpoint } from '@interchainjs/types';
 import { createStore } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { persist, createJSONStorage } from 'zustand/middleware'
+import { deduplicatePromise } from "../utils";
 
 const immerSyncUp = (newWalletManager: WalletManager) => {
   return (draft: { chains: Chain[]; assetLists: AssetList[]; wallets: BaseWallet[]; signerOptions: SignerOptions; endpointOptions: EndpointOptions; signerOptionMap: Record<string, InterchainSigningOptions>; endpointOptionsMap: Record<string, Endpoints>; preferredSignTypeMap: Record<string, SignType>; }) => {
@@ -78,21 +80,23 @@ export const createInterchainStore = (walletManager: WalletManager) => {
     },
 
     init: async () => {
-      const existedChainWalletStatesMap = new Map(get().chainWalletState.map(cws => [cws.walletName + cws.chainName, cws]))
+
+      set(draft => {
+        draft.chainWalletState = []
+      })
+
       wallets.forEach(wallet => {
         chains.forEach(chain => {
-          if (!existedChainWalletStatesMap.has(wallet.info.name + chain.chainName)) {
-            set(draft => {
-              draft.chainWalletState.push({
-                chainName: chain.chainName,
-                walletName: wallet.info.name,
-                walletState: WalletState.Disconnected,
-                rpcEndpoint: "",
-                errorMessage: "",
-                account: undefined
-              })
+          set(draft => {
+            draft.chainWalletState.push({
+              chainName: chain.chainName,
+              walletName: wallet.info.name,
+              walletState: WalletState.Disconnected,
+              rpcEndpoint: "",
+              errorMessage: "",
+              account: undefined
             })
-          }
+          })
         })
       })
 
@@ -248,9 +252,18 @@ export const createInterchainStore = (walletManager: WalletManager) => {
         console.log(error)
       }
     },
-    getRpcEndpoint: async (walletName: string, chainName: string) => {
-      const rpcEndpoint = await walletManager.getRpcEndpoint(walletName, chainName)
-      return rpcEndpoint
+    getRpcEndpoint: async (walletName: string, chainName: string): Promise<string | HttpEndpoint> => {
+      const rpc = get().getChainWalletState(walletName, chainName).rpcEndpoint
+      if (rpc) {
+        return rpc
+      }
+
+      const cacheKey = `rpcEndpoint-${walletName}-${chainName}`;
+      return deduplicatePromise(cacheKey, async () => {
+        const rpc = await walletManager.getRpcEndpoint(walletName, chainName)
+        get().updateChainWalletState(walletName, chainName, { rpcEndpoint: rpc })
+        return rpc
+      })
     },
     getChainLogoUrl(chainName) {
       return walletManager.getChainLogoUrl(chainName)
@@ -280,8 +293,9 @@ export const createInterchainStore = (walletManager: WalletManager) => {
     getWalletByName(walletName) {
       return walletManager.getWalletByName(walletName)
     },
-    getSigningClient(walletName, chainName) {
-      return walletManager.getSigningClient(walletName, chainName)
+    getSigningClient(walletName, chainName): Promise<SigningClient> {
+      const cacheKey = `signingClient-${walletName}-${chainName}`;
+      return deduplicatePromise(cacheKey, () => walletManager.getSigningClient(walletName, chainName));
     },
     getEnv() {
       return walletManager.getEnv()
@@ -290,7 +304,11 @@ export const createInterchainStore = (walletManager: WalletManager) => {
     name: 'interchain-kit-store',
     storage: createJSONStorage(() => localStorage),
     partialize: state => ({
-      chainWalletState: state.chainWalletState,
+      chainWalletState: state.chainWalletState.map(cws => ({
+        chainName: cws.chainName,
+        walletName: cws.walletName,
+        account: cws.account,
+      })),
       currentWalletName: state.currentWalletName,
       currentChainName: state.currentChainName
     }),

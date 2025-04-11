@@ -1,26 +1,24 @@
 import { useEffect, useState } from "react"
 import { useWalletManager } from "./useWalletManager"
 import { WalletState } from "@interchain-kit/core"
-import { useRpcEndpoint } from "./useRpcEndpoint"
 
 export const useSigningClient = (chainName: string, walletName: string) => {
-  const { getSigningClient, getChainWalletState } = useWalletManager()
-  const { rpcEndpoint } = useRpcEndpoint(chainName, walletName)
+  const { getSigningClient, getChainWalletState, getRpcEndpoint } = useWalletManager()
+
   const [signingClient, setSigningClient] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  // Use useMemo to ensure chainWalletState is stable
   const chainWalletState = getChainWalletState(walletName, chainName)
 
   useEffect(() => {
     if (
-      chainWalletState?.walletState === WalletState.Connected &&
-      rpcEndpoint
+      chainWalletState?.walletState === WalletState.Connected
     ) {
       const handleGetSigningClient = async () => {
         setIsLoading(true)
         try {
+          await getRpcEndpoint(walletName, chainName)
           const client = await getSigningClient(walletName, chainName)
           setSigningClient(client)
           setError(null)
@@ -35,7 +33,7 @@ export const useSigningClient = (chainName: string, walletName: string) => {
 
       handleGetSigningClient()
     }
-  }, [chainWalletState?.walletState, rpcEndpoint])
+  }, [chainWalletState?.walletState])
 
   return {
     signingClient,

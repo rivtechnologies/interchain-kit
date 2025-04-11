@@ -40,7 +40,7 @@ import {
 
 const chainNames: string[] = [
   // "injectivetestnet",
-  // "osmosistestnet",
+  "osmosistestnet",
   // "osmosis",
   // "juno",
   // "cosmoshub",
