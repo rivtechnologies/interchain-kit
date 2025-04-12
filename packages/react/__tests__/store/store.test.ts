@@ -204,7 +204,7 @@ describe('InterchainStore', () => {
     await useStore.getState().init();
     const chainWalletState = useStore.getState().chainWalletState;
 
-    expect(chainWalletState).toEqual([{ "chainName": "chain1", "errorMessage": "", "rpcEndpoint": "", "walletName": "wallet1", "walletState": "Disconnected" }, { "chainName": "chain1", "errorMessage": "", "rpcEndpoint": "", "walletName": "WalletConnect", "walletState": "Disconnected" }]);
+    expect(chainWalletState).toEqual([{ "chainName": "chain1", "walletName": "wallet1", "walletState": "Disconnected" }, { "chainName": "chain1", "walletName": "WalletConnect", "walletState": "Disconnected" }]);
   });
 
   it('should set wallet state to NotExist for wallets that do not exist', async () => {
@@ -349,15 +349,11 @@ describe('InterchainStore', () => {
     expect(chainWalletState).toEqual([
       {
         "chainName": "chain1",
-        "errorMessage": "",
-        "rpcEndpoint": "",
         "walletName": "wallet1",
         "walletState": "Disconnected",
       },
       {
         "chainName": "chain1",
-        "errorMessage": "",
-        "rpcEndpoint": "",
         "walletName": "WalletConnect",
         "walletState": "Disconnected",
       },
@@ -376,7 +372,7 @@ describe('InterchainStore', () => {
         "rpcEndpoint": "",
         "walletName": "WalletConnect",
         "walletState": "Disconnected",
-      },
+      }
     ]);
   });
 

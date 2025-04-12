@@ -202,7 +202,7 @@ export class WalletManager {
     }
 
     rpcEndpoint = validRpcEndpoint
-    this.endpointOptionsMap?.[chainName]?.rpc.push(rpcEndpoint)
+    this.endpointOptionsMap = { ...this.endpointOptionsMap, [chainName]: { rpc: [rpcEndpoint] } }
     return rpcEndpoint
   }
 
