@@ -1,4 +1,4 @@
-import { BroadcastMode, DirectSignDoc, ExtensionWallet, SignOptions, WalletAccount } from '@interchain-kit/core';
+import { BroadcastMode, CosmosWallet, DirectSignDoc, SignOptions, WalletAccount } from '@interchain-kit/core';
 
 declare global {
   interface Window {
@@ -6,16 +6,17 @@ declare global {
   }
 }
 
-import { OfflineAminoSigner, OfflineDirectSigner, AminoSignResponse, StdSignature, DirectSignResponse } from '@interchainjs/cosmos/types/wallet';
+import { AminoSignResponse, StdSignature, DirectSignResponse } from '@interchainjs/cosmos/types/wallet';
 import { StdSignDoc } from '@interchainjs/types';
-import { Chain, AssetList } from '@chain-registry/v2-types'
 import { getMetaMaskCosmosChainInfo } from './utils';
 import { Chain as MetaMaskCosmosChainInfo } from './types'
 
 export const DEFAULT_SNAP_ID = "npm:@cosmsnap/snap";
 
 export const isSnapInstalled = async (snapId = DEFAULT_SNAP_ID) => {
+
   let result = await window.ethereum.request({ method: 'wallet_getSnaps' });
+
   const installed = Object.keys(result).includes(snapId);
 
   console.log('isSnapInstalled', installed)
@@ -73,7 +74,7 @@ export const installSnap = async (snapId = DEFAULT_SNAP_ID) => {
 }
 
 
-export class CosmosExtensionMetaMask extends ExtensionWallet {
+export class CosmosExtensionMetaMask extends CosmosWallet {
 
   chains: MetaMaskCosmosChainInfo[] = []
 
@@ -97,14 +98,13 @@ export class CosmosExtensionMetaMask extends ExtensionWallet {
       }
       await installSnap();
       this.chains = await this.getChains()
-      this.isExtensionInstalled = true;
     } catch (error) {
-      this.errorMessage = (error as any).message;
-      this.isExtensionInstalled = true;
+      console.error('Error initializing MetaMask:', error);
+      throw error;
     }
   }
 
-  async connect(chainId: string | string[]): Promise<void> {
+  async connect(chainId: string): Promise<void> {
     await window.ethereum.request({
       method: 'wallet_requestSnaps',
       params: {
@@ -119,7 +119,7 @@ export class CosmosExtensionMetaMask extends ExtensionWallet {
     }
   }
 
-  async disconnect(chainId: string | string[]): Promise<void> {
+  async disconnect(chainId: string): Promise<void> {
     await window.ethereum.request({
       method: 'wallet_revokePermissions',
       params: [
@@ -156,44 +156,31 @@ export class CosmosExtensionMetaMask extends ExtensionWallet {
     }
   }
 
-  getAccounts(chainIds: string[]): Promise<WalletAccount[]> {
-    throw new Error('Method not implemented.');
-  }
-
-  getOfflineSignerAmino(chainId: string): OfflineAminoSigner {
-    return {
-      getAccounts: async () => [await this.getAccount(chainId)],
-      signAmino: async (signer: string, signDoc: StdSignDoc, signOptions?: SignOptions) => {
-        return await this.signAmino(chainId, signer, signDoc, signOptions);
-      }
-    }
-  }
-
-  getOfflineSignerDirect(chainId: string): OfflineDirectSigner {
-    return {
-      getAccounts: async () => [await this.getAccount(chainId)],
-      signDirect: async (signer: string, signDoc: DirectSignDoc, signOptions?: SignOptions) => {
-        return await this.signDirect(chainId, signer, signDoc, signOptions);
-      }
-    }
+  async getOfflineSigner(chainId: string) {
+    return super.getOfflineSigner(chainId, 'amino');
   }
 
   async signAmino(chainId: string, signer: string, signDoc: StdSignDoc, signOptions?: SignOptions): Promise<AminoSignResponse> {
-    const result = await window.ethereum.request({
-      method: 'wallet_invokeSnap',
-      params: {
-        snapId: DEFAULT_SNAP_ID,
-        request: {
-          method: 'signAmino',
-          params: {
-            chain_id: chainId,
-            sign_doc: signDoc,
-            signer
-          }
+    try {
+      const result = await window.ethereum.request({
+        method: 'wallet_invokeSnap',
+        params: {
+          snapId: DEFAULT_SNAP_ID,
+          request: {
+            method: 'signAmino',
+            params: {
+              chain_id: chainId,
+              sign_doc: signDoc,
+              signer
+            }
+          },
         },
-      },
-    });
-    return result.data;
+      });
+      return result.data;
+    } catch (error) {
+      console.log(error)
+      throw new Error('Error signing transaction: ' + error);
+    }
   }
 
   signArbitrary(chainId: string, signer: string, data: string | Uint8Array): Promise<StdSignature> {
@@ -205,30 +192,35 @@ export class CosmosExtensionMetaMask extends ExtensionWallet {
   }
 
   async signDirect(chainId: string, signer: string, signDoc: DirectSignDoc, signOptions?: SignOptions): Promise<DirectSignResponse> {
-    const result = await window.ethereum.request({
-      method: 'wallet_invokeSnap',
-      params: {
-        snapId: DEFAULT_SNAP_ID,
-        request: {
-          method: 'signDirect',
-          params: {
-            chain_id: chainId,
-            sign_doc: signDoc,
-            signer
-          }
+    try {
+      const result = await window.ethereum.request({
+        method: 'wallet_invokeSnap',
+        params: {
+          snapId: DEFAULT_SNAP_ID,
+          request: {
+            method: 'signDirect',
+            params: {
+              chain_id: chainId,
+              sign_doc: signDoc,
+              signer
+            }
+          },
         },
-      },
-    });
-    return result.data
+      });
+      return result.data
+    } catch (error) {
+      console.log(error)
+      throw new Error('Error signing transaction: ' + error);
+    }
   }
 
   sendTx(chainId: string, tx: Uint8Array, mode: BroadcastMode): Promise<Uint8Array> {
     throw new Error('Method not implemented.');
   }
 
-  async addSuggestChain(chain: Chain, assetLists: AssetList[]): Promise<void> {
+  async addSuggestChain(chainId: string): Promise<void> {
 
-    const chainInfo = getMetaMaskCosmosChainInfo(chain, assetLists[0]);
+    const chainInfo = getMetaMaskCosmosChainInfo(chain, this.assetLists[0]);
 
     await window.ethereum.request({
       method: 'wallet_invokeSnap',

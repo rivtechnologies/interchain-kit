@@ -3,6 +3,7 @@ import { ICON } from './constant';
 
 export const cosmosSnapExtensionInfo: Wallet = {
   name: 'cosmos-extension-metamask',
+  ethereumKey: 'ethereum',
   description:
     'The Official Cosmos Extension for MetaMask allowing full use of MetaMask within the Cosmos.',
   prettyName: 'Cosmos MetaMask Extension',
