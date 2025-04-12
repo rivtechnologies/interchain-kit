@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.222](https://github.com/interchain-kit/frontier-extension/compare/@interchain-kit/frontier-extension@0.2.221...@interchain-kit/frontier-extension@0.2.222) (2025-04-12)
+
+**Note:** Version bump only for package @interchain-kit/frontier-extension
+
 ## [0.2.221](https://github.com/interchain-kit/frontier-extension/compare/@interchain-kit/frontier-extension@0.2.220...@interchain-kit/frontier-extension@0.2.221) (2025-04-11)
 
 **Note:** Version bump only for package @interchain-kit/frontier-extension
