@@ -25,14 +25,14 @@ export class EthereumWallet extends BaseWallet {
         method: "eth_requestAccounts",
         params: [{ chainId }],
       })
-      const chainIdd = await this.ethereum.request({
-        method: "eth_chainId",
-        params: [],
-      })
-      await this.ethereum.request({
-        method: "wallet_switchEthereumChain",
-        params: [{ chainId: chainIdd }],
-      })
+      // const chainIdd = await this.ethereum.request({
+      //   method: "eth_chainId",
+      //   params: [],
+      // })
+      // await this.ethereum.request({
+      //   method: "wallet_switchEthereumChain",
+      //   params: [{ chainId: chainIdd }],
+      // })
     } catch (error) {
       if (!(error as any).message.includes("reject")) {
         await this.addSuggestChain(chainId as string)
