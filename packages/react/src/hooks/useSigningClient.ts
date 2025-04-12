@@ -4,10 +4,12 @@ import { useAsync } from "./useAsync"
 import { WalletState } from "@interchain-kit/core"
 
 export const useSigningClient = (chainName: string, walletName: string) => {
-  const { getSigningClient, getChainWalletState } = useWalletManager()
+  const { getSigningClient, getChainWalletState, getWalletByName } = useWalletManager()
   const { rpcEndpoint } = useRpcEndpoint(chainName, walletName)
 
   const chainWalletState = getChainWalletState(walletName, chainName)
+
+  const wallet = getWalletByName(walletName)
 
   const { data, isLoading, error } = useAsync({
     queryKey: `signing-client-${chainName}-${walletName}`,

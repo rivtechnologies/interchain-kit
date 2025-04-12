@@ -1,7 +1,7 @@
-import { BroadcastMode, IGenericOfflineSigner, StdSignDoc } from '@interchainjs/types';
+import { IGenericOfflineSigner, StdSignDoc } from '@interchainjs/types';
 import { AminoGenericOfflineSigner, AminoSignResponse, DirectGenericOfflineSigner, DirectSignResponse, StdSignature } from "@interchainjs/cosmos/types/wallet";
 import { BaseWallet } from "./base-wallet";
-import { DirectSignDoc, SignOptions, SignType, WalletAccount } from '../types';
+import { BroadcastMode, DirectSignDoc, SignOptions, SignType, WalletAccount } from '../types';
 import { getClientFromExtension } from '../utils';
 import { chainRegistryChainToKeplr } from '@chain-registry/v2-keplr';
 
@@ -41,7 +41,8 @@ export class CosmosWallet extends BaseWallet {
     }
   }
   async disconnect(chainId: string): Promise<void> {
-    await this.client.disable(chainId)
+    this.client.disable?.(chainId);
+    this.client.disconnect?.(chainId);
   }
   async getAccount(chainId: string): Promise<WalletAccount> {
     const key = await this.client.getKey(chainId);
@@ -88,7 +89,6 @@ export class CosmosWallet extends BaseWallet {
   async addSuggestChain(chainId: string): Promise<void> {
     const chain = this.getChainById(chainId)
     const chainInfo = chainRegistryChainToKeplr(chain, this.assetLists)
-    console.log(chainInfo)
     try {
       await this.client.experimentalSuggestChain(chainInfo)
     } catch (error) {

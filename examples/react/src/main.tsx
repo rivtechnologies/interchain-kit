@@ -9,6 +9,9 @@ import { ChainProvider } from "@interchain-kit/react";
 
 import { assetLists, chains } from "@chain-registry/v2";
 import { BaseWallet, WCWallet } from "@interchain-kit/core";
+import { ninjiWallet } from "@interchain-kit/ninji-extension";
+import { finWallet } from "@interchain-kit/fin-extension";
+import { shellWallet } from "@interchain-kit/shell-extension";
 import { keplrWallet } from "@interchain-kit/keplr-extension";
 import { leapWallet } from "@interchain-kit/leap-extension";
 import { cosmostationWallet } from "@interchain-kit/cosmostation-extension";
@@ -116,7 +119,7 @@ const _chains = [
   ...chains.filter((c) => chainNames.includes(c.chainName)),
   // createChainFromEthereumChainInfo(bscethertestnet),
   // createChainFromEthereumChainInfo(goerliethereumtestnet),
-  createChainFromEthereumChainInfo(sepoliaEthereumTestNet),
+  // createChainFromEthereumChainInfo(sepoliaEthereumTestNet),
   // createStarshipChain(
   //   "test-osmosis-1",
   //   "osmosis",
@@ -129,7 +132,7 @@ const _assetLists = [
   ...assetLists.filter((a) => chainNames.includes(a.chainName)),
   // createAssetListFromEthereumChainInfo(bscethertestnet),
   // createAssetListFromEthereumChainInfo(goerliethereumtestnet),
-  createAssetListFromEthereumChainInfo(sepoliaEthereumTestNet),
+  // createAssetListFromEthereumChainInfo(sepoliaEthereumTestNet),
   // createStarshipAssetList("osmosis"),
 ];
 
@@ -147,9 +150,9 @@ const _assetLists = [
 const _wallets: BaseWallet[] = [
   // mock1Wallet,
   // mock2Wallet,
-  // keplrWallet,
+  keplrWallet,
   // leapWallet,
-  cosmostationWallet,
+  // cosmostationWallet,
   // stationWallet,
   // galaxyStationWallet,
   // walletConnect,
@@ -157,14 +160,17 @@ const _wallets: BaseWallet[] = [
   // cosmosExtensionMetaMask,
   // walletConnect,
   // ledgerWallet,
-  // leapCosmosExtensionMetaMask,
+  leapCosmosExtensionMetaMask,
   // compassWallet,
   // trustExtension,
   // metaMaskExtension,
   // okxWallet,
   // xdefiWallet,
   // exodusWallet,
-  coin98Wallet,
+  // coin98Wallet,
+  // finWallet,
+  // shellWallet,
+  // ninjiWallet,
 ];
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -204,6 +210,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             //   rpc: ['https://rpc.testnet.osmosis.zone'],
             //   rest: ['https://lcd.testnet.osmosis.zone']
             // }
+            // injectivetestnet: {
+            //   rpc: ["https://testnet.explorer.injective.network/"],
+            // },
           },
         }}
       >
