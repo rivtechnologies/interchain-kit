@@ -5,6 +5,7 @@ import { LEAP_LOGO, METAMASK_LOGO } from './constant';
 
 export const metamaskLeapCosmosSnapInfo: Wallet = {
   name: 'leap-metamask-cosmos-snap',
+  ethereumKey: 'ethereum',
   description:
     'The Leap Cosmos MetaMask Snap allows signing of Cosmos transactions using MetaMask.',
   prettyName: 'Leap Cosmos MetaMask',

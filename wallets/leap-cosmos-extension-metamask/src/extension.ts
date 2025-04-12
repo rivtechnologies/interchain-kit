@@ -1,6 +1,6 @@
 import { AminoSignResponse } from '@interchainjs/cosmos/types/wallet';
 import { StdSignDoc } from '@interchainjs/types';
-import { DirectSignDoc, ExtensionWallet, SignOptions, WalletAccount } from '@interchain-kit/core';
+import { CosmosWallet, DirectSignDoc, ExtensionWallet, SignOptions, WalletAccount } from '@interchain-kit/core';
 import { ChainInfo } from './types';
 import { Chain, AssetList } from '@chain-registry/v2-types';
 
@@ -10,7 +10,7 @@ declare global {
   }
 }
 
-export class LeapCosmosExtensionMetaMask extends ExtensionWallet {
+export class LeapCosmosExtensionMetaMask extends CosmosWallet {
   snapId: string = 'npm:@leapwallet/metamask-cosmos-snap'
 
   supportedChains: { [chainId: string]: ChainInfo } = {}
@@ -21,10 +21,10 @@ export class LeapCosmosExtensionMetaMask extends ExtensionWallet {
         throw new Error('MetaMask is not installed');
       }
       this.supportedChains = await this.getSupportedChains();
-      this.isExtensionInstalled = true;
+
     } catch (error) {
       this.errorMessage = (error as any).message;
-      this.isExtensionInstalled = false;
+
     }
   }
 
@@ -40,7 +40,7 @@ export class LeapCosmosExtensionMetaMask extends ExtensionWallet {
     })
   }
 
-  async connect(chainId: string | string[]) {
+  async connect(chainId: string) {
     await window.ethereum.request({
       method: 'wallet_requestSnaps',
       params: {
@@ -52,7 +52,7 @@ export class LeapCosmosExtensionMetaMask extends ExtensionWallet {
     }
   }
 
-  async disconnect(chainId: string | string[]): Promise<void> {
+  async disconnect(chainId: string): Promise<void> {
     await window.ethereum.request({
       method: 'wallet_revokePermissions',
       params: [
@@ -87,6 +87,10 @@ export class LeapCosmosExtensionMetaMask extends ExtensionWallet {
       isSmartContract: false,
       username: 'leap cosmos in metamask',
     }
+  }
+
+  async getOfflineSigner(chainId: string) {
+    return super.getOfflineSigner(chainId, 'amino')
   }
 
   async getAccounts(chainIds: string[]): Promise<WalletAccount[]> {
