@@ -370,6 +370,25 @@ const E2ETest = () => {
       <button className="bg-blue-100 p-1 m-1" onClick={open}>
         open modal
       </button>
+      <button
+        className="bg-blue-100 p-1 m-1"
+        onClick={() => {
+          walletManager.addChains(
+            chains.filter((c) => c.chainName === "sei"),
+            assetLists.filter((a) => a.chainName === "sei"),
+            undefined,
+            {
+              endpoints: {
+                sei: {
+                  rpc: ["http://localhost:26657"],
+                },
+              },
+            }
+          );
+        }}
+      >
+        change rpc
+      </button>
     </div>
   );
 };

@@ -20,12 +20,18 @@ type UseAsyncRequestOptions<T> = {
    * @default true
    */
   enabled?: boolean;
+  /**
+   * Whether to disable caching
+   * @default false
+   */
+  disableCache?: boolean;
 };
 
 export function useAsync<T>({
   queryKey,
   queryFn,
-  enabled = true
+  enabled = true,
+  disableCache = false,
 }: UseAsyncRequestOptions<T>) {
   const [state, setState] = useState<{
     data: T | null;
@@ -56,7 +62,7 @@ export function useAsync<T>({
   useEffect(() => {
     if (!enabled) return;
 
-    if (cache.has(cacheKey)) {
+    if (!disableCache && cache.has(cacheKey)) {
       setState(prev => ({
         ...prev,
         data: cache.get(cacheKey),
@@ -94,7 +100,9 @@ export function useAsync<T>({
 
     const requestPromise = queryFnRef.current()
       .then((data) => {
-        cache.set(cacheKey, data);
+        if (!disableCache) {
+          cache.set(cacheKey, data);
+        }
         if (mountedRef.current) {
           setState({
             data,
@@ -112,20 +120,21 @@ export function useAsync<T>({
             error,
           });
         }
-        // throw error;
       })
       .finally(() => {
         activeRequests.delete(cacheKey);
       });
 
     activeRequests.set(cacheKey, requestPromise);
-  }, [cacheKey, enabled]); // 不再依赖 queryFn
+  }, [cacheKey, enabled, disableCache]);
 
   const refetch = async () => {
     try {
       setState(prev => ({ ...prev, isLoading: true, error: null }));
       const data = await queryFnRef.current();
-      cache.set(cacheKey, data);
+      if (!disableCache) {
+        cache.set(cacheKey, data);
+      }
       if (mountedRef.current) {
         setState({
           data,

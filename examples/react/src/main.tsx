@@ -45,7 +45,7 @@ const chainNames: string[] = [
   // "injectivetestnet",
   "osmosistestnet",
   // "osmosis",
-  // "juno",
+  "juno",
   // "cosmoshub",
   // "stargaze",
   // "noble",

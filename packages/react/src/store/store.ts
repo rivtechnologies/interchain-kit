@@ -6,6 +6,7 @@ import { HttpEndpoint } from '@interchainjs/types';
 import { createStore } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { persist, createJSONStorage } from 'zustand/middleware'
+import { dedupeAsync } from '../utils';
 
 const immerSyncUp = (newWalletManager: WalletManager) => {
   return (draft: { chains: Chain[]; assetLists: AssetList[]; wallets: BaseWallet[]; signerOptions: SignerOptions; endpointOptions: EndpointOptions; signerOptionMap: Record<string, InterchainSigningOptions>; endpointOptionsMap: Record<string, Endpoints>; preferredSignTypeMap: Record<string, SignType>; }) => {
@@ -203,6 +204,10 @@ export const createInterchainStore = (walletManager: WalletManager) => {
             }
           })
         })
+
+        draft.chainWalletState = draft.chainWalletState.map(cws => {
+          return { ...cws, rpcEndpoint: newEndpointOptions?.endpoints?.[cws.chainName]?.rpc?.[0] || cws.rpcEndpoint }
+        })
       })
     },
 
@@ -258,7 +263,13 @@ export const createInterchainStore = (walletManager: WalletManager) => {
       }
     },
     getRpcEndpoint: async (walletName: string, chainName: string): Promise<string | HttpEndpoint> => {
-      return walletManager.getRpcEndpoint(walletName, chainName)
+      return dedupeAsync(`${chainName}-rpcEndpoint`, async () => {
+        const rpcEndpoint = await walletManager.getRpcEndpoint(walletName, chainName)
+        get().wallets.map(wallet => {
+          get().updateChainWalletState(wallet.info.name, chainName, { rpcEndpoint })
+        })
+        return rpcEndpoint
+      })
     },
     getChainLogoUrl(chainName) {
       return walletManager.getChainLogoUrl(chainName)
