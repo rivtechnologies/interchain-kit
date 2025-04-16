@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { renderHook } from "@testing-library/react-hooks"
+import { renderHook } from "@testing-library/react"
 import { useChainWallet } from "../../src/hooks/useChainWallet"
 import { useWalletManager } from "../../src/hooks/useWalletManager"
 import { ChainWallet } from "../../src/store/chain-wallet"

@@ -2,11 +2,11 @@
  * @jest-environment jsdom
  */
 
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react';
 import { useChain } from '../../src/hooks/useChain';
 import { useWalletManager } from '../../src/hooks/useWalletManager';
 import { useWalletModal } from '../../src/modal';
-import { ChainNameNotExist, WalletState } from '@interchain-kit/core';
+import { ChainNameNotExist, ChainNotExist, WalletState } from '@interchain-kit/core';
 import { ChainWalletState, InterchainStore } from '../../src/store';
 import { MockWallet } from '../helpers/mock-wallet';
 
@@ -69,9 +69,10 @@ describe('useChain', () => {
 
   it('should throw an error if chain does not exist', () => {
     mockWalletManager.getChainByName.mockReturnValue(undefined);
-    const { result } = renderHook(() => useChain('non-existent-chain'));
 
-    expect(() => result.current).toThrow(ChainNameNotExist);
+    expect(() => {
+      renderHook(() => useChain('non-existent-chain'));
+    }).toThrow(new ChainNameNotExist('non-existent-chain'));
   });
 
   it('should return correct values for an existing chain', () => {
