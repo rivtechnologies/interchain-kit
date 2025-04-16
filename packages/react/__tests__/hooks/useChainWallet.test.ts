@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { renderHook } from "@testing-library/react"
+import { act, renderHook, waitFor } from "@testing-library/react"
 import { useChainWallet } from "../../src/hooks/useChainWallet"
 import { useWalletManager } from "../../src/hooks/useWalletManager"
 import { ChainWallet } from "../../src/store/chain-wallet"
@@ -61,7 +61,7 @@ describe("useChainWallet", () => {
             ; (useWalletManager as jest.Mock).mockReturnValue(mockWalletManager)
     })
 
-    it("should return the correct chain and wallet data", () => {
+    it("should return the correct chain and wallet data", async () => {
         const chainName = "test-chain"
         const walletName = "test-wallet"
 
@@ -83,18 +83,20 @@ describe("useChainWallet", () => {
 
         const { result } = renderHook(() => useChainWallet(chainName, walletName))
 
-        expect(result.current.chain).toEqual(mockChain)
-        expect(result.current.wallet).toBeInstanceOf(ChainWallet)
-        expect(result.current.assetList).toEqual(mockWalletManager.assetLists[0])
-        expect(result.current.status).toBe(WalletState.Connected)
-        expect(result.current.username).toBe("test-user")
-        expect(result.current.address).toBe("test-address")
-        expect(result.current.message).toBe("")
-        expect(result.current.rpcEndpoint).toBe("http://localhost:26657")
-        expect(result.current.logoUrl).toBe("http://logo.url")
+        await waitFor(() => {
+            expect(result.current.chain).toEqual(mockChain)
+            expect(result.current.wallet).toBeInstanceOf(ChainWallet)
+            expect(result.current.assetList).toEqual(mockWalletManager.assetLists[0])
+            expect(result.current.status).toBe(WalletState.Connected)
+            expect(result.current.username).toBe("test-user")
+            expect(result.current.address).toBe("test-address")
+            expect(result.current.message).toBe("")
+            expect(result.current.rpcEndpoint).toBe("http://localhost:26657")
+            expect(result.current.logoUrl).toBe("http://logo.url")
+        })
     })
 
-    it("should call disconnect when disconnect is invoked", () => {
+    it("should call disconnect when disconnect is invoked", async () => {
         const chainName = "test-chain"
         const walletName = "test-wallet"
 
@@ -102,7 +104,11 @@ describe("useChainWallet", () => {
 
         result.current.disconnect()
 
-        expect(mockWalletManager.disconnect).toHaveBeenCalledWith(walletName, chainName)
+        await waitFor(() => {
+            expect(mockWalletManager.disconnect).toHaveBeenCalledWith(walletName, chainName)
+        })
+
+
     })
 
     it("should return the correct RPC endpoint", async () => {
@@ -115,10 +121,12 @@ describe("useChainWallet", () => {
 
         const endpointResult = await result.current.getRpcEndpoint()
 
-        expect(endpointResult).toBe("http://localhost:26657")
+        await waitFor(() => {
+            expect(endpointResult).toBe("http://localhost:26657")
+        })
     })
 
-    it("should return the signing client", () => {
+    it("should return the signing client", async () => {
         const chainName = "test-chain"
         const walletName = "test-wallet"
 
@@ -129,6 +137,8 @@ describe("useChainWallet", () => {
 
         const { result } = renderHook(() => useChainWallet(chainName, walletName))
 
-        expect(result.current.getSigningClient()).toBe(mockSigningClient)
+        await waitFor(() => {
+            expect(result.current.getSigningClient()).toBe(mockSigningClient)
+        })
     })
 })

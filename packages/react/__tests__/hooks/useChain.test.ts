@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { renderHook, act } from '@testing-library/react';
+import { renderHook, act, waitFor } from '@testing-library/react';
 import { useChain } from '../../src/hooks/useChain';
 import { useWalletManager } from '../../src/hooks/useWalletManager';
 import { useWalletModal } from '../../src/modal';
@@ -75,7 +75,7 @@ describe('useChain', () => {
     }).toThrow(new ChainNameNotExist('non-existent-chain'));
   });
 
-  it('should return correct values for an existing chain', () => {
+  it('should return correct values for an existing chain', async () => {
 
     const mockChainWalletState: ChainWalletState = {
       walletState: WalletState.Connected,
@@ -92,25 +92,31 @@ describe('useChain', () => {
 
     const { result } = renderHook(() => useChain('test-chain'));
 
-    expect(result.current.chain).toEqual(mockChain);
-    expect(result.current.status).toBe(WalletState.Connected);
-    expect(result.current.username).toBe('test-user');
-    expect(result.current.address).toBe('test-address');
-    expect(result.current.rpcEndpoint).toBe('http://localhost:26657');
+    await waitFor(() => {
+      expect(result.current.chain).toEqual(mockChain);
+      expect(result.current.status).toBe(WalletState.Connected);
+      expect(result.current.username).toBe('test-user');
+      expect(result.current.address).toBe('test-address');
+      expect(result.current.rpcEndpoint).toBe('http://localhost:26657');
+    })
+
+
   });
 
-  it('should call connect and open modal when connect is invoked', () => {
+  it('should call connect and open modal when connect is invoked', async () => {
 
     mockWalletManager.getChainByName.mockReturnValue(mockChain);
 
     const { result } = renderHook(() => useChain('test-chain'));
 
-    act(() => {
+    await act(() => {
       result.current.connect();
     });
 
-    expect(mockWalletManager.setCurrentChainName).toHaveBeenCalledWith('test-chain');
-    expect(mockWalletModal.open).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(mockWalletManager.setCurrentChainName).toHaveBeenCalledWith('test-chain');
+      expect(mockWalletModal.open).toHaveBeenCalled();
+    })
   });
 
   it('should call disconnect when disconnect is invoked', async () => {
@@ -123,33 +129,42 @@ describe('useChain', () => {
       await result.current.disconnect();
     });
 
-    expect(mockWalletManager.disconnect).toHaveBeenCalledWith('test-wallet', 'test-chain');
+    await waitFor(() => {
+
+      expect(mockWalletManager.disconnect).toHaveBeenCalledWith('test-wallet', 'test-chain');
+    })
+
   });
 
-  it('should call open modal when openView is invoked', () => {
+  it('should call open modal when openView is invoked', async () => {
 
     mockWalletManager.getChainByName.mockReturnValue(mockChain);
 
     const { result } = renderHook(() => useChain('test-chain'));
 
-    act(() => {
+    await act(() => {
       result.current.openView();
     });
 
-    expect(mockWalletManager.setCurrentChainName).toHaveBeenCalledWith('test-chain');
-    expect(mockWalletModal.open).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(mockWalletManager.setCurrentChainName).toHaveBeenCalledWith('test-chain');
+      expect(mockWalletModal.open).toHaveBeenCalled();
+    })
+
   });
 
-  it('should call close modal when closeView is invoked', () => {
+  it('should call close modal when closeView is invoked', async () => {
 
     mockWalletManager.getChainByName.mockReturnValue(mockChain);
 
     const { result } = renderHook(() => useChain('test-chain'));
 
-    act(() => {
+    await act(() => {
       result.current.closeView();
     });
 
-    expect(mockWalletModal.close).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(mockWalletModal.close).toHaveBeenCalled();
+    })
   });
 });

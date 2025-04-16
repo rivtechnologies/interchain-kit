@@ -8,17 +8,19 @@ describe('useAsync', () => {
     });
     afterEach(cleanup)
 
-    it('should return initial state', () => {
+    it('should return initial state', async () => {
         const { result } = renderHook(() =>
             useAsync({
                 queryKey: 'test1',
                 queryFn: async () => 'data',
             })
         );
+        await waitFor(() => {
+            expect(result.current.data).toBeNull();
+            expect(result.current.isLoading).toBe(true);
+            expect(result.current.error).toBeNull();
+        })
 
-        expect(result.current.data).toBeNull();
-        expect(result.current.isLoading).toBe(true);
-        expect(result.current.error).toBeNull();
     });
 
     it('should fetch data and update state', async () => {

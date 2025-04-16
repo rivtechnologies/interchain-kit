@@ -1,5 +1,5 @@
-import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import React, { act } from "react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { WalletModalProvider, useWalletModal } from "../../src/modal/provider";
 import "@testing-library/jest-dom";
 import { ChainProvider } from "../../src/provider";
@@ -18,7 +18,7 @@ const TestComponent = () => {
 };
 
 describe("WalletModalProvider", () => {
-  it("should render children correctly", () => {
+  it("should render children correctly", async () => {
     render(
       <ChainProvider chains={[chain]} assetLists={[assetList]} wallets={[]}>
         <WalletModalProvider>
@@ -27,17 +27,21 @@ describe("WalletModalProvider", () => {
       </ChainProvider>
     );
 
-    expect(screen.getByText("Test Child")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("Test Child")).toBeInTheDocument();
+    });
   });
 
-  it("should open and close the modal", () => {
-    render(
-      <ChainProvider chains={[chain]} assetLists={[assetList]} wallets={[]}>
-        <WalletModalProvider>
-          <TestComponent />
-        </WalletModalProvider>
-      </ChainProvider>
-    );
+  it("should open and close the modal", async () => {
+    await act(async () => {
+      render(
+        <ChainProvider chains={[chain]} assetLists={[assetList]} wallets={[]}>
+          <WalletModalProvider>
+            <TestComponent />
+          </WalletModalProvider>
+        </ChainProvider>
+      );
+    });
 
     const openButton = screen.getByText("Open Modal");
     const closeButton = screen.getByText("Close Modal");
