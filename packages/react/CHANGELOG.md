@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/interchain-kit/react/compare/@interchain-kit/react@0.2.222...@interchain-kit/react@0.3.0) (2025-04-16)
+
+### Bug Fixes
+
+- **@interchain-kit/react:** fix warning when test ([dfc9d0e](https://github.com/interchain-kit/react/commit/dfc9d0e6f3649942860b4664f5a069218e1e3933))
+
 ## [0.2.222](https://github.com/interchain-kit/react/compare/@interchain-kit/react@0.2.221...@interchain-kit/react@0.2.222) (2025-04-12)
 
 **Note:** Version bump only for package @interchain-kit/react

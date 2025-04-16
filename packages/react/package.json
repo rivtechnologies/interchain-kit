@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/react",
-  "version": "0.2.222",
+  "version": "0.3.0",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector react package",
   "main": "index.js",
@@ -34,7 +34,7 @@
   "keywords": [],
   "dependencies": {
     "@chain-registry/v2-types": "^0.53.40",
-    "@interchain-kit/core": "0.2.222",
+    "@interchain-kit/core": "0.3.0",
     "@interchain-ui/react": "1.26.1",
     "@interchainjs/cosmos": "1.11.2",
     "@interchainjs/cosmos-types": "1.11.2",
@@ -58,10 +58,10 @@
     "ts-jest": "^29.3.0"
   },
   "peerDependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
     "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0"
+    "@types/react-dom": "^19.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "gitHead": "f3ba828eb8b2a4db46931a04b010a59aeec4cc4e"
 }
