@@ -312,6 +312,8 @@ const E2ETest = () => {
     keplrExtension?.addSuggestChain(chainInfo);
   };
 
+  const chainNameToAdd = "cosmoshubtestnet";
+
   return (
     <div>
       <table style={{ width: "1000px" }}>
@@ -374,12 +376,12 @@ const E2ETest = () => {
         className="bg-blue-100 p-1 m-1"
         onClick={() => {
           walletManager.addChains(
-            chains.filter((c) => c.chainName === "sei"),
-            assetLists.filter((a) => a.chainName === "sei"),
+            chains.filter((c) => c.chainName === chainNameToAdd),
+            assetLists.filter((a) => a.chainName === chainNameToAdd),
             undefined,
             {
               endpoints: {
-                sei: {
+                [chainNameToAdd]: {
                   rpc: ["http://localhost:26657"],
                 },
               },
@@ -387,7 +389,7 @@ const E2ETest = () => {
           );
         }}
       >
-        change rpc
+        change rpc: {chainNameToAdd}
       </button>
     </div>
   );

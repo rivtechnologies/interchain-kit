@@ -1,6 +1,6 @@
 import { AssetList, Chain } from '@chain-registry/v2-types';
 import { createInterchainStore, InterchainStore } from '../../src/store/store';
-import { WalletManager, WalletState, SignerOptions, EndpointOptions, clientNotExistError } from '@interchain-kit/core';
+import { WalletManager, WalletState, SignerOptions, EndpointOptions, clientNotExistError, WalletAccount } from '@interchain-kit/core';
 
 const localStorageMock: Storage = (() => {
   let store: { [key: string]: string } = {};
@@ -390,4 +390,20 @@ describe('InterchainStore', () => {
     );
     expect(filteredStates.length).toBe(1);
   });
+
+  it('should initialize chainWalletState with old states if they exist', async () => {
+
+    const oldChainWalletState = useStore.getState().chainWalletState;
+    expect(oldChainWalletState).toHaveLength(2)
+
+    // mock init again with new chains and wallets
+    useStore.getState().wallets = [{ info: { name: 'wallet1' }, init: jest.fn() }] as any[]
+    useStore.getState().chains = [{ chainName: 'chain1', chainId: '1' }] as Chain[];
+    useStore.getState().assetLists = [{ chainName: 'chain1', assets: [] }] as AssetList[];
+    await useStore.getState().init()
+
+    const chainWalletState = useStore.getState().chainWalletState;
+    expect(chainWalletState).toHaveLength(2)
+  });
+
 });

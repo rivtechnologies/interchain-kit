@@ -83,16 +83,18 @@ export const createInterchainStore = (walletManager: WalletManager) => {
 
       const oldChainWalletStatesMap = new Map(get().chainWalletState.map(cws => [cws.walletName + cws.chainName, cws]))
 
-      set(draft => {
-        draft.chainWalletState = []
-      })
+      // should remove wallet that already disconnected ,for hydrain back from localstorage
+      // const oldChainWalletStateMap = new Map()
+      // get().chainWalletState.forEach(cws => {
+      //   if(cws.walletState === WalletState.Connected) {
+      //     oldChainWalletStateMap.set(cws.walletName + cws.chainName, cws)
+      //   }
+      // })
 
-      wallets.forEach(wallet => {
-        chains.forEach(chain => {
+      get().wallets.forEach(wallet => {
+        get().chains.forEach(chain => {
           set(draft => {
-            if (oldChainWalletStatesMap.has(wallet.info.name + chain.chainName)) {
-              draft.chainWalletState.push(oldChainWalletStatesMap.get(wallet.info.name + chain.chainName)!)
-            } else {
+            if (!oldChainWalletStatesMap.has(wallet.info.name + chain.chainName)) {
               draft.chainWalletState.push({
                 chainName: chain.chainName,
                 walletName: wallet.info.name,
