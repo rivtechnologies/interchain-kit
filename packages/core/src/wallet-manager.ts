@@ -7,7 +7,7 @@ import { SigningOptions as InterchainSigningOptions } from '@interchainjs/cosmos
 import { SigningClient } from '@interchainjs/cosmos/signing-client'
 import Bowser from 'bowser';
 import { ChainNameNotExist, ChainNotExist, getValidRpcEndpoint, isInstanceOf, NoValidRpcEndpointFound, RpcInfo, WalletNotExist } from './utils';
-import { WCWallet } from './wc-wallet';
+import { WCWallet } from './wallets/wc-wallet';
 
 export class WalletManager {
   chains: Chain[] = []

@@ -1,9 +1,14 @@
 import { OkxwalletExtensionInfo } from "./registry"
-import { CosmosWallet, EthereumWallet, MultiChainWallet } from '@interchain-kit/core';
+import { CosmosWallet, EthereumWallet, ExtensionWallet, PlatformWallet, WCMobileWebWallet } from '@interchain-kit/core';
 
-const okxWallet = new MultiChainWallet(OkxwalletExtensionInfo)
+const web = new ExtensionWallet(OkxwalletExtensionInfo)
 
-okxWallet.setNetworkWallet('cosmos', new CosmosWallet(OkxwalletExtensionInfo))
-okxWallet.setNetworkWallet('eip155', new EthereumWallet(OkxwalletExtensionInfo))
+web.setNetworkWallet('cosmos', new CosmosWallet(OkxwalletExtensionInfo))
+web.setNetworkWallet('eip155', new EthereumWallet(OkxwalletExtensionInfo))
+
+
+const okxWallet = new PlatformWallet(OkxwalletExtensionInfo)
+okxWallet.setPlatformWallet('web', web)
+okxWallet.setPlatformWallet('mobile-web', new WCMobileWebWallet(OkxwalletExtensionInfo))
 
 export { okxWallet }

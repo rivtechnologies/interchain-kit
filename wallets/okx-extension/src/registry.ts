@@ -26,4 +26,5 @@ export const OkxwalletExtensionInfo: Wallet = {
       link: 'https://www.okx.com/download',
     },
   ],
+  dappBrowserLink: () => "https://www.okx.com/download?deeplink=" + encodeURIComponent("okx://wallet/dapp/url?dappUrl=" + encodeURIComponent(location.href))
 };

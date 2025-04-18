@@ -1,4 +1,3 @@
-export * from './wc-wallet'
 export * from './types'
 export * from './utils'
 export * from './wallet-manager'

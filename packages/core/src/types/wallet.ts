@@ -68,6 +68,11 @@ export interface Wallet {
     ) => string;
   };
   endpoints?: EndpointOptions['endpoints']
+  walletConnectLink?: {
+    android?: string;
+    ios?: string;
+  },
+  dappBrowserLink?: (url: string) => string;
 }
 
 export interface DirectSignDoc {

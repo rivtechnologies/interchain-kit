@@ -29,4 +29,11 @@ export const trustExtensionInfo: Wallet = {
         'https://microsoftedge.microsoft.com/addons/detail/trust-wallet/ajkhoeiiokighlmdnlakpjfoobnjinie',
     },
   ],
+  walletconnect: {
+    name: 'Trust Wallet',
+    projectId: '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0'
+  },
+  walletConnectLink: {
+    android: `https://link.trustwallet.com/wc?uri={wc-uri}`,
+  }
 };

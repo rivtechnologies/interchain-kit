@@ -3,6 +3,7 @@ import {
   BaseWallet,
   EthereumWallet,
   isInstanceOf,
+  isMobile,
   MultiChainWallet,
   WCWallet,
 } from "@interchain-kit/core";
@@ -391,6 +392,8 @@ const E2ETest = () => {
       >
         change rpc: {chainNameToAdd}
       </button>
+      {JSON.stringify(isMobile())}
+      {navigator.userAgent}
     </div>
   );
 };

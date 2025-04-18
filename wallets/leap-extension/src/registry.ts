@@ -21,4 +21,11 @@ export const leapExtensionInfo: Wallet = {
       link: 'https://chrome.google.com/webstore/detail/leap-cosmos-wallet/fcfcfllfndlomdhbehjjcoimbgofdncg',
     },
   ],
+  walletconnect: {
+    name: 'Leap Wallet',
+    projectId: '3ed8cc046c6211a798dc5ec70f1302b43e07db9639fd287de44a9aa115a21ed6'
+  },
+  walletConnectLink: {
+    android: `leapcosmos://wcV2?{wc-uri}`,
+  }
 };

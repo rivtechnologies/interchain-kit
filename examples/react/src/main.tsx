@@ -23,7 +23,7 @@ import { ledgerWallet } from "@interchain-kit/ledger";
 import { cosmosExtensionMetaMask } from "@interchain-kit/cosmos-extension-metamask";
 import { xdefiWallet } from "@interchain-kit/xdefi-extension";
 import { compassWallet } from "@interchain-kit/compass-extension";
-import { trustExtension } from "@interchain-kit/trust-extension";
+import { trustWallet } from "@interchain-kit/trust-extension";
 import { leapCosmosExtensionMetaMask } from "@interchain-kit/leap-cosmos-extension-metamask";
 import { xdefinWallet } from "@interchain-kit/xdefi-extension";
 // import { MockWallet } from "@interchain-kit/mock-wallet";
@@ -43,9 +43,9 @@ import {
 
 const chainNames: string[] = [
   // "injectivetestnet",
-  "osmosistestnet",
-  // "osmosis",
-  "juno",
+  // "osmosistestnet",
+  "osmosis",
+  // "juno",
   // "cosmoshub",
   // "stargaze",
   // "noble",
@@ -151,7 +151,7 @@ const _wallets: BaseWallet[] = [
   // mock1Wallet,
   // mock2Wallet,
   keplrWallet,
-  // leapWallet,
+  leapWallet,
   // cosmostationWallet,
   // stationWallet,
   // galaxyStationWallet,
@@ -160,11 +160,11 @@ const _wallets: BaseWallet[] = [
   // cosmosExtensionMetaMask,
   // walletConnect,
   // ledgerWallet,
-  leapCosmosExtensionMetaMask,
+  // leapCosmosExtensionMetaMask,
   // compassWallet,
-  // trustExtension,
+  trustWallet,
   // metaMaskExtension,
-  // okxWallet,
+  okxWallet,
   // xdefiWallet,
   // exodusWallet,
   // coin98Wallet,

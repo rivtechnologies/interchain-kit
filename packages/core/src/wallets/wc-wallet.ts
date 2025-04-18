@@ -1,17 +1,15 @@
-import { Algo, Wallet, WcEventTypes, WcProviderEventType } from './types/wallet';
-import { BaseWallet } from "./wallets/base-wallet";
-import { WalletAccount, SignOptions, DirectSignDoc, BroadcastMode, SignType } from "./types";
+import { Algo, Wallet, WcEventTypes, WcProviderEventType } from '../types/wallet';
+import { BaseWallet } from "./base-wallet";
+import { WalletAccount, SignOptions, DirectSignDoc, BroadcastMode, SignType } from "../types";
 import { PairingTypes, SessionTypes, SignClientTypes } from '@walletconnect/types';
 import { Buffer } from 'buffer'
 import {
   AminoGenericOfflineSigner,
   DirectGenericOfflineSigner,
-  IAminoGenericOfflineSigner,
-  IDirectGenericOfflineSigner,
 } from '@interchainjs/cosmos/types/wallet';
 import { AminoSignResponse, StdSignature, DirectSignResponse } from '@interchainjs/cosmos/types/wallet';
 import { IGenericOfflineSigner, StdSignDoc } from '@interchainjs/types'
-import { WalletConnectIcon } from './constant';
+import { WalletConnectIcon } from '../constant';
 import { Chain } from '@chain-registry/v2-types';
 import UniversalProvider, { ConnectParams, UniversalProviderOpts } from '@walletconnect/universal-provider';
 
@@ -49,7 +47,7 @@ export class WCWallet extends BaseWallet {
     this.walletConnectOption = walletConnectOption
   }
 
-  override async init(): Promise<void> {
+  async init(): Promise<void> {
     this.events.removeAllListeners()
 
     const defaultOption: UniversalProviderOpts = {
@@ -349,9 +347,9 @@ export class WCWallet extends BaseWallet {
 
     for (const event of events) {
       // console.log(event)
-      this.provider.on(event as any, (data: any) => {
-        console.log(event, data)
-      })
+      // this.provider.on(event as any, (data: any) => {
+      //   console.log(event, data)
+      // })
     }
 
   }
