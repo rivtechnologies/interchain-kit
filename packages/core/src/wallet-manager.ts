@@ -217,7 +217,7 @@ export class WalletManager {
     const options: InterchainSigningOptions = {
       broadcast: {
         checkTx: true,
-        deliverTx: false,
+        deliverTx: true,
       },
       ...signingOptions,
       signerOptions: {
