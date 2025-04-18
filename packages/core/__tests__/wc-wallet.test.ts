@@ -1,4 +1,4 @@
-import { WCWallet } from '../src/wc-wallet';
+import { WCWallet } from '../src/wallets/wc-wallet';
 import { UniversalProvider } from '@walletconnect/universal-provider';
 import { WalletAccount, SignType } from '../src/types';
 import { Chain } from '@chain-registry/v2-types';
