@@ -1,13 +1,13 @@
 
-import { EthereumWallet, MultiChainWallet } from "@interchain-kit/core";
+import { EthereumWallet, ExtensionWallet } from "@interchain-kit/core";
 import { MetaMaskExtensionInfo } from "./registry";
 
 export * from './constant'
 export * from './registry'
 
 
-const metaMaskExtension = new MultiChainWallet(MetaMaskExtensionInfo)
+const metaMaskWallet = new ExtensionWallet(MetaMaskExtensionInfo)
 
-metaMaskExtension.setNetworkWallet('eip155', new EthereumWallet(MetaMaskExtensionInfo))
+metaMaskWallet.setNetworkWallet('eip155', new EthereumWallet(MetaMaskExtensionInfo))
 
-export { metaMaskExtension }
+export { metaMaskWallet }

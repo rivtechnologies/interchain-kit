@@ -27,7 +27,7 @@ import { trustWallet } from "@interchain-kit/trust-extension";
 import { leapCosmosExtensionMetaMask } from "@interchain-kit/leap-cosmos-extension-metamask";
 import { xdefinWallet } from "@interchain-kit/xdefi-extension";
 // import { MockWallet } from "@interchain-kit/mock-wallet";
-import { metaMaskExtension } from "@interchain-kit/metamask-extension";
+import { metaMaskWallet } from "@interchain-kit/metamask-extension";
 import { exodusWallet } from "@interchain-kit/exodus-extension";
 import { starshipChain, starshipChain1 } from "./utils/starship.ts";
 import { ThemeProvider } from "@interchain-ui/react";
@@ -44,13 +44,13 @@ import {
 const chainNames: string[] = [
   // "injectivetestnet",
   // "osmosistestnet",
-  "osmosis",
+  // "osmosis",
   // "juno",
   // "cosmoshub",
   // "stargaze",
   // "noble",
   // "seitestnet2",
-  // "ethereum",
+  "ethereum",
   // "cosmoshubtestnet",
 ];
 // const chainNames = ["osmosistestnet"];
@@ -117,9 +117,9 @@ const sepoliaEthereumTestNet = {
 
 const _chains = [
   ...chains.filter((c) => chainNames.includes(c.chainName)),
-  // createChainFromEthereumChainInfo(bscethertestnet),
+  createChainFromEthereumChainInfo(bscethertestnet),
   // createChainFromEthereumChainInfo(goerliethereumtestnet),
-  // createChainFromEthereumChainInfo(sepoliaEthereumTestNet),
+  createChainFromEthereumChainInfo(sepoliaEthereumTestNet),
   // createStarshipChain(
   //   "test-osmosis-1",
   //   "osmosis",
@@ -130,9 +130,9 @@ const _chains = [
 // const _chains = [starshipChain1]
 const _assetLists = [
   ...assetLists.filter((a) => chainNames.includes(a.chainName)),
-  // createAssetListFromEthereumChainInfo(bscethertestnet),
+  createAssetListFromEthereumChainInfo(bscethertestnet),
   // createAssetListFromEthereumChainInfo(goerliethereumtestnet),
-  // createAssetListFromEthereumChainInfo(sepoliaEthereumTestNet),
+  createAssetListFromEthereumChainInfo(sepoliaEthereumTestNet),
   // createStarshipAssetList("osmosis"),
 ];
 
@@ -150,8 +150,8 @@ const _assetLists = [
 const _wallets: BaseWallet[] = [
   // mock1Wallet,
   // mock2Wallet,
-  keplrWallet,
-  leapWallet,
+  // keplrWallet,
+  // leapWallet,
   // cosmostationWallet,
   // stationWallet,
   // galaxyStationWallet,
@@ -162,9 +162,9 @@ const _wallets: BaseWallet[] = [
   // ledgerWallet,
   // leapCosmosExtensionMetaMask,
   // compassWallet,
-  trustWallet,
-  // metaMaskExtension,
-  okxWallet,
+  // trustWallet,
+  metaMaskWallet,
+  // okxWallet,
   // xdefiWallet,
   // exodusWallet,
   // coin98Wallet,

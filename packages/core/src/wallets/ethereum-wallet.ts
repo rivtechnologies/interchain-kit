@@ -107,10 +107,10 @@ export class EthereumWallet extends BaseWallet {
       throw error;
     }
   }
-  getProvider() {
+  async getProvider(chainId: string) {
+    await this.switchChain(chainId)
     return this.ethereum
   }
-
 
   async sendTransaction(transactionParameters: any) {
     // 发送交易请求
