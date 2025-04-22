@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/ninji-extension",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector",
   "main": "index.js",
@@ -32,7 +32,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@interchain-kit/core": "0.3.5"
+    "@interchain-kit/core": "0.3.6"
   },
   "gitHead": "4aee00fd4e8d20d3bcaeb026fa23b05805b54594"
 }

@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/okx-extension",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "author": "Cosmology <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector",
   "main": "index.js",
