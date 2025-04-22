@@ -12,7 +12,7 @@ export const getWalletInfo = (wallet: BaseWallet) => {
 
 export const transferToWalletUISchema = (w: BaseWallet) => {
   if (w.info.mode === "wallet-connect") {
-    const wc = w as WCWallet
+    const wc = w as unknown as WCWallet
     if (wc.session) {
       return {
         name: wc.session?.peer.metadata?.name,

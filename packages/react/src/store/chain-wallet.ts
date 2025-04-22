@@ -4,7 +4,7 @@ import { IGenericOfflineSigner } from "@interchainjs/types";
 
 
 export class ChainWallet<TWallet extends BaseWallet> extends BaseWallet {
-  getProvider(chainId: Chain["chainId"]): unknown {
+  getProvider(chainId: Chain["chainId"]): Promise<unknown> {
     return this.originalWallet.getProvider(chainId);
   }
   originalWallet: TWallet;

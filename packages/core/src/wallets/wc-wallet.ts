@@ -374,7 +374,7 @@ export class WCWallet extends BaseWallet {
     }
   }
 
-  getProvider() {
+  async getProvider() {
     return this.provider
   }
 }

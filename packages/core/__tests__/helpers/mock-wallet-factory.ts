@@ -43,7 +43,7 @@ export class MockBaseWallet extends BaseWallet {
   addSuggestChain(chainId: string): Promise<void> {
     return Promise.reject(new Error('Method not implemented.'));
   }
-  getProvider(chainId: Chain['chainId']) {
+  async getProvider(chainId: Chain['chainId']) {
     return {}
   }
   addMockAccount(chainId: string, walletName: string, account: WalletAccount): void {

@@ -66,7 +66,7 @@ export class PlatformWallet extends BaseWallet {
   addSuggestChain(chainId: Chain["chainId"]): Promise<void> {
     return this.currentPlatformWallet?.addSuggestChain(chainId);
   }
-  getProvider(chainId: Chain["chainId"]): unknown {
+  getProvider(chainId: Chain["chainId"]): Promise<unknown> {
     return this.currentPlatformWallet.getProvider(chainId);
   }
 

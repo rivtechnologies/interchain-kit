@@ -69,12 +69,12 @@ describe("ChainWallet", () => {
         expect(mockOriginalWallet.addSuggestChain).toHaveBeenCalledWith(chainId);
     });
 
-    it("should get a provider for a chain", () => {
+    it("should get a provider for a chain", async () => {
         const chainId = "test-chain";
         const mockProvider = {};
-        mockOriginalWallet.getProvider.mockReturnValue(mockProvider);
+        mockOriginalWallet.getProvider.mockResolvedValue(mockProvider);
 
-        const provider = chainWallet.getProvider(chainId);
+        const provider = await chainWallet.getProvider(chainId);
         expect(mockOriginalWallet.getProvider).toHaveBeenCalledWith(chainId);
         expect(provider).toEqual(mockProvider);
     });
