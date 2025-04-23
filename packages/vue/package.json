@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/vue",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit for vue",
   "main": "index.umd.js",
@@ -28,7 +28,7 @@
   "keywords": [],
   "dependencies": {
     "@chain-registry/v2-types": "^0.53.0",
-    "@interchain-kit/core": "0.3.7",
+    "@interchain-kit/core": "0.3.8",
     "@interchain-ui/vue": "^1.4.1",
     "@interchainjs/cosmos": "0.0.1-beta.34",
     "@interchainjs/cosmos-types": "0.0.1-beta.17",
@@ -44,5 +44,5 @@
   "peerDependencies": {
     "vue": ">=3.0.0"
   },
-  "gitHead": "4aee00fd4e8d20d3bcaeb026fa23b05805b54594"
+  "gitHead": "671b9fb525118f296e33863c7049a4dfa409b539"
 }

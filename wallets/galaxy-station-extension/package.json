@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/galaxy-station-extension",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector",
   "main": "index.js",
@@ -32,7 +32,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@interchain-kit/core": "0.3.7"
+    "@interchain-kit/core": "0.3.8"
   },
-  "gitHead": "4aee00fd4e8d20d3bcaeb026fa23b05805b54594"
+  "gitHead": "671b9fb525118f296e33863c7049a4dfa409b539"
 }
