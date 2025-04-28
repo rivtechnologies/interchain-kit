@@ -292,6 +292,17 @@ const WalletConnectTd = ({ wallet }: { wallet: BaseWallet }) => {
 const E2ETest = () => {
   const walletManager = useWalletManager();
   const { open } = useWalletModal();
+
+  console.log(
+    walletManager.chainWalletState.reduce(
+      (walletState, chainWalletState) => ({
+        ...walletState,
+        [chainWalletState.walletName]: chainWalletState.walletState,
+      }),
+      {}
+    )
+  );
+
   const addChain = async () => {
     const keplrExtension = walletManager.wallets.find(
       (w) => w.info?.name === "keplr-extension"

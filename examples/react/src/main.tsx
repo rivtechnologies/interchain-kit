@@ -175,7 +175,7 @@ const _wallets: BaseWallet[] = [
   // compassWallet,
   // trustWallet,
   // metaMaskWallet,
-  // okxWallet,
+  okxWallet,
   // xdefiWallet,
   // exodusWallet,
   // coin98Wallet,

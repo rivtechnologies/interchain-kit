@@ -17,7 +17,7 @@ export class ExtensionWallet extends MultiChainWallet {
       if (error instanceof Error && error.message === clientNotExistError.message) {
         this.walletState = WalletState.NotExist
       }
-      // throw error
+      throw error
     }
 
 
