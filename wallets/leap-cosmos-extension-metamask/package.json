@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/leap-cosmos-extension-metamask",
-  "version": "0.3.9",
+  "version": "0.3.10",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector for leap cosmos extension metamask",
   "main": "index.js",
@@ -32,7 +32,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@interchain-kit/core": "0.3.9"
+    "@interchain-kit/core": "0.3.10"
   },
   "gitHead": "69071f05d5637f7008393f11fb17151282ef4d2b"
 }

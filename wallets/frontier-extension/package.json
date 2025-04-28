@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/frontier-extension",
-  "version": "0.3.9",
+  "version": "0.3.10",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector",
   "main": "index.js",
@@ -32,7 +32,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@interchain-kit/core": "0.3.9"
+    "@interchain-kit/core": "0.3.10"
   },
   "gitHead": "2ce818a2a7b306c65526b6e8dbee8aaeefb15415"
 }
