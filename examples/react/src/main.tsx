@@ -8,7 +8,12 @@ import { BrowserRouter } from "react-router-dom";
 import { ChainProvider } from "@interchain-kit/react";
 
 import { assetLists, chains } from "@chain-registry/v2";
-import { BaseWallet, WCWallet } from "@interchain-kit/core";
+import {
+  BaseWallet,
+  ExtensionWallet,
+  isInstanceOf,
+  WCWallet,
+} from "@interchain-kit/core";
 import { ninjiWallet } from "@interchain-kit/ninji-extension";
 import { finWallet } from "@interchain-kit/fin-extension";
 import { shellWallet } from "@interchain-kit/shell-extension";
@@ -43,14 +48,14 @@ import {
 
 const chainNames: string[] = [
   // "injectivetestnet",
-  // "osmosistestnet",
+  "osmosistestnet",
   // "osmosis",
   // "juno",
   // "cosmoshub",
   // "stargaze",
   // "noble",
   // "seitestnet2",
-  "ethereum",
+  // "ethereum",
   // "cosmoshubtestnet",
 ];
 // const chainNames = ["osmosistestnet"];
@@ -117,9 +122,9 @@ const sepoliaEthereumTestNet = {
 
 const _chains = [
   ...chains.filter((c) => chainNames.includes(c.chainName)),
-  createChainFromEthereumChainInfo(bscethertestnet),
+  // createChainFromEthereumChainInfo(bscethertestnet),
   // createChainFromEthereumChainInfo(goerliethereumtestnet),
-  createChainFromEthereumChainInfo(sepoliaEthereumTestNet),
+  // createChainFromEthereumChainInfo(sepoliaEthereumTestNet),
   // createStarshipChain(
   //   "test-osmosis-1",
   //   "osmosis",
@@ -130,9 +135,9 @@ const _chains = [
 // const _chains = [starshipChain1]
 const _assetLists = [
   ...assetLists.filter((a) => chainNames.includes(a.chainName)),
-  createAssetListFromEthereumChainInfo(bscethertestnet),
+  // createAssetListFromEthereumChainInfo(bscethertestnet),
   // createAssetListFromEthereumChainInfo(goerliethereumtestnet),
-  createAssetListFromEthereumChainInfo(sepoliaEthereumTestNet),
+  // createAssetListFromEthereumChainInfo(sepoliaEthereumTestNet),
   // createStarshipAssetList("osmosis"),
 ];
 
@@ -147,11 +152,17 @@ const _assetLists = [
 //   name: "mock2",
 // });
 
+if (isInstanceOf(keplrWallet, ExtensionWallet)) {
+  keplrWallet.setSignOptions({
+    preferNoSetFee: false,
+  });
+}
+
 const _wallets: BaseWallet[] = [
   // mock1Wallet,
   // mock2Wallet,
-  // keplrWallet,
-  // leapWallet,
+  keplrWallet,
+  leapWallet,
   // cosmostationWallet,
   // stationWallet,
   // galaxyStationWallet,
@@ -163,7 +174,7 @@ const _wallets: BaseWallet[] = [
   // leapCosmosExtensionMetaMask,
   // compassWallet,
   // trustWallet,
-  metaMaskWallet,
+  // metaMaskWallet,
   // okxWallet,
   // xdefiWallet,
   // exodusWallet,

@@ -2,7 +2,6 @@ import { assetLists, chains } from "@chain-registry/v2";
 import {
   BaseWallet,
   EthereumWallet,
-  isInstanceOf,
   isMobile,
   MultiChainWallet,
   WCWallet,
@@ -123,7 +122,7 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
 
       const fee = {
         amount: coins(25000, denom),
-        gas: "1000000",
+        gas: "100000",
       };
 
       try {
@@ -159,7 +158,7 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
         provider = wallet.getProvider();
       }
       if (wallet instanceof EthereumWallet) {
-        provider = wallet.getProvider();
+        provider = wallet.getProvider(chain.chainId as string);
       }
       if (wallet instanceof MultiChainWallet) {
         const ethWallet = wallet.getWalletByChainType("eip155");

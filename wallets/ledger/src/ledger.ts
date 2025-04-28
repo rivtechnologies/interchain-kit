@@ -1,4 +1,4 @@
-import { BaseWallet, SignOptions, Wallet, WalletAccount, DirectSignDoc, BroadcastMode } from "@interchain-kit/core";
+import { BaseWallet, SignOptions, Wallet, WalletAccount, DirectSignDoc, BroadcastMode, CosmosWallet } from "@interchain-kit/core";
 import Transport from "@ledgerhq/hw-transport";
 import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import { chains } from "@chain-registry/v2";
@@ -9,17 +9,22 @@ import {
   OfflineDirectSigner,
   DirectSignResponse,
   AminoSignResponse,
-  StdSignature
+  StdSignature,
+  AminoGenericOfflineSigner
 } from '@interchainjs/cosmos/types/wallet';
 
 import CosmosApp from '@zondax/ledger-cosmos-js'
 import { Buffer } from 'buffer'
 import { SimpleAccount } from "@interchain-kit/core";
-import { StdSignDoc } from '@interchainjs/types';
+import { IGenericOfflineSigner, StdSignDoc } from '@interchainjs/types';
 import { convertDerToFixed64, sortedObject } from "./utils";
 import { Chain } from "@chain-registry/v2-types";
 
-export class LedgerWallet extends BaseWallet {
+export class LedgerWallet extends CosmosWallet {
+
+  getProvider(): Promise<unknown> {
+    throw new Error("Method not implemented.");
+  }
 
   cosmosPath: string;
   transport: Transport;
@@ -48,7 +53,7 @@ export class LedgerWallet extends BaseWallet {
     }
   }
 
-  async connect(chainId: string | string[]): Promise<void> {
+  async connect(chainId: string): Promise<void> {
     try {
       this.transport = await TransportWebHID.create()
       this.cosmosApp = new CosmosApp(this.transport)
@@ -62,7 +67,7 @@ export class LedgerWallet extends BaseWallet {
     }
   }
 
-  async disconnect(chainId: string | string[]): Promise<void> {
+  async disconnect(chainId: string): Promise<void> {
     if (this.transport) {
       await this.transport.close();
     }
@@ -103,21 +108,15 @@ export class LedgerWallet extends BaseWallet {
     throw new Error("Method not implemented.");
   }
 
-  async getSimpleAccount(chainId: string): Promise<SimpleAccount> {
-    const { address, username } = await this.getAccount(chainId);
-    return {
-      namespace: 'cosmos',
-      chainId,
-      address,
-      username,
-    };
+  async getOfflineSigner(chainId: unknown, preferredSignType?: unknown) {
+    return this.getOfflineSignerAmino(chainId as string);
   }
 
-  getOfflineSignerAmino(chainId: string): OfflineAminoSigner {
-    return {
+  getOfflineSignerAmino(chainId: string): IGenericOfflineSigner {
+    return new AminoGenericOfflineSigner({
       getAccounts: async () => [await this.getAccount(chainId)],
       signAmino: async (signer, signDoc) => this.signAmino(chainId, signer, signDoc, {}),
-    }
+    }) as IGenericOfflineSigner
   }
 
   getOfflineSignerDirect(chainId: string): OfflineDirectSigner {
@@ -161,7 +160,7 @@ export class LedgerWallet extends BaseWallet {
     throw new Error("Method not implemented.");
   }
 
-  addSuggestChain(chainInfo: ChainInfo): Promise<void> {
+  addSuggestChain(chainId: string): Promise<void> {
     throw new Error("Method not implemented.");
   }
 

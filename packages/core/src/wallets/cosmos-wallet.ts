@@ -8,16 +8,15 @@ import { chainRegistryChainToKeplr } from '@chain-registry/v2-keplr';
 export class CosmosWallet extends BaseWallet {
 
   defaultSignOptions = {
-    preferNoSetFee: false,
+    preferNoSetFee: true,
     preferNoSetMemo: true,
     disableBalanceCheck: false,
   }
 
   setSignOptions(options: SignOptions) {
     this.defaultSignOptions = {
-      preferNoSetFee: options.preferNoSetFee,
-      preferNoSetMemo: options.preferNoSetMemo,
-      disableBalanceCheck: options.disableBalanceCheck
+      ...this.defaultSignOptions,
+      ...options,
     }
   }
 
@@ -55,6 +54,18 @@ export class CosmosWallet extends BaseWallet {
     };
   }
   async getOfflineSigner(chainId: string, preferredSignType?: SignType) {
+    const account = await this.getAccount(chainId);
+
+    if (account.isNanoLedger) {
+      return new AminoGenericOfflineSigner({
+        getAccounts: async () => [account],
+        signAmino: async (signer, signDoc) => {
+          return this.signAmino(chainId, signer, signDoc, this.defaultSignOptions)
+        }
+      }) as IGenericOfflineSigner
+    }
+
+
     if (preferredSignType === 'amino') {
       return new AminoGenericOfflineSigner({
         getAccounts: async () => [await this.getAccount(chainId)],
