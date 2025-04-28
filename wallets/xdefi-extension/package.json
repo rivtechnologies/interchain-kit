@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/xdefi-extension",
-  "version": "0.3.10",
+  "version": "0.3.11",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector",
   "main": "index.js",
@@ -32,7 +32,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@interchain-kit/core": "0.3.10"
+    "@interchain-kit/core": "0.3.11"
   },
   "gitHead": "cbeaf7d862753020e789dbe75a55f423a7f5de8b"
 }
