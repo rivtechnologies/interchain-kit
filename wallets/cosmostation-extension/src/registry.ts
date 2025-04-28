@@ -4,6 +4,7 @@ import { ICON } from "./constant";
 export const cosmostationExtensionInfo: Wallet = {
   windowKey: 'cosmostation.providers.keplr',
   ethereumKey: 'cosmostation.ethereum',
+  walletIdentifyKey: 'cosmostation',
   name: 'cosmostation-extension',
   prettyName: 'Cosmostation',
   logo: ICON,

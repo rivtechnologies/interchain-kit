@@ -293,15 +293,15 @@ const E2ETest = () => {
   const walletManager = useWalletManager();
   const { open } = useWalletModal();
 
-  console.log(
-    walletManager.chainWalletState.reduce(
-      (walletState, chainWalletState) => ({
-        ...walletState,
-        [chainWalletState.walletName]: chainWalletState.walletState,
-      }),
-      {}
-    )
-  );
+  // console.log(
+  //   walletManager.chainWalletState.reduce(
+  //     (walletState, chainWalletState) => ({
+  //       ...walletState,
+  //       [chainWalletState.walletName]: chainWalletState.walletState,
+  //     }),
+  //     {}
+  //   )
+  // );
 
   const addChain = async () => {
     const keplrExtension = walletManager.wallets.find(

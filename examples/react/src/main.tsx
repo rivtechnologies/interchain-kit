@@ -48,8 +48,8 @@ import {
 
 const chainNames: string[] = [
   // "injectivetestnet",
-  // "osmosistestnet",
-  "osmosis",
+  "osmosistestnet",
+  // "osmosis",
   // "juno",
   // "cosmoshub",
   // "stargaze",
@@ -162,7 +162,7 @@ const _wallets: BaseWallet[] = [
   // mock1Wallet,
   // mock2Wallet,
   keplrWallet,
-  leapWallet,
+  // leapWallet,
   cosmostationWallet,
   // stationWallet,
   // galaxyStationWallet,
@@ -175,7 +175,7 @@ const _wallets: BaseWallet[] = [
   // compassWallet,
   // trustWallet,
   // metaMaskWallet,
-  okxWallet,
+  // okxWallet,
   // xdefiWallet,
   // exodusWallet,
   // coin98Wallet,
