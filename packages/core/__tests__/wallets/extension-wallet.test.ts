@@ -36,10 +36,10 @@ describe("ExtensionWallet", () => {
 
         (getClientFromExtension as jest.Mock).mockRejectedValue(clientNotExistError);
 
-        // await expect(extensionWallet.init()).rejects.toThrow(clientNotExistError);
-        await extensionWallet.init();
+        await expect(extensionWallet.init()).rejects.toThrow(clientNotExistError);
+        // await extensionWallet.init();
 
-        expect(extensionWallet.errorMessage).toBe(clientNotExistError.message);
+        // expect(extensionWallet.errorMessage).toBe(clientNotExistError.message);
 
         // expect(getClientFromExtension).toHaveBeenCalledWith("test-key");
         // expect(MultiChainWallet.prototype.init).not.toHaveBeenCalled();
