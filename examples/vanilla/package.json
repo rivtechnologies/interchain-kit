@@ -2,7 +2,7 @@
   "name": "@interchain-kit/vanilla-examples",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector core package",
-  "version": "0.3.12",
+  "version": "0.3.13",
   "type": "module",
   "private": true,
   "scripts": {
