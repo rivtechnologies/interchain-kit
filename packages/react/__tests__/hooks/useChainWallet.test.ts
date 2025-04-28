@@ -8,7 +8,7 @@ import { useWalletManager } from "../../src/hooks/useWalletManager"
 import { ChainWallet } from "../../src/store/chain-wallet"
 import { InterchainStore } from "../../src/store"
 import { MockWallet } from "../helpers/mock-wallet"
-import { WalletState } from "@interchain-kit/core"
+import { BaseWallet, WalletState } from "@interchain-kit/core"
 import { SigningClient } from "../../src/types/sign-client"
 
 // Mock the useWalletManager hook
@@ -85,7 +85,7 @@ describe("useChainWallet", () => {
 
         await waitFor(() => {
             expect(result.current.chain).toEqual(mockChain)
-            expect(result.current.wallet).toBeInstanceOf(ChainWallet)
+            expect(result.current.wallet).toBeInstanceOf(BaseWallet)
             expect(result.current.assetList).toEqual(mockWalletManager.assetLists[0])
             expect(result.current.status).toBe(WalletState.Connected)
             expect(result.current.username).toBe("test-user")

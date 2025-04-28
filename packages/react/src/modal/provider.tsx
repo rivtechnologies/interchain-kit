@@ -78,7 +78,7 @@ export const WalletModalProvider = ({
         close={handleCloseModal}
         wallets={walletsForUI}
         walletConnectQRCodeUri={walletConnectQRCodeUri}
-        currentWallet={wallet?.originalWallet}
+        currentWallet={wallet}
         isConnecting={status === WalletState.Connecting}
         isConnected={status === WalletState.Connected}
         isRejected={status === WalletState.Rejected}
