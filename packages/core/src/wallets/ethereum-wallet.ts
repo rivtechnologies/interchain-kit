@@ -44,6 +44,9 @@ export class EthereumWallet extends BaseWallet {
     console.log('eth disconnect')
   }
   async switchChain(chainId: string): Promise<void> {
+    if (!chainId.startsWith("0x")) {
+      chainId = "0x" + parseInt(chainId, 10).toString(16);
+    }
     if (this.isSwitchingNetwork) {
       while (true) {
         await delay(10)

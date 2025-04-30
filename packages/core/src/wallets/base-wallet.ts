@@ -44,5 +44,5 @@ export abstract class BaseWallet {
 
   abstract addSuggestChain(chainId: Chain['chainId']): Promise<void>
 
-  abstract getProvider(chainId: Chain['chainId']): Promise<unknown>
+  abstract getProvider(chainId: Chain['chainId']): Promise<any>
 }

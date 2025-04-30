@@ -60,14 +60,17 @@ const BalanceTd = ({ address, wallet, chain, assetList }: BalanceProps) => {
         provider = wallet.getProvider();
       }
       if (wallet instanceof EthereumWallet) {
-        provider = wallet.getProvider();
+        provider = wallet.getProvider(chain.chainId as string);
       }
       if (wallet instanceof MultiChainWallet) {
         const ethWallet = wallet.getWalletByChainType("eip155");
-        provider = ethWallet.getProvider(chain.chainId as string);
+        provider = await ethWallet.getProvider(chain.chainId as string);
       }
-      provider = new ethers.providers.JsonRpcProvider(rpcEndpoint as string);
-      const result = await provider.getBalance(address);
+      // provider = new ethers.providers.JsonRpcProvider(rpcEndpoint as string);
+
+      const ethProvider = new ethers.providers.Web3Provider(provider);
+      const result = await ethProvider.getBalance(address);
+
       balance = { balance: { amount: result.toString() } };
     }
 
