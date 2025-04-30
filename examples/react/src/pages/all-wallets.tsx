@@ -230,8 +230,15 @@ const AddressTd = ({ wallet, chain }: SendTokenProps) => {
 };
 
 const ChainRow = ({ chain, wallet }: { chain: Chain; wallet: BaseWallet }) => {
-  const { address, rpcEndpoint, connect, disconnect, status, assetList } =
-    useChainWallet(chain.chainName, wallet.info?.name as string);
+  const {
+    address,
+    rpcEndpoint,
+    connect,
+    disconnect,
+    status,
+    assetList,
+    message,
+  } = useChainWallet(chain.chainName, wallet.info?.name as string);
   return (
     <tr>
       <td>
@@ -240,7 +247,9 @@ const ChainRow = ({ chain, wallet }: { chain: Chain; wallet: BaseWallet }) => {
       </td>
       <td>{chain.chainName}</td>
       <td>{chain.chainId}</td>
-      <td>{status}</td>
+      <td>
+        {status}:{message}
+      </td>
       <RpcTd address={address} wallet={wallet} chain={chain}></RpcTd>
       <AddressTd address={address} wallet={wallet} chain={chain}></AddressTd>
       <BalanceTd
