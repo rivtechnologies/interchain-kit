@@ -2,7 +2,7 @@
   "name": "@interchain-kit/react-examples",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector core package",
-  "version": "0.3.14",
+  "version": "0.3.15",
   "type": "module",
   "private": true,
   "scripts": {
