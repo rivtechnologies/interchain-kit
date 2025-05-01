@@ -30,7 +30,7 @@ export abstract class BaseWallet {
   getChainById(chainId: Chain['chainId']): Chain {
     const chain = this.chainMap.get(chainId);
     if (!chain) {
-      throw new Error(`Chain ${chainId} not found in wallet ${this.info.name}`)
+      throw new Error(`Chain Registry with id ${chainId} not found!`);
     }
     return chain
   }
