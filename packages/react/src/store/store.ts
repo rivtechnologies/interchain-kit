@@ -40,6 +40,7 @@ export interface InterchainStore extends WalletManager {
   getDraftChainWalletState: (state: InterchainStore, walletName: string, chainName: string) => ChainWalletState
   getChainWalletState: (walletName: string, chainName: string) => ChainWalletState | undefined
   updateChainWalletState: (walletName: string, chainName: string, data: Partial<ChainWalletState>) => void
+  isReady: boolean
 }
 
 export type InterchainStoreData = {
@@ -71,6 +72,8 @@ export const createInterchainStore = (walletManager: WalletManager) => {
     endpointOptionsMap: { ...walletManager.endpointOptionsMap },
 
     walletConnectQRCodeUri: '',
+
+    isReady: false,
 
     updateChainWalletState: (walletName: string, chainName: string, data: Partial<ChainWalletState>) => {
       set(draft => {
@@ -133,6 +136,8 @@ export const createInterchainStore = (walletManager: WalletManager) => {
           }
           return cws
         })
+
+        draft.isReady = true
       })
     },
 
