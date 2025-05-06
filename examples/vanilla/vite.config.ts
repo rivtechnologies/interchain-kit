@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
-import { ngrok } from "vite-plugin-ngrok";
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
