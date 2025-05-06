@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/keplr-extension",
-  "version": "0.3.17",
+  "version": "0.3.18",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector",
   "main": "index.js",
@@ -31,7 +31,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@interchain-kit/core": "0.3.17",
+    "@interchain-kit/core": "0.3.18",
     "@keplr-wallet/provider-extension": "^0.12.102"
   },
   "gitHead": "16acf51a0a2260dde8c31e1964787725491f7bb8"

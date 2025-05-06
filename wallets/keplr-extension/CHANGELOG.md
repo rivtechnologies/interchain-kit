@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.18](https://github.com/interchain-kit/interchain-kit/compare/@interchain-kit/keplr-extension@0.3.17...@interchain-kit/keplr-extension@0.3.18) (2025-05-06)
+
+**Note:** Version bump only for package @interchain-kit/keplr-extension
+
 ## [0.3.17](https://github.com/interchain-kit/interchain-kit/compare/@interchain-kit/keplr-extension@0.3.16...@interchain-kit/keplr-extension@0.3.17) (2025-05-05)
 
 **Note:** Version bump only for package @interchain-kit/keplr-extension

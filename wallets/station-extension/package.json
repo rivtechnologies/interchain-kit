@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/station-extension",
-  "version": "0.3.17",
+  "version": "0.3.18",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector",
   "main": "index.js",
@@ -32,7 +32,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@interchain-kit/core": "0.3.17"
+    "@interchain-kit/core": "0.3.18"
   },
   "gitHead": "db6357a994121e763f95624042c623b98642cb63"
 }
