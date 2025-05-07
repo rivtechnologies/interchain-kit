@@ -54,6 +54,7 @@ describe("useChainWallet", () => {
         getAccount: jest.fn(),
         getEnv: jest.fn(),
         getDownloadLink: jest.fn(),
+        isReady: true
     }
 
     beforeEach(() => {

@@ -38,6 +38,7 @@
     "@interchain-ui/react": "1.26.1",
     "@interchainjs/cosmos": "1.11.5",
     "@interchainjs/cosmos-types": "1.11.5",
+    "@interchainjs/types": "^1.11.5",
     "@react-icons/all-files": "^4.1.0",
     "@walletconnect/types": "^2.17.3",
     "interchainjs": "1.11.5",

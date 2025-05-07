@@ -2297,7 +2297,7 @@
   dependencies:
     decimal.js "^10.4.3"
 
-"@interchainjs/types@1.11.5":
+"@interchainjs/types@1.11.5", "@interchainjs/types@^1.11.5":
   version "1.11.5"
   resolved "https://registry.yarnpkg.com/@interchainjs/types/-/types-1.11.5.tgz#ce5adac1fccf8f3f26cabf0ef4cb5bc7de3888b5"
   integrity sha512-cH2mb7bfuEfY2iyA2ITZjYNI7vyHdMWhybAuM2XzYh5xvtyujmQZPQhqDFZoy89qaMYbtIAPaZR8vlOBSCBhMQ==
