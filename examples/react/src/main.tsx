@@ -45,10 +45,11 @@ import {
   createStarshipChain,
   createStarshipAssetList,
 } from "./utils/osmo-test-net.ts";
+import { create } from "domain";
 
 const chainNames: string[] = [
   // "injectivetestnet",
-  "osmosistestnet",
+  // "osmosistestnet",
   // "osmosis",
   // "juno",
   // "cosmoshub",
@@ -120,11 +121,24 @@ const sepoliaEthereumTestNet = {
   blockExplorerUrls: ["https://goerli.etherscan.io"],
 };
 
+const HOLESKY_TESTNET = {
+  chainId: "17000", // 17000 | 0x4268
+  chainName: "HoleskyTestNet",
+  rpcUrls: ["https://ethereum-holesky.publicnode.com"],
+  nativeCurrency: {
+    name: "HoleskyETH",
+    symbol: "ETH",
+    decimals: 18,
+  },
+  blockExplorerUrls: ["https://holesky.etherscan.io"],
+};
+
 const _chains = [
   ...chains.filter((c) => chainNames.includes(c.chainName)),
-  // createChainFromEthereumChainInfo(bscethertestnet),
-  // createChainFromEthereumChainInfo(goerliethereumtestnet),
-  // createChainFromEthereumChainInfo(sepoliaEthereumTestNet),
+  createChainFromEthereumChainInfo(bscethertestnet),
+  createChainFromEthereumChainInfo(goerliethereumtestnet),
+  createChainFromEthereumChainInfo(sepoliaEthereumTestNet),
+  createChainFromEthereumChainInfo(HOLESKY_TESTNET),
   // createStarshipChain(
   //   "test-osmosis-1",
   //   "osmosis",
@@ -135,9 +149,10 @@ const _chains = [
 // const _chains = [starshipChain1]
 const _assetLists = [
   ...assetLists.filter((a) => chainNames.includes(a.chainName)),
-  // createAssetListFromEthereumChainInfo(bscethertestnet),
-  // createAssetListFromEthereumChainInfo(goerliethereumtestnet),
-  // createAssetListFromEthereumChainInfo(sepoliaEthereumTestNet),
+  createAssetListFromEthereumChainInfo(bscethertestnet),
+  createAssetListFromEthereumChainInfo(goerliethereumtestnet),
+  createAssetListFromEthereumChainInfo(sepoliaEthereumTestNet),
+  createAssetListFromEthereumChainInfo(HOLESKY_TESTNET),
   // createStarshipAssetList("osmosis"),
 ];
 
@@ -161,9 +176,9 @@ if (isInstanceOf(keplrWallet, ExtensionWallet)) {
 const _wallets: BaseWallet[] = [
   // mock1Wallet,
   // mock2Wallet,
-  keplrWallet,
+  // keplrWallet,
   // leapWallet,
-  cosmostationWallet,
+  // cosmostationWallet,
   // stationWallet,
   // galaxyStationWallet,
   // walletConnect,
@@ -174,7 +189,7 @@ const _wallets: BaseWallet[] = [
   // leapCosmosExtensionMetaMask,
   // compassWallet,
   // trustWallet,
-  // metaMaskWallet,
+  metaMaskWallet,
   // okxWallet,
   // xdefiWallet,
   // exodusWallet,

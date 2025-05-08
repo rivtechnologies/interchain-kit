@@ -20,19 +20,20 @@ export class EthereumWallet extends BaseWallet {
     }
   }
   async connect(chainId: Chain["chainId"]): Promise<void> {
+    let chainIdToHex = chainId.startsWith("0x") ? chainId : "0x" + parseInt(chainId, 10).toString(16);
     try {
-      const accounts = await this.ethereum.request({
-        method: "eth_requestAccounts",
-        params: [{ chainId }],
-      })
+      // const accounts = await this.ethereum.request({
+      //   method: "eth_requestAccounts",
+      //   params: [{ chainId }],
+      // })
       // const chainIdd = await this.ethereum.request({
       //   method: "eth_chainId",
       //   params: [],
       // })
-      // await this.ethereum.request({
-      //   method: "wallet_switchEthereumChain",
-      //   params: [{ chainId: chainIdd }],
-      // })
+      await this.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: chainIdToHex }],
+      })
     } catch (error) {
       if (!(error as any).message.includes("reject")) {
         await this.addSuggestChain(chainId as string)
@@ -86,10 +87,11 @@ export class EthereumWallet extends BaseWallet {
     return {} as IGenericOfflineSigner
   }
   async addSuggestChain(chainId: string): Promise<void> {
+    const chainIdToHex = chainId.startsWith("0x") ? chainId : "0x" + parseInt(chainId, 10).toString(16);
     const chain = this.chainMap.get(chainId)
     const assetList = this.assetLists.find(assetList => assetList.chainName === chain.chainName)
     const network: EthereumNetwork = {
-      chainId: chain.chainId,
+      chainId: chainIdToHex,
       chainName: chain.chainName,
       rpcUrls: chain.apis?.rpc.map(api => api.address),
       nativeCurrency: {
