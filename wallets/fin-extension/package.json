@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/fin-extension",
-  "version": "0.3.18",
+  "version": "0.3.19",
   "author": "developers <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector",
   "main": "index.js",
@@ -32,7 +32,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@interchain-kit/core": "0.3.18"
+    "@interchain-kit/core": "0.3.19"
   },
   "gitHead": "16acf51a0a2260dde8c31e1964787725491f7bb8"
 }
