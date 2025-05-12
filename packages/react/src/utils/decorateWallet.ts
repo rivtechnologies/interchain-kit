@@ -4,13 +4,20 @@ export const decorateWallet = <T extends BaseWallet>(wallet: T, decorateMethods:
   return new Proxy(wallet, {
     get(target, prop, receiver) {
       if (prop in decorateMethods) {
-        const method = decorateMethods[prop as keyof T];
-        if (typeof method === "function") {
-          return method.bind(target);
+        const value = decorateMethods[prop as keyof T];
+        if (typeof value === "function") {
+          return value.bind(target);
         }
-        return method;
+        return value;
       }
       return Reflect.get(target, prop, receiver);
+    },
+    set(target, prop, value, receiver) {
+      if (prop in decorateMethods) {
+        (decorateMethods as any)[prop] = value;
+        return true;
+      }
+      return Reflect.set(target, prop, value, receiver);
     },
   });
 }

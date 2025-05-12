@@ -12,7 +12,7 @@ import {
   useWalletManager,
   useWalletModal,
 } from "@interchain-kit/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { makeKeplrChainInfo } from "../utils";
 import { Chain, Asset, AssetList } from "@chain-registry/v2-types";
 import { coins } from "@cosmjs/amino";
@@ -305,15 +305,13 @@ const E2ETest = () => {
   const walletManager = useWalletManager();
   const { open } = useWalletModal();
 
-  // console.log(
-  //   walletManager.chainWalletState.reduce(
-  //     (walletState, chainWalletState) => ({
-  //       ...walletState,
-  //       [chainWalletState.walletName]: chainWalletState.walletState,
-  //     }),
-  //     {}
-  //   )
-  // );
+  useEffect(() => {
+    if (walletManager.isReady) {
+      walletManager.wallets.forEach((wallet) => {
+        console.log(wallet.walletState);
+      });
+    }
+  }, [walletManager.isReady]);
 
   const addChain = async () => {
     const keplrExtension = walletManager.wallets.find(

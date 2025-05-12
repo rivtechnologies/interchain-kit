@@ -87,7 +87,70 @@ export const createInterchainStore = (walletManager: WalletManager) => {
 
     createStatefulWallet: () => {
       const wallets = walletManager.wallets.map(wallet => {
-        decorateWallet(wallet, {
+        // safeStrictBatchPatch(wallet, {
+        //   connect: async (original, chainId) => {
+        //     const walletName = wallet.info.name
+        //     const chainName = get().chains.find(chain => chain.chainId === chainId)?.chainName
+        //     const state = get().getChainWalletState(walletName, chainName)?.walletState
+        //     if (state === WalletState.NotExist) {
+        //       return
+        //     }
+        //     if (walletName === 'WalletConnect' && state === WalletState.Connected) {
+        //       return
+        //     }
+        //     set(draft => {
+        //       draft.currentChainName = chainName
+        //       draft.currentWalletName = walletName
+        //       draft.walletConnectQRCodeUri = ''
+        //     })
+        //     get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Connecting, errorMessage: '' })
+        //     try {
+        //       if (wallet instanceof WCWallet) {
+        //         wallet.setOnPairingUriCreatedCallback((uri) => {
+        //           set(draft => {
+        //             draft.walletConnectQRCodeUri = uri
+        //           })
+        //         })
+        //       }
+        //       await original(chainId)
+        //       get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Connected })
+        //       await get().getAccount(walletName, chainName)
+        //     } catch (error) {
+        //       if ((error as any).message === 'Request rejected') {
+        //         get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Rejected, errorMessage: (error as any).message })
+        //         return
+        //       }
+        //       get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Disconnected, errorMessage: (error as any).message })
+        //     }
+        //   },
+        //   disconnect: async (original, chainId) => {
+        //     const walletName = wallet.info.name
+        //     const chainName = get().chains.find(chain => chain.chainId === chainId)?.chainName
+        //     try {
+        //       await original(chainId)
+        //       get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Disconnected, account: null })
+        //     } catch (error) {
+        //     }
+        //   },
+        //   getAccount: async (original, chainId) => {
+        //     const walletName = wallet.info.name
+        //     const chainName = get().chains.find(chain => chain.chainId === chainId)?.chainName
+        //     try {
+        //       const account = await original(chainId)
+        //       get().updateChainWalletState(walletName, chainName, { account })
+        //       return account
+        //     } catch (error) {
+        //       console.log(error)
+        //     }
+        //   },
+        //   walletState: get().getChainWalletState(wallet.info.name, walletManager.chains?.[0].chainName)?.walletState || WalletState.Disconnected
+        // })
+
+
+
+        // return wallet
+
+        return decorateWallet(wallet, {
           connect: async (chainId) => {
             const walletName = wallet.info.name
             const chainName = get().chains.find(chain => chain.chainId === chainId)?.chainName
@@ -143,12 +206,10 @@ export const createInterchainStore = (walletManager: WalletManager) => {
               console.log(error)
             }
           },
-          walletState: get().chainWalletState.find(cws => cws.walletName === wallet.info.name && cws.chainName === get().currentChainName)?.walletState || WalletState.Disconnected,
+          walletState: get().getChainWalletState(wallet.info.name, walletManager.chains?.[0].chainName)?.walletState || WalletState.Disconnected
         })
 
-        return wallet
       })
-
       set(draft => {
         draft.wallets = wallets
       })
