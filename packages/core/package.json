@@ -54,5 +54,5 @@
     "@keplr-wallet/types": "^0.12.168",
     "jest-environment-jsdom": "^29.7.0"
   },
-  "gitHead": "dff9d352f8545f3106e72009101ccd581d7c6f4d"
+  "gitHead": "55ef30266ed5a638e8724d35bcd5941f88d400c2"
 }
