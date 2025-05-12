@@ -55,7 +55,8 @@ describe('useChain', () => {
     getEnv: jest.fn(),
     getDownloadLink: jest.fn(),
     isReady: true,
-    updateWalletState: jest.fn()
+    updateWalletState: jest.fn(),
+    createStatefulWallet: jest.fn(),
   }
 
   const mockWalletModal = {
