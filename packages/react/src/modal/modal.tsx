@@ -176,6 +176,7 @@ export const WalletModal = ({
     address,
     shouldShowList,
     walletConnectQRCodeUri,
+    wallets,
   ]);
 
   return (
