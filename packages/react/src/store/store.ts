@@ -7,6 +7,7 @@ import { createStore } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { dedupeAsync } from '../utils';
+import { decorateWallet } from '../utils/decorateWallet';
 
 const immerSyncUp = (newWalletManager: WalletManager) => {
   return (draft: { chains: Chain[]; assetLists: AssetList[]; wallets: BaseWallet[]; signerOptions: SignerOptions; endpointOptions: EndpointOptions; signerOptionMap: Record<string, InterchainSigningOptions>; endpointOptionsMap: Record<string, Endpoints>; preferredSignTypeMap: Record<string, SignType>; }) => {
@@ -41,7 +42,8 @@ export interface InterchainStore extends WalletManager {
   getChainWalletState: (walletName: string, chainName: string) => ChainWalletState | undefined
   updateChainWalletState: (walletName: string, chainName: string, data: Partial<ChainWalletState>) => void
   updateWalletState: (walletName: string, data: Partial<ChainWalletState>) => void
-  isReady: boolean
+  isReady: boolean,
+  createStatefulWallet: () => void
 }
 
 export type InterchainStoreData = {
@@ -64,7 +66,7 @@ export const createInterchainStore = (walletManager: WalletManager) => {
     currentChainName: '',
     chains: [...walletManager.chains],
     assetLists: [...walletManager.assetLists],
-    wallets: [...walletManager.wallets],
+    wallets: [],
     signerOptions: walletManager.signerOptions,
     endpointOptions: walletManager.endpointOptions,
 
@@ -94,8 +96,140 @@ export const createInterchainStore = (walletManager: WalletManager) => {
       })
     },
 
+    createStatefulWallet: () => {
+      const wallets = walletManager.wallets.map(wallet => {
+        // safeStrictBatchPatch(wallet, {
+        //   connect: async (original, chainId) => {
+        //     const walletName = wallet.info.name
+        //     const chainName = get().chains.find(chain => chain.chainId === chainId)?.chainName
+        //     const state = get().getChainWalletState(walletName, chainName)?.walletState
+        //     if (state === WalletState.NotExist) {
+        //       return
+        //     }
+        //     if (walletName === 'WalletConnect' && state === WalletState.Connected) {
+        //       return
+        //     }
+        //     set(draft => {
+        //       draft.currentChainName = chainName
+        //       draft.currentWalletName = walletName
+        //       draft.walletConnectQRCodeUri = ''
+        //     })
+        //     get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Connecting, errorMessage: '' })
+        //     try {
+        //       if (wallet instanceof WCWallet) {
+        //         wallet.setOnPairingUriCreatedCallback((uri) => {
+        //           set(draft => {
+        //             draft.walletConnectQRCodeUri = uri
+        //           })
+        //         })
+        //       }
+        //       await original(chainId)
+        //       get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Connected })
+        //       await get().getAccount(walletName, chainName)
+        //     } catch (error) {
+        //       if ((error as any).message === 'Request rejected') {
+        //         get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Rejected, errorMessage: (error as any).message })
+        //         return
+        //       }
+        //       get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Disconnected, errorMessage: (error as any).message })
+        //     }
+        //   },
+        //   disconnect: async (original, chainId) => {
+        //     const walletName = wallet.info.name
+        //     const chainName = get().chains.find(chain => chain.chainId === chainId)?.chainName
+        //     try {
+        //       await original(chainId)
+        //       get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Disconnected, account: null })
+        //     } catch (error) {
+        //     }
+        //   },
+        //   getAccount: async (original, chainId) => {
+        //     const walletName = wallet.info.name
+        //     const chainName = get().chains.find(chain => chain.chainId === chainId)?.chainName
+        //     try {
+        //       const account = await original(chainId)
+        //       get().updateChainWalletState(walletName, chainName, { account })
+        //       return account
+        //     } catch (error) {
+        //       console.log(error)
+        //     }
+        //   },
+        //   walletState: get().getChainWalletState(wallet.info.name, walletManager.chains?.[0].chainName)?.walletState || WalletState.Disconnected
+        // })
+
+
+
+        // return wallet
+
+        return decorateWallet(wallet, {
+          connect: async (chainId) => {
+            const walletName = wallet.info.name
+            const chainName = get().chains.find(chain => chain.chainId === chainId)?.chainName
+            const state = get().getChainWalletState(walletName, chainName)?.walletState
+            if (state === WalletState.NotExist) {
+              return
+            }
+            if (walletName === 'WalletConnect' && state === WalletState.Connected) {
+              return
+            }
+            set(draft => {
+              draft.currentChainName = chainName
+              draft.currentWalletName = walletName
+              draft.walletConnectQRCodeUri = ''
+            })
+            get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Connecting, errorMessage: '' })
+            try {
+              if (wallet instanceof WCWallet) {
+                wallet.setOnPairingUriCreatedCallback((uri) => {
+                  set(draft => {
+                    draft.walletConnectQRCodeUri = uri
+                  })
+                })
+              }
+              await wallet.connect(chainId)
+              get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Connected })
+              await get().getAccount(walletName, chainName)
+            } catch (error) {
+              if ((error as any).message === 'Request rejected') {
+                get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Rejected, errorMessage: (error as any).message })
+                return
+              }
+              get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Disconnected, errorMessage: (error as any).message })
+            }
+          },
+          disconnect: async (chainId) => {
+            const walletName = wallet.info.name
+            const chainName = get().chains.find(chain => chain.chainId === chainId)?.chainName
+            try {
+              await wallet.disconnect(chainId)
+              get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Disconnected, account: null })
+            } catch (error) {
+            }
+          },
+          getAccount: async (chainId) => {
+            const walletName = wallet.info.name
+            const chainName = get().chains.find(chain => chain.chainId === chainId)?.chainName
+            try {
+              const account = await wallet.getAccount(chainId)
+              get().updateChainWalletState(walletName, chainName, { account })
+              return account
+            } catch (error) {
+              console.log(error)
+            }
+          },
+          walletState: get().getChainWalletState(wallet.info.name, walletManager.chains?.[0].chainName)?.walletState || WalletState.Disconnected
+        })
+
+      })
+      set(draft => {
+        draft.wallets = wallets
+      })
+    },
+
     init: async () => {
       const oldChainWalletStatesMap = new Map(get().chainWalletState.map(cws => [cws.walletName + cws.chainName, cws]))
+
+      get().createStatefulWallet()
 
       // should remove wallet that already disconnected ,for hydrain back from localstorage
       // const oldChainWalletStateMap = new Map()

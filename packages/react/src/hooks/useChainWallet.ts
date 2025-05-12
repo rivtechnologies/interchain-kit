@@ -34,11 +34,7 @@ export const useChainWallet = (chainName: string, walletName: string): UseChainW
     chain,
     assetList,
     address: chainWalletStateToShow?.account?.address,
-    wallet: wallet ? decorateWallet(wallet, {
-      connect: () => connect(walletName, chainName),
-      disconnect: () => disconnect(walletName, chainName),
-      getAccount: () => getAccount(walletName, chainName)
-    }) : null,
+    wallet,
 
     getSigningClient: () => getSigningClient(walletName, chainName),
 

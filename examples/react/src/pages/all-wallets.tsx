@@ -305,13 +305,17 @@ const E2ETest = () => {
   const walletManager = useWalletManager();
   const { open } = useWalletModal();
 
-  useEffect(() => {
-    if (walletManager.isReady) {
-      walletManager.wallets.forEach((wallet) => {
-        console.log(wallet.walletState);
-      });
-    }
-  }, [walletManager.isReady]);
+  // useEffect(() => {
+  //   if (walletManager.isReady) {
+  //     walletManager.wallets.forEach((wallet) => {
+  //       console.log(wallet.walletState);
+  //     });
+  //   }
+  // }, [walletManager.isReady]);
+
+  // walletManager.wallets.forEach((wallet) => {
+  //   console.log(wallet.walletState);
+  // });
 
   const addChain = async () => {
     const keplrExtension = walletManager.wallets.find(
