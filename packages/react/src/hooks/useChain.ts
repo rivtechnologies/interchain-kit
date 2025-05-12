@@ -3,6 +3,7 @@ import { useWalletModal } from "../modal";
 import { useWalletManager } from './useWalletManager';
 import { ChainNameNotExist } from '@interchain-kit/core';
 import { useSigningClient } from './useSigningClient';
+import { decorateWallet } from '../utils/decorateWallet';
 
 export const useChain = (chainName: string): UseChainReturnType => {
 
@@ -44,7 +45,11 @@ export const useChain = (chainName: string): UseChainReturnType => {
     chain,
     assetList,
     address: chainWalletStateToShow?.account?.address,
-    wallet,
+    wallet: wallet ? decorateWallet(wallet, {
+      connect: () => connect(currentWalletName, chainName),
+      disconnect: () => disconnect(currentWalletName, chainName),
+      getAccount: () => getAccount(currentWalletName, chainName)
+    }) : null,
 
     getSigningClient: () => getSigningClient(currentWalletName, chainName),
 
