@@ -44,7 +44,7 @@ describe('EthereumWallet', () => {
             wallet.ethereum = { request: mockRequest };
             await wallet.connect('0x1');
             expect(mockRequest).toHaveBeenCalledWith({
-                method: 'eth_requestAccounts',
+                method: 'wallet_switchEthereumChain',
                 params: [{ chainId: '0x1' }],
             });
         });
