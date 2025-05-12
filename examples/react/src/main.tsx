@@ -49,7 +49,7 @@ import { create } from "domain";
 
 const chainNames: string[] = [
   // "injectivetestnet",
-  // "osmosistestnet",
+  "osmosistestnet",
   // "osmosis",
   // "juno",
   // "cosmoshub",
@@ -135,10 +135,10 @@ const HOLESKY_TESTNET = {
 
 const _chains = [
   ...chains.filter((c) => chainNames.includes(c.chainName)),
-  createChainFromEthereumChainInfo(bscethertestnet),
-  createChainFromEthereumChainInfo(goerliethereumtestnet),
-  createChainFromEthereumChainInfo(sepoliaEthereumTestNet),
-  createChainFromEthereumChainInfo(HOLESKY_TESTNET),
+  // createChainFromEthereumChainInfo(bscethertestnet),
+  // createChainFromEthereumChainInfo(goerliethereumtestnet),
+  // createChainFromEthereumChainInfo(sepoliaEthereumTestNet),
+  // createChainFromEthereumChainInfo(HOLESKY_TESTNET),
   // createStarshipChain(
   //   "test-osmosis-1",
   //   "osmosis",
@@ -149,10 +149,10 @@ const _chains = [
 // const _chains = [starshipChain1]
 const _assetLists = [
   ...assetLists.filter((a) => chainNames.includes(a.chainName)),
-  createAssetListFromEthereumChainInfo(bscethertestnet),
-  createAssetListFromEthereumChainInfo(goerliethereumtestnet),
-  createAssetListFromEthereumChainInfo(sepoliaEthereumTestNet),
-  createAssetListFromEthereumChainInfo(HOLESKY_TESTNET),
+  // createAssetListFromEthereumChainInfo(bscethertestnet),
+  // createAssetListFromEthereumChainInfo(goerliethereumtestnet),
+  // createAssetListFromEthereumChainInfo(sepoliaEthereumTestNet),
+  // createAssetListFromEthereumChainInfo(HOLESKY_TESTNET),
   // createStarshipAssetList("osmosis"),
 ];
 
@@ -176,8 +176,8 @@ if (isInstanceOf(keplrWallet, ExtensionWallet)) {
 const _wallets: BaseWallet[] = [
   // mock1Wallet,
   // mock2Wallet,
-  // keplrWallet,
-  // leapWallet,
+  keplrWallet,
+  leapWallet,
   // cosmostationWallet,
   // stationWallet,
   // galaxyStationWallet,
@@ -189,7 +189,7 @@ const _wallets: BaseWallet[] = [
   // leapCosmosExtensionMetaMask,
   // compassWallet,
   // trustWallet,
-  metaMaskWallet,
+  // metaMaskWallet,
   // okxWallet,
   // xdefiWallet,
   // exodusWallet,

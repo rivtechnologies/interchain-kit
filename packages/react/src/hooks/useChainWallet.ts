@@ -1,7 +1,6 @@
 import { useWalletManager } from "./useWalletManager"
 import { UseChainWalletReturnType } from "../types/chain"
 import { useSigningClient } from "./useSigningClient"
-import { decorateWallet } from "../utils/decorateWallet"
 
 export const useChainWallet = (chainName: string, walletName: string): UseChainWalletReturnType => {
   const { assetLists, disconnect, setCurrentChainName, setCurrentWalletName, getChainByName, getWalletByName, getChainWalletState, getChainLogoUrl, connect, getSigningClient, getRpcEndpoint, getAccount } = useWalletManager()
@@ -34,11 +33,7 @@ export const useChainWallet = (chainName: string, walletName: string): UseChainW
     chain,
     assetList,
     address: chainWalletStateToShow?.account?.address,
-    wallet: wallet ? decorateWallet(wallet, {
-      connect: () => connect(walletName, chainName),
-      disconnect: () => disconnect(walletName, chainName),
-      getAccount: () => getAccount(walletName, chainName),
-    }) : null,
+    wallet,
 
     getSigningClient: () => getSigningClient(walletName, chainName),
 

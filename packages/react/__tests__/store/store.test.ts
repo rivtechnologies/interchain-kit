@@ -26,6 +26,51 @@ Object.defineProperties(global, {
     writable: true
   }
 })
+
+describe('Test InterchainStore init', () => {
+  let walletManager: WalletManager;
+  let useStore: ReturnType<typeof createInterchainStore>;
+
+  it('should isReady be true after init', async () => {
+    walletManager = {
+      chains: [{ chainName: 'chain1', chainId: '1' }] as Chain[],
+      assetLists: [{ chainName: 'chain1', assets: [] }] as AssetList[],
+      wallets: [{ info: { name: 'wallet1' }, init: jest.fn() }, { info: { name: "WalletConnect" }, init: jest.fn() }] as any[],
+      signerOptions: {} as SignerOptions,
+      endpointOptions: {} as EndpointOptions,
+      preferredSignTypeMap: {},
+      signerOptionMap: {},
+      endpointOptionsMap: {},
+      init: jest.fn(),
+      connect: jest.fn(),
+      disconnect: jest.fn(),
+      getAccount: jest.fn(),
+      getRpcEndpoint: jest.fn(),
+      getChainLogoUrl: jest.fn(),
+      getChainByName: jest.fn(),
+      getAssetListByName: jest.fn(),
+      getDownloadLink: jest.fn(),
+      getOfflineSigner: jest.fn(),
+      getPreferSignType: jest.fn(),
+      getSignerOptions: jest.fn(),
+      getWalletByName: jest.fn(),
+      getSigningClient: jest.fn(),
+      getEnv: jest.fn(),
+      addChains: jest.fn(),
+    } as unknown as WalletManager;
+
+    const useStore = createInterchainStore(walletManager);
+
+    expect(useStore.getState().isReady).toBe(false);
+
+    await useStore.getState().init()
+
+    expect(useStore.getState().isReady).toBe(true);
+  })
+})
+
+
+
 describe('InterchainStore', () => {
   let walletManager: WalletManager;
   let store: InterchainStore;
@@ -58,23 +103,13 @@ describe('InterchainStore', () => {
       getEnv: jest.fn(),
       addChains: jest.fn(),
     } as unknown as WalletManager;
-
-    store = createInterchainStore(walletManager).getState()
-
-    await store.init()
     useStore = createInterchainStore(walletManager);
+
+    await useStore.getState().init();
   });
 
   afterEach(() => {
     localStorage.clear();
-  });
-
-  it('should initialize store with wallet manager data', () => {
-    expect(store.chains).toEqual(walletManager.chains);
-    expect(store.assetLists).toEqual(walletManager.assetLists);
-    expect(store.wallets).toEqual(walletManager.wallets);
-    expect(store.signerOptions).toEqual(walletManager.signerOptions);
-    expect(store.endpointOptions).toEqual(walletManager.endpointOptions);
   });
 
   it('should set current chain name', () => {
@@ -201,10 +236,12 @@ describe('InterchainStore', () => {
   });
 
   it('should initialize chainWalletState with disconnected wallets for all chains', async () => {
-    await useStore.getState().init();
     const chainWalletState = useStore.getState().chainWalletState;
 
-    expect(chainWalletState).toEqual([{ "chainName": "chain1", "walletName": "wallet1", "walletState": "Disconnected" }, { "chainName": "chain1", "walletName": "WalletConnect", "walletState": "Disconnected" }]);
+    expect(chainWalletState).toEqual([
+      { "chainName": "chain1", "walletName": "wallet1", "walletState": "Disconnected", "account": undefined, "errorMessage": "", "rpcEndpoint": "" },
+      { "chainName": "chain1", "walletName": "WalletConnect", "walletState": "Disconnected", "account": undefined, "errorMessage": "", "rpcEndpoint": "" }
+    ]);
   });
 
   it('should set wallet state to NotExist for wallets that do not exist', async () => {
@@ -339,6 +376,7 @@ describe('InterchainStore', () => {
   });
 
   it('should add new chain wallet states for new chains and wallets', async () => {
+    expect(useStore.getState().isReady).toBeTruthy()
     const newChains = [{ chainName: 'chain2', chainId: '2' }] as Chain[];
     const newAssetLists = [{ chainName: 'chain2', assets: [] }] as AssetList[];
 
@@ -348,12 +386,18 @@ describe('InterchainStore', () => {
 
     expect(chainWalletState).toEqual([
       {
+        "account": undefined,
         "chainName": "chain1",
+        "errorMessage": "",
+        "rpcEndpoint": "",
         "walletName": "wallet1",
         "walletState": "Disconnected",
       },
       {
+        "account": undefined,
         "chainName": "chain1",
+        "errorMessage": "",
+        "rpcEndpoint": "",
         "walletName": "WalletConnect",
         "walletState": "Disconnected",
       },
