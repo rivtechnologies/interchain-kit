@@ -88,8 +88,8 @@ export class EthereumWallet extends BaseWallet {
   }
   async addSuggestChain(chainId: string): Promise<void> {
     const chainIdToHex = chainId.startsWith("0x") ? chainId : "0x" + parseInt(chainId, 10).toString(16);
-    const chain = this.chainMap.get(chainId)
-    const assetList = this.assetLists.find(assetList => assetList.chainName === chain.chainName)
+    const chain = this.getChainById(chainId)
+    const assetList = this.getAssetListByChainId(chainId)
     const network: EthereumNetwork = {
       chainId: chainIdToHex,
       chainName: chain.chainName,

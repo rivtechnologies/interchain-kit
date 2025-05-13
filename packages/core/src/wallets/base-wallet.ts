@@ -34,6 +34,16 @@ export abstract class BaseWallet {
     }
     return chain
   }
+
+  getAssetListByChainId(chainId: Chain['chainId']): AssetList {
+    const chain = this.getChainById(chainId);
+    const assetList = this.assetLists.find(assetList => assetList.chainName === chain.chainName);
+    if (!assetList) {
+      throw new Error(`Asset List with id ${chainId} not found!`);
+    }
+    return assetList
+  }
+
   abstract init(): Promise<void>
   abstract connect(chainId: Chain['chainId']): Promise<void>
   abstract disconnect(chainId: Chain['chainId']): Promise<void>
