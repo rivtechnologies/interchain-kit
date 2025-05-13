@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/compass-extension",
-  "version": "0.3.22",
+  "version": "0.3.23",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector",
   "main": "index.js",
@@ -31,7 +31,7 @@
     "watch:dev": "tsc -w -p tsconfig.esm.json & tsc -w"
   },
   "dependencies": {
-    "@interchain-kit/core": "^0.3.22"
+    "@interchain-kit/core": "^0.3.23"
   },
   "keywords": [],
   "gitHead": "c0123638121646a6c503c5be4796bf757ceae166"
