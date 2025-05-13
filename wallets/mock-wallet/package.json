@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/mock-wallet",
-  "version": "0.3.21",
+  "version": "0.3.22",
   "author": "Cosmology <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector",
   "main": "index.js",
@@ -32,7 +32,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@interchain-kit/core": "^0.3.21"
+    "@interchain-kit/core": "^0.3.22"
   },
   "gitHead": "fa632d559d1427938ac94385a562fb407914f6b9"
 }
