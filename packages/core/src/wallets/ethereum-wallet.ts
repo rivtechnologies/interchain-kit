@@ -108,7 +108,7 @@ export class EthereumWallet extends BaseWallet {
       });
       console.log(`Network ${network.chainName} added successfully.`);
     } catch (error) {
-      if (!(error as any).message.includes("is not function")) {
+      if ((error as any).message.includes("is not a function")) {
         return
       }
       console.error(`Failed to add network: ${(error as any).message}`);
