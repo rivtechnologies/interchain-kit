@@ -6,7 +6,6 @@ import { Chain } from "@chain-registry/v2-types"
 export class StatefulWallet extends BaseWallet {
   originalWallet: BaseWallet
   walletName: string
-  message: string
   walletSet: (arg: (draft: StatefulWallet) => void) => void
   walletGet: () => StatefulWallet
   set: (arg: (draft: InterchainStore) => void) => void
@@ -24,7 +23,7 @@ export class StatefulWallet extends BaseWallet {
     this.originalWallet = wallet
     this.walletName = wallet.info.name
     this.walletState = WalletState.Disconnected
-    this.message = ""
+    this.errorMessage = ""
 
     this.walletSet = walletSet
     this.walletGet = walletGet
@@ -91,14 +90,14 @@ export class StatefulWallet extends BaseWallet {
         get().updateChainWalletState(walletName, chainToConnect.chainName, { walletState: WalletState.Rejected, errorMessage: (error as any).message })
         walletSet(draft => {
           draft.walletState = WalletState.Rejected
-          draft.message = (error as any).message
+          draft.errorMessage = (error as any).message
         })
         return
       }
       get().updateChainWalletState(walletName, chainToConnect.chainName, { walletState: WalletState.Disconnected, errorMessage: (error as any).message })
       walletSet(draft => {
         draft.walletState = WalletState.Disconnected
-        draft.message = (error as any).message
+        draft.errorMessage = (error as any).message
       })
     }
   }
@@ -112,7 +111,7 @@ export class StatefulWallet extends BaseWallet {
       get().updateChainWalletState(walletName, chainToConnect.chainName, { walletState: WalletState.Disconnected, account: null })
       walletSet(draft => {
         draft.walletState = WalletState.Disconnected
-        draft.message = ""
+        draft.errorMessage = ""
       })
     } catch (error) {
 

@@ -131,12 +131,26 @@ describe('WCWallet', () => {
             },
         } as any;
 
+        wallet.getCosmosAccount = jest.fn().mockResolvedValue({
+            address: 'test-address',
+            algo: 'secp256k1',
+            pubkey: "ZmF3ZWZhdw==",
+        })
+
         const account = await wallet.getAccount('test-chain-id');
 
         expect(account).toEqual({
             address: 'test-address',
             algo: 'secp256k1',
-            pubkey: null,
+            pubkey: new Uint8Array([
+                102,
+                97,
+                119,
+                101,
+                102,
+                97,
+                119,
+            ]),
             username: '',
             isNanoLedger: null,
             isSmartContract: null,

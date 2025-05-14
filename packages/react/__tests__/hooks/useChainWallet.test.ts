@@ -21,7 +21,7 @@ describe("useChainWallet", () => {
 
     const mockWallet = new MockWallet({ name: 'test-wallet', mode: 'extension', prettyName: 'Test Wallet' });
 
-    const statefulWallet = new StatefulWallet(mockWallet, () => { }, () => ({} as StatefulWallet), () => { }, () => ({} as InterchainStore),)
+    const statefulWallet = new StatefulWallet(mockWallet, () => { }, () => ({} as StatefulWallet), () => { }, () => ({} as InterchainStore))
 
     const mockWalletManager: jest.Mocked<InterchainStore> = {
         chains: [{ chainName: 'test-chain', chainType: 'cosmos' as const }],
@@ -59,6 +59,7 @@ describe("useChainWallet", () => {
         getDownloadLink: jest.fn(),
         isReady: true,
         createStatefulWallet: jest.fn(),
+        modalIsOpen: false, openModal: jest.fn(), closeModal: jest.fn(), getStatefulWalletByName: jest.fn(),
     }
 
     beforeEach(() => {
@@ -82,7 +83,7 @@ describe("useChainWallet", () => {
         }
 
         mockWalletManager.getChainByName.mockReturnValue(mockChain)
-        mockWalletManager.getWalletByName.mockReturnValue(mockWallet)
+        mockWalletManager.getStatefulWalletByName.mockReturnValue(statefulWallet)
         mockWalletManager.getChainWalletState.mockReturnValue(mockChainWalletState)
         mockWalletManager.getChainLogoUrl.mockReturnValue("http://logo.url")
 
@@ -90,7 +91,7 @@ describe("useChainWallet", () => {
 
         await waitFor(() => {
             expect(result.current.chain).toEqual(mockChain)
-            expect(result.current.wallet).toBeInstanceOf(BaseWallet)
+            expect(result.current.wallet).toBeInstanceOf(StatefulWallet)
             expect(result.current.assetList).toEqual(mockWalletManager.assetLists[0])
             expect(result.current.status).toBe(WalletState.Connected)
             expect(result.current.username).toBe("test-user")

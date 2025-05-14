@@ -38,6 +38,9 @@ export interface InterchainStore extends WalletManager {
   walletConnectQRCodeUri: string
   isReady: boolean,
   wallets: StatefulWallet[],
+  modalIsOpen: boolean,
+  openModal: () => void,
+  closeModal: () => void,
   setCurrentChainName: (chainName: string) => void
   setCurrentWalletName: (walletName: string) => void
   getDraftChainWalletState: (state: InterchainStore, walletName: string, chainName: string) => ChainWalletState
@@ -63,7 +66,14 @@ export const createInterchainStore = (walletManager: WalletManager) => {
     currentChainName: '',
     chains: [...walletManager.chains],
     assetLists: [...walletManager.assetLists],
-    wallets: [],
+    wallets: walletManager.wallets.map(wallet => {
+
+      const walletSet = (fn: (wallet: StatefulWallet) => void) => {
+        set((draft) => fn(draft.wallets.find(w => w.info.name === wallet.info.name)!));
+      };
+
+      return new StatefulWallet(wallet, walletSet, () => get().wallets.find(w => w.info.name === wallet.info.name), set, get)
+    }),
     signerOptions: walletManager.signerOptions,
     endpointOptions: walletManager.endpointOptions,
 
@@ -74,6 +84,19 @@ export const createInterchainStore = (walletManager: WalletManager) => {
     walletConnectQRCodeUri: '',
 
     isReady: false,
+
+    modalIsOpen: false,
+    openModal: () => {
+      set(draft => {
+        draft.modalIsOpen = true
+      })
+    },
+    closeModal: () => {
+      set(draft => {
+        draft.modalIsOpen = false
+        draft.walletConnectQRCodeUri = '' // reset the QR code uri when modal is closed
+      })
+    },
 
     updateChainWalletState: (walletName: string, chainName: string, data: Partial<ChainWalletState>) => {
       set(draft => {
@@ -113,7 +136,7 @@ export const createInterchainStore = (walletManager: WalletManager) => {
     init: async () => {
       const oldChainWalletStatesMap = new Map(get().chainWalletState.map(cws => [cws.walletName + cws.chainName, cws]))
 
-      get().createStatefulWallet()
+      // get().createStatefulWallet()
 
       // should remove wallet that already disconnected ,for hydrain back from localstorage
       // const oldChainWalletStateMap = new Map()

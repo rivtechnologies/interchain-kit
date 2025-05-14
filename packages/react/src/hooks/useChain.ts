@@ -1,9 +1,8 @@
 import { UseChainReturnType } from '../types/chain';
-import { useWalletModal } from "../modal";
 import { useWalletManager } from './useWalletManager';
 import { ChainNameNotExist } from '@interchain-kit/core';
 import { useSigningClient } from './useSigningClient';
-import { decorateWallet } from '../utils/decorateWallet';
+import { useWalletModal } from './useWalletModal';
 
 export const useChain = (chainName: string): UseChainReturnType => {
 

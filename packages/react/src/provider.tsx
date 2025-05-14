@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { ReactElement, useEffect, useRef } from "react";
 import { createContext, useContext } from "react";
 import {
   BaseWallet,
@@ -7,7 +7,7 @@ import {
   WalletManager,
 } from "@interchain-kit/core";
 import { AssetList, Chain } from "@chain-registry/v2-types";
-import { WalletModalProvider } from "./modal";
+import { ModalRenderer, WalletModalProps } from "./modal";
 import { createInterchainStore, InterchainStore } from "./store";
 import { StoreApi } from "zustand";
 
@@ -20,6 +20,7 @@ type InterchainWalletProviderProps = {
   signerOptions?: SignerOptions;
   endpointOptions?: EndpointOptions;
   children: React.ReactNode;
+  walletModal: (props: WalletModalProps) => ReactElement;
 };
 
 const InterchainWalletContext =
@@ -32,6 +33,7 @@ export const ChainProvider = ({
   signerOptions,
   endpointOptions,
   children,
+  walletModal: ProviderWalletModal,
 }: InterchainWalletProviderProps) => {
   // const [_, forceRender] = useState({});
 
@@ -52,7 +54,8 @@ export const ChainProvider = ({
 
   return (
     <InterchainWalletContext.Provider value={store.current}>
-      <WalletModalProvider>{children}</WalletModalProvider>
+      {children}
+      <ModalRenderer walletModal={ProviderWalletModal} />
     </InterchainWalletContext.Provider>
   );
 };

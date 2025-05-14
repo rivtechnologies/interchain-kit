@@ -5,7 +5,7 @@ import "./index.css";
 import "@interchain-ui/react/styles";
 import { BrowserRouter } from "react-router-dom";
 
-import { ChainProvider } from "@interchain-kit/react";
+import { ChainProvider, InterchainWalletModal } from "@interchain-kit/react";
 
 import { assetLists, chains } from "@chain-registry/v2";
 import {
@@ -176,20 +176,20 @@ if (isInstanceOf(keplrWallet, ExtensionWallet)) {
 const _wallets: BaseWallet[] = [
   // mock1Wallet,
   // mock2Wallet,
-  // keplrWallet,
-  // leapWallet,
+  keplrWallet,
+  leapWallet,
   // cosmostationWallet,
   // stationWallet,
   // galaxyStationWallet,
   // walletConnect,
   // ledgerWallet,
   // cosmosExtensionMetaMask,
-  walletConnect,
+  // walletConnect,
   // ledgerWallet,
   // leapCosmosExtensionMetaMask,
   // compassWallet,
   // trustWallet,
-  // metaMaskWallet,
+  metaMaskWallet,
   // okxWallet,
   // xdefiWallet,
   // exodusWallet,
@@ -206,6 +206,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         chains={_chains}
         wallets={_wallets}
         assetLists={_assetLists}
+        walletModal={InterchainWalletModal}
         signerOptions={{
           signing: (chainName) => {
             return {

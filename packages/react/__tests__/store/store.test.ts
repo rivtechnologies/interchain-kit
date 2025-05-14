@@ -1,7 +1,7 @@
 
 import { AssetList, Chain } from '@chain-registry/v2-types';
 import { createInterchainStore, InterchainStore } from '../../src/store/store';
-import { WalletManager, WalletState, SignerOptions, EndpointOptions, clientNotExistError, WalletAccount, BaseWallet } from '@interchain-kit/core';
+import { WalletManager, WalletState, SignerOptions, EndpointOptions, clientNotExistError, WalletAccount, BaseWallet, WCWallet } from '@interchain-kit/core';
 import { MockWallet, MockWalletConnect } from '../helpers/mock-wallet';
 import { chain, assetList } from '@chain-registry/v2/mainnet/osmosis'
 
@@ -90,13 +90,17 @@ describe('InterchainStore', () => {
   const mockAssetList = { chainName: 'chain1', assets: [] } as AssetList;
 
   const mockWallet1 = new MockWallet({ name: 'wallet1', mode: 'extension', prettyName: 'Wallet 1' });
+  // const mockWCWallet = new MockWalletConnect({ name: 'WalletConnect', mode: 'wallet-connect', prettyName: 'Wallet Connect' });
+  // const mockWCWallet = { info: { name: 'WalletConnect', mode: 'wallet-connect', prettyName: 'Wallet Connect' } } as WCWallet
   const mockWCWallet = new MockWalletConnect({ name: 'WalletConnect', mode: 'wallet-connect', prettyName: 'Wallet Connect' });
 
   mockWallet1.getChainById = jest.fn().mockImplementation(() => mockChain);
   mockWallet1.connect = jest.fn()
+  mockWallet1.getAccount = jest.fn().mockResolvedValue({ address: 'address1' } as WalletAccount);
 
   mockWCWallet.getChainById = jest.fn().mockImplementation(() => mockChain);
   mockWCWallet.connect = jest.fn()
+  mockWCWallet.getAccount = jest.fn().mockResolvedValue({ address: 'address1' } as WalletAccount);
 
   beforeEach(async () => {
     walletManager = {

@@ -5,14 +5,14 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useChain } from '../../src/hooks/useChain';
 import { useWalletManager } from '../../src/hooks/useWalletManager';
-import { useWalletModal } from '../../src/modal';
 import { ChainNameNotExist, ChainNotExist, WalletState } from '@interchain-kit/core';
 import { ChainWalletState, InterchainStore } from '../../src/store';
 import { MockWallet } from '../helpers/mock-wallet';
 import { StatefulWallet } from '../../src/store/stateful-wallet';
+import { useWalletModal } from '../../src/hooks';
 
 jest.mock('../../src/hooks/useWalletManager');
-jest.mock('../../src/modal');
+jest.mock('../../src/hooks/useWalletModal.ts');
 
 describe('useChain', () => {
   const mockChain = { chainName: 'test-chain', chainType: 'cosmos' as const };
@@ -60,6 +60,7 @@ describe('useChain', () => {
     getDownloadLink: jest.fn(),
     isReady: true,
     createStatefulWallet: jest.fn(),
+    modalIsOpen: false, openModal: jest.fn(), closeModal: jest.fn(), getStatefulWalletByName: jest.fn(),
   }
 
   const mockWalletModal = {
