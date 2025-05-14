@@ -7,7 +7,7 @@ import { decorateWallet } from '../utils/decorateWallet';
 
 export const useChain = (chainName: string): UseChainReturnType => {
 
-  const { assetLists, currentWalletName, disconnect, setCurrentChainName, getChainByName, getWalletByName, getChainWalletState, getChainLogoUrl, connect, getSigningClient, getRpcEndpoint, getAccount } = useWalletManager()
+  const { assetLists, currentWalletName, disconnect, setCurrentChainName, getChainByName, getWalletByName, getChainWalletState, getChainLogoUrl, connect, getSigningClient, getRpcEndpoint, getAccount, getStatefulWalletByName } = useWalletManager()
 
   const chain = getChainByName(chainName)
 
@@ -16,7 +16,7 @@ export const useChain = (chainName: string): UseChainReturnType => {
   }
 
   const assetList = assetLists.find(a => a.chainName === chainName)
-  const wallet = getWalletByName(currentWalletName)
+  const wallet = getStatefulWalletByName(currentWalletName)
 
   const chainWalletStateToShow = getChainWalletState(currentWalletName, chainName)
   const { open, close } = useWalletModal()

@@ -4,11 +4,11 @@ import { useSigningClient } from "./useSigningClient"
 import { decorateWallet } from "../utils/decorateWallet"
 
 export const useChainWallet = (chainName: string, walletName: string): UseChainWalletReturnType => {
-  const { assetLists, disconnect, setCurrentChainName, setCurrentWalletName, getChainByName, getWalletByName, getChainWalletState, getChainLogoUrl, connect, getSigningClient, getRpcEndpoint, getAccount } = useWalletManager()
+  const { assetLists, disconnect, setCurrentChainName, setCurrentWalletName, getChainByName, getWalletByName, getChainWalletState, getChainLogoUrl, connect, getSigningClient, getRpcEndpoint, getAccount, getStatefulWalletByName } = useWalletManager()
 
   const chain = getChainByName(chainName)
 
-  const wallet = getWalletByName(walletName)
+  const wallet = getStatefulWalletByName(walletName)
 
   const assetList = assetLists.find(a => a.chainName === chainName)
 

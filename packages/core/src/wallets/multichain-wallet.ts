@@ -56,7 +56,7 @@ export class MultiChainWallet extends BaseWallet {
   getWalletByChainType(chainType: Chain['chainType']) {
     const wallet = this.networkWalletMap.get(chainType);
     if (!wallet) {
-      throw new Error('Unsupported chain type')
+      throw new Error(`Unsupported chain type: "${chainType}"`);
     }
     return wallet;
   }

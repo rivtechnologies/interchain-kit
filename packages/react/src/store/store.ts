@@ -1,13 +1,13 @@
 import { SigningClient } from '@interchainjs/cosmos/signing-client';
 import { AssetList, Chain } from "@chain-registry/v2-types"
-import { BaseWallet, clientNotExistError, EndpointOptions, Endpoints, SignerOptions, SignType, Wallet, WalletAccount, WalletManager, WalletState, WCWallet } from "@interchain-kit/core"
+import { BaseWallet, clientNotExistError, EndpointOptions, Endpoints, SignerOptions, SignType, WalletAccount, WalletManager, WalletState } from "@interchain-kit/core"
 import { SigningOptions as InterchainSigningOptions } from '@interchainjs/cosmos/types/signing-client';
 import { HttpEndpoint } from '@interchainjs/types';
 import { createStore } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { dedupeAsync } from '../utils';
-import { decorateWallet } from '../utils/decorateWallet';
+import { StatefulWallet } from './stateful-wallet';
 
 const immerSyncUp = (newWalletManager: WalletManager) => {
   return (draft: { chains: Chain[]; assetLists: AssetList[]; wallets: BaseWallet[]; signerOptions: SignerOptions; endpointOptions: EndpointOptions; signerOptionMap: Record<string, InterchainSigningOptions>; endpointOptionsMap: Record<string, Endpoints>; preferredSignTypeMap: Record<string, SignType>; }) => {
@@ -36,29 +36,26 @@ export interface InterchainStore extends WalletManager {
   currentWalletName: string
   currentChainName: string
   walletConnectQRCodeUri: string
+  isReady: boolean,
+  wallets: StatefulWallet[],
   setCurrentChainName: (chainName: string) => void
   setCurrentWalletName: (walletName: string) => void
   getDraftChainWalletState: (state: InterchainStore, walletName: string, chainName: string) => ChainWalletState
   getChainWalletState: (walletName: string, chainName: string) => ChainWalletState | undefined
   updateChainWalletState: (walletName: string, chainName: string, data: Partial<ChainWalletState>) => void
-  updateWalletState: (walletName: string, data: Partial<ChainWalletState>) => void
-  isReady: boolean,
   createStatefulWallet: () => void
+  getStatefulWalletByName: (walletName: string) => StatefulWallet | undefined
 }
 
 export type InterchainStoreData = {
   chains: Chain[]
   assetLists: AssetList[]
-  wallets: BaseWallet[]
+  wallets: StatefulWallet[]
   signerOptions: SignerOptions
   endpointOptions: EndpointOptions
 }
 
 export const createInterchainStore = (walletManager: WalletManager) => {
-
-  const { chains, assetLists, wallets, signerOptions, endpointOptions } = walletManager
-  // const walletManager = new WalletManager(chains, assetLists, wallets, signerOptions, endpointOptions)
-
 
   return createStore(persist(immer<InterchainStore>((set, get) => ({
     chainWalletState: [],
@@ -78,152 +75,39 @@ export const createInterchainStore = (walletManager: WalletManager) => {
 
     isReady: false,
 
-    updateWalletState: (walletName: string, data: Partial<ChainWalletState>) => {
-      set(draft => {
-        let targetWalletIndex = draft.wallets.findIndex(w => w.info.name === walletName)
-        draft.wallets[targetWalletIndex].walletState = data.walletState
-      })
-    },
-
     updateChainWalletState: (walletName: string, chainName: string, data: Partial<ChainWalletState>) => {
       set(draft => {
         let targetIndex = draft.chainWalletState.findIndex(cws => cws.walletName === walletName && cws.chainName === chainName)
         draft.chainWalletState[targetIndex] = { ...draft.chainWalletState[targetIndex], ...data }
-
-        if (data.walletState) {
-          get().updateWalletState(walletName, data)
-        }
       })
     },
 
     createStatefulWallet: () => {
       const wallets = walletManager.wallets.map(wallet => {
-        // safeStrictBatchPatch(wallet, {
-        //   connect: async (original, chainId) => {
-        //     const walletName = wallet.info.name
-        //     const chainName = get().chains.find(chain => chain.chainId === chainId)?.chainName
-        //     const state = get().getChainWalletState(walletName, chainName)?.walletState
-        //     if (state === WalletState.NotExist) {
-        //       return
-        //     }
-        //     if (walletName === 'WalletConnect' && state === WalletState.Connected) {
-        //       return
-        //     }
-        //     set(draft => {
-        //       draft.currentChainName = chainName
-        //       draft.currentWalletName = walletName
-        //       draft.walletConnectQRCodeUri = ''
-        //     })
-        //     get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Connecting, errorMessage: '' })
-        //     try {
-        //       if (wallet instanceof WCWallet) {
-        //         wallet.setOnPairingUriCreatedCallback((uri) => {
-        //           set(draft => {
-        //             draft.walletConnectQRCodeUri = uri
-        //           })
-        //         })
-        //       }
-        //       await original(chainId)
-        //       get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Connected })
-        //       await get().getAccount(walletName, chainName)
-        //     } catch (error) {
-        //       if ((error as any).message === 'Request rejected') {
-        //         get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Rejected, errorMessage: (error as any).message })
-        //         return
-        //       }
-        //       get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Disconnected, errorMessage: (error as any).message })
-        //     }
-        //   },
-        //   disconnect: async (original, chainId) => {
-        //     const walletName = wallet.info.name
-        //     const chainName = get().chains.find(chain => chain.chainId === chainId)?.chainName
-        //     try {
-        //       await original(chainId)
-        //       get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Disconnected, account: null })
-        //     } catch (error) {
-        //     }
-        //   },
-        //   getAccount: async (original, chainId) => {
-        //     const walletName = wallet.info.name
-        //     const chainName = get().chains.find(chain => chain.chainId === chainId)?.chainName
-        //     try {
-        //       const account = await original(chainId)
-        //       get().updateChainWalletState(walletName, chainName, { account })
-        //       return account
-        //     } catch (error) {
-        //       console.log(error)
-        //     }
-        //   },
-        //   walletState: get().getChainWalletState(wallet.info.name, walletManager.chains?.[0].chainName)?.walletState || WalletState.Disconnected
-        // })
 
+        const walletSet = (fn: (wallet: StatefulWallet) => void) => {
+          set((draft) => fn(draft.wallets.find(w => w.info.name === wallet.info.name)!));
+        };
 
-
-        // return wallet
-
-        return decorateWallet(wallet, {
-          connect: async (chainId) => {
-            const walletName = wallet.info.name
-            const chainName = get().chains.find(chain => chain.chainId === chainId)?.chainName
-            const state = get().getChainWalletState(walletName, chainName)?.walletState
-            if (state === WalletState.NotExist) {
-              return
-            }
-            if (walletName === 'WalletConnect' && state === WalletState.Connected) {
-              return
-            }
-            set(draft => {
-              draft.currentChainName = chainName
-              draft.currentWalletName = walletName
-              draft.walletConnectQRCodeUri = ''
-            })
-            get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Connecting, errorMessage: '' })
-            try {
-              if (wallet instanceof WCWallet) {
-                wallet.setOnPairingUriCreatedCallback((uri) => {
-                  set(draft => {
-                    draft.walletConnectQRCodeUri = uri
-                  })
-                })
-              }
-              await wallet.connect(chainId)
-              get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Connected })
-              await get().getAccount(walletName, chainName)
-            } catch (error) {
-              if ((error as any).message === 'Request rejected') {
-                get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Rejected, errorMessage: (error as any).message })
-                return
-              }
-              get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Disconnected, errorMessage: (error as any).message })
-            }
-          },
-          disconnect: async (chainId) => {
-            const walletName = wallet.info.name
-            const chainName = get().chains.find(chain => chain.chainId === chainId)?.chainName
-            try {
-              await wallet.disconnect(chainId)
-              get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Disconnected, account: null })
-            } catch (error) {
-            }
-          },
-          getAccount: async (chainId) => {
-            const walletName = wallet.info.name
-            const chainName = get().chains.find(chain => chain.chainId === chainId)?.chainName
-            try {
-              const account = await wallet.getAccount(chainId)
-              get().updateChainWalletState(walletName, chainName, { account })
-              return account
-            } catch (error) {
-              console.log(error)
-            }
-          },
-          walletState: get().getChainWalletState(wallet.info.name, walletManager.chains?.[0].chainName)?.walletState || WalletState.Disconnected
-        })
-
+        return new StatefulWallet(wallet, walletSet, () => get().wallets.find(w => w.info.name === wallet.info.name), set, get)
       })
       set(draft => {
         draft.wallets = wallets
       })
+
+      const defaultWalletStates = get().chainWalletState.reduce((acc, cws) => {
+        if (acc[cws.walletName] && cws.walletState === WalletState.Connected) {
+          return acc
+        }
+        return { ...acc, [cws.walletName]: cws.walletState }
+      }, {} as Record<string, WalletState>)
+
+      set(draft => {
+        draft.wallets.forEach(wallet => {
+          wallet.walletState = defaultWalletStates[wallet.info.name]
+        })
+      })
+
     },
 
     init: async () => {
@@ -271,7 +155,7 @@ export const createInterchainStore = (walletManager: WalletManager) => {
       set(draft => {
         draft.chainWalletState = draft.chainWalletState.map(cws => {
           if (NotExistWallets.includes(cws.walletName)) {
-            get().updateWalletState(cws.walletName, { walletState: WalletState.NotExist })
+
             return { ...cws, walletState: WalletState.NotExist }
           }
           return cws
@@ -279,7 +163,7 @@ export const createInterchainStore = (walletManager: WalletManager) => {
         draft.chainWalletState = draft.chainWalletState.map(cws => {
           if (ExistWallets.includes(cws.walletName)) {
             const newState = cws.walletState === WalletState.NotExist ? WalletState.Disconnected : cws.walletState
-            get().updateWalletState(cws.walletName, { walletState: newState })
+
             return { ...cws, walletState: newState }
           }
           return cws
@@ -367,55 +251,44 @@ export const createInterchainStore = (walletManager: WalletManager) => {
     },
 
     connect: async (walletName: string, chainName: string) => {
-      const state = get().getChainWalletState(walletName, chainName)?.walletState
-      if (state === WalletState.NotExist) {
-        return
+      const wallet = get().wallets.find(w => w.info.name === walletName)
+      const chain = get().chains.find(c => c.chainName === chainName)
+
+      if (!wallet) {
+        throw new Error(`Wallet ${walletName} not found`)
+      }
+      if (!chain) {
+        throw new Error(`Chain ${chainName} not found`)
       }
 
-      if (walletName === 'WalletConnect' && state === WalletState.Connected) {
-        return
-      }
-
-      set(draft => {
-        draft.currentChainName = chainName
-        draft.currentWalletName = walletName
-        draft.walletConnectQRCodeUri = ''
-      })
-      get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Connecting, errorMessage: '' })
-      try {
-        await walletManager.connect(walletName, chainName, (uri) => {
-          set(draft => {
-            draft.walletConnectQRCodeUri = uri
-          })
-        })
-        get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Connected })
-
-        await get().getAccount(walletName, chainName)
-      } catch (error) {
-        if ((error as any).message === 'Request rejected') {
-          get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Rejected, errorMessage: (error as any).message })
-          return
-        }
-        get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Disconnected, errorMessage: (error as any).message })
-      }
+      return wallet.connect(chain.chainId)
     },
 
     disconnect: async (walletName: string, chainName: string) => {
-      try {
-        await walletManager.disconnect(walletName, chainName)
-        get().updateChainWalletState(walletName, chainName, { walletState: WalletState.Disconnected, account: null })
-      } catch (error) {
+      const wallet = get().wallets.find(w => w.info.name === walletName)
+      const chain = get().chains.find(c => c.chainName === chainName)
 
+      if (!wallet) {
+        throw new Error(`Wallet ${walletName} not found`)
       }
+      if (!chain) {
+        throw new Error(`Chain ${chainName} not found`)
+      }
+
+      return wallet.disconnect(chain.chainId)
     },
     getAccount: async (walletName: string, chainName: string) => {
-      try {
-        const account = await walletManager.getAccount(walletName, chainName)
-        get().updateChainWalletState(walletName, chainName, { account })
-        return account
-      } catch (error) {
-        console.log(error)
+      const wallet = get().wallets.find(w => w.info.name === walletName)
+      const chain = get().chains.find(c => c.chainName === chainName)
+
+      if (!wallet) {
+        throw new Error(`Wallet ${walletName} not found`)
       }
+      if (!chain) {
+        throw new Error(`Chain ${chainName} not found`)
+      }
+
+      return wallet.getAccount(chain.chainId)
     },
     getRpcEndpoint: async (walletName: string, chainName: string): Promise<string | HttpEndpoint> => {
       return dedupeAsync(`${chainName}-rpcEndpoint`, async () => {
@@ -453,6 +326,9 @@ export const createInterchainStore = (walletManager: WalletManager) => {
     },
     getWalletByName(walletName) {
       return walletManager.getWalletByName(walletName)
+    },
+    getStatefulWalletByName(walletName: string) {
+      return get().wallets.find(w => w.info.name === walletName)
     },
     async getSigningClient(walletName, chainName): Promise<SigningClient> {
       return walletManager.getSigningClient(walletName, chainName)

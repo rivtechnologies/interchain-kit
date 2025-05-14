@@ -49,7 +49,7 @@ import { create } from "domain";
 
 const chainNames: string[] = [
   // "injectivetestnet",
-  // "osmosistestnet",
+  "osmosistestnet",
   // "osmosis",
   // "juno",
   // "cosmoshub",
@@ -176,8 +176,8 @@ if (isInstanceOf(keplrWallet, ExtensionWallet)) {
 const _wallets: BaseWallet[] = [
   // mock1Wallet,
   // mock2Wallet,
-  // keplrWallet,
-  // leapWallet,
+  keplrWallet,
+  leapWallet,
   // cosmostationWallet,
   // stationWallet,
   // galaxyStationWallet,

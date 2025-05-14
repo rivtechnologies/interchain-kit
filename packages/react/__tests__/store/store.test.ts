@@ -1,6 +1,9 @@
+
 import { AssetList, Chain } from '@chain-registry/v2-types';
 import { createInterchainStore, InterchainStore } from '../../src/store/store';
-import { WalletManager, WalletState, SignerOptions, EndpointOptions, clientNotExistError, WalletAccount } from '@interchain-kit/core';
+import { WalletManager, WalletState, SignerOptions, EndpointOptions, clientNotExistError, WalletAccount, BaseWallet } from '@interchain-kit/core';
+import { MockWallet, MockWalletConnect } from '../helpers/mock-wallet';
+import { chain, assetList } from '@chain-registry/v2/mainnet/osmosis'
 
 const localStorageMock: Storage = (() => {
   let store: { [key: string]: string } = {};
@@ -29,13 +32,20 @@ Object.defineProperties(global, {
 
 describe('Test InterchainStore init', () => {
   let walletManager: WalletManager;
-  let useStore: ReturnType<typeof createInterchainStore>;
+
+  const mockWallet1 = new MockWallet({ name: 'wallet1', mode: 'extension', prettyName: 'Wallet 1' });
+  const mockWallet2 = new MockWallet({ name: 'wallet2', mode: 'extension', prettyName: 'Wallet 2' });
+
+  mockWallet1.getChainById = jest.fn().mockImplementation(() => ({ chainName: 'chain1' }));
+  mockWallet1.init.mockResolvedValue(undefined)
+  mockWallet2.getChainById = jest.fn().mockImplementation(() => ({ chainName: 'chain1' }));
+  mockWallet2.init.mockResolvedValue(undefined)
 
   it('should isReady be true after init', async () => {
     walletManager = {
       chains: [{ chainName: 'chain1', chainId: '1' }] as Chain[],
       assetLists: [{ chainName: 'chain1', assets: [] }] as AssetList[],
-      wallets: [{ info: { name: 'wallet1' }, init: jest.fn() }, { info: { name: "WalletConnect" }, init: jest.fn() }] as any[],
+      wallets: [mockWallet1, mockWallet2],
       signerOptions: {} as SignerOptions,
       endpointOptions: {} as EndpointOptions,
       preferredSignTypeMap: {},
@@ -76,11 +86,23 @@ describe('InterchainStore', () => {
   let store: InterchainStore;
   let useStore: ReturnType<typeof createInterchainStore>;
 
+  const mockChain = { chainName: 'chain1', chainId: '1' } as Chain
+  const mockAssetList = { chainName: 'chain1', assets: [] } as AssetList;
+
+  const mockWallet1 = new MockWallet({ name: 'wallet1', mode: 'extension', prettyName: 'Wallet 1' });
+  const mockWCWallet = new MockWalletConnect({ name: 'WalletConnect', mode: 'wallet-connect', prettyName: 'Wallet Connect' });
+
+  mockWallet1.getChainById = jest.fn().mockImplementation(() => mockChain);
+  mockWallet1.connect = jest.fn()
+
+  mockWCWallet.getChainById = jest.fn().mockImplementation(() => mockChain);
+  mockWCWallet.connect = jest.fn()
+
   beforeEach(async () => {
     walletManager = {
-      chains: [{ chainName: 'chain1', chainId: '1' }] as Chain[],
-      assetLists: [{ chainName: 'chain1', assets: [] }] as AssetList[],
-      wallets: [{ info: { name: 'wallet1' }, init: jest.fn() }, { info: { name: "WalletConnect" }, init: jest.fn() }] as any[],
+      chains: [mockChain] as Chain[],
+      assetLists: [mockAssetList] as AssetList[],
+      wallets: [mockWallet1, mockWCWallet],
       signerOptions: {} as SignerOptions,
       endpointOptions: {} as EndpointOptions,
       preferredSignTypeMap: {},
@@ -103,6 +125,7 @@ describe('InterchainStore', () => {
       getEnv: jest.fn(),
       addChains: jest.fn(),
     } as unknown as WalletManager;
+
     useStore = createInterchainStore(walletManager);
 
     await useStore.getState().init();
@@ -135,31 +158,29 @@ describe('InterchainStore', () => {
       }
     });
 
-    await useStore.getState().connect('wallet1', 'chain1');
-    expect(walletManager.connect).toHaveBeenCalledWith('wallet1', 'chain1', expect.any(Function));
-    expect(useStore.getState().currentChainName).toBe('chain1');
+    await useStore.getState().connect('wallet1', mockChain.chainName);
+    expect(mockWallet1.connect).toHaveBeenCalledWith(mockChain.chainId);
+    expect(useStore.getState().currentChainName).toBe(mockChain.chainName);
     expect(useStore.getState().currentWalletName).toBe('wallet1');
-    const state = useStore.getState().getChainWalletState('wallet1', 'chain1');
+    const state = useStore.getState().getChainWalletState('wallet1', mockChain.chainName);
     expect(state?.walletState).toBe(WalletState.Connected);
     expect(state?.errorMessage).toBe('');
   });
 
   it('should handle WalletConnect URI during connection', async () => {
-    (walletManager.connect as jest.Mock).mockImplementationOnce(async (walletName, chainName, onUri) => {
-      if (walletName === 'WalletConnect') {
-        onUri('wc:mock-uri');
-      }
+    mockWCWallet.setOnPairingUriCreatedCallback = jest.fn().mockImplementationOnce((onUri) => {
+      onUri('wc:mock-uri');
     });
 
     await useStore.getState().connect('WalletConnect', 'chain1');
-    expect(walletManager.connect).toHaveBeenCalledWith('WalletConnect', 'chain1', expect.any(Function));
+    expect(mockWCWallet.connect).toHaveBeenCalledWith(mockChain.chainId);
     expect(useStore.getState().walletConnectQRCodeUri).toBe('wc:mock-uri');
     const state = useStore.getState().getChainWalletState('WalletConnect', 'chain1');
     expect(state?.walletState).toBe(WalletState.Connected);
   });
 
   it('should handle rejected connection request', async () => {
-    (walletManager.connect as jest.Mock).mockRejectedValueOnce(new Error('Request rejected'));
+    (mockWallet1.connect as jest.Mock).mockRejectedValueOnce(new Error('Request rejected'));
 
     await useStore.getState().connect('wallet1', 'chain1');
     const state = useStore.getState().getChainWalletState('wallet1', 'chain1');
@@ -168,7 +189,7 @@ describe('InterchainStore', () => {
   });
 
   it('should handle connection error with a specific message', async () => {
-    (walletManager.connect as jest.Mock).mockRejectedValueOnce(new Error('Specific connection error'));
+    (mockWallet1.connect as jest.Mock).mockRejectedValueOnce(new Error('Specific connection error'));
 
     await useStore.getState().connect('wallet1', 'chain1');
     const state = useStore.getState().getChainWalletState('wallet1', 'chain1');
@@ -195,7 +216,7 @@ describe('InterchainStore', () => {
   });
 
   it('should handle connection error', async () => {
-    (walletManager.connect as jest.Mock).mockRejectedValueOnce(new Error('Connection error'));
+    (mockWallet1.connect as jest.Mock).mockRejectedValueOnce(new Error('Connection error'));
     await useStore.getState().connect('wallet1', 'chain1');
     const state = useStore.getState().getChainWalletState('wallet1', 'chain1');
     expect(state?.walletState).toBe(WalletState.Disconnected);
@@ -212,7 +233,7 @@ describe('InterchainStore', () => {
 
   it('should get account', async () => {
     const account = { address: 'address1' };
-    (walletManager.getAccount as jest.Mock).mockResolvedValueOnce(account);
+    (mockWallet1.getAccount as jest.Mock).mockResolvedValueOnce(account);
     const result = await useStore.getState().getAccount('wallet1', 'chain1');
     expect(result).toBe(account);
     const state = useStore.getState().getChainWalletState('wallet1', 'chain1');
@@ -279,8 +300,8 @@ describe('InterchainStore', () => {
   });
 
   it('should handle a mix of existing and non-existing wallets', async () => {
-    (walletManager.wallets[0].init as jest.Mock).mockRejectedValueOnce(clientNotExistError);
-    (walletManager.wallets[1].init as jest.Mock).mockResolvedValueOnce(undefined);
+    mockWallet1.init = jest.fn().mockRejectedValueOnce(clientNotExistError);
+    mockWCWallet.init = jest.fn().mockResolvedValueOnce(undefined);
 
     await useStore.getState().init();
     const chainWalletState = useStore.getState().chainWalletState;
@@ -365,13 +386,13 @@ describe('InterchainStore', () => {
 
   it('should update wallet state to Connected and fetch account after connection', async () => {
     const account = { address: 'address1' };
-    (walletManager.getAccount as jest.Mock).mockResolvedValueOnce(account);
+    (mockWallet1.getAccount as jest.Mock).mockResolvedValueOnce(account);
 
     await useStore.getState().connect('wallet1', 'chain1');
 
     const state = useStore.getState().getChainWalletState('wallet1', 'chain1');
     expect(state?.walletState).toBe(WalletState.Connected);
-    expect(walletManager.getAccount).toHaveBeenCalledWith('wallet1', 'chain1');
+    expect(mockWallet1.getAccount).toHaveBeenCalledWith(mockChain.chainId);
     expect(state?.account).toBe(account);
   });
 

@@ -22,10 +22,11 @@ import QRCode from "react-qr-code";
 import { send } from "interchainjs/cosmos/bank/v1beta1/tx.rpc.func";
 import { RpcClient } from "@interchainjs/cosmos/query/rpc";
 import { ethers } from "ethers";
+import { StatefulWallet } from "@interchain-kit/react/store/stateful-wallet";
 
 type BalanceProps = {
   address: string;
-  wallet: BaseWallet;
+  wallet: StatefulWallet;
   chainName: string;
   chainId: string;
   chain: Chain;
@@ -55,17 +56,7 @@ const BalanceTd = ({ address, wallet, chain, assetList }: BalanceProps) => {
       });
     }
     if (chain.chainType === "eip155") {
-      let provider;
-      if (wallet instanceof WCWallet) {
-        provider = wallet.getProvider();
-      }
-      if (wallet instanceof EthereumWallet) {
-        provider = wallet.getProvider(chain.chainId as string);
-      }
-      if (wallet instanceof MultiChainWallet) {
-        const ethWallet = wallet.getWalletByChainType("eip155");
-        provider = await ethWallet.getProvider(chain.chainId as string);
-      }
+      const provider = await wallet.getProvider(chain.chainId as string);
       // provider = new ethers.providers.JsonRpcProvider(rpcEndpoint as string);
 
       const ethProvider = new ethers.providers.Web3Provider(provider);
@@ -94,7 +85,7 @@ const BalanceTd = ({ address, wallet, chain, assetList }: BalanceProps) => {
 };
 
 type SendTokenProps = {
-  wallet: BaseWallet;
+  wallet: StatefulWallet;
   address: string;
   chain: Chain;
 };
@@ -232,7 +223,13 @@ const AddressTd = ({ wallet, chain }: SendTokenProps) => {
   );
 };
 
-const ChainRow = ({ chain, wallet }: { chain: Chain; wallet: BaseWallet }) => {
+const ChainRow = ({
+  chain,
+  wallet,
+}: {
+  chain: Chain;
+  wallet: StatefulWallet;
+}) => {
   const {
     address,
     rpcEndpoint,
@@ -268,7 +265,7 @@ const ChainRow = ({ chain, wallet }: { chain: Chain; wallet: BaseWallet }) => {
   );
 };
 
-const WalletConnectTd = ({ wallet }: { wallet: BaseWallet }) => {
+const WalletConnectTd = ({ wallet }: { wallet: StatefulWallet }) => {
   const walletManager = useWalletManager();
 
   const chainIds = walletManager.chains.map((c) => c.chainId);
@@ -305,16 +302,18 @@ const E2ETest = () => {
   const walletManager = useWalletManager();
   const { open } = useWalletModal();
 
+  // console.log(walletManager.wallets);
+
   // useEffect(() => {
   //   if (walletManager.isReady) {
   //     walletManager.wallets.forEach((wallet) => {
-  //       console.log(wallet.walletState);
+  //       console.log({ name: wallet.walletName, state: wallet.walletState });
   //     });
   //   }
   // }, [walletManager.isReady]);
 
   // walletManager.wallets.forEach((wallet) => {
-  //   console.log(wallet.walletState);
+  //   console.log({ name: wallet.walletName, state: wallet.walletState });
   // });
 
   const addChain = async () => {

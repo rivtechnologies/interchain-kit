@@ -9,6 +9,7 @@ import { useWalletModal } from '../../src/modal';
 import { ChainNameNotExist, ChainNotExist, WalletState } from '@interchain-kit/core';
 import { ChainWalletState, InterchainStore } from '../../src/store';
 import { MockWallet } from '../helpers/mock-wallet';
+import { StatefulWallet } from '../../src/store/stateful-wallet';
 
 jest.mock('../../src/hooks/useWalletManager');
 jest.mock('../../src/modal');
@@ -20,10 +21,13 @@ describe('useChain', () => {
 
   const mockWallet = new MockWallet({ name: 'test-wallet', mode: 'extension', prettyName: 'Test Wallet' });
 
+  const statefulWallet = new StatefulWallet(mockWallet, () => { }, () => ({} as StatefulWallet), () => { }, () => ({} as InterchainStore),)
+
+
   const mockWalletManager: jest.Mocked<InterchainStore> = {
     chains: [{ chainName: 'test-chain', chainType: 'cosmos' as const }],
     assetLists: [{ chainName: 'test-chain', assets: [] }],
-    wallets: [mockWallet],
+    wallets: [statefulWallet],
     currentWalletName: 'test-wallet',
     currentChainName: 'test-chain',
     chainWalletState: [],
@@ -55,7 +59,6 @@ describe('useChain', () => {
     getEnv: jest.fn(),
     getDownloadLink: jest.fn(),
     isReady: true,
-    updateWalletState: jest.fn(),
     createStatefulWallet: jest.fn(),
   }
 
