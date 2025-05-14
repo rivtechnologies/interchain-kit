@@ -2084,6 +2084,16 @@
     "@interchainjs/math" "1.11.5"
     "@interchainjs/utils" "1.11.5"
 
+"@interchainjs/amino@1.11.9":
+  version "1.11.9"
+  resolved "https://registry.yarnpkg.com/@interchainjs/amino/-/amino-1.11.9.tgz#358361ebbab91d587b5a94e8a60394c95a4f4078"
+  integrity sha512-LF8yNG7foctfEvWoI/mMU634kt6aGIPKuU22S4rwNrxSIf01tV0Bnve+Dg9yqwyf4LTeyQxf1mMzwN2/emLnsA==
+  dependencies:
+    "@interchainjs/crypto" "1.11.9"
+    "@interchainjs/encoding" "1.11.9"
+    "@interchainjs/math" "1.11.9"
+    "@interchainjs/utils" "1.11.9"
+
 "@interchainjs/auth@0.0.1-alpha.31":
   version "0.0.1-alpha.31"
   resolved "https://registry.yarnpkg.com/@interchainjs/auth/-/auth-0.0.1-alpha.31.tgz#233ab8135881bdfac4d8bd1ace520d8834f26b00"
@@ -2113,6 +2123,18 @@
   dependencies:
     "@interchainjs/types" "1.11.5"
     "@interchainjs/utils" "1.11.5"
+    "@noble/curves" "^1.1.0"
+    "@noble/hashes" "^1.3.1"
+    "@scure/bip32" "^1.0.10"
+    ethers "^6.5.1"
+
+"@interchainjs/auth@1.11.9":
+  version "1.11.9"
+  resolved "https://registry.yarnpkg.com/@interchainjs/auth/-/auth-1.11.9.tgz#6f42cd8ac7d75b4829fd30bf8d0314f60b7a0347"
+  integrity sha512-jCTqzDXUrn/npFmJ1X04Ad6FqC5gEYbNzL/TUidNQSPNDkELu6DE9XM/J3DCGWpgBLiUEaz0P2nquTs+QneKCw==
+  dependencies:
+    "@interchainjs/types" "1.11.9"
+    "@interchainjs/utils" "1.11.9"
     "@noble/curves" "^1.1.0"
     "@noble/hashes" "^1.3.1"
     "@scure/bip32" "^1.0.10"
@@ -2160,6 +2182,14 @@
   dependencies:
     "@interchainjs/types" "1.11.5"
     "@interchainjs/utils" "1.11.5"
+
+"@interchainjs/cosmos-types@1.11.9":
+  version "1.11.9"
+  resolved "https://registry.yarnpkg.com/@interchainjs/cosmos-types/-/cosmos-types-1.11.9.tgz#19ae5f3bf86946382a59aa9343d76fb35cc091a0"
+  integrity sha512-ckIHLjXZSaV8ckv1+rx5Znh1Oza+w4XM+TVqDiR4/S30Lx+3RqdyOKexqlI+YRArkd5E58lRFG2ZgLXNzBYIow==
+  dependencies:
+    "@interchainjs/types" "1.11.9"
+    "@interchainjs/utils" "1.11.9"
 
 "@interchainjs/cosmos-types@1.6.3":
   version "1.6.3"
@@ -2212,6 +2242,19 @@
     "@noble/hashes" "^1.3.1"
     decimal.js "^10.4.3"
 
+"@interchainjs/cosmos@1.11.9":
+  version "1.11.9"
+  resolved "https://registry.yarnpkg.com/@interchainjs/cosmos/-/cosmos-1.11.9.tgz#12ae62e5c3405e57b1bd441f35eb08036f59d6ec"
+  integrity sha512-7qmv1wMp2ptDh1x/X5rszIgHYTLy7IHOzUPYEAGZShBLohb11sc0ZmmSnBBIEPTWwvDkm72pRNu7Lba7JRWO4Q==
+  dependencies:
+    "@interchainjs/auth" "1.11.9"
+    "@interchainjs/cosmos-types" "1.11.9"
+    "@interchainjs/types" "1.11.9"
+    "@interchainjs/utils" "1.11.9"
+    "@noble/curves" "^1.1.0"
+    "@noble/hashes" "^1.3.1"
+    decimal.js "^10.4.3"
+
 "@interchainjs/cosmos@1.6.3":
   version "1.6.3"
   resolved "https://registry.yarnpkg.com/@interchainjs/cosmos/-/cosmos-1.6.3.tgz#e804d8fdf64e8046be9572a15fb685cb76ddd6ae"
@@ -2255,6 +2298,19 @@
     elliptic "^6.5.4"
     libsodium-wrappers-sumo "^0.7.11"
 
+"@interchainjs/crypto@1.11.9":
+  version "1.11.9"
+  resolved "https://registry.yarnpkg.com/@interchainjs/crypto/-/crypto-1.11.9.tgz#2d59e0aae5c9523bc11d2764cff7b983373c4b68"
+  integrity sha512-xq01OS2MaHZLUS3rB38nRCKQGpmhuPMQOgZ/A6N4+JAT2kKzc24H0t22RZo59ElG4/E/G81pE3kv3KH9J1yuqA==
+  dependencies:
+    "@interchainjs/encoding" "1.11.9"
+    "@interchainjs/math" "1.11.9"
+    "@interchainjs/utils" "1.11.9"
+    "@noble/hashes" "^1"
+    bn.js "^5.2.0"
+    elliptic "^6.5.4"
+    libsodium-wrappers-sumo "^0.7.11"
+
 "@interchainjs/encoding@1.11.5":
   version "1.11.5"
   resolved "https://registry.yarnpkg.com/@interchainjs/encoding/-/encoding-1.11.5.tgz#706e06fa86079c7a07dad9356d2c4681f61465f3"
@@ -2265,10 +2321,27 @@
     bech32 "^1.1.4"
     readonly-date "^1.0.0"
 
+"@interchainjs/encoding@1.11.9":
+  version "1.11.9"
+  resolved "https://registry.yarnpkg.com/@interchainjs/encoding/-/encoding-1.11.9.tgz#2cad3a34580a4cc31748c778be4d84b6e0309c89"
+  integrity sha512-4MuMqC1Tu3vCxSqJgrcQg1AiyUEcwq4iOlHnao7G9exKWC7VIyUo62yN0WssUTvWtEwHYxRbOpIPtsqhdCkznA==
+  dependencies:
+    "@interchainjs/math" "1.11.9"
+    base64-js "^1.3.0"
+    bech32 "^1.1.4"
+    readonly-date "^1.0.0"
+
 "@interchainjs/math@1.11.5":
   version "1.11.5"
   resolved "https://registry.yarnpkg.com/@interchainjs/math/-/math-1.11.5.tgz#7eb6d8add418de754db382f7d09e952cd4ee0654"
   integrity sha512-w4n3w7QIrIFZe2AL24OIuhwsO3ArLkRWmBbduZvoRzEi2cG2gfBvrCLtIJisyp2j/w4T80EeP0E+uQqne9Mn7A==
+  dependencies:
+    bn.js "^5.2.0"
+
+"@interchainjs/math@1.11.9":
+  version "1.11.9"
+  resolved "https://registry.yarnpkg.com/@interchainjs/math/-/math-1.11.9.tgz#a9c5556886c89b8a7af12b33d6363a086cf2796b"
+  integrity sha512-wsbBRSeYbsinNlIaWRzqunQypFgaheV/UNbn/H+0qhajj8lDGeTvQtRFURd6rgWF6FznUbs5b07w+nJ7CDSOwA==
   dependencies:
     bn.js "^5.2.0"
 
@@ -2282,6 +2355,17 @@
     "@interchainjs/encoding" "1.11.5"
     "@interchainjs/math" "1.11.5"
     "@interchainjs/types" "1.11.5"
+
+"@interchainjs/pubkey@1.11.9":
+  version "1.11.9"
+  resolved "https://registry.yarnpkg.com/@interchainjs/pubkey/-/pubkey-1.11.9.tgz#1b17d474276d28834bc8aa149671d7d23816f036"
+  integrity sha512-IqNC/1xK64rkH4CBJQLG9VT677qOhjyEoU9fpLzuQlI1Xr6rS97el/6VgIJ/XT7EU6+qnUXevw6j8lsHRUoXEA==
+  dependencies:
+    "@interchainjs/amino" "1.11.9"
+    "@interchainjs/cosmos-types" "1.11.9"
+    "@interchainjs/encoding" "1.11.9"
+    "@interchainjs/math" "1.11.9"
+    "@interchainjs/types" "1.11.9"
 
 "@interchainjs/types@0.0.1-alpha.31":
   version "0.0.1-alpha.31"
@@ -2297,10 +2381,17 @@
   dependencies:
     decimal.js "^10.4.3"
 
-"@interchainjs/types@1.11.5", "@interchainjs/types@^1.11.5":
+"@interchainjs/types@1.11.5":
   version "1.11.5"
   resolved "https://registry.yarnpkg.com/@interchainjs/types/-/types-1.11.5.tgz#ce5adac1fccf8f3f26cabf0ef4cb5bc7de3888b5"
   integrity sha512-cH2mb7bfuEfY2iyA2ITZjYNI7vyHdMWhybAuM2XzYh5xvtyujmQZPQhqDFZoy89qaMYbtIAPaZR8vlOBSCBhMQ==
+  dependencies:
+    decimal.js "^10.4.3"
+
+"@interchainjs/types@1.11.9":
+  version "1.11.9"
+  resolved "https://registry.yarnpkg.com/@interchainjs/types/-/types-1.11.9.tgz#3c41eb3b11f6cefc7a1df3f07dee7fe8afb1e46e"
+  integrity sha512-5G546AwLkUjeYOV0lug3HI9eY4zlnCdMDvojQ2vmQMYsuN1WkE0rKWhektguGFx5YHA9tn8MqgD4gMOsHqqa4A==
   dependencies:
     decimal.js "^10.4.3"
 
@@ -2333,6 +2424,15 @@
   integrity sha512-1otzjx72Gku1JuFGX5RWVn7yv49MlR85SNoOcyhzYoLFAyokW6lGejyMiXCJef7FAzwkkFIOVjwdCB5cjBqCuw==
   dependencies:
     "@interchainjs/types" "1.11.5"
+    bech32 "^2.0.0"
+    decimal.js "^10.4.3"
+
+"@interchainjs/utils@1.11.9":
+  version "1.11.9"
+  resolved "https://registry.yarnpkg.com/@interchainjs/utils/-/utils-1.11.9.tgz#48b609f1cf24d4c144625c00c15587b65c495d67"
+  integrity sha512-dT/58D0yms9+Os8m+tOPiQisbAShvzoNCvlm02kf8oPwHKkD48O7X/eU0G8Uioi1QEU3PDI41/Up10WfUWwWAw==
+  dependencies:
+    "@interchainjs/types" "1.11.9"
     bech32 "^2.0.0"
     decimal.js "^10.4.3"
 
@@ -6947,7 +7047,7 @@ base-x@^5.0.0:
   resolved "https://registry.yarnpkg.com/base-x/-/base-x-5.0.1.tgz#16bf35254be1df8aca15e36b7c1dda74b2aa6b03"
   integrity sha512-M7uio8Zt++eg3jPj+rHMfCC+IuygQHHCOU+IYsVtik6FWjuYpVt/+MRKcgsAMHh8mMFAwnB+Bs+mTrFiXjMzKg==
 
-base64-js@^1.3.0, base64-js@^1.3.1:
+base64-js@^1.3.0, base64-js@^1.3.1, base64-js@^1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
@@ -9744,6 +9844,20 @@ interchainjs@1.11.5, interchainjs@^1.9.16:
     "@interchainjs/pubkey" "1.11.5"
     "@interchainjs/types" "1.11.5"
     "@interchainjs/utils" "1.11.5"
+    "@noble/hashes" "^1.3.1"
+    decimal.js "^10.4.3"
+
+interchainjs@1.11.9:
+  version "1.11.9"
+  resolved "https://registry.yarnpkg.com/interchainjs/-/interchainjs-1.11.9.tgz#df5af88dbdecdbed1bd9410ccb0b6049a84c4fbd"
+  integrity sha512-QniZ6owRIQi7ZV3ZVGYZsWJP4dJX/HLq24v9jVREzfD/vUSruY34rSXU1Tv1VcjiyyKgeW4picneg56p4X4sGw==
+  dependencies:
+    "@interchainjs/cosmos" "1.11.9"
+    "@interchainjs/cosmos-types" "1.11.9"
+    "@interchainjs/encoding" "1.11.9"
+    "@interchainjs/pubkey" "1.11.9"
+    "@interchainjs/types" "1.11.9"
+    "@interchainjs/utils" "1.11.9"
     "@noble/hashes" "^1.3.1"
     decimal.js "^10.4.3"
 

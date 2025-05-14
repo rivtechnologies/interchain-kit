@@ -2,7 +2,7 @@ import { Algo, Wallet, WcEventTypes, WcProviderEventType } from '../types/wallet
 import { BaseWallet } from "./base-wallet";
 import { WalletAccount, SignOptions, DirectSignDoc, BroadcastMode, SignType } from "../types";
 import { PairingTypes, SessionTypes, SignClientTypes } from '@walletconnect/types';
-import { Buffer } from 'buffer'
+import { fromByteArray, toByteArray } from 'base64-js';
 import {
   AminoGenericOfflineSigner,
   DirectGenericOfflineSigner,
@@ -180,17 +180,19 @@ export class WCWallet extends BaseWallet {
       accounts = this.provider.session.namespaces[chain.chainType].accounts
     }
 
+    const account = await this.getCosmosAccount(chainId)
+
     return {
-      address: accounts[0]?.split(':').pop(),
+      address: account.address,
       algo: 'secp256k1',
-      pubkey: null,
+      pubkey: toByteArray(account.pubkey),
       username: '',
       isNanoLedger: null,
       isSmartContract: null
     }
   }
 
-  async getCosmosAccount(chainId: string): Promise<WalletAccount> {
+  async getCosmosAccount(chainId: string): Promise<{ address: string, algo: Algo, pubkey: string }> {
 
     try {
 

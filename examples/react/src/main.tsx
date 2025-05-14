@@ -135,7 +135,7 @@ const HOLESKY_TESTNET = {
 
 const _chains = [
   ...chains.filter((c) => chainNames.includes(c.chainName)),
-  createChainFromEthereumChainInfo(bscethertestnet),
+  // createChainFromEthereumChainInfo(bscethertestnet),
   // createChainFromEthereumChainInfo(goerliethereumtestnet),
   // createChainFromEthereumChainInfo(sepoliaEthereumTestNet),
   // createChainFromEthereumChainInfo(HOLESKY_TESTNET),
@@ -149,7 +149,7 @@ const _chains = [
 // const _chains = [starshipChain1]
 const _assetLists = [
   ...assetLists.filter((a) => chainNames.includes(a.chainName)),
-  createAssetListFromEthereumChainInfo(bscethertestnet),
+  // createAssetListFromEthereumChainInfo(bscethertestnet),
   // createAssetListFromEthereumChainInfo(goerliethereumtestnet),
   // createAssetListFromEthereumChainInfo(sepoliaEthereumTestNet),
   // createAssetListFromEthereumChainInfo(HOLESKY_TESTNET),
@@ -176,20 +176,20 @@ if (isInstanceOf(keplrWallet, ExtensionWallet)) {
 const _wallets: BaseWallet[] = [
   // mock1Wallet,
   // mock2Wallet,
-  keplrWallet,
-  leapWallet,
+  // keplrWallet,
+  // leapWallet,
   // cosmostationWallet,
   // stationWallet,
   // galaxyStationWallet,
   // walletConnect,
   // ledgerWallet,
   // cosmosExtensionMetaMask,
-  // walletConnect,
+  walletConnect,
   // ledgerWallet,
   // leapCosmosExtensionMetaMask,
   // compassWallet,
   // trustWallet,
-  metaMaskWallet,
+  // metaMaskWallet,
   // okxWallet,
   // xdefiWallet,
   // exodusWallet,

@@ -45,6 +45,7 @@
     "@walletconnect/sign-client": "^2.19.1",
     "@walletconnect/types": "^2.19.1",
     "@walletconnect/universal-provider": "^2.19.1",
+    "base64-js": "^1.5.1",
     "bowser": "^2.11.0",
     "buffer": "^6.0.3",
     "interchainjs": "1.11.9",
