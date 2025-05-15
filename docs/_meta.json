@@ -1,7 +1,8 @@
 {
   "index": "Introduction",
   "installation": "Installation",
-  "quickstart": "Quick Start",
+  "quick-start": "Quick Start",
   "usage": "Usage",
-  "configuration": "Configuration"
+  "configuration": "Configuration",
+  "adding-new-wallets": "Adding New Wallets"
 }
