@@ -23,7 +23,6 @@ export class WCMobileWebWallet extends WCWallet {
   }
 
   async init() {
-    this.walletConnectData = await getWCInfoByProjectId(this.info.walletconnect.projectId)
     await super.init()
 
     this.provider.on('display_uri', async (uri: string) => {
@@ -33,6 +32,7 @@ export class WCMobileWebWallet extends WCWallet {
   }
 
   async connect() {
+    this.walletConnectData = await getWCInfoByProjectId(this.info.walletconnect.projectId)
     await this.navigateToDappBrowserLink()
     await super.connect('')
   }
