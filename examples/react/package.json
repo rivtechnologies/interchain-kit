@@ -39,7 +39,7 @@
     "@interchain-kit/ledger": "^0.3.25",
     "@interchain-kit/mock-wallet": "^0.3.25",
     "@interchain-kit/ninji-extension": "^0.3.25",
-    "@interchain-kit/okx-extension": "^0.3.24",
+    "@interchain-kit/okx-extension": "^0.3.25",
     "@interchain-kit/react": "^0.3.25",
     "@interchain-kit/shell-extension": "^0.3.25",
     "@interchain-kit/trust-extension": "^0.3.25",
