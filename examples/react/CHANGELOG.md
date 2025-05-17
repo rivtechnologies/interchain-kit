@@ -11,6 +11,10 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 **Note:** Version bump only for package @interchain-kit/react-examples
 
+## [0.3.25](https://github.com/hyperweb-io/interchain-kit/compare/@interchain-kit/react-examples@0.3.25...@interchain-kit/react-examples@0.3.25) (2025-05-17)
+
+**Note:** Version bump only for package @interchain-kit/react-examples
+
 ## [0.3.25](https://github.com/hyperweb-io/interchain-kit/compare/@interchain-kit/react-examples@0.3.24...@interchain-kit/react-examples@0.3.25) (2025-05-16)
 
 **Note:** Version bump only for package @interchain-kit/react-examples
