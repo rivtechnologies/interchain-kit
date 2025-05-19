@@ -6,8 +6,8 @@ export class WCMobileWebWallet extends WCWallet {
   walletConnectData: any
 
   async navigateWalletConnectLink(uri: string) {
-    const appUrl = this.walletConnectData.mobile.native || this.walletConnectData.mobile.universal
-    const wcUrl = this.info.walletConnectLink?.android?.replace('{wc-uri}', encodeURIComponent(uri)).replace('{app-url}', appUrl)
+    // const appUrl = this.walletConnectData.mobile.native || this.walletConnectData.mobile.universal
+    const wcUrl = this.info.walletConnectLink?.android?.replace('{wc-uri}', encodeURIComponent(uri))
 
     if (wcUrl) {
       // window.open(wcUrl, '_blank')
@@ -23,8 +23,8 @@ export class WCMobileWebWallet extends WCWallet {
   }
 
   async init() {
+    // this.walletConnectData = await getWCInfoByProjectId(this.info.walletconnect.projectId)
     await super.init()
-
     this.provider.on('display_uri', async (uri: string) => {
       await this.navigateWalletConnectLink(uri)
       await this.navigateToDappBrowserLink()
@@ -32,7 +32,6 @@ export class WCMobileWebWallet extends WCWallet {
   }
 
   async connect() {
-    this.walletConnectData = await getWCInfoByProjectId(this.info.walletconnect.projectId)
     await this.navigateToDappBrowserLink()
     await super.connect('')
   }
