@@ -2,7 +2,8 @@ import { Wallet } from "@interchain-kit/core";
 import { ICON } from "./constant";
 
 export const cosmostationExtensionInfo: Wallet = {
-  windowKey: 'cosmostation.providers.keplr',
+  windowKey: 'cosmostation',
+  cosmosKey: 'cosmostation.providers.keplr',
   ethereumKey: 'cosmostation.ethereum',
   walletIdentifyKey: 'cosmostation',
   name: 'cosmostation-extension',

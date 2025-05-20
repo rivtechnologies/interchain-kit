@@ -6,6 +6,7 @@ export const shellExtensionInfo: Wallet = {
     name: 'shell-extension',
     prettyName: 'Shell',
     windowKey: 'shellwallet',
+    cosmosKey: 'shellwallet',
     walletIdentifyKey: 'shellwallet',
     logo: ICON,
     mode: 'extension',

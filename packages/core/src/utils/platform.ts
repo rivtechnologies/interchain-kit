@@ -1,3 +1,4 @@
+import { Wallet } from "../types";
 import { BaseWallet, ExtensionWallet, WCMobileWebWallet } from "../wallets";
 
 export const isMobile = () => {
@@ -18,18 +19,22 @@ export const isIOS = () => {
   return /iPad|iPhone|iPod/.test(userAgent);
 }
 
-export type PlatformTypes = 'mobile-web' | 'web'
+export type PlatformTypes = 'inAppBrowser' | 'mobileBrowser' | 'desktopBrowser'
 
-export type PlatformWalletMap = {
-  'mobile-web': WCMobileWebWallet
-  'web': ExtensionWallet
-}
+
+export type PlatformWallet = WCMobileWebWallet | ExtensionWallet
+
+export type PlatformWalletMap = Record<PlatformTypes, PlatformWallet>
 
 export const selectWalletByPlatform = (
-  walletPlatformMap: PlatformWalletMap
+  walletPlatformMap: PlatformWalletMap, walletInfo: Wallet
 ): BaseWallet => {
   if (isMobile()) {
-    return walletPlatformMap['mobile-web']
+    if ((window as any)[walletInfo.windowKey]) {
+      return walletPlatformMap['inAppBrowser']
+    } else {
+      return walletPlatformMap['mobileBrowser']
+    }
   }
-  return walletPlatformMap['web']
+  return walletPlatformMap['desktopBrowser']
 };

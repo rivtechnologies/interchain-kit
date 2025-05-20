@@ -8,8 +8,9 @@ web.setNetworkWallet('cosmos', new CosmosWallet(keplrExtensionInfo))
 web.setNetworkWallet('eip155', new EthereumWallet(keplrExtensionInfo))
 
 const keplrWallet = selectWalletByPlatform({
-  'mobile-web': new WCMobileWebWallet(keplrExtensionInfo),
-  'web': web
-})
+  mobileBrowser: new WCMobileWebWallet(keplrExtensionInfo),
+  inAppBrowser: web,
+  desktopBrowser: web,
+}, keplrExtensionInfo)
 
 export { keplrWallet }

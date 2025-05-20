@@ -3,7 +3,7 @@ import { Wallet } from '@interchain-kit/core';
 import { ICON } from './constant';
 
 export const MetaMaskExtensionInfo: Wallet = {
-  windowKey: '',
+  windowKey: 'ethereum',
   ethereumKey: 'ethereum',
   walletIdentifyKey: 'ethereum.isMetaMask',
   name: 'metamask-extension',

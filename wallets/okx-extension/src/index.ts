@@ -7,8 +7,9 @@ web.setNetworkWallet('cosmos', new CosmosWallet(OkxwalletExtensionInfo))
 web.setNetworkWallet('eip155', new EthereumWallet(OkxwalletExtensionInfo))
 
 const okxWallet = selectWalletByPlatform({
-    'web': web,
-    'mobile-web': new WCMobileWebWallet(OkxwalletExtensionInfo),
-})
+    mobileBrowser: new WCMobileWebWallet(OkxwalletExtensionInfo),
+    inAppBrowser: web,
+    desktopBrowser: web,
+}, OkxwalletExtensionInfo)
 
 export { okxWallet }

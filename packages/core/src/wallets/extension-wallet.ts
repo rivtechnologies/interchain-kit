@@ -5,7 +5,7 @@ import { MultiChainWallet } from "./multichain-wallet";
 
 export class ExtensionWallet extends MultiChainWallet {
   async init() {
-    const walletIdentify = await getClientFromExtension(this.info.walletIdentifyKey)
+    const walletIdentify = await getClientFromExtension(this.info.windowKey)
     if (!walletIdentify) {
       throw clientNotExistError
     }

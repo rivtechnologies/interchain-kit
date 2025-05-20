@@ -24,13 +24,14 @@ class LeapCosmosWallet extends CosmosWallet {
 
 
 const web = new ExtensionWallet(leapExtensionInfo);
-web.setNetworkWallet('cosmos', new LeapCosmosWallet(leapExtensionInfo))
+web.setNetworkWallet('cosmos', new CosmosWallet(leapExtensionInfo))
 web.setNetworkWallet('eip155', new EthereumWallet(leapExtensionInfo))
 
 
 const leapWallet = selectWalletByPlatform({
-  'mobile-web': new WCMobileWebWallet(leapExtensionInfo),
-  'web': web
-})
+  mobileBrowser: new WCMobileWebWallet(leapExtensionInfo),
+  inAppBrowser: web,
+  desktopBrowser: web,
+}, leapExtensionInfo)
 
 export { leapWallet }

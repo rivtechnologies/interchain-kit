@@ -3,6 +3,7 @@ import { ICON } from "./constant";
 
 export const compassExtensionInfo: Wallet = {
   windowKey: 'compass',
+  cosmosKey: 'compass',
   name: 'compass-extension',
   prettyName: 'Compass',
   mode: 'extension',
