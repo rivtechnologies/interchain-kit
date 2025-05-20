@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/shell-extension",
-  "version": "0.3.27",
+  "version": "0.3.28",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector",
   "main": "index.js",
@@ -32,7 +32,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@interchain-kit/core": "^0.3.27"
+    "@interchain-kit/core": "^0.3.28"
   },
   "gitHead": "1e4dcb1ced38979946277016daa66a6ab7585f9b"
 }
