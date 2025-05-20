@@ -3,7 +3,6 @@ import { ICON } from "./constant";
 
 export const frontierExtensionInfo: Wallet = {
   windowKey: 'frontier',
-  cosmosKey: 'frontier',
   name: 'frontier-extension',
   prettyName: 'Frontier',
   logo: ICON,

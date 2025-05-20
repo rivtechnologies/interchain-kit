@@ -2,8 +2,7 @@ import { Wallet } from "@interchain-kit/core";
 import { ICON } from "./constant";
 
 export const Coin98ExtensionInfo: Wallet = {
-  windowKey: 'coin98',
-  cosmosKey: 'coin98.cosmos',
+  windowKey: 'coin98.cosmos',
   ethereumKey: 'ethereum',
   walletIdentifyKey: 'ethereum.isCoin98',
   name: 'coin98-extension',

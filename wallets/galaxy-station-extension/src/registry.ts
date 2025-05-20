@@ -3,7 +3,6 @@ import { ICON } from "./constant";
 
 export const galaxyStationExtensionInfo: Wallet = {
   windowKey: 'galaxyStation',
-  cosmosKey: 'galaxyStation',
   name: 'galaxy-station-extension',
   prettyName: 'Galaxy Station',
   logo: ICON,

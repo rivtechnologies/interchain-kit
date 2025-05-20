@@ -4,7 +4,6 @@ import { ICON } from "./constant";
 
 export const exodusExtensionInfo: Wallet = {
     windowKey: 'exodus',
-    cosmosKey: 'exodus',
     walletIdentifyKey: 'exodus.ethereum.isExodus',
     ethereumKey: 'exodus.ethereum',
     name: 'exodus-extension',

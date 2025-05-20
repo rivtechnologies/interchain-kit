@@ -2,8 +2,7 @@ import { Wallet } from "@interchain-kit/core";
 import { ICON } from "./constant";
 
 export const stationExtensionInfo: Wallet = {
-  windowKey: 'station',
-  cosmosKey: 'station.keplr',
+  windowKey: 'station.keplr',
   walletIdentifyKey: 'station._pendingRequests',
   name: 'station-extension',
   prettyName: 'Station',

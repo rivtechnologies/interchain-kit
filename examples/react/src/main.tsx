@@ -49,8 +49,8 @@ import { create } from "domain";
 
 const chainNames: string[] = [
   // "injectivetestnet",
-  "osmosistestnet",
-  // "osmosis",
+  // "osmosistestnet",
+  "osmosis",
   // "juno",
   // "cosmoshub",
   // "stargaze",
@@ -189,8 +189,8 @@ const _wallets: BaseWallet[] = [
   // leapCosmosExtensionMetaMask,
   // compassWallet,
   // trustWallet,
-  metaMaskWallet,
-  // okxWallet,
+  // metaMaskWallet,
+  okxWallet,
   // xdefiWallet,
   // exodusWallet,
   // coin98Wallet,

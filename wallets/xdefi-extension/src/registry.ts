@@ -4,8 +4,7 @@ import { ICON } from './constant';
 export const xdefiExtensionInfo: Wallet = {
   name: 'xdefi-extension',
   prettyName: 'XDEFI',
-  windowKey: 'xfi',
-  cosmosKey: 'xfi.keplr',
+  windowKey: 'xfi.keplr',
   walletIdentifyKey: 'xfi.keplr.isXDEFI',
   ethereumKey: 'xfi.ethereum',
   logo: ICON,

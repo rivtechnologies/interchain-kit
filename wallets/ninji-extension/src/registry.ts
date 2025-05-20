@@ -3,7 +3,6 @@ import { ICON } from "./constant";
 
 export const ninjiExtensionInfo: Wallet = {
     name: 'ninji-extension',
-    cosmosKey: 'ninji',
     prettyName: 'Ninji',
     windowKey: 'ninji',
     walletIdentifyKey: 'ninji',
