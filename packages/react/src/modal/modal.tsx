@@ -83,6 +83,10 @@ export const InterchainWalletModal = () => {
     getEnv,
   } = useWalletManager();
 
+  const [selectedWallet, setSelectedWallet] = useState<StatefulWallet | null>(
+    null
+  );
+
   const walletsForUI = statefulWallets.map((w) => transferToWalletUISchema(w));
 
   const chainNameToConnect = currentChainName || chains[0].chainName;
@@ -95,15 +99,20 @@ export const InterchainWalletModal = () => {
     (w) => w.info.name === currentWalletName
   );
 
+  const walletToShow = selectedWallet || currentWallet;
+
   const { account, errorMessage } =
-    getChainWalletState(currentWalletName, currentChainName) ||
-    ({} as ChainWalletState);
+    getChainWalletState(
+      selectedWallet?.info?.name || currentWalletName,
+      currentChainName
+    ) || ({} as ChainWalletState);
 
   const disconnect = () => {
-    currentWallet.disconnect(chainToConnect.chainId);
+    walletToShow.disconnect(chainToConnect.chainId);
   };
 
   const onSelectWallet = (wallet: StatefulWallet) => {
+    setSelectedWallet(wallet);
     setShouldShowList(false);
     return wallet.connect(chainToConnect.chainId);
   };
@@ -129,17 +138,17 @@ export const InterchainWalletModal = () => {
       close={handleCloseModal}
       wallets={walletsForUI}
       walletConnectQRCodeUri={walletConnectQRCodeUri}
-      currentWallet={currentWallet}
-      isConnecting={currentWallet?.walletState === WalletState.Connecting}
-      isConnected={currentWallet?.walletState === WalletState.Connected}
-      isRejected={currentWallet?.walletState === WalletState.Rejected}
-      isDisconnected={currentWallet?.walletState === WalletState.Disconnected}
-      isNotExist={currentWallet?.walletState === WalletState.NotExist}
+      currentWallet={walletToShow}
+      isConnecting={walletToShow?.walletState === WalletState.Connecting}
+      isConnected={walletToShow?.walletState === WalletState.Connected}
+      isRejected={walletToShow?.walletState === WalletState.Rejected}
+      isDisconnected={walletToShow?.walletState === WalletState.Disconnected}
+      isNotExist={walletToShow?.walletState === WalletState.NotExist}
       errorMessage={errorMessage}
       onSelectWallet={(w) => onSelectWallet(w)}
       onBack={() => setShouldShowList(true)} // Add other required props with appropriate default or mock values
-      onReconnect={() => onSelectWallet(currentWallet)}
-      getDownloadLink={() => getDownloadLink(currentWallet?.info.name)}
+      onReconnect={() => onSelectWallet(walletToShow)}
+      getDownloadLink={() => getDownloadLink(walletToShow?.info.name)}
       getEnv={getEnv}
     />
   );
@@ -168,6 +177,11 @@ export const WalletModal = ({
   getDownloadLink,
   getEnv,
 }: InterchainWalletModalProps) => {
+  console.log({
+    name: currentWallet?.info.name,
+    status: currentWallet?.walletState,
+  });
+
   const { header, content } = useMemo(() => {
     if (
       shouldShowList ||
@@ -181,14 +195,6 @@ export const WalletModal = ({
             wallets={wallets}
           />
         ),
-      };
-    }
-    if (currentWallet && currentWallet.errorMessage) {
-      return {
-        header: (
-          <ErrorHeader wallet={currentWallet} close={close} onBack={onBack} />
-        ),
-        content: <ErrorContent wallet={currentWallet} onBack={onBack} />,
       };
     }
     if (
@@ -237,6 +243,14 @@ export const WalletModal = ({
         ),
       };
     }
+    if (currentWallet && currentWallet.errorMessage) {
+      return {
+        header: (
+          <ErrorHeader wallet={currentWallet} close={close} onBack={onBack} />
+        ),
+        content: <ErrorContent wallet={currentWallet} onBack={onBack} />,
+      };
+    }
     if (currentWallet && isConnected) {
       return {
         header: (
@@ -275,13 +289,14 @@ export const WalletModal = ({
       ),
     };
   }, [
-    currentWallet,
+    currentWallet?.info?.name,
     isConnected,
     isConnecting,
     address,
     shouldShowList,
     walletConnectQRCodeUri,
     wallets,
+    isOpen,
   ]);
 
   return (

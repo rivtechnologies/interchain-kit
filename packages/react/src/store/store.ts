@@ -192,6 +192,17 @@ export const createInterchainStore = (walletManager: WalletManager) => {
           return cws
         })
 
+        draft.chainWalletState.forEach(cws => {
+
+          const lastExistWallet = draft.wallets.find(w => w.info.name === cws.walletName)
+          if (cws.walletState === WalletState.Connected && lastExistWallet.walletState !== WalletState.Connected) {
+            lastExistWallet.walletState = WalletState.Connected
+          }
+          if (cws.walletState === WalletState.NotExist) {
+            lastExistWallet.walletState = WalletState.NotExist
+          }
+        })
+
         draft.isReady = true
       })
     },
@@ -309,6 +320,12 @@ export const createInterchainStore = (walletManager: WalletManager) => {
       }
       if (!chain) {
         throw new Error(`Chain ${chainName} not found`)
+      }
+
+      const existedAccount = get().chainWalletState.find(cws => cws.walletName === walletName && cws.chainName === chainName)?.account
+
+      if (existedAccount) {
+        return existedAccount
       }
 
       return wallet.getAccount(chain.chainId)

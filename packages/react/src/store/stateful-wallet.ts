@@ -6,6 +6,7 @@ import { Chain } from "@chain-registry/v2-types"
 export class StatefulWallet extends BaseWallet {
   originalWallet: BaseWallet
   walletName: string
+  walletState: WalletState
   walletSet: (arg: (draft: StatefulWallet) => void) => void
   walletGet: () => StatefulWallet
   set: (arg: (draft: InterchainStore) => void) => void
@@ -65,6 +66,7 @@ export class StatefulWallet extends BaseWallet {
 
     walletSet(draft => {
       draft.walletState = WalletState.Connecting
+      draft.errorMessage = ''
     })
     get().updateChainWalletState(walletName, chainToConnect.chainName, { walletState: WalletState.Connecting, errorMessage: '' })
     try {
@@ -107,7 +109,9 @@ export class StatefulWallet extends BaseWallet {
     const chainToConnect = this.getChainToConnect(chainId)
 
     try {
-      await originalWallet.disconnect(chainToConnect.chainId)
+      if (this.walletGet().walletState === WalletState.Connected) {
+        await originalWallet.disconnect(chainToConnect.chainId)
+      }
       get().updateChainWalletState(walletName, chainToConnect.chainName, { walletState: WalletState.Disconnected, account: null })
       walletSet(draft => {
         draft.walletState = WalletState.Disconnected

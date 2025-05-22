@@ -7,7 +7,7 @@ import { IGenericOfflineSigner } from "@interchainjs/types";
 export abstract class BaseWallet {
   info: Wallet
   errorMessage: string
-  walletState: WalletState
+  // walletState: WalletState
   events: EventEmitter<WalletEvents> = new EventEmitter()
   chainMap: Map<Chain['chainId'], Chain> = new Map()
   assetLists: AssetList[] = []
