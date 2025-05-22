@@ -5,6 +5,7 @@ export const ninjiExtensionInfo: Wallet = {
     name: 'ninji-extension',
     prettyName: 'Ninji',
     windowKey: 'ninji',
+    cosmosKey: 'ninji',
     walletIdentifyKey: 'ninji',
     logo: ICON,
     mode: 'extension',

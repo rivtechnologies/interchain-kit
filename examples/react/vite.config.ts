@@ -22,7 +22,7 @@ export default defineConfig({
   },
   server: {
     // host: '3ac5-36-229-52-247.ngrok-free.app',
-    allowedHosts: ['2967-240e-3a1-4a71-c511-6913-b49-3ae-2e84.ngrok-free.app'],
+    allowedHosts: ['hyperweb-wallet.hyperweb.dpdns.org'],
     host: '0.0.0.0',
     port: 5173,
     hmr: true

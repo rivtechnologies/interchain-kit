@@ -7,6 +7,7 @@ export const FinExtensionInfo: Wallet = {
     prettyName: 'Fin',
     mode: 'extension',
     windowKey: 'fin',
+    cosmosKey: 'fin',
     walletIdentifyKey: 'fin',
 
     downloads: [

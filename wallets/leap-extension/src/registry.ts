@@ -4,8 +4,9 @@ import { ICON } from "./constant";
 
 export const leapExtensionInfo: Wallet = {
   windowKey: 'leap',
-  walletIdentifyKey: 'leap.ethereum.isLeap',
+  cosmosKey: 'leap',
   ethereumKey: 'leap.ethereum',
+  walletIdentifyKey: 'leap.ethereum.isLeap',
   name: 'leap-extension',
   prettyName: 'Leap',
   logo: ICON,

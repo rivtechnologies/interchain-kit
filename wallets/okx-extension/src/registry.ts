@@ -3,7 +3,8 @@ import { ICON } from "./constant";
 
 
 export const OkxwalletExtensionInfo: Wallet = {
-  windowKey: 'okxwallet.keplr',
+  windowKey: 'okxwallet',
+  cosmosKey: 'okxwallet.keplr',
   ethereumKey: 'okxwallet',
   walletIdentifyKey: 'okxwallet.isOkxWallet',
   name: 'okxwallet-extension',

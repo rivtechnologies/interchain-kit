@@ -4,6 +4,7 @@ import { ICON } from './constant';
 
 export const keplrExtensionInfo: Wallet = {
   windowKey: 'keplr',
+  cosmosKey: 'keplr',
   ethereumKey: 'keplr.ethereum',
   walletIdentifyKey: 'keplr.ethereum.isKeplr',
   name: 'keplr-extension',

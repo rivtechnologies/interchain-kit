@@ -177,11 +177,6 @@ export const WalletModal = ({
   getDownloadLink,
   getEnv,
 }: InterchainWalletModalProps) => {
-  console.log({
-    name: currentWallet?.info.name,
-    status: currentWallet?.walletState,
-  });
-
   const { header, content } = useMemo(() => {
     if (
       shouldShowList ||

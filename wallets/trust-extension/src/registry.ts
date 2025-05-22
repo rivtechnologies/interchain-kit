@@ -2,7 +2,8 @@ import { Wallet } from "@interchain-kit/core";
 import { ICON } from "./constant";
 
 export const trustExtensionInfo: Wallet = {
-  windowKey: 'trustWallet.cosmos',
+  windowKey: 'trustWallet',
+  cosmosKey: 'trustWallet.cosmos',
   ethereumKey: 'trustWallet',
   name: 'trust-extension',
   prettyName: 'Trust',

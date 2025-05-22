@@ -22,7 +22,7 @@ export class CosmosWallet extends BaseWallet {
 
   async init(): Promise<void> {
     try {
-      this.client = await getClientFromExtension(this.info.windowKey)
+      this.client = await getClientFromExtension(this.info.cosmosKey)
     } catch (error) {
       this.errorMessage = (error as any).message
       throw error

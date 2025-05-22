@@ -16,7 +16,7 @@ export class WCMobileWebWallet extends WCWallet {
     }
 
     if (wcUrl) {
-      window.open(wcUrl, '_blank')
+      window.open(wcUrl, "_blank", "noopener,noreferrer")
     }
   }
 
@@ -24,7 +24,8 @@ export class WCMobileWebWallet extends WCWallet {
     if (!this.info.dappBrowserLink) {
       return
     }
-    window.location.href = this.info.dappBrowserLink(window.location.href)
+    const link = this.info.dappBrowserLink(window.location.href)
+    window.open(link, "_blank", "noopener,noreferrer")
   }
 
   async init() {
