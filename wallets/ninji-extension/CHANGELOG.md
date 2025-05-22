@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.30](https://github.com/interchain-kit/ninji-extension/compare/@interchain-kit/ninji-extension@0.3.29...@interchain-kit/ninji-extension@0.3.30) (2025-05-22)
+
+**Note:** Version bump only for package @interchain-kit/ninji-extension
+
 ## [0.3.29](https://github.com/interchain-kit/ninji-extension/compare/@interchain-kit/ninji-extension@0.3.28...@interchain-kit/ninji-extension@0.3.29) (2025-05-22)
 
 **Note:** Version bump only for package @interchain-kit/ninji-extension

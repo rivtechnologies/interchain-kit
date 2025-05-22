@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.30](https://github.com/hyperweb-io/interchain-kit/compare/@interchain-kit/react-examples@0.3.29...@interchain-kit/react-examples@0.3.30) (2025-05-22)
+
+**Note:** Version bump only for package @interchain-kit/react-examples
+
 ## [0.3.29](https://github.com/hyperweb-io/interchain-kit/compare/@interchain-kit/react-examples@0.3.28...@interchain-kit/react-examples@0.3.29) (2025-05-22)
 
 **Note:** Version bump only for package @interchain-kit/react-examples
