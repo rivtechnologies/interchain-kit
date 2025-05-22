@@ -12,7 +12,7 @@ describe("ExtensionWallet", () => {
 
     beforeEach(() => {
         extensionWallet = new ExtensionWallet({
-            walletIdentifyKey: "test-key",
+            windowKey: "test-key",
             name: "Test Wallet",
             mode: 'extension',
             prettyName: "Test Pretty Wallet",

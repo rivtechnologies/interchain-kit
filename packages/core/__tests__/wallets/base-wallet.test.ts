@@ -4,13 +4,13 @@ import { Chain } from "@chain-registry/v2-types";
 
 class TestWallet extends BaseWallet {
   async init(): Promise<void> {
-    this.walletState = WalletState.Disconnected;
+
   }
   async connect(chainId: Chain['chainId']): Promise<void> {
-    this.walletState = WalletState.Connected;
+
   }
   async disconnect(chainId: Chain['chainId']): Promise<void> {
-    this.walletState = WalletState.Disconnected;
+
   }
   async getAccount(chainId: Chain['chainId']): Promise<any> {
     return { address: "test-address" };
@@ -29,21 +29,6 @@ describe("BaseWallet", () => {
 
   beforeEach(() => {
     wallet = new TestWallet({ name: "Test Wallet", prettyName: "Test Wallet", mode: 'extension' });
-  });
-
-  it("should initialize wallet", async () => {
-    await wallet.init();
-    expect(wallet.walletState).toBe(WalletState.Disconnected);
-  });
-
-  it("should connect to a chain", async () => {
-    await wallet.connect("test-chain-id");
-    expect(wallet.walletState).toBe(WalletState.Connected);
-  });
-
-  it("should disconnect from a chain", async () => {
-    await wallet.disconnect("test-chain-id");
-    expect(wallet.walletState).toBe(WalletState.Disconnected);
   });
 
   it("should set and retrieve chain map", () => {

@@ -19,6 +19,7 @@ describe('CosmosWallet', () => {
     beforeEach(() => {
         wallet = new CosmosWallet({
             windowKey: 'keplr',
+            cosmosKey: 'keplr',
             name: 'cosmosTestWallet',
             mode: 'extension',
             prettyName: 'Cosmos Test Wallet',
