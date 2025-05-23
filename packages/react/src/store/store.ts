@@ -361,24 +361,20 @@ export const createInterchainStore = (walletManager: WalletManager) => {
       const chain = get().chains.find(c => c.chainName === chainName)
       const wallet = get().getStatefulWalletByName(walletName)
 
-      const walletToUse = wallet.originalWallet as CosmosWallet
-
-      console.log(await get().getAccount(walletName, chainName))
-
       const preferSignType = get().getPreferSignType(chainName)
       let offlineSigner: IGenericOfflineSigner
       if (preferSignType === 'amino') {
         offlineSigner = new AminoGenericOfflineSigner({
           getAccounts: async () => [await get().getAccount(walletName, chainName)],
           signAmino(signerAddress, signDoc) {
-            return walletToUse.signAmino(chain.chainId, signerAddress, signDoc, walletToUse.defaultSignOptions)
+            return wallet.executeSpecificWalletMethod(CosmosWallet, (wallet) => wallet.signAmino(chain.chainId, signerAddress, signDoc, wallet.defaultSignOptions))
           },
         }) as IGenericOfflineSigner
       } else if (preferSignType === 'direct') {
         offlineSigner = new DirectGenericOfflineSigner({
           getAccounts: async () => [await get().getAccount(walletName, chainName)],
           signDirect(signerAddress, signDoc) {
-            return walletToUse.signDirect(chain.chainId, signerAddress, signDoc, walletToUse.defaultSignOptions)
+            return wallet.executeSpecificWalletMethod(CosmosWallet, (wallet) => wallet.signDirect(chain.chainId, signerAddress, signDoc, wallet.defaultSignOptions))
           }
         }) as IGenericOfflineSigner
       }

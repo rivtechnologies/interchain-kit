@@ -1,5 +1,5 @@
 
-import { BaseWallet, WalletAccount, WalletState, WCWallet } from "@interchain-kit/core"
+import { BaseWallet, CosmosWallet, EthereumWallet, ExtensionWallet, WalletAccount, WalletState, WCWallet } from "@interchain-kit/core"
 import { InterchainStore } from "./store"
 import { Chain } from "@chain-registry/v2-types"
 
@@ -143,5 +143,31 @@ export class StatefulWallet extends BaseWallet {
   }
   getChainById(chainId: Chain["chainId"]): Chain {
     return this.originalWallet.getChainById(chainId)
+  }
+  executeSpecificWalletMethod<T, R>(
+    WalletClass: new (...args: any[]) => T,
+    callback: (wallet: T) => R
+  ): R | undefined {
+    if (this.originalWallet instanceof WalletClass) {
+      return callback(this.originalWallet as T)
+    }
+    if (this.originalWallet instanceof WCWallet) {
+      return callback(this.originalWallet as T)
+    }
+    if (this.originalWallet instanceof ExtensionWallet) {
+      if (WalletClass === CosmosWallet) {
+        const cosmosWallet = this.originalWallet.getWalletByChainType('cosmos')
+        if (cosmosWallet) {
+          return callback(cosmosWallet as T)
+        }
+      }
+      if (WalletClass === EthereumWallet) {
+        const ethereumWallet = this.originalWallet.getWalletByChainType('eip155')
+        if (ethereumWallet) {
+          return callback(ethereumWallet as T)
+        }
+      }
+    }
+    return undefined
   }
 }
