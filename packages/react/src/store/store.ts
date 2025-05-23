@@ -1,13 +1,14 @@
 import { SigningClient } from '@interchainjs/cosmos/signing-client';
 import { AssetList, Chain } from "@chain-registry/v2-types"
-import { BaseWallet, clientNotExistError, EndpointOptions, Endpoints, SignerOptions, SignType, WalletAccount, WalletManager, WalletState } from "@interchain-kit/core"
+import { BaseWallet, clientNotExistError, CosmosWallet, EndpointOptions, Endpoints, SignerOptions, SignType, WalletAccount, WalletManager, WalletState } from "@interchain-kit/core"
 import { SigningOptions as InterchainSigningOptions } from '@interchainjs/cosmos/types/signing-client';
-import { HttpEndpoint } from '@interchainjs/types';
+import { HttpEndpoint, IGenericOfflineSigner } from '@interchainjs/types';
 import { createStore } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { dedupeAsync } from '../utils';
 import { StatefulWallet } from './stateful-wallet';
+import { AminoGenericOfflineSigner, DirectGenericOfflineSigner, ICosmosGenericOfflineSigner } from '@interchainjs/cosmos/types/wallet';
 
 const immerSyncUp = (newWalletManager: WalletManager) => {
   return (draft: { chains: Chain[]; assetLists: AssetList[]; wallets: BaseWallet[]; signerOptions: SignerOptions; endpointOptions: EndpointOptions; signerOptionMap: Record<string, InterchainSigningOptions>; endpointOptionsMap: Record<string, Endpoints>; preferredSignTypeMap: Record<string, SignType>; }) => {
@@ -135,7 +136,6 @@ export const createInterchainStore = (walletManager: WalletManager) => {
 
     init: async () => {
       const oldChainWalletStatesMap = new Map(get().chainWalletState.map(cws => [cws.walletName + cws.chainName, cws]))
-
       // get().createStatefulWallet()
 
       // should remove wallet that already disconnected ,for hydrain back from localstorage
@@ -325,6 +325,12 @@ export const createInterchainStore = (walletManager: WalletManager) => {
       const existedAccount = get().chainWalletState.find(cws => cws.walletName === walletName && cws.chainName === chainName)?.account
 
       if (existedAccount) {
+
+        if (typeof existedAccount.pubkey === 'object') {
+          // return from localstorage need to restructure to uinit8Array
+          return { ...existedAccount, pubkey: Uint8Array.from({ ...existedAccount.pubkey, length: Object.keys(existedAccount.pubkey).length }) }
+        }
+
         return existedAccount
       }
 
@@ -351,17 +357,41 @@ export const createInterchainStore = (walletManager: WalletManager) => {
     getDownloadLink(walletName) {
       return walletManager.getDownloadLink(walletName)
     },
-    getOfflineSigner(walletName, chainName) {
-      return walletManager.getOfflineSigner(walletName, chainName)
+    async getOfflineSigner(walletName, chainName) {
+      const chain = get().chains.find(c => c.chainName === chainName)
+      const wallet = get().getStatefulWalletByName(walletName)
+
+      const walletToUse = wallet.originalWallet as CosmosWallet
+
+      console.log(await get().getAccount(walletName, chainName))
+
+      const preferSignType = get().getPreferSignType(chainName)
+      let offlineSigner: IGenericOfflineSigner
+      if (preferSignType === 'amino') {
+        offlineSigner = new AminoGenericOfflineSigner({
+          getAccounts: async () => [await get().getAccount(walletName, chainName)],
+          signAmino(signerAddress, signDoc) {
+            return walletToUse.signAmino(chain.chainId, signerAddress, signDoc, walletToUse.defaultSignOptions)
+          },
+        }) as IGenericOfflineSigner
+      } else if (preferSignType === 'direct') {
+        offlineSigner = new DirectGenericOfflineSigner({
+          getAccounts: async () => [await get().getAccount(walletName, chainName)],
+          signDirect(signerAddress, signDoc) {
+            return walletToUse.signDirect(chain.chainId, signerAddress, signDoc, walletToUse.defaultSignOptions)
+          }
+        }) as IGenericOfflineSigner
+      }
+      return offlineSigner
     },
     getPreferSignType(chainName) {
       const result = walletManager.getPreferSignType(chainName)
-      set(immerSyncUp(walletManager))
+      // set(immerSyncUp(walletManager))
       return result
     },
     getSignerOptions(chainName) {
       const result = walletManager.getSignerOptions(chainName)
-      set(immerSyncUp(walletManager))
+      // set(immerSyncUp(walletManager))
       return result
     },
     getWalletByName(walletName) {
@@ -371,7 +401,16 @@ export const createInterchainStore = (walletManager: WalletManager) => {
       return get().wallets.find(w => w.info.name === walletName)
     },
     async getSigningClient(walletName, chainName): Promise<SigningClient> {
-      return walletManager.getSigningClient(walletName, chainName)
+
+      const chainWalletState = get().getChainWalletState(walletName, chainName)
+
+      const signerOptions = await get().getSignerOptions(chainName)
+
+      const offlineSigner = await get().getOfflineSigner(walletName, chainName) as ICosmosGenericOfflineSigner
+
+      const signingClient = await SigningClient.connectWithSigner(chainWalletState.rpcEndpoint, offlineSigner, signerOptions)
+      return signingClient
+
     },
     getEnv() {
       return walletManager.getEnv()

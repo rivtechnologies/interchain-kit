@@ -3,7 +3,7 @@ import { useAsync } from "./useAsync"
 import { WalletState } from "@interchain-kit/core"
 
 export const useSigningClient = (chainName: string, walletName: string) => {
-  const { getSigningClient, getChainWalletState, getRpcEndpoint } = useWalletManager()
+  const { getSigningClient, getChainWalletState, getRpcEndpoint, isReady } = useWalletManager()
 
   const chainWalletState = getChainWalletState(walletName, chainName)
 
@@ -16,7 +16,7 @@ export const useSigningClient = (chainName: string, walletName: string) => {
         return getSigningClient(walletName, chainName)
       }
     },
-    enabled: chainWalletState?.walletState === WalletState.Connected,
+    enabled: chainWalletState?.walletState === WalletState.Connected && isReady,
     disableCache: true,
   })
 

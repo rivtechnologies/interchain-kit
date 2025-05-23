@@ -247,7 +247,8 @@ export class WalletManager {
     const rpcEndpoint = await this.getRpcEndpoint(walletName, chainName)
     const offlineSigner = await this.getOfflineSigner(walletName, chainName) as ICosmosGenericOfflineSigner
     const signerOptions = await this.getSignerOptions(chainName)
-    return SigningClient.connectWithSigner(rpcEndpoint, offlineSigner, signerOptions)
+    const signingClient = await SigningClient.connectWithSigner(rpcEndpoint, offlineSigner, signerOptions)
+    return signingClient
   }
 
   getEnv() {

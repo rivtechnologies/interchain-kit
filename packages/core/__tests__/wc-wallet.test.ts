@@ -5,6 +5,31 @@ import { Chain } from '@chain-registry/v2-types';
 
 jest.mock('@walletconnect/universal-provider');
 
+const localStorageMock: Storage = (() => {
+    let store: { [key: string]: string } = {};
+    return {
+        getItem: (key: string): string | null => store[key] || null,
+        setItem: (key: string, value: string): void => {
+            store[key] = value;
+        },
+        removeItem: (key: string): void => {
+            delete store[key];
+        },
+        clear: (): void => {
+            store = {};
+        },
+        key: (index: number): string | null => Object.keys(store)[index] || null,
+        length: 0,
+    };
+})();
+
+Object.defineProperties(global, {
+    localStorage: {
+        value: localStorageMock,
+        writable: true
+    }
+})
+
 describe('WCWallet', () => {
     let wallet: WCWallet;
 

@@ -62,8 +62,12 @@ export class WCWallet extends BaseWallet {
       }
     }
 
+    const savedStringifySession = localStorage.getItem('wc-session')
+    const savedSession = savedStringifySession ? JSON.parse(savedStringifySession) : undefined
+
+
     // this.signClient = await SignClient.init({ ...defaultOption, ...this.walletConnectOption })
-    this.provider = await UniversalProvider.init({ ...defaultOption, ...this.walletConnectOption })
+    this.provider = await UniversalProvider.init({ ...defaultOption, ...this.walletConnectOption, session: savedSession })
     this.bindingEvent()
   }
 
@@ -132,6 +136,8 @@ export class WCWallet extends BaseWallet {
       this.pairingUri = null
 
       this.onPairingUriCreated && this.onPairingUriCreated(null)
+
+      localStorage.setItem('wc-session', JSON.stringify(this.session))
     } catch (error) {
       console.log('wc connect error', error)
       throw error
@@ -142,6 +148,7 @@ export class WCWallet extends BaseWallet {
     // await this.provider.client.session.delete(this.provider?.session?.topic, { code: 6000, message: 'user disconnect!!' })
     this.session = null
     await this.provider.disconnect()
+    localStorage.removeItem('wc-session')
     // this.provider.client.pairing.delete(this.pairingToConnect.topic, { code: 6000, message: 'user disconnect!!' })
     // await this.provider.client.disconnect({ topic: this.sessionToConnect.topic, reason: { code: 6000, message: 'user disconnect!!' } })
     // await this.provider.client.pairing.delete(this.pairingToConnect.topic, { code: 6000, message: 'user disconnect!!' })
@@ -272,10 +279,8 @@ export class WCWallet extends BaseWallet {
       signerAddress: signer,
       signDoc: {
         chainId: signDoc.chainId,
-        bodyBytes: Buffer.from(signDoc.bodyBytes).toString('base64'),
-        authInfoBytes: Buffer.from(signDoc.authInfoBytes).toString(
-          'base64'
-        ),
+        bodyBytes: fromByteArray(signDoc.bodyBytes),
+        authInfoBytes: fromByteArray(signDoc.authInfoBytes),
         accountNumber: signDoc.accountNumber.toString(),
       },
     };
@@ -313,11 +318,13 @@ export class WCWallet extends BaseWallet {
 
     this.provider.on("session_delete", (error: { message: string; code: number }) => {
       console.log("session_delete:", event);
+      localStorage.removeItem('wc-session')
     });
 
     this.provider.on("session_event", (error: { message: string; code: number }) => {
       console.log("session_event:", event);
     });
+
 
 
     this.provider.on('session_request', (error: { message: string; code: number }) => {
