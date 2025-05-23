@@ -36,12 +36,12 @@
     "@chain-registry/v2-types": "^0.53.40",
     "@interchain-kit/core": "^0.3.30",
     "@interchain-ui/react": "1.26.1",
-    "@interchainjs/cosmos": "1.11.9",
-    "@interchainjs/cosmos-types": "1.11.9",
-    "@interchainjs/types": "1.11.9",
+    "@interchainjs/cosmos": "1.11.11",
+    "@interchainjs/cosmos-types": "1.11.11",
+    "@interchainjs/types": "1.11.11",
     "@react-icons/all-files": "^4.1.0",
     "@walletconnect/types": "^2.17.3",
-    "interchainjs": "1.11.9",
+    "interchainjs": "1.11.11",
     "zustand": "^5.0.3"
   },
   "devDependencies": {
