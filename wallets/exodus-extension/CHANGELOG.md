@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.31](https://github.com/interchain-kit/exodus-extension/compare/@interchain-kit/exodus-extension@0.3.30...@interchain-kit/exodus-extension@0.3.31) (2025-05-23)
+
+**Note:** Version bump only for package @interchain-kit/exodus-extension
+
 ## [0.3.30](https://github.com/interchain-kit/exodus-extension/compare/@interchain-kit/exodus-extension@0.3.29...@interchain-kit/exodus-extension@0.3.30) (2025-05-22)
 
 **Note:** Version bump only for package @interchain-kit/exodus-extension
