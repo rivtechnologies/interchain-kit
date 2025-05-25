@@ -1,5 +1,4 @@
 import { ConnectModalHead, ConnectModalStatus } from "@interchain-ui/react";
-import { useWalletModal } from "../provider";
 import { BaseWallet } from "@interchain-kit/core";
 
 export const ConnectingHeader = ({

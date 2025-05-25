@@ -34,6 +34,12 @@ export class WCWallet extends BaseWallet {
 
   onPairingUriCreated: (uri: string) => void
 
+  accountToRestore: WalletAccount | null = null
+
+  setAccountToRestore(account: WalletAccount) {
+    this.accountToRestore = account
+  }
+
   constructor(option?: Wallet, walletConnectOption?: SignClientTypes.Options) {
     const defaultWalletConnectOption: Wallet = {
       name: 'WalletConnect',
@@ -179,12 +185,9 @@ export class WCWallet extends BaseWallet {
   }
 
   async getAccount(chainId: Chain['chainId']): Promise<WalletAccount> {
-    const chain = this.getChainById(chainId)
 
-    let accounts: string[] = []
-
-    if (this.provider.session) {
-      accounts = this.provider.session.namespaces[chain.chainType].accounts
+    if (this.accountToRestore) {
+      return this.accountToRestore
     }
 
     const account = await this.getCosmosAccount(chainId)
@@ -215,7 +218,6 @@ export class WCWallet extends BaseWallet {
         pubkey: pubkey,
       }
     } catch (error) {
-      this.errorMessage = (error as any).message
       console.log('get cosmos account error', error)
       throw error
     }

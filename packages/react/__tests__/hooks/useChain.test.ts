@@ -5,7 +5,7 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useChain } from '../../src/hooks/useChain';
 import { useWalletManager } from '../../src/hooks/useWalletManager';
-import { ChainNameNotExist, ChainNotExist, WalletState } from '@interchain-kit/core';
+import { ChainNameNotExist, WalletState } from '@interchain-kit/core';
 import { ChainWalletState, InterchainStore } from '../../src/store';
 import { MockWallet } from '../helpers/mock-wallet';
 import { StatefulWallet } from '../../src/store/stateful-wallet';
@@ -21,7 +21,7 @@ describe('useChain', () => {
 
   const mockWallet = new MockWallet({ name: 'test-wallet', mode: 'extension', prettyName: 'Test Wallet' });
 
-  const statefulWallet = new StatefulWallet(mockWallet, () => { }, () => ({} as StatefulWallet), () => { }, () => ({} as InterchainStore),)
+  const statefulWallet = new StatefulWallet(mockWallet, () => ({} as InterchainStore))
 
 
   const mockWalletManager: jest.Mocked<InterchainStore> = {
@@ -58,8 +58,8 @@ describe('useChain', () => {
     getAccount: jest.fn(),
     getEnv: jest.fn(),
     getDownloadLink: jest.fn(),
+    setWalletConnectQRCodeUri: jest.fn(),
     isReady: true,
-    createStatefulWallet: jest.fn(),
     modalIsOpen: false, openModal: jest.fn(), closeModal: jest.fn(), getStatefulWalletByName: jest.fn(),
   }
 

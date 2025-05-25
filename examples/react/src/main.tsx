@@ -49,8 +49,8 @@ import { create } from "domain";
 
 const chainNames: string[] = [
   // "injectivetestnet",
-  // "osmosistestnet",
-  "osmosis",
+  "osmosistestnet",
+  // "osmosis",
   // "juno",
   // "cosmoshub",
   // "stargaze",
@@ -220,7 +220,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             };
           },
           preferredSignType: (chainName) => {
-            return chainName === "osmosistestnet" ? "direct" : "amino";
+            return chainName === "osmosistestnet" ? "amino" : "direct";
           },
         }}
         endpointOptions={{

@@ -2,17 +2,11 @@
  * @jest-environment jsdom
  */
 
-import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import {
-  InterchainWalletModalProps,
-  WalletModal,
-  WalletModalProps,
-} from "../../src/modal/modal";
-import { BaseWallet } from "@interchain-kit/core";
+import { InterchainWalletModalProps, WalletModal } from "../../src/modal/modal";
 import "@testing-library/jest-dom";
 import { transferToWalletUISchema } from "../../src/utils";
-import { MockStatefulWallet, MockWallet } from "../helpers/mock-wallet";
+import { MockWallet } from "../helpers/mock-wallet";
 import { StatefulWallet } from "../../src/store/stateful-wallet";
 import { InterchainStore } from "../../src/store";
 
@@ -24,9 +18,6 @@ describe("WalletModal", () => {
   });
   const statefulWallet = new StatefulWallet(
     mockWallet,
-    () => {},
-    () => ({} as StatefulWallet),
-    () => {},
     () => ({} as InterchainStore)
   );
   const mockProps: InterchainWalletModalProps = {

@@ -42,14 +42,6 @@ describe('CosmosWallet', () => {
         expect(wallet.client).toBe(mockClient);
     });
 
-    it('should throw an error if initialization fails', async () => {
-        const errorMessage = 'Failed to get client';
-        (getClientFromExtension as jest.Mock).mockRejectedValue(new Error(errorMessage));
-
-        await expect(wallet.init()).rejects.toThrow(errorMessage);
-        expect(wallet.errorMessage).toBe(errorMessage);
-    });
-
     it('should connect to a chain', async () => {
         const mockClient = { enable: jest.fn() };
         wallet.client = mockClient;

@@ -1,55 +1,99 @@
 
-import { BaseWallet, CosmosWallet, EthereumWallet, ExtensionWallet, WalletAccount, WalletState, WCWallet } from "@interchain-kit/core"
+import { BaseWallet, clientNotExistError, CosmosWallet, EthereumWallet, ExtensionWallet, WalletAccount, WalletState, WCWallet } from "@interchain-kit/core"
 import { InterchainStore } from "./store"
 import { Chain } from "@chain-registry/v2-types"
 
 export class StatefulWallet extends BaseWallet {
   originalWallet: BaseWallet
   walletName: string
-  walletState: WalletState
-  walletSet: (arg: (draft: StatefulWallet) => void) => void
-  walletGet: () => StatefulWallet
-  set: (arg: (draft: InterchainStore) => void) => void
   get: () => InterchainStore
-
 
   constructor(
     wallet: BaseWallet,
-    walletSet: (arg: (draft: StatefulWallet) => void) => void,
-    walletGet: () => StatefulWallet,
-    set: (arg: (draft: InterchainStore) => void) => void,
     get: () => InterchainStore
   ) {
     super(wallet.info)
     this.originalWallet = wallet
     this.walletName = wallet.info.name
-    this.walletState = WalletState.Disconnected
-    this.errorMessage = ""
-
-    this.walletSet = walletSet
-    this.walletGet = walletGet
-    this.set = set
     this.get = get
   }
 
-  getChainToConnect(chainId?: Chain["chainId"]): Chain {
-    const { currentChainName, chains } = this.get()
-    const lastChainName = currentChainName
-    const lastChain = chains.find((chain) => chain.chainName === lastChainName)
-    return chainId ? this.originalWallet.getChainById(chainId) : lastChain
+  get store(): InterchainStore {
+    return this.get();
+  }
+
+  get walletState(): WalletState {
+    // 獲取此錢包在所有鏈上的狀態
+    const states = (this.store.chainWalletState || [])
+      .filter(cws => cws.walletName === this.walletName)
+      .map(cws => cws.walletState);
+
+    // If any chain is in the connected state, return connected
+    if (states.includes(WalletState.Connected)) {
+      return WalletState.Connected;
+    }
+
+    // 如果有任何一個鏈正在連接中，則返回連接中
+    if (states.includes(WalletState.Connecting)) {
+      return WalletState.Connecting;
+    }
+
+    // 如果所有鏈都是不存在狀態，則返回不存在
+    if (states.length > 0 && states.every(state => state === WalletState.NotExist)) {
+      return WalletState.NotExist;
+    }
+
+    // 如果有任何一個鏈是被拒絕狀態，則返回被拒絕
+    if (states.includes(WalletState.Rejected)) {
+      return WalletState.Rejected;
+    }
+
+    // 預設返回未連接
+    return WalletState.Disconnected;
+  }
+
+  get errorMessage(): string {
+    // 獲取此錢包在所有鏈上的錯誤訊息
+    const errors = (this.store.chainWalletState || [])
+      .filter(cws => cws.walletName === this.walletName)
+      .map(cws => cws.errorMessage)
+      .filter(error => error && error.trim() !== '');
+
+    // 返回第一個非空錯誤訊息，如果沒有則返回空字串
+    return errors.length > 0 ? errors[0] : '';
   }
 
   async init(): Promise<void> {
-    return this.originalWallet.init()
+    try {
+      await this.originalWallet.init()
+      this.store.chains.forEach(chain => {
+        const lastChainWalletState = this.store.getChainWalletState(this.walletName, chain.chainName)?.walletState
+        if (lastChainWalletState === WalletState.NotExist) {
+          this.store.updateChainWalletState(this.walletName, chain.chainName, {
+            walletState: WalletState.Disconnected,
+            errorMessage: ''
+          });
+        }
+      });
+    } catch (error) {
+      if (error === clientNotExistError) {
+        this.store.chains.forEach(chain => {
+          this.store.updateChainWalletState(this.walletName, chain.chainName, {
+            walletState: WalletState.NotExist,
+            errorMessage: clientNotExistError.message
+          });
+        })
+      }
+    }
   }
 
   async connect(chainId: Chain["chainId"]): Promise<void> {
 
-    const { get, set, walletName, walletGet, walletSet, originalWallet } = this
+    const { store, walletName, originalWallet } = this
 
-    const chainToConnect = this.getChainToConnect(chainId)
+    const chainToConnect = this.getChainById(chainId)
 
-    const state = get().getChainWalletState(walletName, chainToConnect.chainName)?.walletState
+    const state = store.getChainWalletState(walletName, chainToConnect.chainName)?.walletState
     if (state === WalletState.NotExist) {
       return
     }
@@ -58,75 +102,56 @@ export class StatefulWallet extends BaseWallet {
       return
     }
 
-    set(draft => {
-      draft.currentChainName = chainToConnect.chainName
-      draft.currentWalletName = walletName
-      draft.walletConnectQRCodeUri = ''
-    })
+    store.setCurrentChainName(chainToConnect.chainName)
+    store.setCurrentWalletName(walletName)
+    store.setWalletConnectQRCodeUri('')
 
-    walletSet(draft => {
-      draft.walletState = WalletState.Connecting
-      draft.errorMessage = ''
-    })
-    get().updateChainWalletState(walletName, chainToConnect.chainName, { walletState: WalletState.Connecting, errorMessage: '' })
+    store.updateChainWalletState(walletName, chainToConnect.chainName, { walletState: WalletState.Connecting, errorMessage: '' })
     try {
 
       if (originalWallet instanceof WCWallet) {
         originalWallet.setOnPairingUriCreatedCallback((uri) => {
-          set(draft => {
-            draft.walletConnectQRCodeUri = uri
-          })
+          store.setWalletConnectQRCodeUri(uri)
         })
       }
 
       await originalWallet.connect(chainToConnect.chainId)
 
-      get().updateChainWalletState(walletName, chainToConnect.chainName, { walletState: WalletState.Connected })
-      walletSet(draft => {
-        draft.walletState = WalletState.Connected
-      })
+      store.updateChainWalletState(walletName, chainToConnect.chainName, { walletState: WalletState.Connected })
 
-      await walletGet().getAccount(chainToConnect.chainId)
+      await this.getAccount(chainToConnect.chainId)
     } catch (error) {
-      if ((error as any).message === 'Request rejected') {
-        get().updateChainWalletState(walletName, chainToConnect.chainName, { walletState: WalletState.Rejected, errorMessage: (error as any).message })
-        walletSet(draft => {
-          draft.walletState = WalletState.Rejected
-          draft.errorMessage = (error as any).message
-        })
+      if ((error as any).message.includes('rejected')) {
+        store.updateChainWalletState(walletName, chainToConnect.chainName, { walletState: WalletState.Rejected, errorMessage: (error as any).message })
         return
+      } else {
+        store.updateChainWalletState(walletName, chainToConnect.chainName, { walletState: WalletState.Disconnected, errorMessage: (error as any).message })
       }
-      get().updateChainWalletState(walletName, chainToConnect.chainName, { walletState: WalletState.Disconnected, errorMessage: (error as any).message })
-      walletSet(draft => {
-        draft.walletState = WalletState.Disconnected
-        draft.errorMessage = (error as any).message
-      })
     }
   }
   async disconnect(chainId: Chain["chainId"]) {
-    const { get, walletName, walletSet, originalWallet } = this
+    const { store, walletName, originalWallet } = this
 
-    const chainToConnect = this.getChainToConnect(chainId)
+    const chainToConnect = this.getChainById(chainId)
 
     try {
-      if (this.walletGet().walletState === WalletState.Connected) {
+      if (this.walletState === WalletState.Connected) {
         await originalWallet.disconnect(chainToConnect.chainId)
       }
-      get().updateChainWalletState(walletName, chainToConnect.chainName, { walletState: WalletState.Disconnected, account: null })
-      walletSet(draft => {
-        draft.walletState = WalletState.Disconnected
-        draft.errorMessage = ""
-      })
+      store.updateChainWalletState(walletName, chainToConnect.chainName, { walletState: WalletState.Disconnected, account: null })
     } catch (error) {
 
     }
   }
   async getAccount(chainId: Chain["chainId"]): Promise<WalletAccount> {
-    const chainToConnect = this.getChainToConnect(chainId)
-    const { get, walletName, originalWallet } = this
+    const chainToConnect = this.getChainById(chainId)
+    const { store, walletName, originalWallet } = this
     try {
       const account = await originalWallet.getAccount(chainToConnect.chainId)
-      get().updateChainWalletState(walletName, chainToConnect.chainName, { account })
+      store.updateChainWalletState(walletName, chainToConnect.chainName, { account })
+      if (this.originalWallet instanceof WCWallet) {
+        this.originalWallet.setAccountToRestore(account)
+      }
       return account
     } catch (error) {
       console.log(error)

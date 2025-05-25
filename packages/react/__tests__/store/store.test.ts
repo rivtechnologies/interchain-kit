@@ -278,9 +278,20 @@ describe('InterchainStore', () => {
     expect(chainWalletState).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
+          account: undefined,
           chainName: 'chain1',
           walletName: 'wallet1',
+          errorMessage: 'Client not exist',
+          rpcEndpoint: '',
           walletState: WalletState.NotExist,
+        }),
+        expect.objectContaining({
+          account: undefined,
+          chainName: "chain1",
+          walletName: "WalletConnect",
+          errorMessage: "",
+          rpcEndpoint: "",
+          walletState: "Disconnected"
         }),
       ])
     );
@@ -313,12 +324,18 @@ describe('InterchainStore', () => {
     expect(chainWalletState).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
+          account: undefined,
           chainName: 'chain1',
+          errorMessage: 'Client not exist',
+          rpcEndpoint: '',
           walletName: 'wallet1',
           walletState: WalletState.NotExist,
         }),
         expect.objectContaining({
+          account: undefined,
           chainName: 'chain1',
+          errorMessage: '',
+          rpcEndpoint: '',
           walletName: 'WalletConnect',
           walletState: WalletState.Disconnected,
         }),
@@ -329,17 +346,37 @@ describe('InterchainStore', () => {
   it('should set wallet state to Disconnected for wallets that not exist before', async () => {
     useStore.getState().updateChainWalletState('wallet1', 'chain1', { walletState: WalletState.NotExist });
 
-    (walletManager.wallets[0].init as jest.Mock).mockResolvedValueOnce(undefined);
+    (walletManager.wallets[0].init as jest.Mock).mockResolvedValue({});
 
     await useStore.getState().init();
     const chainWalletState = useStore.getState().chainWalletState;
 
+    // expect(chainWalletState).toEqual(
+    //   expect.arrayContaining([
+    //     expect.objectContaining({
+    //       chainName: 'chain1',
+    //       walletName: 'wallet1',
+    //       walletState: WalletState.Disconnected,
+    //     }),
+    //   ])
+    // );
     expect(chainWalletState).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          chainName: 'chain1',
-          walletName: 'wallet1',
-          walletState: WalletState.Disconnected,
+          account: undefined,
+          chainName: "chain1",
+          errorMessage: "",
+          rpcEndpoint: "",
+          walletName: "wallet1",
+          walletState: "Disconnected"
+        }),
+        expect.objectContaining({
+          account: undefined,
+          chainName: "chain1",
+          errorMessage: "",
+          rpcEndpoint: "",
+          walletName: "WalletConnect",
+          walletState: "Disconnected"
         }),
       ])
     );

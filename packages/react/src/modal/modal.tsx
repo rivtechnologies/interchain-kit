@@ -83,7 +83,7 @@ export const InterchainWalletModal = () => {
     getEnv,
   } = useWalletManager();
 
-  const [selectedWallet, setSelectedWallet] = useState<StatefulWallet | null>(
+  const [walletToConnect, setWalletToConnect] = useState<StatefulWallet | null>(
     null
   );
 
@@ -99,11 +99,11 @@ export const InterchainWalletModal = () => {
     (w) => w.info.name === currentWalletName
   );
 
-  const walletToShow = selectedWallet || currentWallet;
+  const walletToShow = walletToConnect || currentWallet;
 
   const { account, errorMessage } =
     getChainWalletState(
-      selectedWallet?.info?.name || currentWalletName,
+      walletToConnect?.info?.name || currentWalletName,
       currentChainName
     ) || ({} as ChainWalletState);
 
@@ -112,7 +112,7 @@ export const InterchainWalletModal = () => {
   };
 
   const onSelectWallet = (wallet: StatefulWallet) => {
-    setSelectedWallet(wallet);
+    setWalletToConnect(wallet);
     setShouldShowList(false);
     return wallet.connect(chainToConnect.chainId);
   };

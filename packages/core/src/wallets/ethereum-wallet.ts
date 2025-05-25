@@ -12,12 +12,7 @@ export class EthereumWallet extends BaseWallet {
   isSwitchingNetwork: boolean = false
 
   async init(): Promise<void> {
-    try {
-      this.ethereum = await getClientFromExtension(this.info.ethereumKey)
-    } catch (error) {
-      this.errorMessage = (error as any).message
-      throw error
-    }
+    this.ethereum = await getClientFromExtension(this.info.ethereumKey)
   }
   async connect(chainId: Chain["chainId"]): Promise<void> {
     let chainIdToHex = chainId.startsWith("0x") ? chainId : "0x" + parseInt(chainId, 10).toString(16);

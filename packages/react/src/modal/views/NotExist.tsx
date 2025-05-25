@@ -1,20 +1,19 @@
 import { ConnectModalHead, ConnectModalStatus } from "@interchain-ui/react";
-import { useWalletManager } from "../../hooks"; // replace with the actual path
-import { useWalletModal } from "../provider";
-import { BaseWallet, DownloadInfo } from "@interchain-kit/core";
+import { DownloadInfo } from "@interchain-kit/core";
 import { useMemo } from "react";
 import { FaAndroid } from "@react-icons/all-files/fa/FaAndroid";
 import { GoDesktopDownload } from "@react-icons/all-files/go/GoDesktopDownload";
 import { GrFirefox } from "@react-icons/all-files/gr/GrFirefox";
 import { RiAppStoreFill } from "@react-icons/all-files/ri/RiAppStoreFill";
 import { RiChromeFill } from "@react-icons/all-files/ri/RiChromeFill";
+import { StatefulWallet } from "../../store/stateful-wallet";
 
 export const NotExistHeader = ({
   wallet,
   close,
   onBack,
 }: {
-  wallet: BaseWallet;
+  wallet: StatefulWallet;
   close: () => void;
   onBack: () => void;
 }) => {
@@ -34,7 +33,7 @@ export const NotExistContent = ({
   getDownloadLink,
   getEnv,
 }: {
-  wallet: BaseWallet;
+  wallet: StatefulWallet;
   getDownloadLink: (walletName: string) => DownloadInfo;
   getEnv: () => { browser?: string; device?: string; os?: string };
 }) => {

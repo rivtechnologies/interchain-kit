@@ -21,7 +21,7 @@ describe("useChainWallet", () => {
 
     const mockWallet = new MockWallet({ name: 'test-wallet', mode: 'extension', prettyName: 'Test Wallet' });
 
-    const statefulWallet = new StatefulWallet(mockWallet, () => { }, () => ({} as StatefulWallet), () => { }, () => ({} as InterchainStore))
+    const statefulWallet = new StatefulWallet(mockWallet, () => ({} as InterchainStore))
 
     const mockWalletManager: jest.Mocked<InterchainStore> = {
         chains: [{ chainName: 'test-chain', chainType: 'cosmos' as const }],
@@ -58,8 +58,8 @@ describe("useChainWallet", () => {
         getEnv: jest.fn(),
         getDownloadLink: jest.fn(),
         isReady: true,
-        createStatefulWallet: jest.fn(),
         modalIsOpen: false, openModal: jest.fn(), closeModal: jest.fn(), getStatefulWalletByName: jest.fn(),
+        setWalletConnectQRCodeUri: jest.fn(),
     }
 
     beforeEach(() => {

@@ -21,18 +21,14 @@ export class CosmosWallet extends BaseWallet {
   }
 
   async init(): Promise<void> {
-    try {
-      this.client = await getClientFromExtension(this.info.cosmosKey)
-    } catch (error) {
-      this.errorMessage = (error as any).message
-      throw error
-    }
+    this.client = await getClientFromExtension(this.info.cosmosKey)
   }
+
   async connect(chainId: string): Promise<void> {
     try {
       await this.client.enable(chainId)
     } catch (error) {
-      if ((error as any).message !== `Request rejected`) {
+      if (!(error as any).message.includes(`rejected`)) {
         await this.addSuggestChain(chainId)
       } else {
         throw error

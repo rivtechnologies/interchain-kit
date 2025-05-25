@@ -6,7 +6,7 @@ import { HttpEndpoint, IGenericOfflineSigner } from '@interchainjs/types';
 import { createStore } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { persist, createJSONStorage } from 'zustand/middleware'
-import { dedupeAsync } from '../utils';
+import { dedupeAsync, restoreAccountFromLocalStorage } from '../utils';
 import { StatefulWallet } from './stateful-wallet';
 import { AminoGenericOfflineSigner, DirectGenericOfflineSigner, ICosmosGenericOfflineSigner } from '@interchainjs/cosmos/types/wallet';
 
@@ -47,8 +47,8 @@ export interface InterchainStore extends WalletManager {
   getDraftChainWalletState: (state: InterchainStore, walletName: string, chainName: string) => ChainWalletState
   getChainWalletState: (walletName: string, chainName: string) => ChainWalletState | undefined
   updateChainWalletState: (walletName: string, chainName: string, data: Partial<ChainWalletState>) => void
-  createStatefulWallet: () => void
   getStatefulWalletByName: (walletName: string) => StatefulWallet | undefined
+  setWalletConnectQRCodeUri: (uri: string) => void
 }
 
 export type InterchainStoreData = {
@@ -67,14 +67,7 @@ export const createInterchainStore = (walletManager: WalletManager) => {
     currentChainName: '',
     chains: [...walletManager.chains],
     assetLists: [...walletManager.assetLists],
-    wallets: walletManager.wallets.map(wallet => {
-
-      const walletSet = (fn: (wallet: StatefulWallet) => void) => {
-        set((draft) => fn(draft.wallets.find(w => w.info.name === wallet.info.name)!));
-      };
-
-      return new StatefulWallet(wallet, walletSet, () => get().wallets.find(w => w.info.name === wallet.info.name), set, get)
-    }),
+    wallets: walletManager.wallets.map(wallet => new StatefulWallet(wallet, get)),
     signerOptions: walletManager.signerOptions,
     endpointOptions: walletManager.endpointOptions,
 
@@ -106,33 +99,7 @@ export const createInterchainStore = (walletManager: WalletManager) => {
       })
     },
 
-    createStatefulWallet: () => {
-      const wallets = walletManager.wallets.map(wallet => {
 
-        const walletSet = (fn: (wallet: StatefulWallet) => void) => {
-          set((draft) => fn(draft.wallets.find(w => w.info.name === wallet.info.name)!));
-        };
-
-        return new StatefulWallet(wallet, walletSet, () => get().wallets.find(w => w.info.name === wallet.info.name), set, get)
-      })
-      set(draft => {
-        draft.wallets = wallets
-      })
-
-      const defaultWalletStates = get().chainWalletState.reduce((acc, cws) => {
-        if (acc[cws.walletName] && cws.walletState === WalletState.Connected) {
-          return acc
-        }
-        return { ...acc, [cws.walletName]: cws.walletState }
-      }, {} as Record<string, WalletState>)
-
-      set(draft => {
-        draft.wallets.forEach(wallet => {
-          wallet.walletState = defaultWalletStates[wallet.info.name]
-        })
-      })
-
-    },
 
     init: async () => {
       const oldChainWalletStatesMap = new Map(get().chainWalletState.map(cws => [cws.walletName + cws.chainName, cws]))
@@ -163,46 +130,9 @@ export const createInterchainStore = (walletManager: WalletManager) => {
         })
       })
 
-      const NotExistWallets: string[] = []
-      const ExistWallets: string[] = []
-      await Promise.all(get().wallets.map(async wallet => {
-        try {
-          await wallet.init()
-          ExistWallets.push(wallet.info.name)
-        } catch (error) {
-          if (error === clientNotExistError) {
-            NotExistWallets.push(wallet.info.name)
-          }
-        }
-      }))
+
+      await Promise.all(get().wallets.map(async wallet => wallet.init()))
       set(draft => {
-        draft.chainWalletState = draft.chainWalletState.map(cws => {
-          if (NotExistWallets.includes(cws.walletName)) {
-
-            return { ...cws, walletState: WalletState.NotExist }
-          }
-          return cws
-        })
-        draft.chainWalletState = draft.chainWalletState.map(cws => {
-          if (ExistWallets.includes(cws.walletName)) {
-            const newState = cws.walletState === WalletState.NotExist ? WalletState.Disconnected : cws.walletState
-
-            return { ...cws, walletState: newState }
-          }
-          return cws
-        })
-
-        draft.chainWalletState.forEach(cws => {
-
-          const lastExistWallet = draft.wallets.find(w => w.info.name === cws.walletName)
-          if (cws.walletState === WalletState.Connected && lastExistWallet.walletState !== WalletState.Connected) {
-            lastExistWallet.walletState = WalletState.Connected
-          }
-          if (cws.walletState === WalletState.NotExist) {
-            lastExistWallet.walletState = WalletState.NotExist
-          }
-        })
-
         draft.isReady = true
       })
     },
@@ -213,6 +143,10 @@ export const createInterchainStore = (walletManager: WalletManager) => {
 
     setCurrentWalletName: (walletName: string) => {
       set(draft => { draft.currentWalletName = walletName })
+    },
+
+    setWalletConnectQRCodeUri: (uri: string) => {
+      set(draft => { draft.walletConnectQRCodeUri = uri })
     },
 
     getDraftChainWalletState: (state: InterchainStore, walletName: string, chainName: string) => {
@@ -326,11 +260,6 @@ export const createInterchainStore = (walletManager: WalletManager) => {
 
       if (existedAccount) {
 
-        if (typeof existedAccount.pubkey === 'object') {
-          // return from localstorage need to restructure to uinit8Array
-          return { ...existedAccount, pubkey: Uint8Array.from({ ...existedAccount.pubkey, length: Object.keys(existedAccount.pubkey).length }) }
-        }
-
         return existedAccount
       }
 
@@ -358,27 +287,7 @@ export const createInterchainStore = (walletManager: WalletManager) => {
       return walletManager.getDownloadLink(walletName)
     },
     async getOfflineSigner(walletName, chainName) {
-      const chain = get().chains.find(c => c.chainName === chainName)
-      const wallet = get().getStatefulWalletByName(walletName)
-
-      const preferSignType = get().getPreferSignType(chainName)
-      let offlineSigner: IGenericOfflineSigner
-      if (preferSignType === 'amino') {
-        offlineSigner = new AminoGenericOfflineSigner({
-          getAccounts: async () => [await get().getAccount(walletName, chainName)],
-          signAmino(signerAddress, signDoc) {
-            return wallet.executeSpecificWalletMethod(CosmosWallet, (wallet) => wallet.signAmino(chain.chainId, signerAddress, signDoc, wallet.defaultSignOptions))
-          },
-        }) as IGenericOfflineSigner
-      } else if (preferSignType === 'direct') {
-        offlineSigner = new DirectGenericOfflineSigner({
-          getAccounts: async () => [await get().getAccount(walletName, chainName)],
-          signDirect(signerAddress, signDoc) {
-            return wallet.executeSpecificWalletMethod(CosmosWallet, (wallet) => wallet.signDirect(chain.chainId, signerAddress, signDoc, wallet.defaultSignOptions))
-          }
-        }) as IGenericOfflineSigner
-      }
-      return offlineSigner
+      return walletManager.getOfflineSigner(walletName, chainName)
     },
     getPreferSignType(chainName) {
       const result = walletManager.getPreferSignType(chainName)
@@ -397,16 +306,7 @@ export const createInterchainStore = (walletManager: WalletManager) => {
       return get().wallets.find(w => w.info.name === walletName)
     },
     async getSigningClient(walletName, chainName): Promise<SigningClient> {
-
-      const chainWalletState = get().getChainWalletState(walletName, chainName)
-
-      const signerOptions = await get().getSignerOptions(chainName)
-
-      const offlineSigner = await get().getOfflineSigner(walletName, chainName) as ICosmosGenericOfflineSigner
-
-      const signingClient = await SigningClient.connectWithSigner(chainWalletState.rpcEndpoint, offlineSigner, signerOptions)
-      return signingClient
-
+      return walletManager.getSigningClient(walletName, chainName)
     },
     getEnv() {
       return walletManager.getEnv()
@@ -433,6 +333,12 @@ export const createInterchainStore = (walletManager: WalletManager) => {
           console.log('an error happened during hydration', error)
         } else {
           // console.log('interchain-kit store hydration finished')
+          state.chainWalletState = state.chainWalletState.map(cws => {
+            return {
+              ...cws,
+              account: cws.account ? restoreAccountFromLocalStorage(cws.account) : null
+            }
+          })
         }
       }
     },
