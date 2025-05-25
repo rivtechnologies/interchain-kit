@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.33](https://github.com/hyperweb-io/interchain-kit/compare/@interchain-kit/vue-examples@0.3.19...@interchain-kit/vue-examples@0.3.33) (2025-05-25)
+
+**Note:** Version bump only for package @interchain-kit/vue-examples
+
 ## [0.3.19](https://github.com/hyperweb-io/interchain-kit/compare/@interchain-kit/vue-examples@0.3.18...@interchain-kit/vue-examples@0.3.19) (2025-05-12)
 
 **Note:** Version bump only for package @interchain-kit/vue-examples
