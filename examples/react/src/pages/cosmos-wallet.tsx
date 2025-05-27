@@ -1,14 +1,10 @@
-import {
-  CosmosWallet,
-  ExtensionWallet,
-  isInstanceOf,
-  MultiChainWallet,
-} from "@interchain-kit/core";
+import { CosmosWallet } from "@interchain-kit/core";
 import { useChain } from "@interchain-kit/react";
 import { useState } from "react";
 
 const CosmosWalletPage: React.FC = () => {
-  const { wallet, connect, address, disconnect, chain } = useChain("osmosis");
+  const { wallet, connect, address, disconnect, chain } =
+    useChain("osmosistestnet");
 
   const [message, setMessage] = useState("");
   const [signature, setSignature] = useState("");
@@ -22,11 +18,9 @@ const CosmosWalletPage: React.FC = () => {
   };
 
   const handleSignArbitrary = async () => {
-    if (wallet instanceof MultiChainWallet) {
-      const cosmosWallet = (await wallet.getWalletByChainType(
-        "cosmos"
-      )) as CosmosWallet;
+    const cosmosWallet = wallet.getWalletOfType(CosmosWallet);
 
+    if (cosmosWallet) {
       const signed = await cosmosWallet.signArbitrary(
         chain.chainId as string,
         address,

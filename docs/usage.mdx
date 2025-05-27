@@ -415,3 +415,172 @@ For advanced configuration options, you can provide additional options to the Ch
 - [InterchainJS Documentation](https://docs.hyperweb.io/interchainjs)
 - [Chain Registry Documentation](https://github.com/hyperweb-io/chain-registry)
 - [Example Applications](https://github.com/hyperweb-io/interchain-kit/tree/main/examples)
+
+## Signing Arbitrary Messages with Cosmos Wallet
+
+Interchain Kit allows you to sign arbitrary messages using a Cosmos Wallet:
+
+```tsx
+import {
+  CosmosWallet,
+  ExtensionWallet,
+  isInstanceOf,
+  MultiChainWallet,
+} from "@interchain-kit/core";
+import { useChain } from "@interchain-kit/react";
+import { useState } from "react";
+
+const CosmosWalletExample: React.FC = () => {
+  // Connect to a specific chain
+  const { wallet, connect, address, disconnect, chain } =
+    useChain("osmosistestnet");
+
+  const [message, setMessage] = useState("");
+  const [signature, setSignature] = useState("");
+
+  const handleConnect = async () => {
+    connect();
+  };
+
+  const handleDisconnect = async () => {
+    disconnect();
+  };
+
+  const handleSignArbitrary = async () => {
+
+    // get specific wallet to use its own methods
+
+    const cosmosWallet = wallet.getWalletOfType(CosmosWallet);
+
+    if (cosmosWallet) {
+      const signed = await cosmosWallet.signArbitrary(
+        chain.chainId as string,
+        address,
+        message
+      );
+
+      setSignature(signed.signature);
+    }
+  };
+
+  return (
+    <div>
+      <h1>Cosmos Wallet</h1>
+      {address ? (
+        <div>
+          <p>Connected Address: {address}</p>
+          <button onClick={handleDisconnect}>Disconnect</button>
+        </div>
+      ) : (
+        <button onClick={handleConnect}>Connect Wallet</button>
+      )}
+
+      <div>
+        <h2>Sign Arbitrary Message</h2>
+        <textarea
+          rows={4}
+          cols={50}
+          placeholder="Enter a message to sign"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
+        <br />
+        <button onClick={handleSignArbitrary}>
+          Sign Message
+        </button>
+        {signature && (
+          <div>
+            <h3>Signature:</h3>
+            <pre>{signature}</pre>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+```
+
+This example demonstrates how to:
+1. Connect to a specific chain using `useChain`
+2. Get a Cosmos wallet instance using `wallet.getWalletOfType(CosmosWallet)`
+3. Sign arbitrary messages with `cosmosWallet.signArbitrary()`
+4. Display the resulting signature to the user
+
+## Signing Messages with Ethereum Wallet
+
+Interchain Kit also allows you to sign messages using an Ethereum Wallet:
+
+```tsx
+import { EthereumWallet } from "@interchain-kit/core";
+import { useChain } from "@interchain-kit/react";
+import React, { useState } from "react";
+
+const EthereumWalletExample: React.FC = () => {
+  const [message, setMessage] = useState<string>("");
+  const [signature, setSignature] = useState<string | null>(null);
+
+  // Connect to Ethereum chain
+  const { connect, address, disconnect, wallet } = useChain("ethereum");
+
+  const connectWallet = async () => {
+    connect();
+  };
+
+  const disconnectWallet = async () => {
+    disconnect();
+    setSignature(null);
+  };
+
+  const signMessage = async () => {
+
+    // get specific wallet to use its own methods
+
+    const ethereumWallet = wallet.getWalletOfType(EthereumWallet);
+    if (ethereumWallet) {
+      try {
+        const signedMessage = await ethereumWallet.signMessage(message);
+        setSignature(signedMessage);
+      } catch (error) {
+        console.error("Error signing message:", error);
+      }
+    }
+  };
+
+  return (
+    <div>
+      <h2>Ethereum Sign Message Example</h2>
+      {!address ? (
+        <button onClick={connectWallet}>Connect Wallet</button>
+      ) : (
+        <button onClick={disconnectWallet}>Disconnect Wallet</button>
+      )}
+      <div>
+        <div>
+          <strong>Connected:</strong> {address}
+        </div>
+        <textarea
+          rows={3}
+          style={{ width: "100%", marginTop: 16 }}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
+        <button style={{ marginTop: 16 }} onClick={signMessage}>
+          Sign Message
+        </button>
+      </div>
+      {signature && (
+        <div style={{ marginTop: 16 }}>
+          <strong>Signature:</strong>
+          <pre>{signature}</pre>
+        </div>
+      )}
+    </div>
+  );
+};
+```
+
+This example demonstrates how to:
+1. Connect to the Ethereum chain using `useChain("ethereum")`
+2. Get an Ethereum wallet instance using `wallet.getWalletOfType(EthereumWallet)`
+3. Sign messages with `ethereumWallet.signMessage()`
+4. Display the resulting signature to the user

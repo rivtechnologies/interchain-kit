@@ -8,6 +8,7 @@ import LedgerExample from "./pages/leger";
 import Mobile from "./pages/mobile";
 import CosmosWalletPage from "./pages/cosmos-wallet";
 import TestDisconnect from "./pages/test-disconnect";
+import EthereumSignMessage from "./pages/ethereum-wallet";
 
 function Layout() {
   return <Outlet />;
@@ -26,6 +27,7 @@ export default function App() {
         <Route path="mobile" element={<Mobile />} />
         <Route path="cosmos-wallet" element={<CosmosWalletPage />} />
         <Route path="test-disconnect" element={<TestDisconnect />} />
+        <Route path="ethereum-wallet" element={<EthereumSignMessage />} />
       </Route>
     </Routes>
   );

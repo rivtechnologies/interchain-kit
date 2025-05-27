@@ -4,6 +4,7 @@ import { BaseWallet } from "./base-wallet";
 import { delay, getClientFromExtension } from "../utils";
 import { EthereumNetwork } from "../types/ethereum";
 import { IGenericOfflineSigner } from '@interchainjs/types';
+import { fromByteArray, toByteArray } from "base64-js";
 
 export class EthereumWallet extends BaseWallet {
 
@@ -38,6 +39,7 @@ export class EthereumWallet extends BaseWallet {
   async disconnect(chainId: Chain["chainId"]): Promise<void> {
     // throw new Error("Method not implemented.");
     console.log('eth disconnect')
+    return new Promise((resolve, reject) => { resolve() })
   }
   async switchChain(chainId: string): Promise<void> {
     if (!chainId.startsWith("0x")) {
@@ -124,5 +126,34 @@ export class EthereumWallet extends BaseWallet {
 
     console.log('transactionHash:', txHash);
     return txHash;
+  }
+
+  async signMessage(message: string) {
+    if (!this.ethereum) {
+      throw new Error("MetaMask is not installed");
+    }
+
+    try {
+      // Request account access
+      const accounts = await this.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      const account = accounts[0];
+
+      // Encode message to Base64
+      const hexMessage = fromByteArray(new TextEncoder().encode(message));
+
+      // Sign the message
+      const signature = await this.ethereum.request({
+        method: "personal_sign",
+        params: [hexMessage, account],
+      });
+
+      console.log("Signature:", signature);
+      return signature;
+    } catch (error) {
+      console.error("Error signing message:", error);
+      throw error;
+    }
   }
 }

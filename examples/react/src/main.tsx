@@ -49,14 +49,14 @@ import { create } from "domain";
 
 const chainNames: string[] = [
   // "injectivetestnet",
-  "osmosistestnet",
+  // "osmosistestnet",
   // "osmosis",
   // "juno",
   // "cosmoshub",
   // "stargaze",
   // "noble",
   // "seitestnet2",
-  // "ethereum",
+  "ethereum",
   // "cosmoshubtestnet",
 ];
 // const chainNames = ["osmosistestnet"];
