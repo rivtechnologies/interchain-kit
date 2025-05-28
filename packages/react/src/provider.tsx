@@ -20,7 +20,7 @@ type InterchainWalletProviderProps = {
   signerOptions?: SignerOptions;
   endpointOptions?: EndpointOptions;
   children: React.ReactNode;
-  walletModal: (props: WalletModalProps) => ReactElement;
+  walletModal?: (props?: WalletModalProps) => ReactElement;
 };
 
 const InterchainWalletContext =
