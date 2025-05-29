@@ -206,7 +206,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         chains={_chains}
         wallets={_wallets}
         assetLists={_assetLists}
-        walletModal={InterchainWalletModal}
         signerOptions={{
           signing: (chainName) => {
             return {
@@ -246,6 +245,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <BrowserRouter>
           <App />
         </BrowserRouter>
+        <InterchainWalletModal />
       </ChainProvider>
     </ThemeProvider>
   </React.StrictMode>

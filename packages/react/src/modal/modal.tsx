@@ -19,6 +19,7 @@ import { BaseWallet, DownloadInfo, WalletState } from "@interchain-kit/core";
 import {
   ConnectModal,
   Wallet as InterchainUIWalletType,
+  ThemeProvider,
 } from "@interchain-ui/react";
 import { StatefulWallet } from "../store/stateful-wallet";
 import { useWalletManager } from "../hooks";
@@ -295,9 +296,16 @@ export const WalletModal = ({
   ]);
 
   return (
-    <ConnectModal isOpen={isOpen} header={header} onOpen={open} onClose={close}>
-      {content}
-    </ConnectModal>
+    <ThemeProvider>
+      <ConnectModal
+        isOpen={isOpen}
+        header={header}
+        onOpen={open}
+        onClose={close}
+      >
+        {content}
+      </ConnectModal>
+    </ThemeProvider>
   );
 };
 
@@ -306,12 +314,12 @@ export const ModalRenderer = ({
 }: {
   walletModal: (props: WalletModalProps) => ReactElement;
 }) => {
-  if (!ProvidedWalletModal) {
-    throw new Error(
-      `InterchainWalletProvider: walletModal is required. Please provide a wallet modal component. or use InterchainkitWalletModal/n
-      Example: <ChainProvider chains={chains} assetLists={assetLists} wallets={wallets} walletModal={InterchainKitWalletModal} />`
-    );
-  }
+  // if (!ProvidedWalletModal) {
+  //   throw new Error(
+  //     `InterchainWalletProvider: walletModal is required. Please provide a wallet modal component. or use InterchainkitWalletModal/n
+  //     Example: <ChainProvider chains={chains} assetLists={assetLists} wallets={wallets} walletModal={InterchainKitWalletModal} />`
+  //   );
+  // }
 
   const { modalIsOpen, openModal, closeModal, wallets, currentWalletName } =
     useWalletManager();
