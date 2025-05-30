@@ -113,34 +113,36 @@ export const InterchainWalletModal = ({
     currentWallet.connect(chainToConnect.chainId);
   };
   return (
-    <WalletModalElement
-      shouldShowList={shouldShowList}
-      username={account?.username}
-      address={account?.address}
-      disconnect={disconnect}
-      isOpen={isOpen}
-      open={open}
-      close={handleCloseModal}
-      wallets={walletsForUI}
-      walletConnectQRCodeUri={walletConnectQRCodeUri}
-      currentWallet={walletToShow}
-      isConnecting={walletToShow?.walletState === WalletState.Connecting}
-      isConnected={walletToShow?.walletState === WalletState.Connected}
-      isRejected={walletToShow?.walletState === WalletState.Rejected}
-      isDisconnected={walletToShow?.walletState === WalletState.Disconnected}
-      isNotExist={walletToShow?.walletState === WalletState.NotExist}
-      errorMessage={errorMessage}
-      onSelectWallet={(w) => onSelectWallet(w)}
-      onBack={() => setShouldShowList(true)} // Add other required props with appropriate default or mock values
-      onReconnect={() => onSelectWallet(walletToShow)}
-      getDownloadLink={() => getDownloadLink(walletToShow?.info.name)}
-      getEnv={getEnv}
-      modalContainerClassName={modalContainerClassName}
-      modalContentClassName={modalContentClassName}
-      modalChildrenClassName={modalChildrenClassName}
-      modalContentStyles={modalContentStyles}
-      modalThemeProviderProps={modalThemeProviderProps}
-    />
+    <ThemeProvider {...modalThemeProviderProps}>
+      <WalletModalElement
+        shouldShowList={shouldShowList}
+        username={account?.username}
+        address={account?.address}
+        disconnect={disconnect}
+        isOpen={isOpen}
+        open={open}
+        close={handleCloseModal}
+        wallets={walletsForUI}
+        walletConnectQRCodeUri={walletConnectQRCodeUri}
+        currentWallet={walletToShow}
+        isConnecting={walletToShow?.walletState === WalletState.Connecting}
+        isConnected={walletToShow?.walletState === WalletState.Connected}
+        isRejected={walletToShow?.walletState === WalletState.Rejected}
+        isDisconnected={walletToShow?.walletState === WalletState.Disconnected}
+        isNotExist={walletToShow?.walletState === WalletState.NotExist}
+        errorMessage={errorMessage}
+        onSelectWallet={(w) => onSelectWallet(w)}
+        onBack={() => setShouldShowList(true)} // Add other required props with appropriate default or mock values
+        onReconnect={() => onSelectWallet(walletToShow)}
+        getDownloadLink={() => getDownloadLink(walletToShow?.info.name)}
+        getEnv={getEnv}
+        modalContainerClassName={modalContainerClassName}
+        modalContentClassName={modalContentClassName}
+        modalChildrenClassName={modalChildrenClassName}
+        modalContentStyles={modalContentStyles}
+        modalThemeProviderProps={modalThemeProviderProps}
+      />
+    </ThemeProvider>
   );
 };
 
@@ -321,20 +323,18 @@ export const WalletModalElement = ({
   ]);
 
   return (
-    <ThemeProvider {...modalThemeProviderProps}>
-      <ConnectModal
-        isOpen={isOpen}
-        header={header}
-        onOpen={open}
-        onClose={close}
-        modalContainerClassName={modalContainerClassName}
-        modalContentClassName={modalContentClassName}
-        modalChildrenClassName={modalChildrenClassName}
-        modalContentStyles={modalContentStyles}
-      >
-        {content}
-      </ConnectModal>
-    </ThemeProvider>
+    <ConnectModal
+      isOpen={isOpen}
+      header={header}
+      onOpen={open}
+      onClose={close}
+      modalContainerClassName={modalContainerClassName}
+      modalContentClassName={modalContentClassName}
+      modalChildrenClassName={modalChildrenClassName}
+      modalContentStyles={modalContentStyles}
+    >
+      {content}
+    </ConnectModal>
   );
 };
 
