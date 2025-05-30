@@ -15,40 +15,17 @@ import {
   WalletListHeader,
 } from "./views";
 import { ReactElement, useMemo, useState } from "react";
-import { BaseWallet, DownloadInfo, WalletState } from "@interchain-kit/core";
+import { DownloadInfo, WalletState } from "@interchain-kit/core";
 import {
   ConnectModal,
   Wallet as InterchainUIWalletType,
   ThemeProvider,
+  ThemeProviderProps,
 } from "@interchain-ui/react";
 import { StatefulWallet } from "../store/stateful-wallet";
 import { useWalletManager } from "../hooks";
 import { transferToWalletUISchema } from "../utils";
 import { ChainWalletState } from "../store";
-
-export type InterchainWalletModalProps = {
-  shouldShowList: boolean;
-  isOpen: boolean;
-  walletConnectQRCodeUri: string | null;
-  wallets: InterchainUIWalletType[];
-  username: string;
-  address: string;
-  currentWallet?: StatefulWallet;
-  isConnecting: boolean;
-  isConnected: boolean;
-  isRejected: boolean;
-  isDisconnected: boolean;
-  isNotExist: boolean;
-  errorMessage: string;
-  open: () => void;
-  close: () => void;
-  disconnect: () => void;
-  onSelectWallet: (wallet: StatefulWallet) => void;
-  onBack: () => void;
-  onReconnect: () => void;
-  getDownloadLink: (walletName: string) => DownloadInfo;
-  getEnv: () => { browser?: string; device?: string; os?: string };
-};
 
 export type WalletModalProps = {
   isOpen: boolean;
@@ -58,15 +35,22 @@ export type WalletModalProps = {
   close: () => void;
 };
 
-type ModalType =
-  | "wallet-list"
-  | "connecting"
-  | "connected"
-  | "reject"
-  | "not-exist"
-  | "qr-code";
+export type InterchainWalletModalProps = {
+  modalContainerClassName?: string;
+  modalContentClassName?: string;
+  modalChildrenClassName?: string;
+  modalContentStyles?: React.CSSProperties;
+  modalThemeProviderProps?: ThemeProviderProps;
+};
 
-export const InterchainWalletModal = () => {
+export const InterchainWalletModal = ({
+  // ==== Custom modal styles
+  modalContainerClassName,
+  modalContentClassName,
+  modalChildrenClassName,
+  modalContentStyles,
+  modalThemeProviderProps,
+}: InterchainWalletModalProps) => {
   const [shouldShowList, setShouldShowList] = useState(false);
 
   const {
@@ -129,7 +113,7 @@ export const InterchainWalletModal = () => {
     currentWallet.connect(chainToConnect.chainId);
   };
   return (
-    <WalletModal
+    <WalletModalElement
       shouldShowList={shouldShowList}
       username={account?.username}
       address={account?.address}
@@ -151,11 +135,46 @@ export const InterchainWalletModal = () => {
       onReconnect={() => onSelectWallet(walletToShow)}
       getDownloadLink={() => getDownloadLink(walletToShow?.info.name)}
       getEnv={getEnv}
+      modalContainerClassName={modalContainerClassName}
+      modalContentClassName={modalContentClassName}
+      modalChildrenClassName={modalChildrenClassName}
+      modalContentStyles={modalContentStyles}
+      modalThemeProviderProps={modalThemeProviderProps}
     />
   );
 };
 
-export const WalletModal = ({
+export type WalletModalElementProps = {
+  shouldShowList: boolean;
+  isOpen: boolean;
+  walletConnectQRCodeUri: string | null;
+  wallets: InterchainUIWalletType[];
+  username: string;
+  address: string;
+  currentWallet?: StatefulWallet;
+  isConnecting: boolean;
+  isConnected: boolean;
+  isRejected: boolean;
+  isDisconnected: boolean;
+  isNotExist: boolean;
+  errorMessage: string;
+  open: () => void;
+  close: () => void;
+  disconnect: () => void;
+  onSelectWallet: (wallet: StatefulWallet) => void;
+  onBack: () => void;
+  onReconnect: () => void;
+  getDownloadLink: (walletName: string) => DownloadInfo;
+  getEnv: () => { browser?: string; device?: string; os?: string };
+
+  modalThemeProviderProps?: ThemeProviderProps;
+  modalContainerClassName?: string;
+  modalContentClassName?: string;
+  modalChildrenClassName?: string;
+  modalContentStyles?: React.CSSProperties;
+};
+
+export const WalletModalElement = ({
   shouldShowList,
   isOpen,
   walletConnectQRCodeUri,
@@ -177,7 +196,13 @@ export const WalletModal = ({
   onReconnect,
   getDownloadLink,
   getEnv,
-}: InterchainWalletModalProps) => {
+
+  modalThemeProviderProps,
+  modalContainerClassName,
+  modalContentClassName,
+  modalChildrenClassName,
+  modalContentStyles,
+}: WalletModalElementProps) => {
   const { header, content } = useMemo(() => {
     if (
       shouldShowList ||
@@ -296,12 +321,16 @@ export const WalletModal = ({
   ]);
 
   return (
-    <ThemeProvider>
+    <ThemeProvider {...modalThemeProviderProps}>
       <ConnectModal
         isOpen={isOpen}
         header={header}
         onOpen={open}
         onClose={close}
+        modalContainerClassName={modalContainerClassName}
+        modalContentClassName={modalContentClassName}
+        modalChildrenClassName={modalChildrenClassName}
+        modalContentStyles={modalContentStyles}
       >
         {content}
       </ConnectModal>
@@ -314,12 +343,9 @@ export const ModalRenderer = ({
 }: {
   walletModal: (props: WalletModalProps) => ReactElement;
 }) => {
-  // if (!ProvidedWalletModal) {
-  //   throw new Error(
-  //     `InterchainWalletProvider: walletModal is required. Please provide a wallet modal component. or use InterchainkitWalletModal/n
-  //     Example: <ChainProvider chains={chains} assetLists={assetLists} wallets={wallets} walletModal={InterchainKitWalletModal} />`
-  //   );
-  // }
+  if (!ProvidedWalletModal) {
+    return null;
+  }
 
   const { modalIsOpen, openModal, closeModal, wallets, currentWalletName } =
     useWalletManager();

@@ -201,52 +201,54 @@ const _wallets: BaseWallet[] = [
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ThemeProvider>
-      <ChainProvider
-        chains={_chains}
-        wallets={_wallets}
-        assetLists={_assetLists}
-        signerOptions={{
-          signing: (chainName) => {
-            return {
-              broadcast: {
-                checkTx: chainName === "osmosistestnet",
-                deliverTx: chainName === "osmosistestnet",
-                timeoutMs: chainName === "osmosistestnet" ? 20000 : 10000,
-              },
-              gasPrice:
-                chainName === "osmosistestnet" ? "0.025uosmo" : "0.025uatom",
-            };
-          },
-          preferredSignType: (chainName) => {
-            return chainName === "osmosistestnet" ? "amino" : "direct";
-          },
-        }}
-        endpointOptions={{
-          endpoints: {
-            // 'osmosis': {
-            //   rpc: ['http://localhost:26657'],
-            //   rest: ['http://localhost:1317']
-            // },
-            // 'cosmoshub': {
-            //   rpc: ['http://localhost:26653'],
-            //   rest: ['http://localhost:1313']
-            // }
-            // 'osmosistestnet': {
-            //   rpc: ['https://rpc.testnet.osmosis.zone'],
-            //   rest: ['https://lcd.testnet.osmosis.zone']
-            // }
-            // injectivetestnet: {
-            //   rpc: ["https://testnet.explorer.injective.network/"],
-            // },
-          },
-        }}
-      >
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-        <InterchainWalletModal />
-      </ChainProvider>
-    </ThemeProvider>
+    <ChainProvider
+      chains={_chains}
+      wallets={_wallets}
+      assetLists={_assetLists}
+      walletModal={() => (
+        <InterchainWalletModal
+          modalThemeProviderProps={{ defaultTheme: "light" }}
+        />
+      )}
+      signerOptions={{
+        signing: (chainName) => {
+          return {
+            broadcast: {
+              checkTx: chainName === "osmosistestnet",
+              deliverTx: chainName === "osmosistestnet",
+              timeoutMs: chainName === "osmosistestnet" ? 20000 : 10000,
+            },
+            gasPrice:
+              chainName === "osmosistestnet" ? "0.025uosmo" : "0.025uatom",
+          };
+        },
+        preferredSignType: (chainName) => {
+          return chainName === "osmosistestnet" ? "amino" : "direct";
+        },
+      }}
+      endpointOptions={{
+        endpoints: {
+          // 'osmosis': {
+          //   rpc: ['http://localhost:26657'],
+          //   rest: ['http://localhost:1317']
+          // },
+          // 'cosmoshub': {
+          //   rpc: ['http://localhost:26653'],
+          //   rest: ['http://localhost:1313']
+          // }
+          // 'osmosistestnet': {
+          //   rpc: ['https://rpc.testnet.osmosis.zone'],
+          //   rest: ['https://lcd.testnet.osmosis.zone']
+          // }
+          // injectivetestnet: {
+          //   rpc: ["https://testnet.explorer.injective.network/"],
+          // },
+        },
+      }}
+    >
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ChainProvider>
   </React.StrictMode>
 );
