@@ -205,7 +205,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       chains={_chains}
       wallets={_wallets}
       assetLists={_assetLists}
-      walletModal={() => <InterchainWalletModal />}
+      walletModal={() => (
+        <InterchainWalletModal
+          modalThemeProviderProps={{ defaultTheme: "dark", accent: "orange" }}
+        />
+      )}
       signerOptions={{
         signing: (chainName) => {
           return {

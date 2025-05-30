@@ -40,10 +40,8 @@ export type InterchainWalletModalProps = {
   modalContentClassName?: string;
   modalChildrenClassName?: string;
   modalContentStyles?: React.CSSProperties;
-} & Pick<
-  ThemeProviderProps,
-  "defaultTheme" | "overrides" | "themeDefs" | "customTheme"
->;
+  modalThemeProviderProps?: ThemeProviderProps;
+};
 
 export const InterchainWalletModal = ({
   // ==== Custom modal styles
@@ -51,10 +49,7 @@ export const InterchainWalletModal = ({
   modalContentClassName,
   modalChildrenClassName,
   modalContentStyles,
-  overrides,
-  themeDefs,
-  customTheme,
-  defaultTheme,
+  modalThemeProviderProps,
 }: InterchainWalletModalProps) => {
   const [shouldShowList, setShouldShowList] = useState(false);
 
@@ -144,10 +139,7 @@ export const InterchainWalletModal = ({
       modalContentClassName={modalContentClassName}
       modalChildrenClassName={modalChildrenClassName}
       modalContentStyles={modalContentStyles}
-      overrides={overrides}
-      themeDefs={themeDefs}
-      customTheme={customTheme}
-      defaultTheme={defaultTheme}
+      modalThemeProviderProps={modalThemeProviderProps}
     />
   );
 };
@@ -175,14 +167,12 @@ export type WalletModalElementProps = {
   getDownloadLink: (walletName: string) => DownloadInfo;
   getEnv: () => { browser?: string; device?: string; os?: string };
 
+  modalThemeProviderProps?: ThemeProviderProps;
   modalContainerClassName?: string;
   modalContentClassName?: string;
   modalChildrenClassName?: string;
   modalContentStyles?: React.CSSProperties;
-} & Pick<
-  ThemeProviderProps,
-  "defaultTheme" | "overrides" | "themeDefs" | "customTheme"
->;
+};
 
 export const WalletModalElement = ({
   shouldShowList,
@@ -207,14 +197,11 @@ export const WalletModalElement = ({
   getDownloadLink,
   getEnv,
 
+  modalThemeProviderProps,
   modalContainerClassName,
   modalContentClassName,
   modalChildrenClassName,
   modalContentStyles,
-  overrides,
-  themeDefs,
-  customTheme,
-  defaultTheme,
 }: WalletModalElementProps) => {
   const { header, content } = useMemo(() => {
     if (
@@ -334,12 +321,7 @@ export const WalletModalElement = ({
   ]);
 
   return (
-    <ThemeProvider
-      defaultTheme={defaultTheme}
-      overrides={overrides}
-      themeDefs={themeDefs}
-      customTheme={customTheme}
-    >
+    <ThemeProvider {...modalThemeProviderProps}>
       <ConnectModal
         isOpen={isOpen}
         header={header}
@@ -362,10 +344,7 @@ export const ModalRenderer = ({
   walletModal: (props: WalletModalProps) => ReactElement;
 }) => {
   if (!ProvidedWalletModal) {
-    throw new Error(
-      `InterchainWalletProvider: walletModal is required. Please provide a wallet modal component. or use InterchainkitWalletModal/n
-      Example: <ChainProvider chains={chains} assetLists={assetLists} wallets={wallets} walletModal={InterchainKitWalletModal} />`
-    );
+    return null;
   }
 
   const { modalIsOpen, openModal, closeModal, wallets, currentWalletName } =
