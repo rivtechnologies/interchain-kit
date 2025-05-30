@@ -248,6 +248,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     >
       <BrowserRouter>
         <App />
+        {/* <InterchainWalletModal
+          modalThemeProviderProps={{ defaultTheme: "light" }}
+        /> */}
       </BrowserRouter>
     </ChainProvider>
   </React.StrictMode>
