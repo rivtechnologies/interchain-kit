@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.35](https://github.com/interchain-kit/xdefi-extension/compare/@interchain-kit/xdefi-extension@0.3.34...@interchain-kit/xdefi-extension@0.3.35) (2025-06-02)
+
+**Note:** Version bump only for package @interchain-kit/xdefi-extension
+
 ## [0.3.34](https://github.com/interchain-kit/xdefi-extension/compare/@interchain-kit/xdefi-extension@0.3.33...@interchain-kit/xdefi-extension@0.3.34) (2025-05-30)
 
 **Note:** Version bump only for package @interchain-kit/xdefi-extension
