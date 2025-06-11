@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.38](https://github.com/@interchain-kit/core/compare/@interchain-kit/core@0.3.37...@interchain-kit/core@0.3.38) (2025-06-11)
+
+**Note:** Version bump only for package @interchain-kit/core
+
 ## [0.3.37](https://github.com/@interchain-kit/core/compare/@interchain-kit/core@0.3.36...@interchain-kit/core@0.3.37) (2025-06-11)
 
 **Note:** Version bump only for package @interchain-kit/core
