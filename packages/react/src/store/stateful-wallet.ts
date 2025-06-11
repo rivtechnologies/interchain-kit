@@ -1,7 +1,7 @@
 
 import { BaseWallet, clientNotExistError, CosmosWallet, EthereumWallet, ExtensionWallet, MultiChainWallet, WalletAccount, WalletState, WCWallet } from "@interchain-kit/core"
 import { InterchainStore } from "./store"
-import { Chain } from "@chain-registry/v2-types"
+import { Chain } from "@chain-registry/types"
 
 export class StatefulWallet extends BaseWallet {
   originalWallet: BaseWallet

@@ -1,4 +1,4 @@
-import { AssetList, Chain } from '@chain-registry/v2-types';
+import { AssetList, Chain } from '@chain-registry/types';
 import { computed, Ref, ref, watch } from 'vue';
 import { UseChainWalletReturnType } from '../types/chain';
 import { useAccount } from './useAccount';

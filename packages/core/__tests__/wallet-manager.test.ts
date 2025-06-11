@@ -1,5 +1,5 @@
 import { WalletManager } from '../src/wallet-manager';
-import { Chain, AssetList } from '@chain-registry/v2-types';
+import { Chain, AssetList } from '@chain-registry/types';
 import { BaseWallet } from '../src/wallets/base-wallet';
 import { SignerOptions, EndpointOptions, SignType } from '../src/types';
 import { WalletNotExist, ChainNameNotExist, NoValidRpcEndpointFound, getValidRpcEndpoint } from '../src/utils';

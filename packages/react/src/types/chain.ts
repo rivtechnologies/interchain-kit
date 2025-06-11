@@ -1,5 +1,5 @@
 import { HttpEndpoint } from '@interchainjs/types';
-import { Chain, AssetList } from '@chain-registry/v2-types';
+import { Chain, AssetList } from '@chain-registry/types';
 import { BaseWallet, WalletState } from '@interchain-kit/core';
 import { SigningClient } from './sign-client';
 import { ChainWallet } from '../store/chain-wallet';

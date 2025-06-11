@@ -2,7 +2,7 @@ import { AminoSignResponse } from '@interchainjs/cosmos/types/wallet';
 import { StdSignDoc } from '@interchainjs/types';
 import { CosmosWallet, DirectSignDoc, ExtensionWallet, SignOptions, WalletAccount } from '@interchain-kit/core';
 import { ChainInfo } from './types';
-import { Chain, AssetList } from '@chain-registry/v2-types';
+import { Chain, AssetList } from '@chain-registry/types';
 
 declare global {
   interface Window {

@@ -1,5 +1,5 @@
 import { SigningClient } from '@interchainjs/cosmos/signing-client';
-import { AssetList, Chain } from "@chain-registry/v2-types"
+import { AssetList, Chain } from "@chain-registry/types"
 import { BaseWallet, clientNotExistError, CosmosWallet, EndpointOptions, Endpoints, SignerOptions, SignType, WalletAccount, WalletManager, WalletState } from "@interchain-kit/core"
 import { SigningOptions as InterchainSigningOptions } from '@interchainjs/cosmos/types/signing-client';
 import { HttpEndpoint, IGenericOfflineSigner } from '@interchainjs/types';

@@ -1,6 +1,6 @@
 import { BaseWallet } from "../../src/wallets/base-wallet";
 import { Wallet, WalletState } from "../../src/types";
-import { Chain } from "@chain-registry/v2-types";
+import { Chain } from "@chain-registry/types";
 
 class TestWallet extends BaseWallet {
   async init(): Promise<void> {

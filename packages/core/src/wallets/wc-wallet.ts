@@ -10,7 +10,7 @@ import {
 import { AminoSignResponse, StdSignature, DirectSignResponse } from '@interchainjs/cosmos/types/wallet';
 import { IGenericOfflineSigner, StdSignDoc } from '@interchainjs/types'
 import { WalletConnectIcon } from '../constant';
-import { Chain } from '@chain-registry/v2-types';
+import { Chain } from '@chain-registry/types';
 import UniversalProvider, { ConnectParams, UniversalProviderOpts } from '@walletconnect/universal-provider';
 
 

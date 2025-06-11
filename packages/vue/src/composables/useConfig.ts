@@ -1,4 +1,4 @@
-import { AssetList, Chain } from '@chain-registry/v2-types';
+import { AssetList, Chain } from '@chain-registry/types';
 import { EndpointOptions, SignerOptions } from '@interchain-kit/core';
 
 import { useWalletManager } from './useWalletManager';

@@ -1,4 +1,4 @@
-import { AssetList, Chain } from '@chain-registry/v2-types';
+import { AssetList, Chain } from '@chain-registry/types';
 import { BaseWallet, WalletState } from '@interchain-kit/core';
 import { HttpEndpoint } from '@interchainjs/types';
 import { ComputedRef, Ref } from 'vue';

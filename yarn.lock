@@ -1121,20 +1121,20 @@
   integrity sha512-h44uqedXa3/c9snlJDOQ7uwAM/4jB9t4A6wUrRM6qa2Dppr/XhHhAevnNp3bDIFBH7NxsqEGZwpbVWCvZh46UA==
   dependencies:
     "@chain-registry/v2" "^1.71.71"
-    "@chain-registry/v2-types" "^0.53.40"
+    "@chain-registry/types" "^0.53.40"
     "@keplr-wallet/cosmos" "0.12.28"
     "@keplr-wallet/crypto" "0.12.28"
     "@types/semver" "^7.5.8"
     semver "^7.5.0"
 
-"@chain-registry/v2-types@^0.49.6":
+"@chain-registry/types@^0.49.6":
   version "0.49.86"
-  resolved "https://registry.yarnpkg.com/@chain-registry/v2-types/-/v2-types-0.49.86.tgz#f4ee7c3f32d31cac9d483ed2f6898e6001998345"
+  resolved "https://registry.yarnpkg.com/@chain-registry/types/-/v2-types-0.49.86.tgz#f4ee7c3f32d31cac9d483ed2f6898e6001998345"
   integrity sha512-cF+hhEsbdO734/11aBctJ5ich1Y8ROLZ8kDr5eZr0gHUgVNj+msryxm4SEFThMnASDOAI6Otd/7wTXe5BRLhcQ==
 
-"@chain-registry/v2-types@^0.53.0", "@chain-registry/v2-types@^0.53.127", "@chain-registry/v2-types@^0.53.40":
+"@chain-registry/types@^0.53.0", "@chain-registry/types@^0.53.127", "@chain-registry/types@^0.53.40":
   version "0.53.127"
-  resolved "https://registry.yarnpkg.com/@chain-registry/v2-types/-/v2-types-0.53.127.tgz#956dea12d73c64ecbdfadd8fdca18e887b5e399d"
+  resolved "https://registry.yarnpkg.com/@chain-registry/types/-/v2-types-0.53.127.tgz#956dea12d73c64ecbdfadd8fdca18e887b5e399d"
   integrity sha512-uyCRgPbUdJ7Fd1kUgXIIp91nQwGALnI/ivZ5ZzJ/ahYozz2Ki5CCnFNVFq4pGMapxIqyK31n72RuWpwZvG/how==
 
 "@chain-registry/v2@^1.65.6", "@chain-registry/v2@^1.71.71":
@@ -1142,7 +1142,7 @@
   resolved "https://registry.yarnpkg.com/@chain-registry/v2/-/v2-1.71.202.tgz#ae521d8c7aaa3f06129bc9aababc9235e30b6e42"
   integrity sha512-Lws4ZAdQ/CNs3b2Dg+xCbqeePlIaEnTylXhr0E7N1lo0a2jz2do7vWxjDLRy8ejcmcUV9KZoc7rpntgZiRlP7Q==
   dependencies:
-    "@chain-registry/v2-types" "^0.53.127"
+    "@chain-registry/types" "^0.53.127"
 
 "@chenfengyuan/vue-qrcode@^2.0.0":
   version "2.0.0"
@@ -1959,7 +1959,7 @@
   dependencies:
     "@chain-registry/v2" "^1.71.71"
     "@chain-registry/v2-keplr" "^0.0.72"
-    "@chain-registry/v2-types" "^0.53.40"
+    "@chain-registry/types" "^0.53.40"
     "@interchainjs/cosmos" "1.6.3"
     "@interchainjs/cosmos-types" "1.6.3"
     "@ledgerhq/hw-app-cosmos" "^6.30.4"
@@ -1994,7 +1994,7 @@
   resolved "https://registry.yarnpkg.com/@interchain-kit/vue/-/vue-0.1.0.tgz#6adb6eda8b711bf6d45ddabf9b67688fb348cf00"
   integrity sha512-4QaDXA00zKULNtWzucNS685OM5J30tex1q/VyMBHYDmfrXWYcAR54ayfcomnJxNgC9TfafXSwq6tzF8cKczeDQ==
   dependencies:
-    "@chain-registry/v2-types" "^0.53.0"
+    "@chain-registry/types" "^0.53.0"
     "@interchain-kit/core" "^0.1.0"
     "@interchain-ui/vue" "^1.4.1"
     "@interchainjs/cosmos" "0.0.1-beta.34"
@@ -2222,7 +2222,7 @@
   integrity sha512-hcVoPchcFROQaSw184YIeh8b9ppCh5nyZuu9tMZrLnsisfB3wm66SoovDqKIYU+ia2/glNKKQ8JJaEa6YyAQRg==
   dependencies:
     "@chain-registry/v2" "^1.65.6"
-    "@chain-registry/v2-types" "^0.49.6"
+    "@chain-registry/types" "^0.49.6"
     "@interchainjs/auth" "0.0.1-alpha.31"
     "@interchainjs/cosmos-types" "0.0.1-alpha.31"
     "@interchainjs/types" "0.0.1-alpha.31"
@@ -2237,7 +2237,7 @@
   integrity sha512-LA0L/WCaWW4umZremdZotGmqlQIIVXAILTEwdGDrzxcdVGOBo47NJ+jgq6O0FQQUrIdZEBMqZnZQ4VOna0OWag==
   dependencies:
     "@chain-registry/v2" "^1.65.6"
-    "@chain-registry/v2-types" "^0.49.6"
+    "@chain-registry/types" "^0.49.6"
     "@interchainjs/auth" "^0.0.1-beta.34"
     "@interchainjs/cosmos-types" "^0.0.1-beta.34"
     "@interchainjs/types" "^0.0.1-beta.34"
@@ -2278,7 +2278,7 @@
   integrity sha512-HRHueKveLSsdb+ENsYLC2vyj7mTqlfC6G8h/WyW/4dHucNOrYky8lr4uQVbIUsZS+JULLEcMQsMb4+4OdbyhtQ==
   dependencies:
     "@chain-registry/v2" "^1.65.6"
-    "@chain-registry/v2-types" "^0.49.6"
+    "@chain-registry/types" "^0.49.6"
     "@interchainjs/auth" "1.6.3"
     "@interchainjs/cosmos-types" "1.6.3"
     "@interchainjs/types" "1.6.3"
@@ -2293,7 +2293,7 @@
   integrity sha512-iolsBD+JxIDV1T2sGdF2hqIShvahkDz1FX6wQa9FCg2BGPyeZGzVvifBQqOK3eP6JwkkEdxvGHhoT2jousMfsQ==
   dependencies:
     "@chain-registry/v2" "^1.65.6"
-    "@chain-registry/v2-types" "^0.49.6"
+    "@chain-registry/types" "^0.49.6"
     "@interchainjs/auth" "0.0.1-beta.41"
     "@interchainjs/cosmos-types" "0.0.1-beta.41"
     "@interchainjs/types" "0.0.1-beta.41"

@@ -1,5 +1,5 @@
 
-import { AssetList, Chain } from "@chain-registry/v2-types";
+import { AssetList, Chain } from "@chain-registry/types";
 import ethereumChain from '@chain-registry/v2/mainnet/ethereum/chain'
 
 type EthereumChainConfig = {

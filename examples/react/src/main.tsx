@@ -36,7 +36,7 @@ import { metaMaskWallet } from "@interchain-kit/metamask-extension";
 import { exodusWallet } from "@interchain-kit/exodus-extension";
 import { starshipChain, starshipChain1 } from "./utils/starship.ts";
 import { ThemeProvider } from "@interchain-ui/react";
-import { Chain } from "@chain-registry/v2-types";
+import { Chain } from "@chain-registry/types";
 import {
   createAssetListFromEthereumChainInfo,
   createChainFromEthereumChainInfo,

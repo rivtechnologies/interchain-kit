@@ -6,7 +6,7 @@ import {
   EndpointOptions,
   WalletManager,
 } from "@interchain-kit/core";
-import { AssetList, Chain } from "@chain-registry/v2-types";
+import { AssetList, Chain } from "@chain-registry/types";
 import { ModalRenderer, WalletModalProps } from "./modal";
 import { createInterchainStore, InterchainStore } from "./store";
 import { StoreApi } from "zustand";

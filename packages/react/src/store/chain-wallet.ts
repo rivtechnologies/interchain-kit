@@ -1,4 +1,4 @@
-import { Chain } from "@chain-registry/v2-types";
+import { Chain } from "@chain-registry/types";
 import { BaseWallet, WalletAccount } from "@interchain-kit/core";
 import { IGenericOfflineSigner } from "@interchainjs/types";
 

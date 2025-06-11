@@ -1,5 +1,5 @@
 
-import { Chain } from "@chain-registry/v2-types"
+import { Chain } from "@chain-registry/types"
 
 export const creditFromStarship = (faucetUrl: string, address: string, denom: string) => fetch(faucetUrl, {
   method: 'POST',

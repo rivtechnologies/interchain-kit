@@ -1,4 +1,4 @@
-import { Asset, Chain } from "@chain-registry/v2-types";
+import { Asset, Chain } from "@chain-registry/types";
 import { ChainInfo, Currency } from '@keplr-wallet/types';
 export const makeKeplrChainInfo = (chain: Chain, asset: Asset, rpc: string, rest: string, chainId: string, chainName: string): ChainInfo => {
   const currency: Currency = {

@@ -1,4 +1,4 @@
-import { Chain } from "@chain-registry/v2-types";
+import { Chain } from "@chain-registry/types";
 export const createMockChain = (
   { chainName, chainId, rpcEndpoint, bech32Prefix, chainType }: { chainName: string; chainId?: string; rpcEndpoint: { address: string }[]; bech32Prefix?: string; chainType: Chain['chainType'] } = {
     chainName: "chain-1",

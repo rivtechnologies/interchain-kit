@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useChain, useWalletManager } from "@interchain-kit/react";
-import { Chain } from "@chain-registry/v2-types";
+import { Chain } from "@chain-registry/types";
 
 const UseChain = () => {
   const [chainName, setChainName] = useState("osmosis");

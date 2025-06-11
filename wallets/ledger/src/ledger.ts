@@ -18,7 +18,7 @@ import { Buffer } from 'buffer'
 import { SimpleAccount } from "@interchain-kit/core";
 import { IGenericOfflineSigner, StdSignDoc } from '@interchainjs/types';
 import { convertDerToFixed64, sortedObject } from "./utils";
-import { Chain } from "@chain-registry/v2-types";
+import { Chain } from "@chain-registry/types";
 
 export class LedgerWallet extends CosmosWallet {
 

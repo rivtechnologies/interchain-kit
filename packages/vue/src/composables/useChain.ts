@@ -1,4 +1,4 @@
-import { AssetList, Chain } from '@chain-registry/v2-types';
+import { AssetList, Chain } from '@chain-registry/types';
 import { ChainNameNotExist, WalletState } from '@interchain-kit/core';
 import { computed, inject, Ref, ref, watch } from 'vue';
 import { CosmosKitUseChainReturnType, UseChainReturnType } from '../types/chain';

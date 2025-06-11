@@ -1,4 +1,4 @@
-import { Chain } from "@chain-registry/v2-types";
+import { Chain } from "@chain-registry/types";
 import { WalletAccount } from "../types";
 import { BaseWallet } from "./base-wallet";
 import { delay, getClientFromExtension } from "../utils";

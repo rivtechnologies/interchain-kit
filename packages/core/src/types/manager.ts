@@ -1,5 +1,5 @@
 import { HttpEndpoint } from '@interchainjs/types';
-import { Chain } from "@chain-registry/v2-types";
+import { Chain } from "@chain-registry/types";
 import { ChainName } from './chain'
 import { SignType } from "./common";
 import { SigningOptions as InterchainSigningOptions } from '@interchainjs/cosmos/types/signing-client'

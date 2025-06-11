@@ -1,4 +1,4 @@
-import { Chain } from '@chain-registry/v2-types';
+import { Chain } from '@chain-registry/types';
 import { OfflineAminoSigner, Secp256k1HdWallet } from '@cosmjs/amino';
 import { DirectSecp256k1HdWallet, OfflineDirectSigner } from '@cosmjs/proto-signing';
 import { BaseWallet, BroadcastMode, SimpleAccount, Wallet, WalletAccount } from "@interchain-kit/core";

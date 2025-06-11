@@ -1,6 +1,6 @@
 import { MultiChainWallet } from '../../src/wallets/multichain-wallet';
 import { BaseWallet } from '../../src/wallets/base-wallet';
-import { Chain } from '@chain-registry/v2-types';
+import { Chain } from '@chain-registry/types';
 import { WalletAccount } from '../../src/types';
 
 describe('MultiChainWallet', () => {

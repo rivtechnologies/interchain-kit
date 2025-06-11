@@ -14,7 +14,7 @@ import {
 } from "@interchain-kit/react";
 import { useEffect, useRef, useState } from "react";
 import { makeKeplrChainInfo } from "../utils";
-import { Chain, Asset, AssetList } from "@chain-registry/v2-types";
+import { Chain, Asset, AssetList } from "@chain-registry/types";
 import { coins } from "@cosmjs/amino";
 import { ChainInfo } from "@keplr-wallet/types";
 import { getBalance } from "interchainjs/cosmos/bank/v1beta1/query.rpc.func";

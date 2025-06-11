@@ -1,5 +1,5 @@
 
-import { AssetList, Chain } from '@chain-registry/v2-types';
+import { AssetList, Chain } from '@chain-registry/types';
 import { SignType, Wallet, WalletAccount } from '../types';
 import { BaseWallet } from './base-wallet';
 import { CosmosWallet } from './cosmos-wallet';

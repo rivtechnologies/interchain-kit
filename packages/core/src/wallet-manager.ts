@@ -1,6 +1,6 @@
 import { ICosmosGenericOfflineSigner } from '@interchainjs/cosmos/types/wallet';
 import { HttpEndpoint } from '@interchainjs/types';
-import { Chain, AssetList } from '@chain-registry/v2-types'
+import { Chain, AssetList } from '@chain-registry/types'
 import { BaseWallet } from './wallets/base-wallet'
 import { ChainName, DeviceType, DownloadInfo, EndpointOptions, Endpoints, OS, SignerOptions, SignType } from './types'
 import { SigningOptions as InterchainSigningOptions } from '@interchainjs/cosmos/types/signing-client';

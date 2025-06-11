@@ -1,5 +1,5 @@
 
-import { AssetList, Chain } from '@chain-registry/v2-types';
+import { AssetList, Chain } from '@chain-registry/types';
 import { createInterchainStore, InterchainStore } from '../../src/store/store';
 import { WalletManager, WalletState, SignerOptions, EndpointOptions, clientNotExistError, WalletAccount, BaseWallet, WCWallet } from '@interchain-kit/core';
 import { MockWallet, MockWalletConnect } from '../helpers/mock-wallet';

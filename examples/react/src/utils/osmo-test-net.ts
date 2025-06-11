@@ -1,5 +1,5 @@
 
-import { AssetList, Chain } from "@chain-registry/v2-types";
+import { AssetList, Chain } from "@chain-registry/types";
 import osmosisChain from '@chain-registry/v2/mainnet/osmosis/chain'
 import osmosisAssetList from '@chain-registry/v2/mainnet/osmosis/asset-list'
 

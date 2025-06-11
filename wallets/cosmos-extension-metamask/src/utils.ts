@@ -1,5 +1,5 @@
 
-import { AssetList, Chain } from "@chain-registry/v2-types";
+import { AssetList, Chain } from "@chain-registry/types";
 import { Chain as MetaMaskCosmosChainInfo } from './types'
 
 export const getMetaMaskCosmosChainInfo = (chain: Chain, assetList: AssetList): MetaMaskCosmosChainInfo => {
