@@ -3,7 +3,7 @@ import { AminoGenericOfflineSigner, AminoSignResponse, DirectGenericOfflineSigne
 import { BaseWallet } from "./base-wallet";
 import { BroadcastMode, DirectSignDoc, SignOptions, SignType, WalletAccount } from '../types';
 import { getClientFromExtension } from '../utils';
-import { chainRegistryChainToKeplr } from '@chain-registry/v2-keplr';
+import { chainRegistryChainToKeplr } from '@chain-registry/keplr';
 
 export class CosmosWallet extends BaseWallet {
 
