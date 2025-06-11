@@ -5,11 +5,11 @@ import { keplrWallet } from '@interchain-kit/keplr-extension';
 import { leapWallet } from '@interchain-kit/leap-extension';
 import { RouterView } from 'vue-router';
 import { WCWallet } from "@interchain-kit/core";
-import { chain as junoChain, assetList as junoAssetList } from "@chain-registry/v2/mainnet/juno";
-import { chain as osmosisChain, assetList as osmosisAssetList } from "@chain-registry/v2/mainnet/osmosis";
-import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from "@chain-registry/v2/mainnet/cosmoshub";
-import { chain as stargazeChain, assetList as stargazeAssetList } from "@chain-registry/v2/mainnet/stargaze";
-// import { chain as osmosisTestChain, assetList as osmosisTestAssetList } from "@chain-registry/v2/testnet/osmosistestnet"
+import { chain as junoChain, assetList as junoAssetList } from "chain-registry/mainnet/juno";
+import { chain as osmosisChain, assetList as osmosisAssetList } from "chain-registry/mainnet/osmosis";
+import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from "chain-registry/mainnet/cosmoshub";
+import { chain as stargazeChain, assetList as stargazeAssetList } from "chain-registry/mainnet/stargaze";
+// import { chain as osmosisTestChain, assetList as osmosisTestAssetList } from "chain-registry/testnet/osmosistestnet"
 const walletConnect = new WCWallet();
 </script>
 

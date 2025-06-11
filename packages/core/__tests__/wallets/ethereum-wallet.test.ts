@@ -1,7 +1,7 @@
 import { EthereumWallet } from '../../src/wallets/ethereum-wallet';
 import { Chain } from "@chain-registry/types";
 const mockGetClientFromExtension = require('../../src/utils').getClientFromExtension;
-import { chain as etherChain, assetList as etherAssetList } from '@chain-registry/v2/mainnet/ethereum';
+import { chain as etherChain, assetList as etherAssetList } from 'chain-registry/mainnet/ethereum';
 
 jest.mock('../../src/utils', () => ({
     getClientFromExtension: jest.fn(),

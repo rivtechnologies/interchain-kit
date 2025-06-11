@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { watch } from 'vue'
 import { useConfig, useWalletManager } from '@interchain-kit/vue';
-import { chain as stargazeChain, assetList as stargazeAssetList } from "@chain-registry/v2/mainnet/stargaze";
+import { chain as stargazeChain, assetList as stargazeAssetList } from "chain-registry/mainnet/stargaze";
 
 const { updateChains, updateAssetLists } = useConfig()
 const walletManager = useWalletManager()

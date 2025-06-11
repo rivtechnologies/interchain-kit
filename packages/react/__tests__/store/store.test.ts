@@ -3,7 +3,7 @@ import { AssetList, Chain } from '@chain-registry/types';
 import { createInterchainStore, InterchainStore } from '../../src/store/store';
 import { WalletManager, WalletState, SignerOptions, EndpointOptions, clientNotExistError, WalletAccount, BaseWallet, WCWallet } from '@interchain-kit/core';
 import { MockWallet, MockWalletConnect } from '../helpers/mock-wallet';
-import { chain, assetList } from '@chain-registry/v2/mainnet/osmosis'
+import { chain, assetList } from 'chain-registry/mainnet/osmosis'
 
 const localStorageMock: Storage = (() => {
   let store: { [key: string]: string } = {};

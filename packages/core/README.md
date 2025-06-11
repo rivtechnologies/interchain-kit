@@ -32,8 +32,8 @@ yarn add @interchain-kit/core
 ## Usage
 #### Connect
 ```js
-import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from '@chain-registry/v2/mainnet/cosmoshub'
-import { chain as junoChain, assetList as junoAssetList } from '@chain-registry/v2/mainnet/juno'
+import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from 'chain-registry/mainnet/cosmoshub'
+import { chain as junoChain, assetList as junoAssetList } from 'chain-registry/mainnet/juno'
 import { WalletManager } from '@interchain-kit/core'
 import { keplrWallet } from '@interchain-kit/keplr-extension'
 
@@ -62,8 +62,8 @@ await walletManager.disconnect(keplrWallet.info?.name as string, junoChain.chain
 #### Account
 ```js
 
-import osmosis from '@chain-registry/v2/mainnet/osmosis';
-import cosmoshub from '@chain-registry/v2/mainnet/cosmoshub'
+import osmosis from 'chain-registry/mainnet/osmosis';
+import cosmoshub from 'chain-registry/mainnet/cosmoshub'
 import { WalletManager } from '@interchain-kit/core';
 import { keplrWallet } from '@interchain-kit/keplr-extension';
 
@@ -83,7 +83,7 @@ console.log(account2)
 #### Query (balance)
 ```ts
 
-import { chain as osmosisChain, assetList as osmosisAssetList } from '@chain-registry/v2/mainnet/osmosis';
+import { chain as osmosisChain, assetList as osmosisAssetList } from 'chain-registry/mainnet/osmosis';
 import { WalletManager } from '@interchain-kit/core';
 import { keplrWallet } from '@interchain-kit/keplr-extension';
 import { createGetBalance } from "interchainjs/cosmos/bank/v1beta1/query.rpc.func";
@@ -111,7 +111,7 @@ console.log(balance)
 #### Signing (send tx)
 ```ts
 
-import { chain as osmosisChain, assetList as osmosisAssetList } from '@chain-registry/v2/mainnet/osmosis';
+import { chain as osmosisChain, assetList as osmosisAssetList } from 'chain-registry/mainnet/osmosis';
 import { WalletManager } from '@interchain-kit/core';
 import { keplrWallet } from '@interchain-kit/keplr-extension';
 import { createSend } from "interchainjs/cosmos/bank/v1beta1/tx.rpc.func";

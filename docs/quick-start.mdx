@@ -27,7 +27,7 @@ First, install the core package and your framework-specific package:
 #### For React Applications
 
 ```bash
-npm install @interchain-kit/core @interchain-kit/react @chain-registry/v2
+npm install @interchain-kit/core @interchain-kit/react chain-registry
 # Install some wallet adapters
 npm install @interchain-kit/keplr-extension @interchain-kit/leap-extension
 ```
@@ -35,7 +35,7 @@ npm install @interchain-kit/keplr-extension @interchain-kit/leap-extension
 #### For Vue Applications
 
 ```bash
-npm install @interchain-kit/core @interchain-kit/vue @chain-registry/v2
+npm install @interchain-kit/core @interchain-kit/vue chain-registry
 # Install some wallet adapters
 npm install @interchain-kit/keplr-extension @interchain-kit/leap-extension
 ```
@@ -54,7 +54,7 @@ import { ChainProvider } from "@interchain-kit/react";
 import { keplrWallet } from "@interchain-kit/keplr-extension";
 import { leapWallet } from "@interchain-kit/leap-extension";
 // Import chain registry data
-import { chains, assetLists } from "@chain-registry/v2";
+import { chains, assetLists } from "chain-registry";
 
 // Filter to include only the chains you want to support
 const chainNames = ["osmosis", "cosmoshub", "juno"];
@@ -83,9 +83,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 import { ChainProvider } from '@interchain-kit/vue';
 import { keplrWallet } from '@interchain-kit/keplr-extension';
 import { leapWallet } from '@interchain-kit/leap-extension';
-import { chain as osmosisChain, assetList as osmosisAssetList } from "@chain-registry/v2/mainnet/osmosis";
-import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from "@chain-registry/v2/mainnet/cosmoshub";
-import { chain as junoChain, assetList as junoAssetList } from "@chain-registry/v2/mainnet/juno";
+import { chain as osmosisChain, assetList as osmosisAssetList } from "chain-registry/mainnet/osmosis";
+import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from "chain-registry/mainnet/cosmoshub";
+import { chain as junoChain, assetList as junoAssetList } from "chain-registry/mainnet/juno";
 </script>
 
 <template>

@@ -1,5 +1,5 @@
-import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from '@chain-registry/v2/mainnet/cosmoshub'
-import { chain as junoChain, assetList as junoAssetList } from '@chain-registry/v2/mainnet/juno'
+import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from 'chain-registry/mainnet/cosmoshub'
+import { chain as junoChain, assetList as junoAssetList } from 'chain-registry/mainnet/juno'
 import { WalletManager } from '@interchain-kit/core'
 import { keplrWallet } from '@interchain-kit/keplr-extension'
 

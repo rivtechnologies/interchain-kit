@@ -1,7 +1,7 @@
 
 import { AssetList, Chain } from "@chain-registry/types";
-import osmosisChain from '@chain-registry/v2/mainnet/osmosis/chain'
-import osmosisAssetList from '@chain-registry/v2/mainnet/osmosis/asset-list'
+import osmosisChain from 'chain-registry/mainnet/osmosis/chain'
+import osmosisAssetList from 'chain-registry/mainnet/osmosis/asset-list'
 
 export const createStarshipChain = (chainId: string, chainName: string, rpc: string, rest: string): Chain => {
   return {

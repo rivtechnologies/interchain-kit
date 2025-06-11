@@ -65,7 +65,7 @@ npm install @interchain-kit/ledger
 You'll also need to install Chain Registry for chain information:
 
 ```bash
-npm install @chain-registry/v2
+npm install chain-registry
 ```
 
 For UI components, you can install Interchain UI (optional but recommended):
@@ -102,7 +102,7 @@ import { ChainProvider, InterchainWalletModal } from "@interchain-kit/react";
 import { keplrWallet } from "@interchain-kit/keplr-extension";
 import { leapWallet } from "@interchain-kit/leap-extension";
 import { WCWallet } from "@interchain-kit/core";
-import { chains, assetLists } from "@chain-registry/v2";
+import { chains, assetLists } from "chain-registry";
 
 // Optional UI components
 import { ThemeProvider } from "@interchain-ui/react";
@@ -150,8 +150,8 @@ import { ChainProvider } from '@interchain-kit/vue';
 import { keplrWallet } from '@interchain-kit/keplr-extension';
 import { leapWallet } from '@interchain-kit/leap-extension';
 import { WCWallet } from "@interchain-kit/core";
-import { chain as osmosisChain, assetList as osmosisAssetList } from "@chain-registry/v2/mainnet/osmosis";
-import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from "@chain-registry/v2/mainnet/cosmoshub";
+import { chain as osmosisChain, assetList as osmosisAssetList } from "chain-registry/mainnet/osmosis";
+import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from "chain-registry/mainnet/cosmoshub";
 
 // Initialize WalletConnect (optional)
 const walletConnect = new WCWallet();

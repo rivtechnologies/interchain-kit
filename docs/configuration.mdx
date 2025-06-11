@@ -16,7 +16,7 @@ import { ChainProvider, InterchainWalletModal } from "@interchain-kit/react";
 import { keplrWallet } from "@interchain-kit/keplr-extension";
 import { leapWallet } from "@interchain-kit/leap-extension";
 // Import chain data
-import { chains, assetLists } from "@chain-registry/v2";
+import { chains, assetLists } from "chain-registry";
 
 function App() {
   return (
@@ -221,8 +221,8 @@ For Vue applications, the configuration is similar but uses the Vue-specific com
 import { ChainProvider } from '@interchain-kit/vue';
 import { keplrWallet } from '@interchain-kit/keplr-extension';
 import { leapWallet } from '@interchain-kit/leap-extension';
-import { chain as osmosisChain, assetList as osmosisAssetList } from "@chain-registry/v2/mainnet/osmosis";
-import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from "@chain-registry/v2/mainnet/cosmoshub";
+import { chain as osmosisChain, assetList as osmosisAssetList } from "chain-registry/mainnet/osmosis";
+import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from "chain-registry/mainnet/cosmoshub";
 import { WCWallet } from "@interchain-kit/core";
 
 // Initialize WalletConnect

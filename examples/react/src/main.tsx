@@ -7,7 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 
 import { ChainProvider, InterchainWalletModal } from "@interchain-kit/react";
 
-import { assetLists, chains } from "@chain-registry/v2";
+import { assetLists, chains } from "chain-registry";
 import {
   BaseWallet,
   ExtensionWallet,

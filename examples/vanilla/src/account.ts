@@ -1,6 +1,6 @@
 
-import osmosis from '@chain-registry/v2/mainnet/osmosis';
-import cosmoshub from '@chain-registry/v2/mainnet/cosmoshub'
+import osmosis from 'chain-registry/mainnet/osmosis';
+import cosmoshub from 'chain-registry/mainnet/cosmoshub'
 import { WalletManager } from '@interchain-kit/core';
 import { keplrWallet } from '@interchain-kit/keplr-extension';
 

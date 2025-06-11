@@ -22,10 +22,10 @@ import { ChainProvider } from '@interchain-kit/vue'
 import { keplrWallet } from '@interchain-kit/keplr-extension';
 import { leapWallet } from '@interchain-kit/leap-extension';
 import { RouterView } from 'vue-router';
-import { chain as junoChain, assetList as junoAssetList } from "@chain-registry/v2/mainnet/juno";
-import { chain as osmosisChain,assetList as osmosisAssetList } from "@chain-registry/v2/mainnet/osmosis";
-import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from "@chain-registry/v2/mainnet/cosmoshub";
-import { chain as osmosisTestChain, assetList as osmosisTestAssetList } from "@chain-registry/v2/testnet/osmosistestnet"
+import { chain as junoChain, assetList as junoAssetList } from "chain-registry/mainnet/juno";
+import { chain as osmosisChain,assetList as osmosisAssetList } from "chain-registry/mainnet/osmosis";
+import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from "chain-registry/mainnet/cosmoshub";
+import { chain as osmosisTestChain, assetList as osmosisTestAssetList } from "chain-registry/testnet/osmosistestnet"
 </script>
 
 <template>
@@ -50,7 +50,7 @@ import { chain as osmosisTestChain, assetList as osmosisTestAssetList } from "@c
 <script setup lang="ts">
 import { ChainProvider } from '@interchain-kit/vue';
 import { keplrWallet } from '@interchain-kit/keplr-extension';
-import { chains, assetLists } from '@chain-registry/v2/mainnet';
+import { chains, assetLists } from 'chain-registry/mainnet';
 import Show from './views/show.vue';
 </script>
 
@@ -134,7 +134,7 @@ import { ChainProvider } from '@interchain-kit/vue'
 import { keplrWallet } from '@interchain-kit/keplr-extension';
 import { leapWallet } from '@interchain-kit/leap-extension';
 import Show from './views/show.vue';
-import { chains, assetLists } from '@chain-registry/v2/mainnet';
+import { chains, assetLists } from 'chain-registry/mainnet';
 
 const chainNames = ['juno', 'stargaze']
 </script>

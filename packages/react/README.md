@@ -38,9 +38,9 @@ import { keplrWallet } from "@interchain-kit/keplr-extension";
 import { ThemeProvider } from "@interchain-ui/react";
 import "@interchain-ui/react/styles";
 
-import { chain as junoChain, assetList as junoAssetList } from "@chain-registry/v2/mainnet/juno";
-import { chain as osmosisChain,assetList as osmosisAssetList } from "@chain-registry/v2/mainnet/osmosis";
-import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from "@chain-registry/v2/mainnet/cosmoshub";
+import { chain as junoChain, assetList as junoAssetList } from "chain-registry/mainnet/juno";
+import { chain as osmosisChain,assetList as osmosisAssetList } from "chain-registry/mainnet/osmosis";
+import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from "chain-registry/mainnet/cosmoshub";
 
 const Show = () => {
   const {address} = useChain('osmosis');
@@ -73,7 +73,7 @@ import { ChainProvider, useChain } from "@interchain-kit/react";
 import { keplrWallet } from "@interchain-kit/keplr-extension";
 import { ThemeProvider } from "@interchain-ui/react";
 import "@interchain-ui/react/styles";
-import { chains, assetLists } from '@chain-registry/v2/mainnet'
+import { chains, assetLists } from 'chain-registry/mainnet'
  
 
 const Show = () => {
@@ -116,8 +116,8 @@ console.log(address) // address for cosmoshub in keplr-extension wallet
 
 ### useChainWallet
 ```js
-import { chain as junoChain, assetList as junoAssetList } from "@chain-registry/v2/mainnet/juno";
-import { chain as stargazeChain,assetList as stargazeAssetList } from "@chain-registry/v2/mainnet/stargaze";
+import { chain as junoChain, assetList as junoAssetList } from "chain-registry/mainnet/juno";
+import { chain as stargazeChain,assetList as stargazeAssetList } from "chain-registry/mainnet/stargaze";
 import { keplrWallet } from "@interchain-kit/keplr-extension";
 import { leapWallet } from "@interchain-kit/leap-extension";
 

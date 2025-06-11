@@ -3,7 +3,7 @@ import { CosmosWallet } from '../../src/wallets/cosmos-wallet';
 import { BaseWallet } from '../../src/wallets/base-wallet';
 import { getClientFromExtension } from '../../src/utils';
 import { chainRegistryChainToKeplr } from '@chain-registry/keplr';
-import { chain as cosmosChain, assetList as cosmosAssetList } from '@chain-registry/v2/mainnet/cosmoshub'
+import { chain as cosmosChain, assetList as cosmosAssetList } from 'chain-registry/mainnet/cosmoshub'
 
 jest.mock('../../src/utils', () => ({
     getClientFromExtension: jest.fn(),

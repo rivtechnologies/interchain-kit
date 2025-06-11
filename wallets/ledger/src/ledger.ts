@@ -1,7 +1,7 @@
 import { BaseWallet, SignOptions, Wallet, WalletAccount, DirectSignDoc, BroadcastMode, CosmosWallet } from "@interchain-kit/core";
 import Transport from "@ledgerhq/hw-transport";
 import TransportWebHID from "@ledgerhq/hw-transport-webhid";
-import { chains } from "@chain-registry/v2";
+import { chains } from "chain-registry";
 import Cosmos from "@ledgerhq/hw-app-cosmos";
 import { ChainInfo } from '@keplr-wallet/types'
 import {

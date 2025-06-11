@@ -1,5 +1,5 @@
 
-import { chain as osmosisChain, assetList as osmosisAssetList } from '@chain-registry/v2/mainnet/osmosis';
+import { chain as osmosisChain, assetList as osmosisAssetList } from 'chain-registry/mainnet/osmosis';
 import { WalletManager } from '@interchain-kit/core';
 import { keplrWallet } from '@interchain-kit/keplr-extension';
 import { createSend } from "interchainjs/cosmos/bank/v1beta1/tx.rpc.func";
