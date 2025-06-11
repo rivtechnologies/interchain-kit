@@ -33,7 +33,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@chain-registry/v2-types": "^0.53.40",
+    "@chain-registry/types": "^2.0.1",
     "@interchain-kit/core": "0.3.36",
     "@interchain-ui/react": "1.26.1",
     "@interchainjs/cosmos": "1.11.11",

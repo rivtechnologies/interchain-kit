@@ -9,8 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@chain-registry/v2": "^1.71.16",
-    "@chain-registry/v2-types": "^0.53.0",
+    "chain-registry": "^2.0.1",
+    "@chain-registry/types": "^2.0.1",
     "@chenfengyuan/vue-qrcode": "^2.0.0",
     "@interchain-kit/vue": "^0.1.0",
     "interchainjs": "0.0.1-alpha.31",

@@ -22,8 +22,8 @@
     }
   },
   "dependencies": {
-    "@chain-registry/v2": "^1.71.16",
-    "@chain-registry/v2-types": "^0.53.0",
+    "chain-registry": "^2.0.1",
+    "@chain-registry/types": "^2.0.1",
     "@cosmjs/crypto": "^0.32.4",
     "@cosmjs/proto-signing": "^0.32.4",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",

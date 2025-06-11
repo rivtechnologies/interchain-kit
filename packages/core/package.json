@@ -32,9 +32,9 @@
   },
   "keywords": [],
   "dependencies": {
-    "@chain-registry/v2": "^1.71.71",
-    "@chain-registry/v2-keplr": "^0.0.72",
-    "@chain-registry/v2-types": "^0.53.40",
+    "chain-registry": "^2.0.1",
+    "@chain-registry/keplr": "^2.0.1",
+    "@chain-registry/types": "^2.0.1",
     "@interchainjs/cosmos": "1.11.11",
     "@interchainjs/cosmos-types": "1.11.11",
     "@interchainjs/types": "1.11.11",
