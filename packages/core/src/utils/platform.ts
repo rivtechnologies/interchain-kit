@@ -1,7 +1,10 @@
 import { Wallet } from "../types";
 import { BaseWallet, ExtensionWallet, WCMobileWebWallet } from "../wallets";
 
+export const isServer = () => typeof window === 'undefined';
+
 export const isMobile = () => {
+  if (isServer()) return false; // Avoid checking user agent on server-side
   const userAgent = navigator.userAgent || navigator.vendor
   return (
     /android/i.test(userAgent) ||
@@ -10,11 +13,13 @@ export const isMobile = () => {
 }
 
 export const isAndroid = () => {
+  if (isServer()) return false; // Avoid checking user agent on server-side
   const userAgent = navigator.userAgent || navigator.vendor
   return /android/i.test(userAgent);
 }
 
 export const isIOS = () => {
+  if (isServer()) return false; // Avoid checking user agent on server-side
   const userAgent = navigator.userAgent || navigator.vendor
   return /iPad|iPhone|iPod/.test(userAgent);
 }
