@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/ledger",
-  "version": "0.3.36",
+  "version": "0.3.37",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector",
   "main": "index.js",
@@ -32,13 +32,13 @@
   },
   "keywords": [],
   "dependencies": {
-    "chain-registry": "^2.0.1",
     "@chain-registry/types": "^2.0.1",
-    "@interchain-kit/core": "0.3.36",
+    "@interchain-kit/core": "0.3.37",
     "@ledgerhq/hw-transport": "^6.31.4",
     "@ledgerhq/hw-transport-webhid": "^6.29.4",
     "@zondax/ledger-cosmos-js": "^4.0.0",
     "buffer": "^6.0.3",
+    "chain-registry": "^2.0.1",
     "crypto": "npm:crypto-es",
     "crypto-browserify": "^3.12.1",
     "crypto-es": "^2.1.0"

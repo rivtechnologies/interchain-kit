@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/core",
-  "version": "0.3.36",
+  "version": "0.3.37",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector core package",
   "main": "index.js",
@@ -32,7 +32,6 @@
   },
   "keywords": [],
   "dependencies": {
-    "chain-registry": "^2.0.1",
     "@chain-registry/keplr": "^2.0.1",
     "@chain-registry/types": "^2.0.1",
     "@interchainjs/cosmos": "1.11.11",
@@ -48,6 +47,7 @@
     "base64-js": "^1.5.1",
     "bowser": "^2.11.0",
     "buffer": "^6.0.3",
+    "chain-registry": "^2.0.1",
     "interchainjs": "1.11.11",
     "long": "^5.2.3",
     "pino-pretty": "^7.6.0"

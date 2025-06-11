@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.37](https://github.com/interchain-kit/trust-extension/compare/@interchain-kit/trust-extension@0.3.36...@interchain-kit/trust-extension@0.3.37) (2025-06-11)
+
+**Note:** Version bump only for package @interchain-kit/trust-extension
+
 ## [0.3.36](https://github.com/interchain-kit/trust-extension/compare/@interchain-kit/trust-extension@0.3.35...@interchain-kit/trust-extension@0.3.36) (2025-06-02)
 
 **Note:** Version bump only for package @interchain-kit/trust-extension
