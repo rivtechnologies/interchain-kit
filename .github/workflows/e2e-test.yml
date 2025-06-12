@@ -30,7 +30,7 @@ jobs:
       id: starship-infra
       uses: hyperweb-io/starship-action@1.0.0
       with:
-        config: e2e/starship/configs/osmo-juno-cosmos.yaml
+        config: e2e/starship/configs/osmosis-cosmoshub.yaml
       
     - name: Install Playwright browsers
       run: cd e2e && npx playwright install --with-deps chromium
