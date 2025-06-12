@@ -28,7 +28,7 @@ jobs:
       
     - name: Set Up Starship Infrastructure
       id: starship-infra
-      uses: hyperweb-io/starship-action@0.5.5
+      uses: hyperweb-io/starship-action@1.0.0
       with:
         config: e2e/starship/configs/osmo-juno-cosmos.yaml
       

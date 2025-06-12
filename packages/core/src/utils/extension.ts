@@ -14,9 +14,9 @@ export const travelObject = (obj: any, paths: string[]) => {
 
 
 export const getClientFromExtension = async (key: string | string[]) => {
-  // if (typeof window === 'undefined') {
-  //   return undefined
-  // }
+  if (typeof window === 'undefined') {
+    return undefined
+  }
 
   const keys = Array.isArray(key) ? key : key.split('.')
 
