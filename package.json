@@ -20,9 +20,14 @@
     "symlink": "symlink-workspace --logLevel error",
     "postinstall": "yarn symlink",
     "dev:watch": "node scripts/dev.js && npx lerna run watch:dev --parallel --stream",
-    "test": "lerna run test --stream"
+    "test": "lerna run test --stream",
+    "test:e2e": "cd e2e && npx playwright test",
+    "test:e2e:ui": "cd e2e && npx playwright test --ui",
+    "test:e2e:headed": "cd e2e && npx playwright test --headed",
+    "test:e2e:debug": "cd e2e && npx playwright test --debug"
   },
   "devDependencies": {
+    "@playwright/test": "^1.40.0",
     "@types/jest": "^29.5.11",
     "@types/node": "^20.12.7",
     "@typescript-eslint/eslint-plugin": "^7.10.0",

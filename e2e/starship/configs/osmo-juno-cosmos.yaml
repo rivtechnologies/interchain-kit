@@ -1,0 +1,52 @@
+# Example values.yaml file will create 2 chains with 4 validators,
+# a ts-relayer between them and the explorer
+name: interchain-kit-e2e
+version: 1.7.0
+
+chains:
+  - id: osmosis-1
+    name: osmosis
+    numValidators: 1
+    ports:
+      rest: 1313
+      rpc: 26653
+      faucet: 9090
+  - id: juno-1
+    name: juno
+    numValidators: 1
+    ports:
+      rest: 1315
+      rpc: 26655
+      faucet: 9092
+  - id: cosmoshub-1
+    name: cosmoshub
+    numValidators: 1
+    ports:
+      rest: 1317
+      rpc: 26657
+      faucet: 9094
+
+relayers:
+  - name: osmos-juno
+    type: hermes
+    replicas: 1
+    chains:
+      - osmosis-1
+      - juno-1
+  - name: osmos-cosmos
+    type: hermes
+    replicas: 1
+    chains:
+      - osmosis-1
+      - cosmoshub-1
+
+explorer:
+  enabled: true
+  ports:
+    rest: 8080
+
+registry:
+  enabled: true
+  ports:
+    rest: 8081
+    grpc: 9091

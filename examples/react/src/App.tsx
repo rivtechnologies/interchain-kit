@@ -28,6 +28,7 @@ export default function App() {
         <Route path="cosmos-wallet" element={<CosmosWalletPage />} />
         <Route path="test-disconnect" element={<TestDisconnect />} />
         <Route path="ethereum-wallet" element={<EthereumSignMessage />} />
+        <Route path="e2e-test" element={<E2ETest />} />
       </Route>
     </Routes>
   );

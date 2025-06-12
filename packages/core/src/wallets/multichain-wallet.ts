@@ -50,8 +50,12 @@ export class MultiChainWallet extends BaseWallet {
 
   async init(): Promise<void> {
     const wallets = Array.from(this.networkWalletMap.values());
-
-    await Promise.all(wallets.map(async wallet => wallet.init()))
+    try {
+      await Promise.all(wallets.map(async wallet => wallet.init()))
+    } catch (error) {
+      console.log('Error initializing wallets:', error);
+      // throw error
+    }
   }
   getWalletByChainType(chainType: Chain['chainType']) {
     const wallet = this.networkWalletMap.get(chainType);

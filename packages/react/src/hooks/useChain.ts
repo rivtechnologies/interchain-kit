@@ -1,6 +1,6 @@
 import { UseChainReturnType } from '../types/chain';
 import { useWalletManager } from './useWalletManager';
-import { ChainNameNotExist } from '@interchain-kit/core';
+import { ChainNameNotExist, WalletState } from '@interchain-kit/core';
 import { useSigningClient } from './useSigningClient';
 import { useWalletModal } from './useWalletModal';
 
@@ -35,7 +35,7 @@ export const useChain = (chainName: string): UseChainReturnType => {
     },
     closeView: close,
     getRpcEndpoint: () => getRpcEndpoint(currentWalletName, chainName),
-    status: chainWalletStateToShow?.walletState,
+    status: chainWalletStateToShow?.walletState || WalletState.Disconnected,
     username: chainWalletStateToShow?.account?.username,
     message: chainWalletStateToShow?.errorMessage,
 

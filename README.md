@@ -8,6 +8,9 @@
   <a href="https://github.com/hyperweb-io/interchain-kit/actions/workflows/unit-test.yaml">
     <img height="20" src="https://github.com/hyperweb-io/interchain-kit/actions/workflows/unit-test.yaml/badge.svg" />
   </a>
+    <a href="https://github.com/hyperweb-io/interchain-kit/actions/workflows/e2e-test.yaml">
+    <img height="20" src="https://github.com/hyperweb-io/interchain-kit/actions/workflows/e2e-test.yaml/badge.svg" />
+  </a>
   <a href="https://github.com/hyperweb-io/lib-count">
     <img height="20" src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fhyperweb-io%2Flib-count%2Fmain%2Foutput%2Fbadges%2Fproducts%2Fcosmos-kit%2Ftotal.json"/>  
   </a>
