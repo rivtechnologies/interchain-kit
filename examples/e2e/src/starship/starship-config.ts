@@ -10,16 +10,10 @@ export const starshipConfig = {
         "rest": 1313,
         "rpc": 26653,
         "faucet": 9090
-      }
-    },
-    {
-      "id": "juno-1",
-      "name": "juno",
-      "numValidators": 1,
-      "ports": {
-        "rest": 1315,
-        "rpc": 26655,
-        "faucet": 9092
+      },
+      "resources": {
+        "cpu": "0.2",
+        "memory": "200M"
       }
     },
     {
@@ -30,19 +24,14 @@ export const starshipConfig = {
         "rest": 1317,
         "rpc": 26657,
         "faucet": 9094
+      },
+      "resources": {
+        "cpu": "0.2",
+        "memory": "200M"
       }
     }
   ],
   "relayers": [
-    {
-      "name": "osmos-juno",
-      "type": "hermes",
-      "replicas": 1,
-      "chains": [
-        "osmosis-1",
-        "juno-1"
-      ]
-    },
     {
       "name": "osmos-cosmos",
       "type": "hermes",
@@ -50,15 +39,13 @@ export const starshipConfig = {
       "chains": [
         "osmosis-1",
         "cosmoshub-1"
-      ]
+      ],
+      "resources": {
+        "cpu": "0.1",
+        "memory": "100M"
+      }
     }
   ],
-  "explorer": {
-    "enabled": true,
-    "ports": {
-      "rest": 8080
-    }
-  },
   "registry": {
     "enabled": true,
     "ports": {

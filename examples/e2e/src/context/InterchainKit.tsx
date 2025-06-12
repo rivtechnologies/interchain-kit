@@ -9,14 +9,9 @@ import {
   chain as cosmoshubChain,
   assetList as cosmoshubAssetList,
 } from "chain-registry/mainnet/cosmoshub";
-import {
-  chain as junoChain,
-  assetList as junoAssetList,
-} from "chain-registry/mainnet/juno";
 
 import { useChain as useStarshipChain } from "@/starship/hook";
 import { useEffect, useState } from "react";
-import { MockCosmosWallet } from "@/wallet/mock-cosmos-wallet";
 import {
   mockWallet1,
   mockWallet2,
@@ -31,22 +26,18 @@ export const InterchainKit = ({ children }: { children: React.ReactNode }) => {
   const [endpoint, setEndpoint] = useState({
     osmosis: "",
     cosmoshub: "",
-    juno: "",
   });
   const osmosis = useStarshipChain("osmosis");
   const cosmoshub = useStarshipChain("cosmoshub");
-  const juno = useStarshipChain("juno");
 
   const initStarship = async () => {
     await Promise.all([
       osmosis.getRpcEndpoint(),
       cosmoshub.getRpcEndpoint(),
-      juno.getRpcEndpoint(),
     ]).then((result) => {
       setEndpoint({
         osmosis: result[0],
         cosmoshub: result[1],
-        juno: result[2],
       });
     });
 
@@ -89,9 +80,6 @@ export const InterchainKit = ({ children }: { children: React.ReactNode }) => {
           },
           cosmoshub: {
             rpc: [endpoint.cosmoshub],
-          },
-          juno: {
-            rpc: [endpoint.juno],
           },
         },
       }}
