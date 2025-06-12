@@ -17,8 +17,7 @@ module.exports = {
   modulePathIgnorePatterns: ["dist/*"],
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   testPathIgnorePatterns: ["__tests__/helpers/*"],
-  // moduleNameMapper: {
-  //   "^uint8arrays$": "<rootDir>../../node_modules/uint8arrays/cjs/src", // 强制使用 CommonJS 版本
-  //   "^multiformats$": "<rootDir>../../node_modules/multiformats/cjs/src", // 强制使用 CommonJS 版本
-  // },
+  moduleNameMapper: {
+    "@interchain-ui/react/styles": "jest-transform-stub",
+  },
 };

@@ -27,7 +27,6 @@ import { StatefulWallet } from "../store/stateful-wallet";
 import { useWalletManager } from "../hooks";
 import { transferToWalletUISchema } from "../utils";
 import { ChainWalletState } from "../store";
-import "@interchain-ui/react/styles";
 
 export type WalletModalProps = {
   isOpen: boolean;
