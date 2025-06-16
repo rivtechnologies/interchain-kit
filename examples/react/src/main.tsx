@@ -177,7 +177,7 @@ const _wallets: BaseWallet[] = [
   // mock1Wallet,
   // mock2Wallet,
   keplrWallet,
-  // leapWallet,
+  leapWallet,
   // cosmostationWallet,
   // stationWallet,
   // galaxyStationWallet,

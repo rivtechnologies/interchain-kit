@@ -12,13 +12,10 @@ import {
 
 import { useChain as useStarshipChain } from "@/starship/hook";
 import { useEffect, useState } from "react";
-import {
-  mockWallet1,
-  mockWallet2,
-  notInstalledWallet,
-  receiverWallet,
-  senderWallet,
-} from "@/wallet";
+import { receiverWallet, senderWallet } from "@/wallet";
+import { notInstalledWallet } from "@/wallet/NotInstalledWallet";
+import { mockWallet } from "@/wallet/MockWallet";
+import { rejectSigningWallet } from "@/wallet/RejectSigningWallet";
 
 export const InterchainKit = ({ children }: { children: React.ReactNode }) => {
   const [isRpcReady, setRpcReady] = useState(false);
@@ -57,11 +54,11 @@ export const InterchainKit = ({ children }: { children: React.ReactNode }) => {
       chains={[osmosisChain, cosmoshubChain]}
       assetLists={[osmosisAssetList, cosmoshubAssetList]}
       wallets={[
-        mockWallet1,
-        mockWallet2,
+        mockWallet,
         senderWallet,
         receiverWallet,
         notInstalledWallet,
+        rejectSigningWallet,
       ]}
       walletModal={() => <InterchainWalletModal />}
       signerOptions={{

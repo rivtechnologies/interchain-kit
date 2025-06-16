@@ -1,37 +1,7 @@
 
 import { Bip39, Random } from '@interchainjs/crypto';
 import { MockCosmosWallet, MockMultiChainWallet } from "./mock-cosmos-wallet";
-import { clientNotExistError, Wallet } from '@interchain-kit/core';
-
-const mockWallet1Info: Wallet = {
-  windowKey: "mock1",
-  cosmosKey: "mockcosmos1",
-  name: "mockWallet1",
-  prettyName: "Mock Cosmos Wallet 1",
-  mode: "extension",
-  downloads: [
-    {
-      device: 'desktop',
-      browser: 'chrome',
-      link: 'https://chrome.google.com/webstore/detail/keplr/dmkamcknogkgcdfhhbddcghachkejeap?hl=en',
-    },
-    {
-      device: 'desktop',
-      browser: 'firefox',
-      link: 'https://addons.mozilla.org/en-US/firefox/addon/keplr/',
-    },
-    {
-      link: 'https://www.keplr.app/download',
-    },
-  ],
-}
-const mockCosmosWallet1 = new MockCosmosWallet(
-  mockWallet1Info,
-  "mock1 mock1 mock1 mock1 mock1 mock1 mock1 mock1 mock1 mock1 mock1 mock1"
-);
-
-export const mockWallet1 = new MockMultiChainWallet(mockWallet1Info)
-mockWallet1.setNetworkWallet('cosmos', mockCosmosWallet1)
+import { Wallet } from '@interchain-kit/core';
 
 
 const mockWallet2Info: Wallet = {
@@ -77,21 +47,3 @@ const receiverCosmosWallet = new MockCosmosWallet(
 export const receiverWallet = new MockMultiChainWallet(receiverWalletInfo)
 receiverWallet.setNetworkWallet('cosmos', receiverCosmosWallet)
 
-
-export const NotInstalledWallet: Wallet = {
-  name: "notInstalledWallet",
-  prettyName: "Not Installed Wallet",
-  mode: "extension",
-  downloads: [
-    {
-      device: 'desktop',
-      browser: 'chrome',
-      link: 'http://show-not-installed-wallet.link',
-    },
-  ]
-}
-
-export const notInstalledWallet = new MockMultiChainWallet(NotInstalledWallet);
-notInstalledWallet.init = () => {
-  throw clientNotExistError
-}

@@ -93,10 +93,14 @@ export class MockCosmosWallet extends CosmosWallet {
     return new DirectGenericOfflineSigner({
       getAccounts: async () => [await this.getAccount(chainId)],
       signDirect: async (signer, signDoc) => {
-        return wallet.signDirect(signer, signDoc)
+        return this.signDirect(chainId, signer, signDoc as DirectSignDoc);
       }
     }) as IGenericOfflineSigner
   }
+
+
+
+
   addSuggestChain(chainId: string | undefined): Promise<void> {
     throw new Error('Method not implemented.');
   }

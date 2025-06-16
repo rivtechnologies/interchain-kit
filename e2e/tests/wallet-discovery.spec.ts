@@ -1,10 +1,11 @@
-import { keplrWallet } from '@interchain-kit/keplr-extension';
+
 import { WalletState } from '@interchain-kit/core';
 import { test } from '@playwright/test';
 import { expect } from '@playwright/test';
-import { mockKeplrWallet } from './utils/mock-wallet';
+
 import { WalletModalModel } from './page-models/wallet-modal';
 import { WalletConnectPage } from './page-models/wallet-connect';
+import { mockWalletWindowObject } from './utils/mock-wallet';
 
 test.describe('Wallet Discovery & Connection', () => {
 
@@ -20,14 +21,14 @@ test.describe('Wallet Discovery & Connection', () => {
 
 
   test('should be disconnected when init, if wallet exist', async ({ page }) => {
-    await mockKeplrWallet(page)
+    await mockWalletWindowObject(page)
     await page.goto('/wallet-connect');
     const element = await page.locator('#wallet-state');
     await expect(element).toContainText(WalletState.Disconnected);
   });
 
   test('should show connected, after connect wallet', async ({ page }) => {
-    await mockKeplrWallet(page)
+    await mockWalletWindowObject(page)
     await page.goto('/wallet-connect');
     const connectBtn = page.locator('[data-testid="connect-wallet-btn"]');
     await connectBtn.click();
@@ -36,7 +37,7 @@ test.describe('Wallet Discovery & Connection', () => {
   });
 
   test('can open modal', async ({ page }) => {
-    await mockKeplrWallet(page)
+    await mockWalletWindowObject(page)
     await page.goto('/wallet-connect');
     const walletModal = new WalletModalModel(page);
     await page.locator('[data-testid="open-modal-btn"]').click();
@@ -44,7 +45,7 @@ test.describe('Wallet Discovery & Connection', () => {
   })
 
   test('should show disconnected, after disconnect wallet', async ({ page }) => {
-    await mockKeplrWallet(page)
+    await mockWalletWindowObject(page)
     await page.goto('/wallet-connect');
     const connectBtn = page.locator('[data-testid="connect-wallet-btn"]');
     await connectBtn.click();
@@ -56,7 +57,7 @@ test.describe('Wallet Discovery & Connection', () => {
 
   test('should show address, after connect wallet', async ({ page }) => {
     const address = 'osmo14jq…ztjcc6r';
-    await mockKeplrWallet(page);
+    await mockWalletWindowObject(page);
     await page.goto('/wallet-connect');
     const walletConnectPage = new WalletConnectPage(page);
     await walletConnectPage.connect();
@@ -68,7 +69,7 @@ test.describe('Wallet Discovery & Connection', () => {
   })
 
   test('disconnect from wallet modal', async ({ page }) => {
-    await mockKeplrWallet(page);
+    await mockWalletWindowObject(page);
     await page.goto('/wallet-connect');
     const walletConnectPage = new WalletConnectPage(page);
     await walletConnectPage.connect();
@@ -76,7 +77,7 @@ test.describe('Wallet Discovery & Connection', () => {
     await walletConnectPage.openModal();
     const walletModalModel = new WalletModalModel(page);
     await walletModalModel.isOpen();
-    await walletModalModel.disconnectWallet('Mock Cosmos Wallet 1');
+    await walletModalModel.disconnectWallet('Mock Wallet');
     await walletConnectPage.isDisconnected();
   })
 

@@ -2,15 +2,14 @@ import { Page } from "@playwright/test";
 
 declare global {
   interface Window {
-    mockcosmos1?: any;
+    mockWallet?: any;
     ethereum?: any;
-    mockcosmos2?: any;
   }
 }
 
-export async function mockKeplrWallet(page: Page) {
+export async function mockWalletWindowObject(page: Page) {
   await page.addInitScript(() => {
-    window.mockcosmos1 = {
+    window.mockWallet = {
       enable: async (chainId: string) => {
         // Mock enabling the wallet for a specific chain
         console.log(`Keplr enabled for chain: ${chainId}`);
