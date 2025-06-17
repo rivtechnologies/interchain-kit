@@ -1,4 +1,3 @@
-import "@interchain-ui/react/styles";
 import {
   ConnectedContent,
   ConnectedHeader,
