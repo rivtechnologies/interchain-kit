@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/okx-extension",
-  "version": "0.3.39",
+  "version": "0.3.40",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector",
   "main": "index.js",
