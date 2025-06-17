@@ -99,14 +99,11 @@ Follow the prompts to select your preferred framework (React or Vue) and configu
 ```tsx
 // In your main application file (e.g., App.tsx or main.tsx)
 import { ChainProvider, InterchainWalletModal } from "@interchain-kit/react";
+import "@interchain-ui/react/styles.css"; // Import Interchain UI styles
 import { keplrWallet } from "@interchain-kit/keplr-extension";
 import { leapWallet } from "@interchain-kit/leap-extension";
 import { WCWallet } from "@interchain-kit/core";
 import { chains, assetLists } from "chain-registry";
-
-// Optional UI components
-import { ThemeProvider } from "@interchain-ui/react";
-import "@interchain-ui/react/styles";
 
 // Initialize WalletConnect (optional)
 const walletConnect = new WCWallet(undefined, {
@@ -124,18 +121,16 @@ const filteredChains = chains.filter(c => chainNames.includes(c.chainName));
 
 function App() {
   return (
-    <ThemeProvider>
-      <ChainProvider
-        wallets={[keplrWallet, leapWallet, walletConnect]}
-        chains={filteredChains}
-        assetLists={assetLists}
-        signerOptions={{}}
-        endpointOptions={{}}
-      >
-        <InterchainWalletModal />
-        {/* Your application components */}
-      </ChainProvider>
-    </ThemeProvider>
+    <ChainProvider
+      wallets={[keplrWallet, leapWallet, walletConnect]}
+      chains={filteredChains}
+      assetLists={assetLists}
+      signerOptions={{}}
+      endpointOptions={{}}
+    >
+      <InterchainWalletModal />
+      {/* Your application components */}
+    </ChainProvider>
   );
 }
 ```

@@ -120,6 +120,7 @@ The `useWalletModal` hook controls the built-in wallet modal for connecting and 
 ```tsx
 import { useWalletModal } from '@interchain-kit/react';
 import { InterchainWalletModal } from '@interchain-kit/react';
+import "@interchain-ui/react/styles.css"; // Import styles for the modal
 
 function WalletModalComponent() {
   const { isOpen, open, close } = useWalletModal();
