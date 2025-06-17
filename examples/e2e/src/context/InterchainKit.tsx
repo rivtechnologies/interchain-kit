@@ -16,6 +16,7 @@ import { receiverWallet, senderWallet } from "@/wallet";
 import { notInstalledWallet } from "@/wallet/NotInstalledWallet";
 import { mockWallet } from "@/wallet/MockWallet";
 import { rejectSigningWallet } from "@/wallet/RejectSigningWallet";
+import { multipleAccountWallet } from "@/wallet/MultipleAccountWallet";
 
 export const InterchainKit = ({ children }: { children: React.ReactNode }) => {
   const [isRpcReady, setRpcReady] = useState(false);
@@ -59,6 +60,7 @@ export const InterchainKit = ({ children }: { children: React.ReactNode }) => {
         receiverWallet,
         notInstalledWallet,
         rejectSigningWallet,
+        multipleAccountWallet,
       ]}
       walletModal={() => <InterchainWalletModal />}
       signerOptions={{

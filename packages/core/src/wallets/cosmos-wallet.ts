@@ -19,8 +19,13 @@ export class CosmosWallet extends BaseWallet {
       ...options,
     }
   }
-
+  bindingEvent() {
+    window.addEventListener(this.info.keystoreChange, () => {
+      this.events.emit('accountChanged', () => { })
+    })
+  }
   async init(): Promise<void> {
+    this.bindingEvent()
     this.client = await getClientFromExtension(this.info.cosmosKey)
   }
 

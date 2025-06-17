@@ -1,7 +1,8 @@
 
-import { BaseWallet, clientNotExistError, CosmosWallet, EthereumWallet, ExtensionWallet, MultiChainWallet, WalletAccount, WalletState, WCWallet } from "@interchain-kit/core"
+import { BaseWallet, clientNotExistError, CosmosWallet, EthereumWallet, ExtensionWallet, isInstanceOf, MultiChainWallet, WalletAccount, WalletState, WCWallet } from "@interchain-kit/core"
 import { InterchainStore } from "./store"
 import { Chain } from "@chain-registry/types"
+import { isSameConstructor } from "../utils/isSameConstructor"
 
 export class StatefulWallet extends BaseWallet {
   originalWallet: BaseWallet
@@ -64,6 +65,15 @@ export class StatefulWallet extends BaseWallet {
   }
 
   async init(): Promise<void> {
+
+    this.originalWallet.events.on('accountChanged', async () => {
+      const chains = Array.from(this.originalWallet.chainMap.values())
+      for (const chain of chains) {
+        await this.getAccount(chain.chainId)
+      }
+    })
+
+
     try {
       await this.originalWallet.init()
       this.store.chains.forEach(chain => {
@@ -176,13 +186,13 @@ export class StatefulWallet extends BaseWallet {
       return this.originalWallet as T
     }
     if (this.originalWallet instanceof MultiChainWallet) {
-      if (WalletClass === CosmosWallet) {
+      if (isSameConstructor(WalletClass, CosmosWallet)) {
         const cosmosWallet = this.originalWallet.getWalletByChainType('cosmos')
         if (cosmosWallet) {
           return cosmosWallet as T
         }
       }
-      if (WalletClass === EthereumWallet) {
+      if (isSameConstructor(WalletClass, EthereumWallet)) {
         const ethereumWallet = this.originalWallet.getWalletByChainType('eip155')
         if (ethereumWallet) {
           return ethereumWallet as T

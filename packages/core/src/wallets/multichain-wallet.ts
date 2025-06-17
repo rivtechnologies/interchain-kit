@@ -50,6 +50,16 @@ export class MultiChainWallet extends BaseWallet {
 
   async init(): Promise<void> {
     const wallets = Array.from(this.networkWalletMap.values());
+
+    wallets.forEach(wallet => {
+      wallet.events.on('accountChanged', () => {
+        this.events.emit('accountChanged', () => {
+
+        });
+      })
+    })
+
+
     try {
       await Promise.all(wallets.map(async wallet => wallet.init()))
     } catch (error) {
