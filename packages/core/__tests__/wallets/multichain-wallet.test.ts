@@ -19,6 +19,9 @@ describe('MultiChainWallet', () => {
             getOfflineSigner: jest.fn(),
             addSuggestChain: jest.fn(),
             getProvider: jest.fn(),
+            events: {
+                on: jest.fn(),
+            }
         } as unknown as BaseWallet;
 
         multiChainWallet = new MultiChainWallet();

@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import { createMockChain } from './../helpers/mock-chain-factory';
 import { CosmosWallet } from '../../src/wallets/cosmos-wallet';
 import { BaseWallet } from '../../src/wallets/base-wallet';
