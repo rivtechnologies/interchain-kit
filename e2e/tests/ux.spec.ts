@@ -30,8 +30,6 @@ test.describe('UX Test', () => {
 
     // 获取更改后的地址并进行验证
     const newAddress = await uxPage.getAccountAddress();
-    console.log('Initial Address:', initialAddress);
-    console.log('New Address:', newAddress);
     expect(newAddress).not.toBe(initialAddress);
   });
 });
