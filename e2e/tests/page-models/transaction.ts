@@ -161,3 +161,78 @@ class ReceiverWalletBlock {
     }).toPass({ timeout });
   }
 }
+
+export class RejectWallet {
+  readonly page: Page;
+  readonly chainName: string;
+  readonly rootLocator: any;
+
+
+  constructor(page: Page, chainName: string = 'osmosis') {
+    this.page = page;
+    this.chainName = chainName;
+    this.rootLocator = page.getByTestId('reject-wallet');
+  }
+
+  /**
+   * 連接拒絕簽名錢包
+   */
+  async connect() {
+    await this.rootLocator.getByRole('button', { name: 'connect' }).click();
+  }
+
+  /**
+   * 等待錢包連接狀態顯示
+   */
+  async waitForStatus(status: string) {
+    await expect(this.rootLocator.locator('p:has-text("status:")'))
+      .toContainText(status);
+  }
+
+  /**
+   * 從水龍頭獲取代幣
+   */
+  async faucet() {
+    await this.rootLocator.getByRole('button', { name: 'faucet reject wallet' }).click();
+  }
+
+  /**
+   * 發送代幣 - 預期會被拒絕
+   */
+  async sendToken() {
+    await this.rootLocator.getByRole('button', { name: 'send' }).click();
+  }
+
+  /**
+   * 檢查餘額是否已更新
+   */
+  async waitForBalanceUpdate(timeout: number = 5000) {
+    // 等待餘額顯示非空值
+    await expect(async () => {
+      const balanceText = await this.rootLocator.locator('p span').textContent();
+      expect(balanceText?.trim()).not.toBe('');
+    }).toPass({ timeout });
+  }
+
+  /**
+   * 檢查是否顯示錯誤消息
+   */
+  async checkForErrorMessage() {
+    return await this.rootLocator.locator('p:has-text("error message:")').textContent();
+  }
+
+  /**
+   * 驗證錯誤消息包含特定文本
+   */
+  async verifyErrorContains(text: string) {
+    await expect(this.rootLocator.locator('p:has-text("error message:")'))
+      .toContainText(text);
+  }
+
+  /**
+   * 獲取當前餘額
+   */
+  async getBalance() {
+    return await this.rootLocator.locator('p span').textContent();
+  }
+}

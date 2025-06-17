@@ -6,6 +6,7 @@ import { Coin, getAllBalances } from "interchainjs";
 import { useState } from "react";
 import { useChain as useStarshipChain } from "@/starship/hook";
 import { useSendToken } from "@/hook/useSendToken";
+import { rejectSigningWallet } from "@/wallet/RejectSigningWallet";
 
 export const SenderWalletBlock = ({
   chainName,
@@ -119,12 +120,75 @@ export const ReceiverWallet = () => {
   );
 };
 
+const RejectWallet = () => {
+  const chainName = "osmosis";
+
+  const receiverChainWallet = useChainWallet(
+    chainName,
+    receiverWallet.info.name
+  );
+
+  const rejectChainWallet = useChainWallet(
+    chainName,
+    rejectSigningWallet.info.name
+  );
+
+  const { creditFromFaucet } = useStarshipChain("osmosis");
+
+  const sendToken = useSendToken("osmosis", rejectSigningWallet.info.name);
+
+  const [error, setError] = useState<string | null>(null);
+
+  const send = async () => {
+    try {
+      await sendToken(receiverChainWallet.address, "1000000");
+    } catch (err) {
+      console.log(err);
+      setError((err as any).message);
+    }
+  };
+
+  const [balances, setBalances] = useState<Coin[]>([]);
+
+  const handleFaucet = async () => {
+    await creditFromFaucet(rejectChainWallet.address, "uosmo");
+    const balances = await getAllBalances(
+      rejectChainWallet.rpcEndpoint as string,
+      {
+        address: rejectChainWallet.address,
+        resolveDenom: true,
+      }
+    );
+    setBalances(balances.balances);
+  };
+
+  return (
+    <div data-testid="reject-wallet">
+      <h3>Reject Wallet {chainName} </h3>
+      <button onClick={rejectChainWallet.connect}>connect</button>
+      <button onClick={handleFaucet}>faucet reject wallet</button>
+      <button onClick={send}>send</button>
+      <p>address: {rejectChainWallet.address}</p>
+      <p>status: {rejectChainWallet.status}</p>
+      <p>
+        {balances.map((balance) => (
+          <span key={balance.denom}>
+            {balance.amount} {balance.denom}{" "}
+          </span>
+        ))}
+      </p>
+      <p>error message: {error}</p>
+    </div>
+  );
+};
+
 export default function () {
   return (
     <div>
       <SenderWalletBlock chainName={"osmosis"} amountToSend="1111111111" />
       <SenderWalletBlock chainName={"cosmoshub"} amountToSend="2222222222" />
       <ReceiverWallet />
+      <RejectWallet />
     </div>
   );
 }
