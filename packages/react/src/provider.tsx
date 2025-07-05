@@ -35,20 +35,21 @@ export const ChainProvider = ({
   children,
   walletModal: ProviderWalletModal,
 }: InterchainWalletProviderProps) => {
-  // const [_, forceRender] = useState({});
+  const store = useRef<InterchainWalletContextType | null>(null);
 
-  const walletManager = new WalletManager(
-    chains,
-    assetLists,
-    wallets,
-    signerOptions,
-    endpointOptions
-  );
-
-  const store = useRef(createInterchainStore(walletManager));
+  if (!store.current) {
+    store.current = createInterchainStore(
+      new WalletManager(
+        chains,
+        assetLists,
+        wallets,
+        signerOptions,
+        endpointOptions
+      )
+    );
+  }
 
   useEffect(() => {
-    // walletManager.init();
     store.current.getState().init();
   }, []);
 
