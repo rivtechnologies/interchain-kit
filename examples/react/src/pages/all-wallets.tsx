@@ -23,6 +23,13 @@ import { send } from "interchainjs/cosmos/bank/v1beta1/tx.rpc.func";
 import { RpcClient } from "@interchainjs/cosmos/query/rpc";
 import { ethers } from "ethers";
 import { StatefulWallet } from "@interchain-kit/react/store/stateful-wallet";
+import {
+  Connection,
+  PublicKey,
+  clusterApiUrl,
+  Transaction,
+  SystemProgram,
+} from "@solana/web3.js";
 
 type BalanceProps = {
   address: string;
@@ -62,6 +69,11 @@ const BalanceTd = ({ address, wallet, chain, assetList }: BalanceProps) => {
       const ethProvider = new ethers.providers.Web3Provider(provider);
       const result = await ethProvider.getBalance(address);
 
+      balance = { balance: { amount: result.toString() } };
+    }
+    if (chain.chainType === "solana") {
+      const connection = new Connection(clusterApiUrl("testnet"), "confirmed");
+      const result = await connection.getBalance(new PublicKey(address));
       balance = { balance: { amount: result.toString() } };
     }
 
@@ -172,6 +184,33 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
       } catch (error) {
         console.log(error);
       }
+    }
+
+    if (chain.chainType === "solana") {
+      const connection = new Connection(clusterApiUrl("testnet"), "confirmed");
+
+      // 1. 构建转账指令
+      const transaction = new Transaction().add(
+        SystemProgram.transfer({
+          fromPubkey: new PublicKey(address), // Phantom 注入的用户地址
+          toPubkey: new PublicKey(toAddressRef.current.value),
+          lamports: Number(amountRef.current.value), // 0.1 SOL
+        })
+      );
+
+      // 2. 获取最新区块哈希
+      transaction.feePayer = new PublicKey(address);
+      const { blockhash } = await connection.getLatestBlockhash();
+      transaction.recentBlockhash = blockhash;
+      const client = await wallet.getProvider(chain.chainId as string)
+      // 3. Phantom 签名
+      const signed = await client.signTransaction(transaction);
+
+      // 4. 发送交易
+      const signature = await connection.sendRawTransaction(signed.serialize());
+      await connection.confirmTransaction(signature);
+      console.log("交易已发送:", signature);
+
     }
   };
 

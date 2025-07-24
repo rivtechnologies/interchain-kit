@@ -35,6 +35,7 @@ import { xdefinWallet } from "@interchain-kit/xdefi-extension";
 // import { MockWallet } from "@interchain-kit/mock-wallet";
 import { metaMaskWallet } from "@interchain-kit/metamask-extension";
 import { exodusWallet } from "@interchain-kit/exodus-extension";
+import { phantomWallet } from "@interchain-kit/phantom-extension";
 import { starshipChain, starshipChain1 } from "./utils/starship.ts";
 import { ThemeProvider } from "@interchain-ui/react";
 import { Chain } from "@chain-registry/types";
@@ -50,15 +51,16 @@ import { create } from "domain";
 
 const chainNames: string[] = [
   // "injectivetestnet",
-  "osmosistestnet",
+  // "osmosistestnet",
   // "osmosis",
   // "juno",
   // "cosmoshub",
   // "stargaze",
   // "noble",
   // "seitestnet2",
-  "ethereum",
+  // "ethereum",
   // "cosmoshubtestnet",
+  "solana",
 ];
 // const chainNames = ["osmosistestnet"];
 // const chainNames = ["cosmoshub"];
@@ -177,8 +179,8 @@ if (isInstanceOf(keplrWallet, ExtensionWallet)) {
 const _wallets: BaseWallet[] = [
   // mock1Wallet,
   // mock2Wallet,
-  keplrWallet,
-  leapWallet,
+  // keplrWallet,
+  // leapWallet,
   // cosmostationWallet,
   // stationWallet,
   // galaxyStationWallet,
@@ -190,7 +192,7 @@ const _wallets: BaseWallet[] = [
   // leapCosmosExtensionMetaMask,
   // compassWallet,
   // trustWallet,
-  metaMaskWallet,
+  // metaMaskWallet,
   // okxWallet,
   // xdefiWallet,
   // exodusWallet,
@@ -198,6 +200,7 @@ const _wallets: BaseWallet[] = [
   // finWallet,
   // shellWallet,
   // ninjiWallet,
+  phantomWallet,
 ];
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

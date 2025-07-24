@@ -39,6 +39,7 @@ export interface Wallet {
   windowKey?: string,
   cosmosKey?: string,
   ethereumKey?: string,
+  solanaKey?: string,
   walletIdentifyKey?: string,
   name: string;
   mode: WalletMode;
