@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/exodus-extension",
-  "version": "0.3.42",
+  "version": "0.3.43",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector",
   "main": "index.js",
@@ -31,7 +31,7 @@
     "watch:dev": "tsc -w -p tsconfig.esm.json & tsc -w"
   },
   "dependencies": {
-    "@interchain-kit/core": "0.3.42"
+    "@interchain-kit/core": "0.3.43"
   },
   "keywords": [],
   "gitHead": "5cab9e273389de0130ab5da00a6d369d0ccff8c5"

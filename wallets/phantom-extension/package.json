@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/phantom-extension",
-  "version": "0.3.42",
+  "version": "0.3.43",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector",
   "main": "index.js",
