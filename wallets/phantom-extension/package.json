@@ -30,5 +30,6 @@
     "test:watch": "jest --watch",
     "watch:dev": "tsc -w -p tsconfig.esm.json & tsc -w"
   },
-  "keywords": []
+  "keywords": [],
+  "gitHead": "3d11fb1fccadec958696aaa78817e2440360cf1c"
 }
