@@ -1,5 +1,5 @@
 import { ICON } from './constant';
-import { Wallet } from '@interchain-kit/core';
+import { OS, Wallet } from '@interchain-kit/core';
 
 export const rivWalletMobileInfo: Wallet = {
     name: 'riv-wallet-mobile',
@@ -20,10 +20,30 @@ export const rivWalletMobileInfo: Wallet = {
     ],
     walletconnect: {
         name: 'RIV Wallet',
-        projectId: '3139502b32bbb007fcb74367656a389'
+        projectId: '3139502b32bbb007fcb74367656a389',
+        encoding: 'base64',
+        mobile: {
+            native: {
+                ios: 'leapcosmos:',
+                android: 'intent:',
+            },
+        },
+        formatNativeUrl: (
+            appUrl: string,
+            wcUri: string,
+            os: OS | undefined,
+            _name: string
+        ): string => {
+            const plainAppUrl = appUrl.split(':')[0];
+            const encodedWcUrl = encodeURIComponent(wcUri);
+            switch (os) {
+                case 'ios':
+                    return `${plainAppUrl}://wcV2?${encodedWcUrl}`;
+                case 'android':
+                    return `${plainAppUrl}://wcV2?${encodedWcUrl}#Intent;package=com.riv_wallet;scheme=rivwallet;end;`;
+                default:
+                    return `${plainAppUrl}://wcV2?${encodedWcUrl}`;
+            }
+        },
     },
-    walletConnectLink: {
-        android: `rivwallet://wcV2?{wc-uri}`,
-        ios: `rivwallet://wcV2?{wc-uri}`
-    }
 };

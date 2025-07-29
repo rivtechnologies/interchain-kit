@@ -1,7 +1,6 @@
-import { CosmosWallet, ExtensionWallet, selectWalletByPlatform, WCMobileWebWallet } from "@interchain-kit/core";
-import { rivWalletExtensionInfo } from "./registry";
+import { ExtensionWallet } from '@interchain-kit/core'
 
-class RivCosmosWallet extends CosmosWallet {
+export class RivWallet extends ExtensionWallet {
     async connect(chainId: string | string[]): Promise<void> {
         await this.client.enable(chainId)
         const targetChain = Array.isArray(chainId) ? chainId : [chainId]
@@ -13,23 +12,9 @@ class RivCosmosWallet extends CosmosWallet {
         }
     }
 
+
     async disconnect(chainId: string | string[]): Promise<void> {
         const targetChain = Array.isArray(chainId) ? chainId : [chainId]
         await Promise.all(targetChain.map(async (chainId) => this.client.disconnect(chainId)))
     }
 }
-
-
-
-
-const web = new ExtensionWallet(rivWalletExtensionInfo);
-web.setNetworkWallet('cosmos', new CosmosWallet(rivWalletExtensionInfo))
-
-
-const rivWallet = selectWalletByPlatform({
-    mobileBrowser: new WCMobileWebWallet(rivWalletExtensionInfo),
-    inAppBrowser: web,
-    desktopBrowser: web,
-}, rivWalletExtensionInfo)
-
-export { rivWallet };

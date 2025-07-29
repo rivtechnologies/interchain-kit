@@ -3,6 +3,7 @@ import { ICON } from './constant';
 
 export const rivWalletExtensionInfo: Wallet = {
   windowKey: 'rivWallet',
+  cosmosKey: 'rivWallet',
   // ethereumKey: 'rivWallet',
   // walletIdentifyKey: 'myNewWallet.ethereum.isMyNewWallet',
   name: 'riv-wallet-extension',

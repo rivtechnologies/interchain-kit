@@ -1,24 +1,33 @@
 {
-  "name": "@interchain-kit/riv-wallet-extension",
-  "version": "1.3.0",
+  "name": "@rivtechnologies/riv-wallet-extension",
+  "version": "0.0.1",
   "author": "RIV Technologies",
   "description": "RIV Wallet adapter for Interchain Kit",
   "main": "index.js",
   "module": "esm/index.js",
   "types": "index.d.ts",
+  "homepage": "https://github.com/@interchain-kit/riv-wallet-extension",
   "license": "SEE LICENSE IN LICENSE",
-  "publishConfig": {
-    "access": "public",
-    "directory": "dist"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/@interchain-kit/riv-wallet-extension"
+  },
+  "bugs": {
+    "url": "https://github.com/@interchain-kit/riv-wallet-extension/issues"
   },
   "scripts": {
     "copy": "copyfiles -f ../../LICENSE README.md package.json dist",
     "clean": "rimraf dist/**",
     "prepare": "npm run build",
     "build": "npm run clean; tsc; tsc -p tsconfig.esm.json; npm run copy",
-    "test": "jest"
+    "build:dev": "npm run clean; tsc --declarationMap; tsc -p tsconfig.esm.json; npm run copy",
+    "lint": "eslint . --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "watch:dev": "tsc -w -p tsconfig.esm.json & tsc -w"
   },
+  "keywords": [],
   "dependencies": {
-    "@interchain-kit/core": "^0.3.24"
+    "@interchain-kit/core": "0.3.43"
   }
 }
