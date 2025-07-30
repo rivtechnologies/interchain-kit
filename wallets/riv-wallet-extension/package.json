@@ -1,5 +1,5 @@
 {
-  "name": "@rivtechnologies/riv-wallet-extension",
+  "name": "@interchain-kit/riv-wallet-extension",
   "version": "0.0.1",
   "author": "RIV Technologies",
   "description": "RIV Wallet adapter for Interchain Kit",
