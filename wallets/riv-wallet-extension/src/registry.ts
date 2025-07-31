@@ -23,6 +23,20 @@ export const rivWalletExtensionInfo: Wallet = {
       os: 'ios',
       link: 'https://apps.apple.com/us/app/riv-wallet/id6502936179',
     },
+    {
+      device: 'desktop',
+      browser: 'chrome',
+      link: 'https://rivwallet.onelink.me/WXDQ/vumxkk27'
+
+    },
+    {
+      device: 'desktop',
+      browser: 'firefox',
+      link: 'https://rivwallet.onelink.me/WXDQ/vumxkk27'
+    },
+    {
+      link: 'https://rivwallet.onelink.me/WXDQ/vumxkk27',
+    },
   ],
   // For WalletConnect support (if applicable)
   walletconnect: {
