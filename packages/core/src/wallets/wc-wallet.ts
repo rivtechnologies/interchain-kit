@@ -11,7 +11,7 @@ import { fromByteArray, toByteArray } from 'base64-js';
 
 import { WalletConnectIcon } from '../constant';
 import { BroadcastMode, DirectSignDoc, SignOptions, SignType, WalletAccount } from '../types';
-import { Algo, Wallet, WcEventTypes, WcProviderEventType } from '../types/wallet';
+import { Algo, Wallet, WCDirectSignResponse, WcEventTypes, WcProviderEventType } from '../types/wallet';
 import { BaseWallet } from './base-wallet';
 
 
@@ -277,7 +277,7 @@ export class WCWallet extends BaseWallet {
     throw new Error('Method not implemented.');
   }
 
-  signDirect(chainId: string, signer: string, signDoc: DirectSignDoc, signOptions?: SignOptions): Promise<DirectSignResponse> {
+  async signDirect(chainId: string, signer: string, signDoc: DirectSignDoc, signOptions?: SignOptions): Promise<DirectSignResponse> {
     const signDocValue = {
       signerAddress: signer,
       signDoc: {
@@ -295,10 +295,21 @@ export class WCWallet extends BaseWallet {
     //     params: signDocValue,
     //   },
     // });
-    return this.provider.request({
+
+    const result = await (this.provider.request({
       method: 'cosmos_signDirect',
       params: signDocValue,
-    }, `cosmos:${chainId}`) as Promise<DirectSignResponse>;
+    }, `cosmos:${chainId}`) as Promise<WCDirectSignResponse>);
+
+    return {
+      signed: {
+        accountNumber: result.signed.accountNumber,
+        authInfoBytes: toByteArray(result.signed.authInfoBytes),
+        bodyBytes: toByteArray(result.signed.bodyBytes),
+        chainId: result.signed.chainId,
+      },
+      signature: result.signature
+    };
   }
 
   sendTx(chainId: string, tx: Uint8Array, mode: BroadcastMode): Promise<Uint8Array> {

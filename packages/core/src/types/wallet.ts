@@ -1,4 +1,5 @@
 
+import { StdSignature } from '@interchainjs/cosmos/types/wallet';
 import { SignClientTypes } from '@walletconnect/types';
 
 import { DappEnv, OS } from './common';
@@ -87,6 +88,33 @@ export interface DirectSignDoc {
   chainId: string | null;
   /** SignDoc accountNumber */
   accountNumber: bigint | null;
+}
+
+export interface WCDirectSignResponse {
+  signed: WCDirectSignDoc;
+  signature: StdSignature;
+}
+export interface WCDirectSignDoc {
+  /**
+   * body_bytes is protobuf serialization of a TxBody that matches the
+   * representation in TxRaw.
+   * This field contains base64 encoded string.
+   */
+  bodyBytes: string;
+  /**
+   * auth_info_bytes is a protobuf serialization of an AuthInfo that matches the
+   * representation in TxRaw.
+   * This field contains base64 encoded string.
+   */
+  authInfoBytes: string;
+  /**
+   * chain_id is the unique identifier of the chain this transaction targets.
+   * It prevents signed transactions from being used on another chain by an
+   * attacker
+   */
+  chainId: string;
+  /** account_number is the account number of the account in state */
+  accountNumber: bigint;
 }
 
 export interface SignOptions {
