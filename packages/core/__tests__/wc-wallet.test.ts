@@ -265,20 +265,58 @@ describe('WCWallet', () => {
     });
 
     it('should handle signDirect requests', async () => {
-        const mockRequest = jest.fn().mockResolvedValue({ signed: 'signed-doc' });
+        // Create some realistic test data
+        const testBodyBytes = new Uint8Array([1, 2, 3, 4, 5]);
+        const testAuthInfoBytes = new Uint8Array([10, 20, 30, 40, 50]);
+
+        // Convert to base64 for the mock response
+        const bodyBytesBase64 = Buffer.from(testBodyBytes).toString('base64'); // "AQIDBAU="
+        const authInfoBytesBase64 = Buffer.from(testAuthInfoBytes).toString('base64'); // "ChQeKDI="
+
+        const mockRequest = jest.fn().mockResolvedValue({
+            signed: {
+                accountNumber: '1',
+                authInfoBytes: authInfoBytesBase64,
+                bodyBytes: bodyBytesBase64,
+                chainId: 'test-chain-id'
+            },
+            signature: 'signature'
+        });
         wallet.provider = {
             request: mockRequest,
         } as any;
 
         const result = await wallet.signDirect('test-chain-id', 'test-signer', {
             chainId: 'test-chain-id',
-            bodyBytes: new Uint8Array(),
-            authInfoBytes: new Uint8Array(),
+            bodyBytes: testBodyBytes,
+            authInfoBytes: testAuthInfoBytes,
             accountNumber: 1n,
         });
 
-        expect(mockRequest).toHaveBeenCalled();
-        expect(result).toEqual({ signed: 'signed-doc' });
+        expect(mockRequest).toHaveBeenCalledWith(
+            {
+                method: 'cosmos_signDirect',
+                params: {
+                    signerAddress: 'test-signer',
+                    signDoc: {
+                        chainId: 'test-chain-id',
+                        bodyBytes: bodyBytesBase64,
+                        authInfoBytes: authInfoBytesBase64,
+                        accountNumber: '1',
+                    },
+                },
+            },
+            'cosmos:test-chain-id'
+        );
+        expect(result).toEqual({
+            signed: {
+                accountNumber: '1',
+                authInfoBytes: testAuthInfoBytes,
+                bodyBytes: testBodyBytes,
+                chainId: 'test-chain-id',
+            },
+            signature: 'signature'
+        });
     });
 
     it('should ping the provider', async () => {
