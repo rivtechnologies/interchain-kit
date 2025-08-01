@@ -54,7 +54,7 @@ export class WCWallet extends BaseWallet {
   }
 
   async init(): Promise<void> {
-    this.events.removeAllListeners()
+    // this.events.removeAllListeners()
 
     const defaultOption: UniversalProviderOpts = {
       projectId: '15a12f05b38b78014b2bb06d77eecdc3',
@@ -319,8 +319,11 @@ export class WCWallet extends BaseWallet {
     });
 
     this.provider.on("session_delete", (error: { message: string; code: number }) => {
-      console.log("session_delete:", event);
+      console.log("session_delete:", error);
       localStorage.removeItem('wc-session')
+
+      // Emit disconnect event to notify StatefulWallet
+      this.events.emit('disconnect')
     });
 
     this.provider.on("session_event", (error: { message: string; code: number }) => {
