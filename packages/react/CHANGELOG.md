@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.44](https://github.com/interchain-kit/react/compare/@interchain-kit/react@0.3.43...@interchain-kit/react@0.3.44) (2025-08-02)
+
+### Features
+
+- detect disconnect by wallet ([d528b1e](https://github.com/interchain-kit/react/commit/d528b1e3fa3170e42430c1d53b152662d700cec9))
+
 ## [0.3.43](https://github.com/interchain-kit/react/compare/@interchain-kit/react@0.3.43...@interchain-kit/react@0.3.43) (2025-07-24)
 
 **Note:** Version bump only for package @interchain-kit/react

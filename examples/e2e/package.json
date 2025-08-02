@@ -1,6 +1,6 @@
 {
   "name": "e2e",
-  "version": "0.3.43",
+  "version": "0.3.44",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -9,9 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@interchain-kit/keplr-extension": "0.3.43",
-    "@interchain-kit/metamask-extension": "0.3.43",
-    "@interchain-kit/react": "0.3.43",
+    "@interchain-kit/keplr-extension": "0.3.44",
+    "@interchain-kit/metamask-extension": "0.3.44",
+    "@interchain-kit/react": "0.3.44",
     "interchainjs": "^1.11.15",
     "js-yaml": "^4.1.0",
     "next": "15.3.3",
