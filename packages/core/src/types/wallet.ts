@@ -1,7 +1,9 @@
 
-import { SignClientTypes } from "@walletconnect/types";
-import { DappEnv, OS } from "./common";
-import { EndpointOptions } from "./manager";
+import { StdSignature } from '@interchainjs/cosmos/types/wallet';
+import { SignClientTypes } from '@walletconnect/types';
+
+import { DappEnv, OS } from './common';
+import { EndpointOptions } from './manager';
 export interface Key {
   readonly name: string;
   readonly algo: string;
@@ -88,6 +90,33 @@ export interface DirectSignDoc {
   accountNumber: bigint | null;
 }
 
+export interface WCDirectSignResponse {
+  signed: WCDirectSignDoc;
+  signature: StdSignature;
+}
+export interface WCDirectSignDoc {
+  /**
+   * body_bytes is protobuf serialization of a TxBody that matches the
+   * representation in TxRaw.
+   * This field contains base64 encoded string.
+   */
+  bodyBytes: string;
+  /**
+   * auth_info_bytes is a protobuf serialization of an AuthInfo that matches the
+   * representation in TxRaw.
+   * This field contains base64 encoded string.
+   */
+  authInfoBytes: string;
+  /**
+   * chain_id is the unique identifier of the chain this transaction targets.
+   * It prevents signed transactions from being used on another chain by an
+   * attacker
+   */
+  chainId: string;
+  /** account_number is the account number of the account in state */
+  accountNumber: bigint;
+}
+
 export interface SignOptions {
   readonly preferNoSetFee?: boolean;
   readonly preferNoSetMemo?: boolean;
@@ -126,11 +155,11 @@ export interface SimpleAccount {
 
 
 export enum WalletState {
-  Disconnected = "Disconnected",
-  Connecting = "Connecting",
-  Connected = "Connected",
-  Rejected = "Rejected",
-  NotExist = "NotExist",
+  Disconnected = 'Disconnected',
+  Connecting = 'Connecting',
+  Connected = 'Connected',
+  Rejected = 'Rejected',
+  NotExist = 'NotExist',
 }
 
 export interface WalletEvents {
