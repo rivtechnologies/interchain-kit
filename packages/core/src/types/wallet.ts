@@ -136,7 +136,7 @@ export enum WalletState {
 export interface WalletEvents {
   'accountChanged': [event: any];
   'displayWalletConnectQRCodeUri': [chainId: string];
-  'disconnect': [];
+  'disconnect': [event: any];
 }
 
 export const WcProviderEventType = {
