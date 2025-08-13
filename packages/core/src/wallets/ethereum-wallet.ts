@@ -3,7 +3,6 @@ import { WalletAccount } from "../types";
 import { BaseWallet } from "./base-wallet";
 import { delay, getClientFromExtension } from "../utils";
 import { EthereumNetwork } from "../types/ethereum";
-import { IGenericOfflineSigner } from '@interchainjs/types';
 import { fromByteArray, toByteArray } from "base64-js";
 
 export class EthereumWallet extends BaseWallet {
@@ -79,10 +78,7 @@ export class EthereumWallet extends BaseWallet {
       username: 'ethereum'
     }
   }
-  async getOfflineSigner(chainId: Chain["chainId"]): Promise<IGenericOfflineSigner> {
-    await this.switchChain(chainId)
-    return {} as IGenericOfflineSigner
-  }
+
   async addSuggestChain(chainId: string): Promise<void> {
     const chainIdToHex = chainId.startsWith("0x") ? chainId : "0x" + parseInt(chainId, 10).toString(16);
     const chain = this.getChainById(chainId)

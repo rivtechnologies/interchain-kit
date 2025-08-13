@@ -1,9 +1,11 @@
-import { IGenericOfflineSigner, StdSignDoc } from '@interchainjs/types';
-import { AminoGenericOfflineSigner, AminoSignResponse, DirectGenericOfflineSigner, DirectSignResponse, StdSignature } from "@interchainjs/cosmos/types/wallet";
+import { StdSignDoc } from '@interchainjs/types';
 import { BaseWallet } from "./base-wallet";
 import { BroadcastMode, DirectSignDoc, SignOptions, SignType, WalletAccount } from '../types';
 import { getClientFromExtension } from '../utils';
 import { chainRegistryChainToKeplr } from '@chain-registry/keplr';
+import { OfflineAminoSigner, OfflineDirectSigner } from '../types/cosmos';
+import { AminoSignResponse, DirectSignResponse } from '@interchainjs/cosmos';
+import { StdSignature } from '@interchainjs/amino';
 
 export class CosmosWallet extends BaseWallet {
 
@@ -54,33 +56,33 @@ export class CosmosWallet extends BaseWallet {
       isNanoLedger: key.isNanoLedger,
     };
   }
-  async getOfflineSigner(chainId: string, preferredSignType?: SignType) {
+  async getOfflineSigner(chainId: string, preferredSignType?: SignType): Promise<OfflineAminoSigner | OfflineDirectSigner> {
     const account = await this.getAccount(chainId);
 
     if (account.isNanoLedger) {
-      return new AminoGenericOfflineSigner({
+      return {
         getAccounts: async () => [account],
-        signAmino: async (signer, signDoc) => {
+        signAmino: async (signer: string, signDoc: StdSignDoc) => {
           return this.signAmino(chainId, signer, signDoc, this.defaultSignOptions)
         }
-      }) as IGenericOfflineSigner
+      }
     }
 
 
     if (preferredSignType === 'amino') {
-      return new AminoGenericOfflineSigner({
+      return {
         getAccounts: async () => [await this.getAccount(chainId)],
-        signAmino: async (signer, signDoc) => {
+        signAmino: async (signer: string, signDoc: StdSignDoc) => {
           return this.signAmino(chainId, signer, signDoc, this.defaultSignOptions)
         }
-      }) as IGenericOfflineSigner
+      }
     } else {
-      return new DirectGenericOfflineSigner({
+      return {
         getAccounts: async () => [await this.getAccount(chainId)],
-        signDirect: async (signer, signDoc) => {
+        signDirect: async (signer: string, signDoc: DirectSignDoc) => {
           return this.signDirect(chainId, signer, signDoc, this.defaultSignOptions)
         }
-      }) as IGenericOfflineSigner
+      }
     }
   }
   async signAmino(chainId: string, signer: string, signDoc: StdSignDoc, signOptions?: SignOptions): Promise<AminoSignResponse> {

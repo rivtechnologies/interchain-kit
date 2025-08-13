@@ -1,7 +1,7 @@
 
-import { StdSignature } from '@interchainjs/cosmos/types/wallet';
-import { SignClientTypes } from '@walletconnect/types';
 
+import { SignClientTypes } from '@walletconnect/types';
+import { StdSignature } from '@interchainjs/amino';
 import { DappEnv, OS } from './common';
 import { EndpointOptions } from './manager';
 export interface Key {
@@ -126,9 +126,9 @@ export interface SignOptions {
 export type Algo = 'secp256k1' | 'eth_secp256k1';
 export interface AccountData {
   /** A printable address (typically bech32 encoded) */
-  address: string;
-  algo: Algo;
-  pubkey: Uint8Array;
+  readonly address: string;
+  readonly algo: Algo;
+  readonly pubkey: Uint8Array;
 }
 
 export interface WalletAccount extends AccountData {

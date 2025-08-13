@@ -30,6 +30,7 @@ import {
   Transaction,
   SystemProgram,
 } from "@solana/web3.js";
+import { MsgSend } from "interchainjs/cosmos/bank/v1beta1/tx";
 
 type BalanceProps = {
   address: string;
@@ -107,7 +108,6 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
 
   const { assetList, signingClient, isSigningClientLoading, rpcEndpoint } =
     useChainWallet(chain.chainName, wallet.info?.name as string);
-
   if (
     chain.chainType === "cosmos" &&
     (isSigningClientLoading || !signingClient)
@@ -131,17 +131,22 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
         gas: "100000",
       };
 
+      const token = {
+        amount: amountRef.current?.value as string,
+        denom,
+      };
+
+      const msgSend = MsgSend.fromPartial({
+        fromAddress: address,
+        toAddress: recipientAddress,
+        amount: [token],
+      });
+
       try {
         const tx = await send(
           signingClient as SigningClient,
           address,
-          {
-            fromAddress: address,
-            toAddress: recipientAddress,
-            amount: [
-              { denom: denom, amount: amountRef.current?.value as string },
-            ],
-          },
+          msgSend,
           fee,
           "test"
         );
@@ -202,7 +207,7 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
       transaction.feePayer = new PublicKey(address);
       const { blockhash } = await connection.getLatestBlockhash();
       transaction.recentBlockhash = blockhash;
-      const client = await wallet.getProvider(chain.chainId as string)
+      const client = await wallet.getProvider(chain.chainId as string);
       // 3. Phantom 签名
       const signed = await client.signTransaction(transaction);
 
@@ -210,7 +215,6 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
       const signature = await connection.sendRawTransaction(signed.serialize());
       await connection.confirmTransaction(signature);
       console.log("交易已发送:", signature);
-
     }
   };
 

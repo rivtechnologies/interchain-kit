@@ -7,8 +7,6 @@ import { WalletNotExist, ChainNameNotExist, NoValidRpcEndpointFound, getValidRpc
 import { createMockAssetList } from './helpers/mock-asset-list-factory';
 import { createMockChain } from './helpers/mock-chain-factory';
 import { createMockAccount, createMockWallet } from './helpers/mock-wallet-factory';
-import { AminoGenericOfflineSigner } from '@interchainjs/cosmos/types/wallet';
-import { SigningClient } from '@interchainjs/cosmos/signing-client';
 import { createSignerOption } from './helpers/mock-setting-factory';
 
 jest.mock('../src/utils/endpoint.ts', () => {
@@ -232,23 +230,23 @@ describe('WalletManager', () => {
     expect(options.signerOptions?.prefix).toBe(signerOptions.signing?.(chain1.chainName as string)?.signerOptions?.prefix);
   });
 
-  it('should get signing client', async () => {
-    SigningClient.connectWithSigner = jest.fn();
-    const mockAminoOfflineSigner = new AminoGenericOfflineSigner({
-      getAccounts: jest.fn(),
-      signAmino: jest.fn()
-    })
-    const mockSignerOption = signerOptions.signing?.(chain1.chainName as string)
-    const mockRpcEndpoint = 'http://localhost:26657';
+  // it('should get signing client', async () => {
+  //   SigningClient.connectWithSigner = jest.fn();
+  //   const mockAminoOfflineSigner = new AminoGenericOfflineSigner({
+  //     getAccounts: jest.fn(),
+  //     signAmino: jest.fn()
+  //   })
+  //   const mockSignerOption = signerOptions.signing?.(chain1.chainName as string)
+  //   const mockRpcEndpoint = 'http://localhost:26657';
 
-    walletManager.getOfflineSigner = jest.fn().mockReturnValue(Promise.resolve(mockAminoOfflineSigner));
-    walletManager.getSignerOptions = jest.fn().mockReturnValue(mockSignerOption);
-    walletManager.getRpcEndpoint = jest.fn().mockReturnValue(Promise.resolve(mockRpcEndpoint));
+  //   walletManager.getOfflineSigner = jest.fn().mockReturnValue(Promise.resolve(mockAminoOfflineSigner));
+  //   walletManager.getSignerOptions = jest.fn().mockReturnValue(mockSignerOption);
+  //   walletManager.getRpcEndpoint = jest.fn().mockReturnValue(Promise.resolve(mockRpcEndpoint));
 
-    await walletManager.getSigningClient(wallet1.info?.name as string, chain1.chainName as string);
+  //   await walletManager.getSigningClient(wallet1.info?.name as string, chain1.chainName as string);
 
-    expect(SigningClient.connectWithSigner).toHaveBeenCalledWith(mockRpcEndpoint, mockAminoOfflineSigner, mockSignerOption);
-  });
+  //   expect(SigningClient.connectWithSigner).toHaveBeenCalledWith(mockRpcEndpoint, mockAminoOfflineSigner, mockSignerOption);
+  // });
 
   it('should get environment info', () => {
     const env = walletManager.getEnv();

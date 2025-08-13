@@ -1,17 +1,20 @@
-import { SigningClient } from '@interchainjs/cosmos/signing-client';
+
 import { AssetList, Chain } from "@chain-registry/types"
 import { BaseWallet, clientNotExistError, CosmosWallet, EndpointOptions, Endpoints, SignerOptions, SignType, WalletAccount, WalletManager, WalletState } from "@interchain-kit/core"
-import { SigningOptions as InterchainSigningOptions } from '@interchainjs/cosmos/types/signing-client';
-import { HttpEndpoint, IGenericOfflineSigner } from '@interchainjs/types';
+import { HttpEndpoint } from '@interchainjs/types';
 import { createStore } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { dedupeAsync, restoreAccountFromLocalStorage } from '../utils';
 import { StatefulWallet } from './stateful-wallet';
-import { AminoGenericOfflineSigner, DirectGenericOfflineSigner, ICosmosGenericOfflineSigner } from '@interchainjs/cosmos/types/wallet';
+import { CosmosSigningOptions } from "@interchain-kit/core/types/cosmos";
+import { ISigningClient } from '@interchainjs/cosmos/types/signing-client';
 
 const immerSyncUp = (newWalletManager: WalletManager) => {
-  return (draft: { chains: Chain[]; assetLists: AssetList[]; wallets: BaseWallet[]; signerOptions: SignerOptions; endpointOptions: EndpointOptions; signerOptionMap: Record<string, InterchainSigningOptions>; endpointOptionsMap: Record<string, Endpoints>; preferredSignTypeMap: Record<string, SignType>; }) => {
+  return (draft: {
+    chains: Chain[]; assetLists: AssetList[]; wallets: BaseWallet[]; signerOptions: SignerOptions; endpointOptions: EndpointOptions; signerOptionMap: Record<string, CosmosSigningOptions
+    >; endpointOptionsMap: Record<string, Endpoints>; preferredSignTypeMap: Record<string, SignType>;
+  }) => {
     draft.chains = newWalletManager.chains
     draft.assetLists = newWalletManager.assetLists
     draft.wallets = newWalletManager.wallets
@@ -305,7 +308,7 @@ export const createInterchainStore = (walletManager: WalletManager) => {
     getStatefulWalletByName(walletName: string) {
       return get().wallets.find(w => w.info.name === walletName)
     },
-    async getSigningClient(walletName, chainName): Promise<SigningClient> {
+    async getSigningClient(walletName, chainName): Promise<ISigningClient> {
       return walletManager.getSigningClient(walletName, chainName)
     },
     getEnv() {

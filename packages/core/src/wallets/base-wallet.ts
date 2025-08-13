@@ -1,7 +1,9 @@
 import { AssetList, Chain } from "@chain-registry/types";
 import { SignType, Wallet, WalletAccount, WalletEvents, WalletState } from "../types";
 import EventEmitter from "events";
-import { IGenericOfflineSigner } from "@interchainjs/types";
+import { OfflineAminoSigner, OfflineDirectSigner } from "../types/cosmos";
+
+
 
 
 export abstract class BaseWallet {
@@ -48,8 +50,8 @@ export abstract class BaseWallet {
   abstract disconnect(chainId: Chain['chainId']): Promise<void>
   abstract getAccount(chainId: Chain['chainId']): Promise<WalletAccount>
 
-  abstract getOfflineSigner(chainId: Chain['chainId']): Promise<IGenericOfflineSigner>
-  abstract getOfflineSigner(chainId: Chain['chainId'], preferredSignType: SignType): Promise<IGenericOfflineSigner>
+  abstract getOfflineSigner(chainId: Chain['chainId']): Promise<OfflineAminoSigner | OfflineDirectSigner>
+  abstract getOfflineSigner(chainId: Chain['chainId'], preferredSignType: SignType): Promise<OfflineAminoSigner | OfflineDirectSigner>
 
   abstract addSuggestChain(chainId: Chain['chainId']): Promise<void>
 

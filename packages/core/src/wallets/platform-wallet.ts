@@ -1,8 +1,8 @@
 import { AssetList, Chain } from "@chain-registry/types";
-import { IGenericOfflineSigner } from "@interchainjs/types";
 import { WalletAccount, SignType, Wallet } from "../types";
 import { BaseWallet } from "./base-wallet";
 import { isMobile } from "../utils";
+import { OfflineAminoSigner, OfflineDirectSigner } from "@interchain-kit/core";
 
 type PlatformWalletType = "mobile-web" | "web";
 
@@ -60,7 +60,7 @@ export class PlatformWallet extends BaseWallet {
   getAccount(chainId: Chain["chainId"]): Promise<WalletAccount> {
     return this.currentPlatformWallet?.getAccount(chainId);
   }
-  getOfflineSigner(chainId: Chain["chainId"], preferredSignType?: SignType): Promise<IGenericOfflineSigner> {
+  getOfflineSigner(chainId: Chain["chainId"], preferredSignType?: SignType): Promise<OfflineAminoSigner | OfflineDirectSigner> {
     return this.currentPlatformWallet.getOfflineSigner(chainId, preferredSignType);
   }
   addSuggestChain(chainId: Chain["chainId"]): Promise<void> {

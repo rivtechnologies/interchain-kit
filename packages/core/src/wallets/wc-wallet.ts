@@ -1,10 +1,6 @@
 import { Chain } from '@chain-registry/types';
-import {
-  AminoGenericOfflineSigner,
-  DirectGenericOfflineSigner,
-} from '@interchainjs/cosmos/types/wallet';
-import { AminoSignResponse, DirectSignResponse, StdSignature } from '@interchainjs/cosmos/types/wallet';
-import { IGenericOfflineSigner, StdSignDoc } from '@interchainjs/types';
+import { AminoSignResponse, DirectSignResponse } from '@interchainjs/cosmos';
+import { StdSignDoc } from '@interchainjs/types';
 import { PairingTypes, SessionTypes, SignClientTypes } from '@walletconnect/types';
 import UniversalProvider, { ConnectParams, UniversalProviderOpts } from '@walletconnect/universal-provider';
 import { fromByteArray, toByteArray } from 'base64-js';
@@ -13,6 +9,7 @@ import { WalletConnectIcon } from '../constant';
 import { BroadcastMode, DirectSignDoc, SignOptions, SignType, WalletAccount } from '../types';
 import { Algo, Wallet, WCDirectSignResponse, WcEventTypes, WcProviderEventType } from '../types/wallet';
 import { BaseWallet } from './base-wallet';
+import { StdSignature } from '@interchainjs/amino';
 
 
 export class WCWallet extends BaseWallet {
@@ -226,19 +223,19 @@ export class WCWallet extends BaseWallet {
 
   async getOfflineSigner(chainId: string, preferredSignType?: SignType) {
     if (preferredSignType === 'amino') {
-      return new AminoGenericOfflineSigner({
+      return {
         getAccounts: async () => [await this.getAccount(chainId)],
-        signAmino: async (signer, signDoc) => {
+        signAmino: async (signer: string, signDoc: StdSignDoc) => {
           return this.signAmino(chainId, signer, signDoc);
         }
-      }) as IGenericOfflineSigner;
+      }
     } else if (preferredSignType === 'direct') {
-      return new DirectGenericOfflineSigner({
+      return {
         getAccounts: async () => [await this.getAccount(chainId)],
-        signDirect: async (signer, signDoc) => {
+        signDirect: async (signer: string, signDoc: DirectSignDoc) => {
           return this.signDirect(chainId, signer, signDoc);
         }
-      }) as IGenericOfflineSigner;
+      }
     }
   }
 

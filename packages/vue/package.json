@@ -30,6 +30,7 @@
     "@chain-registry/types": "^2.0.1",
     "@interchain-kit/core": "0.3.45",
     "@interchain-ui/vue": "^1.4.1",
+    "@interchainjs/auth": "^1.13.0",
     "@interchainjs/cosmos": "1.13.0",
     "@interchainjs/cosmos-types": "1.13.0",
     "@types/node": "^22.7.5",

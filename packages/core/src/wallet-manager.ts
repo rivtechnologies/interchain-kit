@@ -1,13 +1,15 @@
-import { ICosmosGenericOfflineSigner } from '@interchainjs/cosmos/types/wallet';
 import { HttpEndpoint } from '@interchainjs/types';
 import { Chain, AssetList } from '@chain-registry/types'
 import { BaseWallet } from './wallets/base-wallet'
 import { ChainName, DeviceType, DownloadInfo, EndpointOptions, Endpoints, OS, SignerOptions, SignType } from './types'
-import { SigningOptions as InterchainSigningOptions } from '@interchainjs/cosmos/types/signing-client';
-import { SigningClient } from '@interchainjs/cosmos/signing-client'
 import Bowser from 'bowser';
 import { ChainNameNotExist, ChainNotExist, getValidRpcEndpoint, isInstanceOf, NoValidRpcEndpointFound, RpcInfo, WalletNotExist } from './utils';
 import { WCWallet } from './wallets/wc-wallet';
+import { CosmosWallet } from './wallets';
+import { getSigner } from 'interchainjs';
+import { AminoSigner, CosmosSignerConfig, createCosmosQueryClient, DirectSigner } from '@interchainjs/cosmos';
+import { ISigningClient } from '@interchainjs/cosmos/types/signing-client';
+import { CosmosSigningOptions } from './types/cosmos';
 
 export class WalletManager {
   chains: Chain[] = []
@@ -17,7 +19,7 @@ export class WalletManager {
   endpointOptions: EndpointOptions | undefined
 
   preferredSignTypeMap: Record<Chain['chainName'], SignType> = {}
-  signerOptionMap: Record<Chain['chainName'], InterchainSigningOptions> = {}
+  signerOptionMap: Record<Chain['chainName'], CosmosSigningOptions> = {}
   endpointOptionsMap: Record<Chain['chainName'], Endpoints> = {}
 
   constructor(
@@ -210,19 +212,14 @@ export class WalletManager {
     return this.preferredSignTypeMap[chainName] || 'direct'
   }
 
-  getSignerOptions(chainName: string): InterchainSigningOptions {
+  getSignerOptions(chainName: string): CosmosSigningOptions {
     const chain = this.getChainByName(chainName)
     const signingOptions = this.signerOptionMap[chainName]
 
-    const options: InterchainSigningOptions = {
-      broadcast: {
-        checkTx: true,
-        deliverTx: true,
-      },
-      ...signingOptions,
-      signerOptions: {
-        prefix: chain.bech32Prefix,
-        ...signingOptions?.signerOptions,
+    const options: CosmosSigningOptions = {
+      cosmosSignerConfig: {
+        ...signingOptions?.cosmosSignerConfig,
+        addressPrefix: chain.bech32Prefix,
       }
     }
     return options
@@ -243,12 +240,38 @@ export class WalletManager {
     return wallet.getOfflineSigner(chain.chainId, preferredSignType)
   }
 
-  async getSigningClient(walletName: string, chainName: ChainName): Promise<SigningClient> {
-    const rpcEndpoint = await this.getRpcEndpoint(walletName, chainName)
-    const offlineSigner = await this.getOfflineSigner(walletName, chainName) as ICosmosGenericOfflineSigner
-    const signerOptions = await this.getSignerOptions(chainName)
-    const signingClient = await SigningClient.connectWithSigner(rpcEndpoint, offlineSigner, signerOptions)
-    return signingClient
+  async getSigningClient(walletName: string, chainName: ChainName): Promise<ISigningClient> {
+    try {
+      const chain = this.getChainByName(chainName)
+      const rpcEndpoint = await this.getRpcEndpoint(walletName, chainName)
+      const preferredSignType = this.getPreferSignType(chainName)
+      const offlineSigner = await this.getOfflineSigner(walletName, chainName)
+      const defaultSignerOptions = await this.getSignerOptions(chainName)
+
+      const signerOptions: CosmosSignerConfig = {
+        queryClient: await createCosmosQueryClient(rpcEndpoint as string),
+        addressPrefix: chain.bech32Prefix,
+        chainId: chain.chainId,
+        ...defaultSignerOptions,
+      }
+
+      console.log(offlineSigner)
+
+      if (preferredSignType === 'direct') {
+        return getSigner<DirectSigner>(offlineSigner, {
+          preferredSignType: 'direct',
+          signerOptions,
+        })
+      } else {
+        return getSigner<AminoSigner>(offlineSigner, {
+          preferredSignType: 'amino',
+          signerOptions,
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      throw error
+    }
   }
 
   getEnv() {
