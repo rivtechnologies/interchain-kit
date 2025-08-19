@@ -2,8 +2,8 @@ import { Wallet } from '@interchain-kit/core';
 import { ICON } from './constant';
 
 export const rivWalletExtensionInfo: Wallet = {
-  windowKey: 'rivWallet',
-  cosmosKey: 'rivWallet',
+  windowKey: 'rivwallet',
+  cosmosKey: 'rivwallet',
   // ethereumKey: 'rivWallet',
   // walletIdentifyKey: 'myNewWallet.ethereum.isMyNewWallet',
   name: 'riv-wallet-extension',
