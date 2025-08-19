@@ -28,6 +28,6 @@
   },
   "keywords": [],
   "dependencies": {
-    "@interchain-kit/core": "0.3.43"
+    "@interchain-kit/core": "0.3.45"
   }
 }
