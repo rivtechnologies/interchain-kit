@@ -1,6 +1,6 @@
 {
   "name": "@interchain-kit/phantom-extension",
-  "version": "0.3.43",
+  "version": "0.3.45",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "interchain-kit wallet connector",
   "main": "index.js",
@@ -30,5 +30,6 @@
     "test:watch": "jest --watch",
     "watch:dev": "tsc -w -p tsconfig.esm.json & tsc -w"
   },
-  "keywords": []
+  "keywords": [],
+  "gitHead": "3d11fb1fccadec958696aaa78817e2440360cf1c"
 }

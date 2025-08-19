@@ -66,16 +66,27 @@ export class StatefulWallet extends BaseWallet {
 
   async init(): Promise<void> {
 
-    this.originalWallet.events.on('accountChanged', async () => {
-      const chains = Array.from(this.originalWallet.chainMap.values())
-      for (const chain of chains) {
-        await this.getAccount(chain.chainId)
-      }
-    })
-
-
     try {
       await this.originalWallet.init()
+
+      this.originalWallet.events.on('accountChanged', async () => {
+        const chains = Array.from(this.originalWallet.chainMap.values())
+        for (const chain of chains) {
+          await this.getAccount(chain.chainId)
+        }
+      })
+
+      this.originalWallet.events.on('disconnect', () => {
+        // Update all chains for this wallet to disconnected state
+        this.store.chains.forEach(chain => {
+          this.store.updateChainWalletState(this.walletName, chain.chainName, {
+            walletState: WalletState.Disconnected,
+            account: null,
+            errorMessage: ''
+          });
+        });
+      });
+
       this.store.chains.forEach(chain => {
         const lastChainWalletState = this.store.getChainWalletState(this.walletName, chain.chainName)?.walletState
         if (lastChainWalletState === WalletState.NotExist) {

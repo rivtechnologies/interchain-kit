@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.45](https://github.com/@interchain-kit/core/compare/@interchain-kit/core@0.3.44...@interchain-kit/core@0.3.45) (2025-08-07)
+
+**Note:** Version bump only for package @interchain-kit/core
+
+## [0.3.44](https://github.com/@interchain-kit/core/compare/@interchain-kit/core@0.3.43...@interchain-kit/core@0.3.44) (2025-08-02)
+
+### Bug Fixes
+
+- walletconnect's direct sign mode ([027ceb2](https://github.com/@interchain-kit/core/commit/027ceb271d42f79cb71f87ab80e2a293438aa82e))
+
+### Features
+
+- detect disconnect by wallet ([d528b1e](https://github.com/@interchain-kit/core/commit/d528b1e3fa3170e42430c1d53b152662d700cec9))
+
+## [0.3.43](https://github.com/@interchain-kit/core/compare/@interchain-kit/core@0.3.43...@interchain-kit/core@0.3.43) (2025-07-24)
+
+**Note:** Version bump only for package @interchain-kit/core
+
 ## [0.3.43](https://github.com/@interchain-kit/core/compare/@interchain-kit/core@0.3.42...@interchain-kit/core@0.3.43) (2025-07-24)
 
 **Note:** Version bump only for package @interchain-kit/core
