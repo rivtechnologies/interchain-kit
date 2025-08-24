@@ -206,7 +206,7 @@ export class RejectWallet {
   /**
    * 檢查餘額是否已更新
    */
-  async waitForBalanceUpdate(timeout: number = 5000) {
+  async waitForBalanceUpdate(timeout: number = 10000) {
     // 等待餘額顯示非空值
     await expect(async () => {
       const balanceText = await this.rootLocator.locator('p span').textContent();

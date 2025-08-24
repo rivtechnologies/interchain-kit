@@ -30,7 +30,15 @@ export const useSendToken = (chainName: string, walletName: string) => {
       }, fee, 'send native token')
 
       console.log('Transaction result:', res)
+
+      try {
+        await res.wait()
+      } catch (err) {
+        console.log(err)
+      }
     }
+
+
 
   }
 
@@ -68,7 +76,7 @@ export const useSendToken = (chainName: string, walletName: string) => {
 
       console.log(sourcePort, sourceChannel);
 
-      await transfer(signingClient, fromAddress, MsgTransfer.fromPartial({
+      const res = await transfer(signingClient, fromAddress, MsgTransfer.fromPartial({
         sourcePort,
         sourceChannel,
         token,
@@ -80,6 +88,12 @@ export const useSendToken = (chainName: string, walletName: string) => {
       }),
 
         fee, "send ibc")
+
+      try {
+        await res.wait()
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 

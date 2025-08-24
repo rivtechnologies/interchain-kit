@@ -1,10 +1,9 @@
 import { Chain } from '@chain-registry/types';
-import { BaseWallet, CosmosWallet, Wallet, WalletAccount, SignerOptions, DirectSignDoc, SignOptions, ExtensionWallet } from '@interchain-kit/core';
-import { Bip39, Random } from '@interchainjs/crypto';
-import { HDWallet, Secp256k1HDWallet } from '@interchainjs/cosmos/wallets/secp256k1hd';
-import { IGenericOfflineSigner, StdSignDoc } from '@interchainjs/types';
-import { DirectGenericOfflineSigner, DirectSignResponse } from '@interchainjs/cosmos/types';
-import { SignDoc } from 'interchainjs';
+import { CosmosWallet, Wallet, WalletAccount, DirectSignDoc, SignOptions, ExtensionWallet } from '@interchain-kit/core';
+import { Secp256k1HDWallet } from '@interchainjs/cosmos/wallets/secp256k1hd';
+import { DirectSignResponse } from '@interchainjs/cosmos';
+import { HDPath } from '@interchainjs/types';
+
 
 export class MockMultiChainWallet extends ExtensionWallet {
   async init() {
@@ -15,7 +14,7 @@ export class MockMultiChainWallet extends ExtensionWallet {
 
 export class MockCosmosWallet extends CosmosWallet {
 
-  directWalletMap: Record<Chain['chainName'], HDWallet> = {}
+  directWalletMap: Record<Chain['chainName'], Secp256k1HDWallet> = {}
   cosmosHdPath: string = "m/44'/118'/0'/0/0";
   mnemonic: string
 
@@ -34,12 +33,12 @@ export class MockCosmosWallet extends CosmosWallet {
 
 
     //create mock address base on chainId
-    const wallet = await Secp256k1HDWallet.fromMnemonic(this.mnemonic, [
-      {
-        hdPath: this.cosmosHdPath,
-        prefix: chain.bech32Prefix || 'cosmos',
-      },
-    ]);
+    const wallet = await Secp256k1HDWallet.fromMnemonic(this.mnemonic, {
+      derivations: [{
+        prefix: chain.bech32Prefix || 'osmosis',
+        hdPath: this.cosmosHdPath
+      }]
+    });
 
     this.directWalletMap[chain.chainName] = wallet
   }
@@ -73,10 +72,10 @@ export class MockCosmosWallet extends CosmosWallet {
     if (!wallet) {
       throw new Error(`Wallet not connected for chain: ${chainId}`);
     }
-    const accounts = await wallet.getAccounts()
+    const accounts = await (await wallet.toOfflineDirectSigner()).getAccounts()
 
     return {
-      address: accounts[0].address,
+      address: accounts[0].address || '',
       algo: 'secp256k1',
       pubkey: accounts[0].pubkey as Uint8Array,
       username: undefined,
@@ -86,16 +85,17 @@ export class MockCosmosWallet extends CosmosWallet {
   }
   async getOfflineSigner(chainId: string, preferredSignType?: unknown) {
     const chain = this.getChainById(chainId);
+
     const wallet = this.directWalletMap[chain.chainName];
     if (!wallet) {
       throw new Error(`Wallet not connected for chain: ${chainId}`);
     }
-    return new DirectGenericOfflineSigner({
+    return {
       getAccounts: async () => [await this.getAccount(chainId)],
       signDirect: async (signer, signDoc) => {
         return this.signDirect(chainId, signer, signDoc as DirectSignDoc);
       }
-    }) as IGenericOfflineSigner
+    }
   }
 
 

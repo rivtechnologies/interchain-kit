@@ -126,9 +126,9 @@ export interface SignOptions {
 export type Algo = 'secp256k1' | 'eth_secp256k1';
 export interface AccountData {
   /** A printable address (typically bech32 encoded) */
-  readonly address: string;
-  readonly algo: Algo;
-  readonly pubkey: Uint8Array;
+  address: string;
+  algo: Algo;
+  pubkey: Uint8Array;
 }
 
 export interface WalletAccount extends AccountData {

@@ -108,12 +108,9 @@ export const ReceiverWallet = () => {
       <button onClick={handleGetAllBalances}>get balances</button>
       <p>
         {allBalances.map((balance) => (
-          <>
-            <span key={balance.denom}>
-              {balance.amount} {balance.denom}{" "}
-            </span>
-            <br />
-          </>
+          <span key={balance.denom}>
+            {balance.amount} {balance.denom}{" "}
+          </span>
         ))}
       </p>
     </div>
@@ -182,7 +179,7 @@ const RejectWallet = () => {
   );
 };
 
-export default function () {
+export default function Transaction() {
   return (
     <div>
       <SenderWalletBlock chainName={"osmosis"} amountToSend="1111111111" />

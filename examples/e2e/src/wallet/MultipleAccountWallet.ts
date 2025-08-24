@@ -1,17 +1,17 @@
 import { HDWallet, Secp256k1HDWallet } from '@interchainjs/cosmos/wallets/secp256k1hd';
-
+import { generateMnemonic } from '@interchainjs/crypto';
 import { Algo, CosmosWallet, ExtensionWallet, MultiChainWallet, Wallet } from '@interchain-kit/core';
 
 const hdPath = "m/44'/118'/0'/0/0";
 
 export class MultipleAccountCosmosWallet extends CosmosWallet {
   currentAccountIndex: '1' | '2' = '1';
-  accountWalletMap: Record<'1' | '2', Record<string, HDWallet>> = {
+  accountWalletMap: Record<'1' | '2', Record<string, Secp256k1HDWallet>> = {
     '1': {},
     '2': {},
   }
 
-  getCurrentAccountWallet(chainName: string): HDWallet {
+  getCurrentAccountWallet(chainName: string): Secp256k1HDWallet {
     const wallet = this.accountWalletMap[this.currentAccountIndex][chainName];
     if (!wallet) {
       throw new Error(`No wallet found for chainName: ${chainName} and account index: ${this.currentAccountIndex}`);
@@ -27,26 +27,25 @@ export class MultipleAccountCosmosWallet extends CosmosWallet {
 
   async init() {
 
-    const chains = this.chainMap.values()
+    const chains = Array.from(this.chainMap.values())
 
     for (const chain of chains) {
-
-      const wallet1 = await Secp256k1HDWallet.fromMnemonic('Mock Cosmos Wallet 1', [
-        {
-          hdPath,
-          prefix: chain.bech32Prefix || 'cosmos',
-        },
-      ]);
-      const wallet2 = await Secp256k1HDWallet.fromMnemonic('Mock Cosmos Wallet 2', [
-        {
-          hdPath,
-          prefix: chain.bech32Prefix || 'cosmos',
-        },
-      ]);
+      const wallet1 = await Secp256k1HDWallet.fromMnemonic(generateMnemonic(), {
+        derivations: [{
+          prefix: chain.bech32Prefix || 'osmosis',
+          hdPath: hdPath
+        }]
+      });
+      const wallet2 = await Secp256k1HDWallet.fromMnemonic(generateMnemonic(), {
+        derivations: [{
+          prefix: chain.bech32Prefix || 'osmosis',
+          hdPath: hdPath
+        }]
+      });
       this.accountWalletMap['1'][chain.chainName] = wallet1;
       this.accountWalletMap['2'][chain.chainName] = wallet2
     }
-
+    console.log('accountWalletMap', this.accountWalletMap)
     //@ts-ignore
     window[this.info.windowKey] = {}
     //@ts-ignore
@@ -67,7 +66,7 @@ export class MultipleAccountCosmosWallet extends CosmosWallet {
   async getAccount(chainId: string) {
     const chain = this.getChainById(chainId);
     const wallet = this.getCurrentAccountWallet(chain.chainName);
-    const accounts = await wallet.getAccounts();
+    const accounts = await (await wallet.toOfflineDirectSigner()).getAccounts();
     return {
       address: accounts[0].address,
       algo: accounts[0].algo as Algo,

@@ -7,7 +7,7 @@ import { ChainNameNotExist, ChainNotExist, getValidRpcEndpoint, isInstanceOf, No
 import { WCWallet } from './wallets/wc-wallet';
 import { CosmosWallet } from './wallets';
 import { getSigner } from 'interchainjs';
-import { AminoSigner, CosmosSignerConfig, createCosmosQueryClient, DirectSigner } from '@interchainjs/cosmos';
+import { AminoSigner, CosmosSignerConfig, createCosmosQueryClient, DirectSigner, OfflineSigner } from '@interchainjs/cosmos';
 import { ISigningClient } from '@interchainjs/cosmos/types/signing-client';
 import { CosmosSigningOptions } from './types/cosmos';
 
@@ -245,7 +245,7 @@ export class WalletManager {
       const chain = this.getChainByName(chainName)
       const rpcEndpoint = await this.getRpcEndpoint(walletName, chainName)
       const preferredSignType = this.getPreferSignType(chainName)
-      const offlineSigner = await this.getOfflineSigner(walletName, chainName)
+      const offlineSigner = (await this.getOfflineSigner(walletName, chainName)) as unknown as OfflineSigner
       const defaultSignerOptions = await this.getSignerOptions(chainName)
 
       const signerOptions: CosmosSignerConfig = {
@@ -254,8 +254,6 @@ export class WalletManager {
         chainId: chain.chainId,
         ...defaultSignerOptions,
       }
-
-      console.log(offlineSigner)
 
       if (preferredSignType === 'direct') {
         return getSigner<DirectSigner>(offlineSigner, {

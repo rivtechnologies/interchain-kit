@@ -1,11 +1,16 @@
 import { Chain } from "@chain-registry/types";
-import { WalletAccount } from "../types";
+import { OfflineAminoSigner, OfflineDirectSigner, SignType, WalletAccount } from "../types";
 import { BaseWallet } from "./base-wallet";
 import { delay, getClientFromExtension } from "../utils";
 import { EthereumNetwork } from "../types/ethereum";
 import { fromByteArray, toByteArray } from "base64-js";
 
 export class EthereumWallet extends BaseWallet {
+  getOfflineSigner(chainId: Chain["chainId"]): Promise<OfflineAminoSigner | OfflineDirectSigner>;
+  getOfflineSigner(chainId: Chain["chainId"], preferredSignType: SignType): Promise<OfflineAminoSigner | OfflineDirectSigner>;
+  getOfflineSigner(chainId: unknown, preferredSignType?: unknown): Promise<import("../types").OfflineAminoSigner | import("../types").OfflineDirectSigner> {
+    throw new Error("Method not implemented.");
+  }
 
   ethereum: any
 

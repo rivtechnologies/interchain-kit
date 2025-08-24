@@ -17,7 +17,7 @@ export const starshipConfig = {
       }
     },
     {
-      "id": "cosmoshub-1",
+      "id": "cosmoshub-4",
       "name": "cosmoshub",
       "numValidators": 1,
       "ports": {
@@ -38,7 +38,7 @@ export const starshipConfig = {
       "replicas": 1,
       "chains": [
         "osmosis-1",
-        "cosmoshub-1"
+        "cosmoshub-4"
       ],
       "resources": {
         "cpu": "0.1",

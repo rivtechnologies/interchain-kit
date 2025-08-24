@@ -1,6 +1,5 @@
-import { SigningOptions as InterchainSignerOptions } from '@interchainjs/cosmos/types/signing-client';
 
-export const createSignerOption = (chainName: string): InterchainSignerOptions => {
+export const createSignerOption = (chainName: string): any => {
   return {
     broadcast: {
       checkTx: true,

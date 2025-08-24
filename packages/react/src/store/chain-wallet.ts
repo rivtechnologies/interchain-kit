@@ -1,6 +1,5 @@
-import { Chain } from "@chain-registry/types";
-import { BaseWallet, WalletAccount } from "@interchain-kit/core";
-import { IGenericOfflineSigner } from "@interchainjs/types";
+import { Chain } from '@chain-registry/types';
+import { BaseWallet, WalletAccount, OfflineAminoSigner, OfflineDirectSigner } from '@interchain-kit/core';
 
 
 export class ChainWallet<TWallet extends BaseWallet> extends BaseWallet {
@@ -38,7 +37,7 @@ export class ChainWallet<TWallet extends BaseWallet> extends BaseWallet {
   async getAccount(chainId: string): Promise<WalletAccount> {
     return this.getAccountWithState(chainId);
   }
-  async getOfflineSigner(chainId: string): Promise<IGenericOfflineSigner> {
+  async getOfflineSigner(chainId: string): Promise<OfflineAminoSigner | OfflineDirectSigner> {
     return this.originalWallet.getOfflineSigner(chainId);
   }
   async addSuggestChain(chainId: Chain['chainId']): Promise<void> {

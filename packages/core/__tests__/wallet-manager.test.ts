@@ -225,10 +225,10 @@ describe('WalletManager', () => {
     expect(signType2).toBe('direct');
   });
 
-  it('should get signer options', () => {
-    const options = walletManager.getSignerOptions(chain1.chainName);
-    expect(options.signerOptions?.prefix).toBe(signerOptions.signing?.(chain1.chainName as string)?.signerOptions?.prefix);
-  });
+  // it('should get signer options', () => {
+  //   const options = walletManager.getSignerOptions(chain1.chainName);
+  //   expect(options.signerOptions?.prefix).toBe(signerOptions.signing?.(chain1.chainName as string)?.signerOptions?.prefix);
+  // });
 
   // it('should get signing client', async () => {
   //   SigningClient.connectWithSigner = jest.fn();

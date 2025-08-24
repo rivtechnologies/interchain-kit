@@ -1,17 +1,18 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
-  testEnvironment: "jsdom",
+  testEnvironment: "jsdom", // 还是 jsdom
   transform: {
-    "^.+\\.tsx?$": [
+    "^.+\\.[tj]sx?$": [
       "ts-jest",
       {
-        babelConfig: false,
         tsconfig: "tsconfig.json",
+        useESM: false, // 明确告诉 ts-jest 用 CommonJS 输出
       },
     ],
-    "^.+\\.(js|jsx)$": "babel-jest",
   },
-  transformIgnorePatterns: ["/node_modules/(?!multiformats|uint8arrays)/"],
+  transformIgnorePatterns: [
+    "/node_modules/(?!multiformats|uint8arrays|libsodium-wrappers)/",
+  ],
   testRegex: "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
   modulePathIgnorePatterns: ["dist/*"],

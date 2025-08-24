@@ -1,7 +1,8 @@
-import { coins } from '@cosmjs/proto-signing';
+
 import { SigningClient } from '@interchain-kit/react';
-import { createSend } from "interchainjs/cosmos/bank/v1beta1/tx.rpc.func";
-import { createGetBalance } from "interchainjs/cosmos/bank/v1beta1/query.rpc.func";
+import { createCosmosQueryClient } from '@interchainjs/cosmos';
+import { getBalance as getBalanceQuery, MsgSend, send } from 'interchainjs';
+
 export const sendToken = async (
   fromAddress: string,
   toAddress: string,
@@ -10,24 +11,30 @@ export const sendToken = async (
   signingClient: SigningClient,
   msg: string = 'test'
 ) => {
-  const txSend = createSend(signingClient);
+
   const fee = {
-    amount: coins(0, denom),
-    gas: "1000000",
-  };
-  try {
-    const tx = await txSend(
-      fromAddress,
+    amount: [
       {
-        fromAddress,
-        toAddress,
-        amount: [
-          { denom, amount },
-        ],
+        denom,
+        amount,
       },
-      fee,
-      msg
-    );
+    ],
+    gas: '1000000',
+  };
+
+  const token = {
+    amount: '10000000',
+    denom,
+  };
+
+  const msgSend = MsgSend.fromPartial({
+    fromAddress,
+    toAddress,
+    amount: [token]
+  });
+
+  try {
+    const tx = await send(signingClient, fromAddress, msgSend, fee, msg)
     console.log(tx);
   } catch (error) {
     console.error(error);
@@ -35,10 +42,10 @@ export const sendToken = async (
 }
 
 export const getBalance = async (address: string, rpcEndpoint: string, denom: string) => {
-  const balanceQuery = createGetBalance(rpcEndpoint as string);
-  const balance = await balanceQuery({
+  const queryClient = await createCosmosQueryClient(rpcEndpoint)
+  const { balance } = await getBalanceQuery(queryClient, {
     address,
     denom,
-  });
+  })
   return balance
 }

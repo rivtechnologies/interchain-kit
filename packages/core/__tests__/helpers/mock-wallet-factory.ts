@@ -1,8 +1,7 @@
 import { Chain } from '@chain-registry/types';
 
 
-import { IGenericOfflineSigner } from '@interchainjs/types';
-import { SignType, Wallet, WalletAccount } from '../../src/types';
+import { OfflineAminoSigner, OfflineDirectSigner, SignType, Wallet, WalletAccount } from '../../src/types';
 import { BaseWallet } from '../../src/wallets/base-wallet';
 
 type MockAccount = {
@@ -37,7 +36,7 @@ export class MockBaseWallet extends BaseWallet {
     const account = this.mockAccounts.find(a => a.chainId === chainId)?.account;
     return account ? Promise.resolve(account) : Promise.reject(new Error('Account not found'));
   }
-  getOfflineSigner(chainId: string, preferredSignType?: SignType): Promise<IGenericOfflineSigner> {
+  getOfflineSigner(chainId: string, preferredSignType?: SignType): Promise<OfflineAminoSigner | OfflineDirectSigner> {
     return Promise.reject(new Error('Method not implemented.'));
   }
   addSuggestChain(chainId: string): Promise<void> {

@@ -1,5 +1,5 @@
 
-import { BaseWallet, clientNotExistError, CosmosWallet, EthereumWallet, ExtensionWallet, isInstanceOf, MultiChainWallet, WalletAccount, WalletState, WCWallet } from "@interchain-kit/core"
+import { BaseWallet, clientNotExistError, CosmosWallet, EthereumWallet, ExtensionWallet, isInstanceOf, MultiChainWallet, OfflineAminoSigner, OfflineDirectSigner, WalletAccount, WalletState, WCWallet } from "@interchain-kit/core"
 import { InterchainStore } from "./store"
 import { Chain } from "@chain-registry/types"
 import { isSameConstructor } from "../utils/isSameConstructor"
@@ -178,7 +178,7 @@ export class StatefulWallet extends BaseWallet {
       console.log(error)
     }
   }
-  getOfflineSigner(chainId: Chain['chainId']): Promise<import("@interchainjs/types").IGenericOfflineSigner<unknown, unknown, unknown, import("@interchainjs/types").IGenericOfflineSignArgs<unknown, unknown>, import("@interchainjs/types").AccountData>> {
+  getOfflineSigner(chainId: Chain['chainId']): Promise<OfflineAminoSigner | OfflineDirectSigner> {
     return this.originalWallet.getOfflineSigner(chainId)
   }
   addSuggestChain(chainId: Chain["chainId"]): Promise<void> {

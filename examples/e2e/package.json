@@ -12,7 +12,9 @@
     "@interchain-kit/keplr-extension": "0.3.45",
     "@interchain-kit/metamask-extension": "0.3.45",
     "@interchain-kit/react": "0.3.45",
-    "interchainjs": "^1.13.0",
+    "@chain-registry/types-v1": "npm:@chain-registry/types@0.50.197",
+    "@chain-registry/types-v2": "npm:@chain-registry/types@2.0.47",
+    "interchainjs": "1.17.1",
     "js-yaml": "^4.1.0",
     "next": "15.3.3",
     "react": "^19.0.0",
@@ -27,6 +29,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
+    "next-transpile-modules": "^10.0.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

@@ -1,6 +1,6 @@
+
 import { ChainWallet } from "../../src/store/chain-wallet";
 import { BaseWallet, WalletAccount } from "@interchain-kit/core";
-import { IGenericOfflineSigner } from "@interchainjs/types";
 
 describe("ChainWallet", () => {
     let mockOriginalWallet: jest.Mocked<BaseWallet>;
@@ -55,7 +55,11 @@ describe("ChainWallet", () => {
 
     it("should get an offline signer for a chain", async () => {
         const chainId = "test-chain";
-        const mockSigner: IGenericOfflineSigner = {} as IGenericOfflineSigner;
+        const mockSigner = {
+            getAccounts: jest.fn().mockResolvedValue([]),
+            signAmino: jest.fn().mockResolvedValue({}),
+            signDirect: jest.fn().mockResolvedValue({})
+        };
         mockOriginalWallet.getOfflineSigner.mockResolvedValue(mockSigner);
 
         const signer = await chainWallet.getOfflineSigner(chainId);

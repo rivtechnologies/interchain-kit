@@ -23,9 +23,10 @@ const mockWalletInfo: Wallet = {
     },
   ],
 }
+
 const mockCosmosWallet = new MockCosmosWallet(
   mockWalletInfo,
-  "mock1 mock1 mock1 mock1 mock1 mock1 mock1 mock1 mock1 mock1 mock1 mock1"
+  'engage time mail teach column volume depth embody sadness inquiry observe vapor'
 );
 
 export const mockWallet = new MockMultiChainWallet(mockWalletInfo)

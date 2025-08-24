@@ -56,7 +56,7 @@ test.describe('Wallet Discovery & Connection', () => {
   });
 
   test('should show address, after connect wallet', async ({ page }) => {
-    const address = 'osmo14jq…ztjcc6r';
+    const address = 'osmo1m3a…v54ywaw';
     await mockWalletWindowObject(page);
     await page.goto('/wallet-connect');
     const walletConnectPage = new WalletConnectPage(page);

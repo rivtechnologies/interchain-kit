@@ -2,5 +2,7 @@ import "@testing-library/jest-dom";
 
 // Polyfill for TextEncoder and TextDecoder
 import { TextEncoder, TextDecoder } from "util";
-global.TextEncoder = TextEncoder;
-global.TextDecoder = TextDecoder;
+
+// Type assertion to resolve TypeScript compatibility issues
+(global as any).TextEncoder = TextEncoder;
+(global as any).TextDecoder = TextDecoder;

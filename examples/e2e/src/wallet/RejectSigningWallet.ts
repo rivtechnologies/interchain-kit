@@ -15,9 +15,11 @@ const rejectSigningWalletInfo: Wallet = {
   prettyName: "Signing Mock Wallet",
   mode: "extension",
 }
+
+
 const rejectSigningCosmosWallet = new RejectSigningWallet(
   rejectSigningWalletInfo,
-  "reject reject reject reject reject reject reject reject reject reject reject reject"
+  'target coil cactus ocean law mistake biology pond beyond master live trick'
 );
 
 
