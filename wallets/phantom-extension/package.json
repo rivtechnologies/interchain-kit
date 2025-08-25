@@ -31,5 +31,8 @@
     "watch:dev": "tsc -w -p tsconfig.esm.json & tsc -w"
   },
   "keywords": [],
+  "dependencies": {
+    "@interchain-kit/core": "0.3.45"
+  },
   "gitHead": "3d11fb1fccadec958696aaa78817e2440360cf1c"
 }
