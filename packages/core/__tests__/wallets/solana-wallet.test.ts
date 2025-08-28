@@ -1,7 +1,8 @@
 import { SolanaWallet } from '../../src/wallets/solana-wallet';
 import { Chain } from '@chain-registry/types';
 import { Wallet } from '../../src/types';
-import { Transaction, VersionedTransaction, SolanaSignInData } from '../../src/types/solana';
+import { SolanaSignInData } from '../../src/types/solana';
+import { Transaction, VersionedTransaction, TransactionSignature } from '@solana/web3.js';
 
 // Mock the utils module
 const mockGetClientFromExtension = require('../../src/utils').getClientFromExtension;
@@ -38,7 +39,7 @@ describe('SolanaWallet', () => {
   beforeEach(() => {
     // Reset mocks
     jest.clearAllMocks();
-    
+
     // Create mock Solana client
     mockSolanaClient = {
       connect: jest.fn(),
@@ -78,10 +79,10 @@ describe('SolanaWallet', () => {
     it('should bind keystore change event', () => {
       const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
       wallet.bindingEvent();
-      
+
       expect(consoleSpy).toHaveBeenCalledWith('bindingEvent', 'keystorechange');
       expect((global as any).window.addEventListener).toHaveBeenCalledWith('keystorechange', expect.any(Function));
-      
+
       consoleSpy.mockRestore();
     });
   });
@@ -89,14 +90,14 @@ describe('SolanaWallet', () => {
   describe('init', () => {
     it('should initialize the wallet successfully', async () => {
       await wallet.init();
-      
+
       expect(mockGetClientFromExtension).toHaveBeenCalledWith('mockSolanaKey');
       expect(wallet.solana).toBe(mockSolanaClient);
     });
 
     it('should throw an error if initialization fails', async () => {
       mockGetClientFromExtension.mockRejectedValue(new Error('Initialization failed'));
-      
+
       await expect(wallet.init()).rejects.toThrow('Initialization failed');
     });
   });
@@ -108,16 +109,16 @@ describe('SolanaWallet', () => {
 
     it('should connect to Solana wallet successfully', async () => {
       await wallet.connect('solana-mainnet');
-      
+
       expect(mockSolanaClient.connect).toHaveBeenCalled();
     });
 
     it('should handle connection errors gracefully', async () => {
       const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
       mockSolanaClient.connect.mockRejectedValue(new Error('Connection failed'));
-      
+
       await wallet.connect('solana-mainnet');
-      
+
       expect(consoleSpy).toHaveBeenCalledWith(new Error('Connection failed'));
       consoleSpy.mockRestore();
     });
@@ -130,7 +131,7 @@ describe('SolanaWallet', () => {
 
     it('should disconnect from Solana wallet', async () => {
       await wallet.disconnect('solana-mainnet');
-      
+
       expect(mockSolanaClient.disconnect).toHaveBeenCalled();
     });
   });
@@ -142,7 +143,7 @@ describe('SolanaWallet', () => {
 
     it('should return account details when connected', async () => {
       const account = await wallet.getAccount('solana-mainnet');
-      
+
       expect(account).toEqual({
         address: 'mock-public-key',
         pubkey: new Uint8Array([1, 2, 3]),
@@ -155,13 +156,13 @@ describe('SolanaWallet', () => {
 
     it('should throw error when not connected', async () => {
       wallet.solana = null;
-      
+
       await expect(wallet.getAccount('solana-mainnet')).rejects.toThrow('Not connected');
     });
 
     it('should throw error when publicKey is not available', async () => {
       wallet.solana = { publicKey: null };
-      
+
       await expect(wallet.getAccount('solana-mainnet')).rejects.toThrow('Not connected');
     });
   });
@@ -189,7 +190,7 @@ describe('SolanaWallet', () => {
 
     it('should return the Solana client', async () => {
       const provider = await wallet.getProvider('solana-mainnet');
-      
+
       expect(provider).toBe(mockSolanaClient);
     });
   });
@@ -202,9 +203,9 @@ describe('SolanaWallet', () => {
     it('should make a request to the Solana client', async () => {
       const mockResponse = { result: 'success' };
       mockSolanaClient.request.mockResolvedValue(mockResponse);
-      
+
       const result = await wallet.request('testMethod', { param: 'value' });
-      
+
       expect(mockSolanaClient.request).toHaveBeenCalledWith({
         method: 'testMethod',
         params: { param: 'value' },
@@ -219,15 +220,12 @@ describe('SolanaWallet', () => {
     });
 
     it('should sign all transactions', async () => {
-      const mockTransactions: Transaction[] = [
-        { message: new Uint8Array([1]), recentBlockhash: 'hash1', feePayer: 'payer1', instructions: [], signers: [], version: 0 },
-        { message: new Uint8Array([2]), recentBlockhash: 'hash2', feePayer: 'payer2', instructions: [], signers: [], version: 0 },
-      ];
+      const mockTransactions = [{} as Transaction, {} as Transaction];
       const mockSignedTransactions = [...mockTransactions];
       mockSolanaClient.signAllTransactions.mockResolvedValue(mockSignedTransactions);
-      
+
       const result = await wallet.signAllTransactions(mockTransactions);
-      
+
       expect(mockSolanaClient.signAllTransactions).toHaveBeenCalledWith(mockTransactions);
       expect(result).toBe(mockSignedTransactions);
     });
@@ -239,14 +237,12 @@ describe('SolanaWallet', () => {
     });
 
     it('should sign and send all transactions', async () => {
-      const mockTransactions: Transaction[] = [
-        { message: new Uint8Array([1]), recentBlockhash: 'hash1', feePayer: 'payer1', instructions: [], signers: [], version: 0 },
-      ];
+      const mockTransactions = [{} as Transaction];
       const mockResult = { signatures: ['sig1'] };
       mockSolanaClient.signAndSendAllTransactions.mockResolvedValue(mockResult);
-      
+
       const result = await wallet.signAndSendAllTransactions(mockTransactions);
-      
+
       expect(mockSolanaClient.signAndSendAllTransactions).toHaveBeenCalledWith(mockTransactions);
       expect(result).toBe(mockResult);
     });
@@ -258,36 +254,23 @@ describe('SolanaWallet', () => {
     });
 
     it('should sign and send a transaction', async () => {
-      const mockTransaction: Transaction = {
-        message: new Uint8Array([1]),
-        recentBlockhash: 'hash1',
-        feePayer: 'payer1',
-        instructions: [],
-        signers: [],
-        version: 0,
-      };
-      const mockResult = { signature: 'sig1', address: 'mock-address' };
+      const mockTransaction = {} as Transaction;
+      const mockResult: TransactionSignature = 'sig1';
       mockSolanaClient.signAndSendTransaction.mockResolvedValue(mockResult);
-      
+
       const result = await wallet.signAndSendTransaction(mockTransaction);
-      
+
       expect(mockSolanaClient.signAndSendTransaction).toHaveBeenCalledWith(mockTransaction);
       expect(result).toBe(mockResult);
     });
 
     it('should handle VersionedTransaction', async () => {
-      const mockVersionedTransaction: VersionedTransaction = {
-        signatures: [new Uint8Array([1])],
-        message: {
-          deserialize: jest.fn(),
-          serialize: jest.fn(),
-        },
-      };
-      const mockResult = { signature: 'sig1' };
+      const mockVersionedTransaction = {} as VersionedTransaction;
+      const mockResult: TransactionSignature = 'sig1';
       mockSolanaClient.signAndSendTransaction.mockResolvedValue(mockResult);
-      
+
       const result = await wallet.signAndSendTransaction(mockVersionedTransaction);
-      
+
       expect(mockSolanaClient.signAndSendTransaction).toHaveBeenCalledWith(mockVersionedTransaction);
       expect(result).toBe(mockResult);
     });
@@ -314,9 +297,9 @@ describe('SolanaWallet', () => {
         signedMessage: new Uint8Array([4, 5, 6]),
       };
       mockSolanaClient.signIn.mockResolvedValue(mockResult);
-      
+
       const result = await wallet.signIn(mockSignInData);
-      
+
       expect(mockSolanaClient.signIn).toHaveBeenCalledWith(mockSignInData);
       expect(result).toBe(mockResult);
     });
@@ -331,9 +314,9 @@ describe('SolanaWallet', () => {
       const mockMessage = new Uint8Array([1, 2, 3]);
       const mockResult = { signature: new Uint8Array([4, 5, 6]) };
       mockSolanaClient.signMessage.mockResolvedValue(mockResult);
-      
+
       const result = await wallet.signMessage(mockMessage);
-      
+
       expect(mockSolanaClient.signMessage).toHaveBeenCalledWith(mockMessage, 'utf8');
       expect(result).toBe(mockResult);
     });
@@ -342,9 +325,9 @@ describe('SolanaWallet', () => {
       const mockMessage = new Uint8Array([1, 2, 3]);
       const mockResult = { signature: new Uint8Array([4, 5, 6]) };
       mockSolanaClient.signMessage.mockResolvedValue(mockResult);
-      
+
       const result = await wallet.signMessage(mockMessage, 'hex');
-      
+
       expect(mockSolanaClient.signMessage).toHaveBeenCalledWith(mockMessage, 'hex');
       expect(result).toBe(mockResult);
     });
@@ -356,19 +339,12 @@ describe('SolanaWallet', () => {
     });
 
     it('should sign a transaction', async () => {
-      const mockTransaction: Transaction = {
-        message: new Uint8Array([1]),
-        recentBlockhash: 'hash1',
-        feePayer: 'payer1',
-        instructions: [],
-        signers: [],
-        version: 0,
-      };
+      const mockTransaction = {} as Transaction;
       const mockSignedTransaction = { ...mockTransaction };
       mockSolanaClient.signTransaction.mockResolvedValue(mockSignedTransaction);
-      
+
       const result = await wallet.signTransaction(mockTransaction);
-      
+
       expect(mockSolanaClient.signTransaction).toHaveBeenCalledWith(mockTransaction);
       expect(result).toBe(mockSignedTransaction);
     });

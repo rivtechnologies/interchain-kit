@@ -3,8 +3,10 @@ import { Chain } from '@chain-registry/types';
 import { SignType, Wallet, WalletAccount } from '../types';
 import { getClientFromExtension } from '../utils';
 import { BaseWallet } from './base-wallet';
-import { SolanaSignInData, Transaction, VersionedTransaction } from '../types/solana';
+
 import { OfflineAminoSigner, OfflineDirectSigner } from '../types/cosmos';
+import { Transaction, TransactionSignature, VersionedTransaction } from '@solana/web3.js';
+import { SolanaSignInData } from '../types/solana';
 
 function publicKeyToUint8Array(publicKey: any): Uint8Array {
   if (publicKey?.toBytes) return publicKey.toBytes();
@@ -95,7 +97,7 @@ export class SolanaWallet extends BaseWallet {
     return this.solana.signAndSendAllTransactions(transactions);
   }
 
-  async signAndSendTransaction(transaction: Transaction | VersionedTransaction): Promise<{ signature: string; address?: string }> {
+  async signAndSendTransaction(transaction: Transaction | VersionedTransaction): Promise<TransactionSignature> {
 
     return this.solana.signAndSendTransaction(transaction);
   }
@@ -105,7 +107,7 @@ export class SolanaWallet extends BaseWallet {
     return this.solana.signIn(data);
   }
 
-  async signMessage(message: Uint8Array, encoding: 'utf8' | 'hex' = 'utf8'): Promise<any> {
+  async signMessage(message: Uint8Array, encoding: 'utf8' | 'hex' = 'utf8'): Promise<Uint8Array> {
 
     return this.solana.signMessage(message, encoding);
   }
