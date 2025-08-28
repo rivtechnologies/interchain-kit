@@ -85,9 +85,9 @@ export const useSendToken = (chainName: string, walletName: string) => {
         timeoutHeight: undefined,
         timeoutTimestamp: BigInt(timeoutTime),
         memo: 'test transfer',
-      }),
+      }), fee, "send ibc")
 
-        fee, "send ibc")
+      console.log('res:', res)
 
       try {
         await res.wait()

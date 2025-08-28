@@ -1,5 +1,5 @@
 
-import { BaseWallet, clientNotExistError, CosmosWallet, EthereumWallet, ExtensionWallet, isInstanceOf, MultiChainWallet, OfflineAminoSigner, OfflineDirectSigner, WalletAccount, WalletState, WCWallet } from "@interchain-kit/core"
+import { BaseWallet, clientNotExistError, CosmosWallet, EthereumWallet, ExtensionWallet, isInstanceOf, MultiChainWallet, OfflineAminoSigner, OfflineDirectSigner, SolanaWallet, WalletAccount, WalletState, WCWallet } from "@interchain-kit/core"
 import { InterchainStore } from "./store"
 import { Chain } from "@chain-registry/types"
 import { isSameConstructor } from "../utils/isSameConstructor"
@@ -207,6 +207,12 @@ export class StatefulWallet extends BaseWallet {
         const ethereumWallet = this.originalWallet.getWalletByChainType('eip155')
         if (ethereumWallet) {
           return ethereumWallet as T
+        }
+      }
+      if (isSameConstructor(WalletClass, SolanaWallet)) {
+        const solanaWallet = this.originalWallet.getWalletByChainType('solana')
+        if (solanaWallet) {
+          return solanaWallet as T
         }
       }
     }

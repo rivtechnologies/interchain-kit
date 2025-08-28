@@ -9,7 +9,7 @@ export class TransactionPage {
 
   // 導航到交易頁面
   async goto() {
-    await this.page.goto('/transaction');
+    await this.page.goto('/cosmos/transaction');
   }
 
   // 獲取發送者錢包元素

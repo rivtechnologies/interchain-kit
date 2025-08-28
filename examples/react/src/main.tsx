@@ -51,7 +51,7 @@ import { create } from "domain";
 
 const chainNames: string[] = [
   // "injectivetestnet",
-  "osmosistestnet",
+  // "osmosistestnet",
   // "osmosis",
   // "juno",
   // "cosmoshub",
@@ -60,7 +60,7 @@ const chainNames: string[] = [
   // "seitestnet2",
   // "ethereum",
   // "cosmoshubtestnet",
-  // "solana",
+  "solana",
 ];
 // const chainNames = ["osmosistestnet"];
 // const chainNames = ["cosmoshub"];
@@ -179,8 +179,8 @@ if (isInstanceOf(keplrWallet, ExtensionWallet)) {
 const _wallets: BaseWallet[] = [
   // mock1Wallet,
   // mock2Wallet,
-  keplrWallet,
-  leapWallet,
+  // keplrWallet,
+  // leapWallet,
   // cosmostationWallet,
   // stationWallet,
   // galaxyStationWallet,
@@ -200,7 +200,7 @@ const _wallets: BaseWallet[] = [
   // finWallet,
   // shellWallet,
   // ninjiWallet,
-  // phantomWallet,
+  phantomWallet,
 ];
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

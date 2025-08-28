@@ -24,7 +24,7 @@ export class UxPage {
    * 导航到UX页面
    */
   async goto() {
-    await this.page.goto('/ux');
+    await this.page.goto('/cosmos/ux');
   }
 
   /**
