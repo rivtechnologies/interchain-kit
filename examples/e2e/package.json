@@ -15,11 +15,13 @@
     "@interchain-kit/metamask-extension": "0.3.46",
     "@interchain-kit/react": "0.3.46",
     "interchainjs": "1.17.1",
+    "@solana/web3.js": "^1.98.4",
     "js-yaml": "^4.1.0",
     "next": "15.3.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "yaml-loader": "^0.8.1"
+    "yaml-loader": "^0.8.1",
+    "@interchain-kit/mock-wallet": "^0.3.45"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

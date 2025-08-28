@@ -12,7 +12,9 @@
     "test:transaction-signing": "playwright test --grep \"交易簽名流程測試\"",
     "test:cross-chain-ux": "playwright test --grep \"跨鏈用戶體驗測試\"",
     "test:regression-ui": "playwright test --grep \"回歸測試/UI 案例\"",
-    "starship": "starship --config ./starship/configs/osmosis-cosmoshub.yaml"
+    "starship": "starship --config ./starship/configs/osmosis-cosmoshub.yaml",
+    "starship:multi-chain": "starship --config ./starship/configs/multi-chain.yaml",
+    "starship:solana": "starship --config ./starship/configs/solana.yaml"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",

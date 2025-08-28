@@ -9,6 +9,10 @@ import {
   chain as cosmoshubChain,
   assetList as cosmoshubAssetList,
 } from "chain-registry/mainnet/cosmoshub";
+import {
+  chain as solanaChain,
+  assetList as solanaAssetList,
+} from "chain-registry/mainnet/solana";
 
 import { useChain as useStarshipChain } from "@/starship/hook";
 import { useEffect, useState } from "react";
@@ -17,6 +21,10 @@ import { notInstalledWallet } from "@/wallet/NotInstalledWallet";
 import { mockWallet } from "@/wallet/MockWallet";
 import { rejectSigningWallet } from "@/wallet/RejectSigningWallet";
 import { multipleAccountWallet } from "@/wallet/MultipleAccountWallet";
+import {
+  mockSolanaWalletReceiver,
+  mockSolanaWalletSender,
+} from "@/wallet/solana/wallet";
 
 export const InterchainKit = ({ children }: { children: React.ReactNode }) => {
   const [isRpcReady, setRpcReady] = useState(false);
@@ -52,8 +60,8 @@ export const InterchainKit = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <ChainProvider
-      chains={[osmosisChain, cosmoshubChain]}
-      assetLists={[osmosisAssetList, cosmoshubAssetList]}
+      chains={[osmosisChain, cosmoshubChain, solanaChain]}
+      assetLists={[osmosisAssetList, cosmoshubAssetList, solanaAssetList]}
       wallets={[
         mockWallet,
         senderWallet,
@@ -61,6 +69,8 @@ export const InterchainKit = ({ children }: { children: React.ReactNode }) => {
         notInstalledWallet,
         rejectSigningWallet,
         multipleAccountWallet,
+        mockSolanaWalletSender,
+        mockSolanaWalletReceiver,
       ]}
       walletModal={() => <InterchainWalletModal />}
       signerOptions={{
