@@ -37,6 +37,7 @@
     "bip39": "^3.1.0",
     "bs58": "^6.0.0",
     "ed25519-hd-key": "^1.3.0",
+    "ethers": "^6.15.0",
     "tweetnacl": "^1.0.3"
   },
   "gitHead": "3d11fb1fccadec958696aaa78817e2440360cf1c"

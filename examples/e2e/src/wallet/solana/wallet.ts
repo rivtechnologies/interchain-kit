@@ -1,5 +1,4 @@
 import { MultiChainWallet, Wallet } from "@interchain-kit/core";
-import { MockMultiChainWallet } from "../mock-cosmos-wallet";
 import { MockSolanaWallet } from "@interchain-kit/mock-wallet";
 
 

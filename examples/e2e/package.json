@@ -9,19 +9,19 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@chain-registry/types-v1": "npm:@chain-registry/types@0.50.197",
-    "@chain-registry/types-v2": "npm:@chain-registry/types@2.0.47",
     "@interchain-kit/keplr-extension": "0.3.46",
     "@interchain-kit/metamask-extension": "0.3.46",
+    "@interchain-kit/mock-wallet": "^0.3.45",
     "@interchain-kit/react": "0.3.46",
-    "interchainjs": "1.17.1",
+    "@interchainjs/ethereum": "1.17.3",
     "@solana/web3.js": "^1.98.4",
+    "ethers": "^6.15.0",
+    "interchainjs": "1.17.3",
     "js-yaml": "^4.1.0",
     "next": "15.3.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "yaml-loader": "^0.8.1",
-    "@interchain-kit/mock-wallet": "^0.3.45"
+    "yaml-loader": "^0.8.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

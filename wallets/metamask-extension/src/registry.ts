@@ -10,7 +10,7 @@ export const MetaMaskExtensionInfo: Wallet = {
   prettyName: 'MetaMask',
   mode: 'extension',
   logo: ICON,
-  keystoreChange: 'keplr_keystorechange',
+  keystoreChange: 'accountsChanged',
   downloads: [
     {
       device: 'desktop',

@@ -16,7 +16,15 @@ export class EthereumWallet extends BaseWallet {
 
   isSwitchingNetwork: boolean = false
 
+
+  bindingEvent() {
+    this.ethereum.on(this.info.keystoreChange, () => {
+      this.events.emit('accountChanged', () => { })
+    })
+  }
+
   async init(): Promise<void> {
+    this.bindingEvent()
     this.ethereum = await getClientFromExtension(this.info.ethereumKey)
   }
   async connect(chainId: Chain["chainId"]): Promise<void> {
