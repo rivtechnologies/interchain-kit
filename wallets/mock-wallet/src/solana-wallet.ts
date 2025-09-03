@@ -1,4 +1,5 @@
 import { SolanaWallet, Wallet, WalletAccount } from '@interchain-kit/core';
+import { SolanaSignInData } from '@interchain-kit/core/types/solana';
 import { Connection, Keypair, LAMPORTS_PER_SOL, Transaction } from '@solana/web3.js';
 import * as bip39 from 'bip39';
 import bs58 from 'bs58';
@@ -55,10 +56,10 @@ export class MockSolanaWallet extends SolanaWallet {
       }
       const seed = bip39.mnemonicToSeedSync(mnemonic);
       const derivedSeed1 = derivePath(this.derivationPath1, seed.toString('hex')).key;
-      this.keypairMap['1'] = Keypair.fromSeed(derivedSeed1);
+      this.keypairMap['1'] = Keypair.fromSeed(derivedSeed1 as unknown as Uint8Array);
 
       const derivedSeed2 = derivePath(this.derivationPath2, seed.toString('hex')).key;
-      this.keypairMap['2'] = Keypair.fromSeed(derivedSeed2);
+      this.keypairMap['2'] = Keypair.fromSeed(derivedSeed2 as unknown as Uint8Array);
 
     } else {
       // 否则随机生成密钥对
@@ -71,12 +72,18 @@ export class MockSolanaWallet extends SolanaWallet {
   }
 
   async init(): Promise<void> {
-    //@ts-ignore1
+    //@ts-ignore
     window[this.info.windowKey] = {}
     //@ts-ignore
     window[this.info.solanaKey] = {}
 
     await super.init();
+  }
+
+  bindingEvent() {
+    window.addEventListener(this.info.keystoreChange, () => {
+      this.events.emit('accountChanged', () => { });
+    });
   }
 
   getCurrentKeypair(): Keypair {
@@ -118,7 +125,7 @@ export class MockSolanaWallet extends SolanaWallet {
 
 
   // 模拟 Sign In With Solana (SIWS)
-  async signIn(params: SignInParams = {}): Promise<SignInResult> {
+  async signIn(data: SolanaSignInData): Promise<{ address: string; signature: Uint8Array; signedMessage: Uint8Array; }> {
     if (!this.isConnected) {
       throw new Error('Wallet not connected.');
     }
@@ -134,7 +141,7 @@ export class MockSolanaWallet extends SolanaWallet {
       nonce = Math.random().toString(36).substring(2, 10),
       issuedAt = new Date().toISOString(),
       expirationTime = new Date(Date.now() + 1000 * 60 * 60).toISOString(),
-    } = params;
+    } = data;
 
     const message = `${domain} wants you to sign in with your Solana account:
 ${keypair.publicKey.toBase58()}
@@ -151,23 +158,22 @@ Expiration Time: ${expirationTime}`;
     const signature = nacl.sign.detached(messageBytes, keypair.secretKey);
 
     return {
-      signedMessage: message,
-      signature: bs58.encode(signature),
-      publicKey: keypair.publicKey.toBase58(),
+      address: keypair.publicKey.toBase58(),
+      signature: signature,
+      signedMessage: messageBytes,
     };
   }
 
   // 模拟 signMessage
-  async signMessage(message: string): Promise<SignMessageResult> {
+  async signMessage(message: Uint8Array, encoding: 'utf8' | 'hex' = 'utf8'): Promise<any> {
     if (!this.isConnected) {
       throw new Error('Wallet not connected.');
     }
-    const messageBytes = new TextEncoder().encode(message);
     const keypair = this.getCurrentKeypair();
-    const signature = nacl.sign.detached(messageBytes, keypair.secretKey);
+    const signature = nacl.sign.detached(message, keypair.secretKey);
     return {
-      signature: bs58.encode(signature),
-      publicKey: keypair.publicKey.toBase58(),
+      signature: signature,
+      publicKey: keypair.publicKey,
     };
   }
 
@@ -238,13 +244,12 @@ Expiration Time: ${expirationTime}`;
   // 获取余额
   async getBalance(): Promise<number> {
     try {
-
       const keypair = this.getCurrentKeypair();
       const balance = await this.connection.getBalance(keypair.publicKey);
-
       return balance;
     } catch (error) {
       console.error('Error getting balance:', error);
+      return 0;
     }
   }
 
@@ -254,6 +259,52 @@ Expiration Time: ${expirationTime}`;
     const signature = await this.connection.requestAirdrop(keypair.publicKey, lamports);
     await this.connection.confirmTransaction(signature);
     return signature;
+  }
+
+  // 添加 request 方法以符合接口要求
+  async request(method: string, params: any): Promise<any> {
+    const keypair = this.getCurrentKeypair();
+    switch (method) {
+      case 'connect':
+        this.isConnected = true;
+        return { publicKey: keypair.publicKey };
+      case 'disconnect':
+        this.isConnected = false;
+        return {};
+      case 'getAccountInfo':
+        return {
+          address: keypair.publicKey.toBase58(),
+          publicKey: keypair.publicKey
+        };
+      case 'signMessage':
+        if (params?.message) {
+          const messageBytes = typeof params.message === 'string' ? new TextEncoder().encode(params.message) : params.message;
+          const signature = nacl.sign.detached(messageBytes, keypair.secretKey);
+          return {
+            signature: signature,
+            publicKey: keypair.publicKey
+          };
+        }
+        throw new Error('Message parameter required');
+      case 'signTransaction':
+        if (params?.transaction) {
+          const tx = params.transaction as Transaction;
+          tx.partialSign(keypair);
+          return tx;
+        }
+        throw new Error('Transaction parameter required');
+      case 'signAndSendTransaction':
+        if (params?.transaction) {
+          const tx = params.transaction as Transaction;
+          tx.partialSign(keypair);
+          const signature = await this.connection.sendTransaction(tx, [keypair]);
+          await this.connection.confirmTransaction(signature);
+          return { signature };
+        }
+        throw new Error('Transaction parameter required');
+      default:
+        return Promise.resolve({ method, params });
+    }
   }
 }
 

@@ -1,10 +1,12 @@
 import { Chain } from '@chain-registry/types';
 
-import { Wallet, WalletAccount } from '../types';
-import { SolanaSignInData, Transaction, VersionedTransaction } from '../types/solana';
-import { ISolanaWallet } from '../types/wallet-types';
+import { SignType, Wallet, WalletAccount } from '../types';
 import { getClientFromExtension } from '../utils';
 import { BaseWallet } from './base-wallet';
+
+import { OfflineAminoSigner, OfflineDirectSigner } from '../types/cosmos';
+import { Transaction, TransactionSignature, VersionedTransaction } from '@solana/web3.js';
+import { SolanaSignInData } from '../types/solana';
 
 function publicKeyToUint8Array(publicKey: any): Uint8Array {
   if (publicKey?.toBytes) return publicKey.toBytes();
@@ -29,9 +31,8 @@ export class SolanaWallet extends BaseWallet implements ISolanaWallet {
     });
   }
   async init(): Promise<void> {
-
-    this.solana = await getClientFromExtension(this.info.solanaKey);
     this.bindingEvent();
+    this.solana = await getClientFromExtension(this.info.solanaKey);
   }
 
 
@@ -43,10 +44,6 @@ export class SolanaWallet extends BaseWallet implements ISolanaWallet {
       console.log(error);
     }
 
-  }
-
-  async addSuggestChain(chainId: Chain['chainId']): Promise<void> {
-    throw new Error('Solana does not support suggest chain');
   }
 
   async disconnect(chainId: Chain['chainId']): Promise<void> {
@@ -67,6 +64,13 @@ export class SolanaWallet extends BaseWallet implements ISolanaWallet {
     };
   }
 
+  async getOfflineSigner(chainId: Chain['chainId'], preferredSignType?: SignType): Promise<OfflineAminoSigner | OfflineDirectSigner> {
+    throw new Error('Solana does not support getOfflineSigner');
+  }
+
+  async addSuggestChain(chainId: Chain['chainId']): Promise<void> {
+    throw new Error('Solana does not support suggest chain');
+  }
 
   async getProvider(chainId: Chain['chainId']): Promise<any> {
     return this.solana;
@@ -83,27 +87,32 @@ export class SolanaWallet extends BaseWallet implements ISolanaWallet {
   }
 
   async signAllTransactions(transactions: Transaction[]): Promise<Transaction[]> {
+
     return this.solana.signAllTransactions(transactions);
   }
 
   async signAndSendAllTransactions(transactions: Transaction[]): Promise<any> {
+
     return this.solana.signAndSendAllTransactions(transactions);
   }
 
-  async signAndSendTransaction(transaction: Transaction | VersionedTransaction): Promise<string> {
-    const result = await this.solana.signAndSendTransaction(transaction);
-    return result.signature;
+  async signAndSendTransaction(transaction: Transaction | VersionedTransaction): Promise<TransactionSignature> {
+
+    return this.solana.signAndSendTransaction(transaction);
   }
 
   async signIn(data: SolanaSignInData): Promise<{ address: string; signature: Uint8Array; signedMessage: Uint8Array }> {
+
     return this.solana.signIn(data);
   }
 
-  async signMessage(message: Uint8Array, encoding: 'utf8' | 'hex' = 'utf8'): Promise<any> {
+  async signMessage(message: Uint8Array, encoding: 'utf8' | 'hex' = 'utf8'): Promise<Uint8Array> {
+
     return this.solana.signMessage(message, encoding);
   }
 
   async signTransaction(transaction: Transaction): Promise<Transaction> {
+
     return this.solana.signTransaction(transaction);
   }
 }
