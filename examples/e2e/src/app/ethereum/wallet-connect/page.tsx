@@ -6,11 +6,14 @@ import {
 } from "@/wallet/ethereum/wallet";
 import { useChain, useChainWallet } from "@interchain-kit/react";
 export default function EthereumWalletConnect() {
-  const { openView } = useChain("ethereum");
+  const { openView } = useChain("Sepolia Testnet");
 
-  const sender = useChainWallet("ethereum", mockEthereumWalletSender.info.name);
+  const sender = useChainWallet(
+    "Sepolia Testnet",
+    mockEthereumWalletSender.info.name
+  );
   const receiver = useChainWallet(
-    "ethereum",
+    "Sepolia Testnet",
     mockEthereumWalletReceiver.info.name
   );
 

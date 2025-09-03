@@ -76,8 +76,15 @@ export class ChainWalletStore extends BaseWallet {
   }
 
   async refreshAccount(): Promise<void> {
-    const account = await this.wallet.getAccount(this.chain.chainId)
-    this.store.updateChainWalletState(this.wallet.info.name, this.chain.chainName, { account });
+    try {
+      const account = await this.wallet.getAccount(this.chain.chainId)
+
+      console.log(this.wallet)
+
+      this.store.updateChainWalletState(this.wallet.info.name, this.chain.chainName, { account });
+    } catch (error) {
+      this.store.updateChainWalletState(this.wallet.info.name, this.chain.chainName, { walletState: WalletState.Disconnected, account: undefined, errorMessage: (error as any).message });
+    }
   }
 
   async getAccount(): Promise<WalletAccount> {

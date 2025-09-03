@@ -6,7 +6,7 @@ import { useChainWallet } from "@interchain-kit/react";
 
 export default function EthereumUx() {
   const { address, connect, wallet } = useChainWallet(
-    "ethereum",
+    "Sepolia Testnet",
     mockEthereumWalletSender.info.name
   );
 

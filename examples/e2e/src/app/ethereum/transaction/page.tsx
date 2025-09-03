@@ -8,8 +8,14 @@ import { EthereumWallet } from "@interchain-kit/core";
 const SEPOLIA_RPC = "https://eth-sepolia.api.onfinality.io/public";
 
 export default function Transaction() {
-  const sender = useChainWallet("ethereum", "Mock Ethereum Wallet Sender");
-  const receiver = useChainWallet("ethereum", "Mock Ethereum Wallet Receiver");
+  const sender = useChainWallet(
+    "Sepolia Testnet",
+    "Mock Ethereum Wallet Sender"
+  );
+  const receiver = useChainWallet(
+    "Sepolia Testnet",
+    "Mock Ethereum Wallet Receiver"
+  );
 
   const [senderBalance, setSenderBalance] = useState<string>("0");
   const [receiverBalance, setReceiverBalance] = useState<string>("0");

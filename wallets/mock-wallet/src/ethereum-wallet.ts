@@ -19,12 +19,20 @@ export interface MockEthereumWalletOptions extends Wallet {
 export class MockEthereumWallet extends EthereumWallet {
   private accounts: HDNodeWallet[] = [];
   private currentAccountIndex: number = 0;
-  private currentChainId: number = 1; // Default to Ethereum mainnet
-  private provider: Eip1193Provider | null = null;
-  private signer: ethers.Wallet | null = null;
-  private networks: MockEthereumNetwork[] = [];
+  private currentChainId: string = '1'; // Default to Ethereum mainnet
+
+
   private mnemonic: string;
   private derivationPaths: string[];
+  private walletMap: {
+    [chainId: string]: {
+      [accountIndex: string]: {
+        wallet: HDNodeWallet,
+        provider: ethers.JsonRpcProvider,
+        signer: ethers.Wallet
+      }
+    }
+  } = {};
 
   constructor(options: Wallet, mnemonic: string) {
     super(options);
@@ -36,73 +44,45 @@ export class MockEthereumWallet extends EthereumWallet {
       `44'/60'/0'/0/1`   // 第二个钱包
     ];
 
-    this.initializeDefaultNetworks();
-    this.initializeDefaultAccounts();
-  }
-
-  private initializeDefaultNetworks(): void {
-    this.networks = [
-      {
-        chainId: 1,
-        name: 'Ethereum Mainnet',
-        rpcUrl: 'https://eth.llamarpc.com',
-        blockExplorer: 'https://etherscan.io',
-        currencySymbol: 'ETH',
-        currencyDecimals: 18
-      },
-      {
-        chainId: 5,
-        name: 'Goerli Testnet',
-        rpcUrl: 'https://eth-goerli.public.blastapi.io',
-        blockExplorer: 'https://goerli.etherscan.io',
-        currencySymbol: 'ETH',
-        currencyDecimals: 18
-      },
-      {
-        chainId: 11155111,
-        name: 'Sepolia Testnet',
-        rpcUrl: 'https://eth-sepolia.api.onfinality.io/public',
-        blockExplorer: 'https://sepolia.etherscan.io',
-        currencySymbol: 'ETH',
-        currencyDecimals: 18
-      },
-      {
-        chainId: 137,
-        name: 'Polygon',
-        rpcUrl: 'https://polygon-rpc.com',
-        blockExplorer: 'https://polygonscan.com',
-        currencySymbol: 'MATIC',
-        currencyDecimals: 18
-      },
-      {
-        chainId: 56,
-        name: 'BNB Smart Chain',
-        rpcUrl: 'https://bsc-dataseed.binance.org',
-        blockExplorer: 'https://bscscan.com',
-        currencySymbol: 'BNB',
-        currencyDecimals: 18
-      }
-    ];
-  }
-
-  private initializeDefaultAccounts(): void {
-
-    const hdNode = ethers.HDNodeWallet.fromPhrase(this.mnemonic);
-
-    const wallet0 = hdNode.derivePath("44'/60'/0'/0/0");
-
-    const wallet1 = hdNode.derivePath("44'/60'/0'/0/1");
-
-
-    this.accounts.push(wallet0);
-    this.accounts.push(wallet1);
-
 
   }
+
 
   async init(): Promise<void> {
-    // Initialize with default network
-    await this.switchChain(this.currentChainId.toString());
+
+    const chains = Array.from(this.chainMap.values());
+
+    console.log(chains)
+
+    this.currentChainId = chains[0].chainId;
+
+    for (const chain of chains) {
+
+      const hdNode = ethers.HDNodeWallet.fromPhrase(this.mnemonic);
+
+      const wallet0 = hdNode.derivePath("44'/60'/0'/0/0");
+
+      const wallet1 = hdNode.derivePath("44'/60'/0'/0/1");
+
+      const rpc = chain.apis?.rpc[0].address || ''
+
+      const provider = new ethers.JsonRpcProvider(rpc)
+
+      this.walletMap[chain.chainId] = {
+        '0': {
+          wallet: wallet0,
+          provider,
+          signer: new ethers.Wallet(wallet0.privateKey, provider)
+        },
+        '1': {
+          wallet: wallet1,
+          provider,
+          signer: new ethers.Wallet(wallet1.privateKey, provider)
+        }
+      };
+
+    }
+
     return Promise.resolve();
   }
 
@@ -112,55 +92,25 @@ export class MockEthereumWallet extends EthereumWallet {
   }
 
   async disconnect(): Promise<void> {
-    this.provider = null;
-    this.signer = null;
+
+
     return Promise.resolve();
   }
 
   async switchChain(chainId: string): Promise<void> {
-    const chainIdNum = parseInt(chainId, 10);
-    const network = this.networks.find(n => n.chainId === chainIdNum);
 
-    if (!network) {
-      throw new Error(`Network with chainId ${chainId} not found`);
-    }
+    this.currentChainId = chainId;
 
-    this.currentChainId = chainIdNum;
-    this.provider = new ethers.JsonRpcProvider(network.rpcUrl);
-
-    if (this.accounts.length > 0) {
-      this.signer = new ethers.Wallet(
-        this.accounts[this.currentAccountIndex].privateKey,
-        this.provider
-      );
-    }
-
-    console.log(`Switched to network: ${network.name} (${network.chainId})`);
   }
 
   async switchAccount(): Promise<void> {
 
-
     this.currentAccountIndex = this.currentAccountIndex === 0 ? 1 : 0;
-
-    if (this.provider) {
-      this.signer = new ethers.Wallet(
-        this.accounts[this.currentAccountIndex].privateKey,
-        this.provider
-      );
-    }
-
     this.events.emit('accountChanged', () => { })
-
-    console.log(`Switched to account: ${this.accounts[this.currentAccountIndex].address}`);
   }
 
   async getAccount(): Promise<WalletAccount> {
-    if (this.accounts.length === 0) {
-      throw new Error('No accounts available');
-    }
-
-    const account = this.accounts[this.currentAccountIndex];
+    const account = this.walletMap[this.currentChainId][this.currentAccountIndex].wallet
 
     return {
       address: account.address,
@@ -180,68 +130,16 @@ export class MockEthereumWallet extends EthereumWallet {
     return this.accounts[this.currentAccountIndex];
   }
 
-  async getCurrentNetwork(): Promise<MockEthereumNetwork> {
-    const network = this.networks.find(n => n.chainId === this.currentChainId);
-    if (!network) {
-      throw new Error('Current network not found');
-    }
-    return network;
-  }
 
-  async getNetworks(): Promise<MockEthereumNetwork[]> {
-    return this.networks;
-  }
-
-  async addNetwork(network: MockEthereumNetwork): Promise<void> {
-    const existingNetwork = this.networks.find(n => n.chainId === network.chainId);
-    if (existingNetwork) {
-      throw new Error(`Network with chainId ${network.chainId} already exists`);
-    }
-
-    this.networks.push(network);
-    console.log(`Added new network: ${network.name} (${network.chainId})`);
-  }
-
-
-
-  async setDerivationPaths(derivationPaths: string[]): Promise<void> {
-    try {
-      // 清空现有账户
-      this.accounts = [];
-      this.currentAccountIndex = 0;
-
-      // 更新derivation paths
-      this.derivationPaths = derivationPaths;
-
-      // 使用现有的助记词和新的derivation paths创建账户
-      this.derivationPaths.forEach((path, index) => {
-        try {
-          const hdNode = ethers.HDNodeWallet.fromPhrase(this.mnemonic);
-          const wallet = hdNode.derivePath(path);
-          this.accounts.push({
-            address: wallet.address,
-            privateKey: wallet.privateKey,
-            mnemonic: this.mnemonic
-          });
-          console.log(`Created wallet ${index + 1} with path ${path}: ${wallet.address}`);
-        } catch (error) {
-          console.error(`Failed to create wallet with path ${path}:`, error);
-        }
-      });
-
-      console.log(`Successfully set derivation paths and created ${this.accounts.length} accounts`);
-    } catch (error) {
-      throw new Error(`Failed to set derivation paths: ${error}`);
-    }
-  }
 
 
   async getBalance(): Promise<string> {
-    if (!this.signer) {
-      throw new Error('No signer available');
-    }
 
-    const balance = await this.provider!.getBalance(this.signer.address);
+    const { provider, wallet } = this.walletMap[this.currentChainId][this.currentAccountIndex]
+
+    const balance = await provider.getBalance(wallet.address);
+
+
     return ethers.formatEther(balance);
   }
 
@@ -253,11 +151,9 @@ export class MockEthereumWallet extends EthereumWallet {
     gasLimit?: string;
     gasPrice?: string;
   }): Promise<string> {
-    if (!this.signer) {
-      throw new Error('No signer available');
-    }
+    const { signer } = this.walletMap[this.currentChainId][this.currentAccountIndex]
 
-    const tx = await this.signer.sendTransaction({
+    const tx = await signer.sendTransaction({
       from: transaction.from,
       to: transaction.to,
       value: transaction.value,
@@ -271,21 +167,17 @@ export class MockEthereumWallet extends EthereumWallet {
   }
 
   async signMessage(message: string): Promise<string> {
-    if (!this.signer) {
-      throw new Error('No signer available');
-    }
 
-    const signature = await this.signer.signMessage(message);
+    const { signer } = this.walletMap[this.currentChainId][this.currentAccountIndex]
+    const signature = await signer.signMessage(message);
     console.log(`Message signed: ${signature}`);
     return signature;
   }
 
   async signTypedData(domain: any, types: any, value: any): Promise<string> {
-    if (!this.signer) {
-      throw new Error('No signer available');
-    }
+    const { signer } = this.walletMap[this.currentChainId][this.currentAccountIndex]
 
-    const signature = await this.signer.signTypedData(domain, types, value);
+    const signature = await signer.signTypedData(domain, types, value);
     console.log(`Typed data signed: ${signature}`);
     return signature;
   }
@@ -294,18 +186,8 @@ export class MockEthereumWallet extends EthereumWallet {
     return this.provider;
   }
 
-  async getSigner(): Promise<ethers.Wallet | null> {
-    return this.signer;
-  }
 
-  // Getter methods for mnemonic and derivation paths
-  getMnemonic(): string {
-    return this.mnemonic;
-  }
 
-  getDerivationPaths(): string[] {
-    return [...this.derivationPaths]; // 返回副本，防止外部修改
-  }
 
   getWalletInfo(): {
     mnemonic: string;

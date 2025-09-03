@@ -14,18 +14,6 @@ const senderMnemonic = 'usual burden law job pledge pulse version trade link lea
 
 const mockEthereumWalletSenderInstance = new MockEthereumWallet(senderWalletInfo, senderMnemonic);
 
-// Add Sepolia network support
-mockEthereumWalletSenderInstance.addNetwork({
-  chainId: 11155111,
-  name: 'Sepolia Testnet',
-  rpcUrl: 'https://eth-sepolia.public.blastapi.io',
-  blockExplorer: 'https://sepolia.etherscan.io',
-  currencySymbol: 'ETH',
-  currencyDecimals: 18
-});
-
-// Set Sepolia as the default network by modifying the currentChainId
-(mockEthereumWalletSenderInstance as any).currentChainId = 11155111;
 
 mockEthereumWalletSender.setNetworkWallet('eip155', mockEthereumWalletSenderInstance)
 
@@ -44,18 +32,7 @@ const receiverMnemonic = 'similar lamp oppose depth urge wide business slush sib
 
 const mockEthereumWalletReceiverInstance = new MockEthereumWallet(receiverWalletInfo, receiverMnemonic);
 
-// Add Sepolia network support
-mockEthereumWalletReceiverInstance.addNetwork({
-  chainId: 11155111,
-  name: 'Sepolia Testnet',
-  rpcUrl: 'https://eth-sepolia.public.blastapi.io',
-  blockExplorer: 'https://sepolia.etherscan.io',
-  currencySymbol: 'ETH',
-  currencyDecimals: 18
-});
 
-// Set Sepolia as the default network by modifying the currentChainId
-(mockEthereumWalletReceiverInstance as any).currentChainId = 11155111;
 
 mockEthereumWalletReceiver.setNetworkWallet('eip155', mockEthereumWalletReceiverInstance)
 

@@ -34,6 +34,10 @@ import {
   mockEthereumWalletReceiver,
   mockEthereumWalletSender,
 } from "@/wallet/ethereum/wallet";
+import {
+  createAssetListFromEthereumChainInfo,
+  createChainFromEthereumChainInfo,
+} from "@/utils/eth-test-net";
 
 export const InterchainKit = ({ children }: { children: React.ReactNode }) => {
   const [isRpcReady, setRpcReady] = useState(false);
@@ -67,14 +71,36 @@ export const InterchainKit = ({ children }: { children: React.ReactNode }) => {
     return <div>Loading...</div>;
   }
 
+  const sepoliaEthereumTestNet = {
+    chainId: "0xaa36a7", // Sepolia Testnet
+    chainName: "Sepolia Testnet",
+    rpcUrls: [
+      "https://ethereum-sepolia.rpc.subquery.network/public",
+      "https://eth-sepolia.public.blastapi.io",
+      "https://ethereum-sepolia-rpc.publicnode.com",
+    ],
+    nativeCurrency: {
+      name: "Sepolia ETH",
+      symbol: "USDC",
+      decimals: 18,
+    },
+    blockExplorerUrls: ["https://goerli.etherscan.io"],
+  };
+  const sepoliaEthereumChain = createChainFromEthereumChainInfo(
+    sepoliaEthereumTestNet
+  );
+  const sepoliaEthereumAssetList = createAssetListFromEthereumChainInfo(
+    sepoliaEthereumTestNet
+  );
+
   return (
     <ChainProvider
-      chains={[osmosisChain, cosmoshubChain, solanaChain, ethereumChain]}
+      chains={[osmosisChain, cosmoshubChain, solanaChain, sepoliaEthereumChain]}
       assetLists={[
         osmosisAssetList,
         cosmoshubAssetList,
         solanaAssetList,
-        ethereumAssetList,
+        sepoliaEthereumAssetList,
       ]}
       wallets={[
         mockWallet,
