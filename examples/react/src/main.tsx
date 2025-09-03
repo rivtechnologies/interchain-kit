@@ -14,6 +14,7 @@ import {
   ExtensionWallet,
   isInstanceOf,
   WCWallet,
+  walletConnect,
 } from "@interchain-kit/core";
 import { ninjiWallet } from "@interchain-kit/ninji-extension";
 import { finWallet } from "@interchain-kit/fin-extension";
@@ -65,14 +66,14 @@ const chainNames: string[] = [
 // const chainNames = ["osmosistestnet"];
 // const chainNames = ["cosmoshub"];
 
-const walletConnect = new WCWallet(undefined, {
-  metadata: {
-    name: "Wallet Connect In React Example",
-    description: "test",
-    url: "#",
-    icons: ["https://walletconnect.com/walletconnect-logo.png"],
-  },
-});
+// const walletConnect = new WCWallet(undefined, {
+//   metadata: {
+//     name: "Wallet Connect In React Example",
+//     description: "test",
+//     url: "#",
+//     icons: ["https://walletconnect.com/walletconnect-logo.png"],
+//   },
+// });
 
 const wallet1Mnemonic =
   "among machine material tide surround boy ramp nuclear body hover among address";
@@ -187,7 +188,7 @@ const _wallets: BaseWallet[] = [
   // walletConnect,
   // ledgerWallet,
   // cosmosExtensionMetaMask,
-  // walletConnect,
+  walletConnect,
   // ledgerWallet,
   // leapCosmosExtensionMetaMask,
   // compassWallet,

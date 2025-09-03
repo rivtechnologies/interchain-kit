@@ -1,39 +1,39 @@
-import { AssetList, Chain } from "@chain-registry/types";
-import { SignType, Wallet, WalletAccount, WalletEvents, WalletState } from "../types";
-import EventEmitter from "events";
-import { OfflineAminoSigner, OfflineDirectSigner } from "../types/cosmos";
+import { AssetList, Chain } from '@chain-registry/types';
+import EventEmitter from 'events';
+
+import { IBaseWallet, Wallet, WalletAccount, WalletEvents } from '../types';
 
 
 
 
-export abstract class BaseWallet {
-  info: Wallet
+export abstract class BaseWallet implements IBaseWallet {
+  info: Wallet;
 
-  events: EventEmitter<WalletEvents> = new EventEmitter()
-  chainMap: Map<Chain['chainId'], Chain> = new Map()
-  assetLists: AssetList[] = []
-  client: any
+  events: EventEmitter<WalletEvents> = new EventEmitter();
+  chainMap: Map<Chain['chainId'], Chain> = new Map();
+  assetLists: AssetList[] = [];
+  client: any;
   constructor(info: Wallet) {
-    this.info = info
+    this.info = info;
   }
   setChainMap(chains: Chain[]) {
-    this.chainMap = new Map(chains.map(chain => [chain.chainId, chain]))
+    this.chainMap = new Map(chains.map(chain => [chain.chainId, chain]));
   }
   addChain(chain: Chain) {
-    this.chainMap.set(chain.chainId, chain)
+    this.chainMap.set(chain.chainId, chain);
   }
   setAssetLists(assetLists: AssetList[]) {
-    this.assetLists = assetLists
+    this.assetLists = assetLists;
   }
   addAssetList(assetList: AssetList) {
-    this.assetLists.push(assetList)
+    this.assetLists.push(assetList);
   }
   getChainById(chainId: Chain['chainId']): Chain {
     const chain = this.chainMap.get(chainId);
     if (!chain) {
       throw new Error(`Chain Registry with id ${chainId} not found!`);
     }
-    return chain
+    return chain;
   }
 
   getAssetListByChainId(chainId: Chain['chainId']): AssetList {
@@ -42,16 +42,13 @@ export abstract class BaseWallet {
     if (!assetList) {
       throw new Error(`Asset List with id ${chainId} not found!`);
     }
-    return assetList
+    return assetList;
   }
 
   abstract init(): Promise<void>
   abstract connect(chainId: Chain['chainId']): Promise<void>
   abstract disconnect(chainId: Chain['chainId']): Promise<void>
   abstract getAccount(chainId: Chain['chainId']): Promise<WalletAccount>
-
-  abstract getOfflineSigner(chainId: Chain['chainId']): Promise<OfflineAminoSigner | OfflineDirectSigner>
-  abstract getOfflineSigner(chainId: Chain['chainId'], preferredSignType: SignType): Promise<OfflineAminoSigner | OfflineDirectSigner>
 
   abstract addSuggestChain(chainId: Chain['chainId']): Promise<void>
 

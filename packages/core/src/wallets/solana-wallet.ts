@@ -1,10 +1,10 @@
 import { Chain } from '@chain-registry/types';
 
-import { SignType, Wallet, WalletAccount } from '../types';
+import { Wallet, WalletAccount } from '../types';
+import { SolanaSignInData, Transaction, VersionedTransaction } from '../types/solana';
+import { ISolanaWallet } from '../types/wallet-types';
 import { getClientFromExtension } from '../utils';
 import { BaseWallet } from './base-wallet';
-import { SolanaSignInData, Transaction, VersionedTransaction } from '../types/solana';
-import { OfflineAminoSigner, OfflineDirectSigner } from '../types/cosmos';
 
 function publicKeyToUint8Array(publicKey: any): Uint8Array {
   if (publicKey?.toBytes) return publicKey.toBytes();
@@ -17,21 +17,21 @@ function publicKeyToUint8Array(publicKey: any): Uint8Array {
   return new Uint8Array();
 }
 
-export class SolanaWallet extends BaseWallet {
+export class SolanaWallet extends BaseWallet implements ISolanaWallet {
   solana: any;
 
   constructor(info: Wallet) {
     super(info);
   }
   bindingEvent() {
-    console.log('bindingEvent', this.info.keystoreChange);
     window.addEventListener(this.info.keystoreChange, () => {
       this.events.emit('accountChanged', () => { });
     });
   }
   async init(): Promise<void> {
-    this.bindingEvent();
+
     this.solana = await getClientFromExtension(this.info.solanaKey);
+    this.bindingEvent();
   }
 
 
@@ -43,6 +43,10 @@ export class SolanaWallet extends BaseWallet {
       console.log(error);
     }
 
+  }
+
+  async addSuggestChain(chainId: Chain['chainId']): Promise<void> {
+    throw new Error('Solana does not support suggest chain');
   }
 
   async disconnect(chainId: Chain['chainId']): Promise<void> {
@@ -63,13 +67,6 @@ export class SolanaWallet extends BaseWallet {
     };
   }
 
-  async getOfflineSigner(chainId: Chain['chainId'], preferredSignType?: SignType): Promise<OfflineAminoSigner | OfflineDirectSigner> {
-    throw new Error('Solana does not support getOfflineSigner');
-  }
-
-  async addSuggestChain(chainId: Chain['chainId']): Promise<void> {
-    throw new Error('Solana does not support suggest chain');
-  }
 
   async getProvider(chainId: Chain['chainId']): Promise<any> {
     return this.solana;
@@ -86,32 +83,27 @@ export class SolanaWallet extends BaseWallet {
   }
 
   async signAllTransactions(transactions: Transaction[]): Promise<Transaction[]> {
-
     return this.solana.signAllTransactions(transactions);
   }
 
   async signAndSendAllTransactions(transactions: Transaction[]): Promise<any> {
-
     return this.solana.signAndSendAllTransactions(transactions);
   }
 
-  async signAndSendTransaction(transaction: Transaction | VersionedTransaction): Promise<{ signature: string; address?: string }> {
-
-    return this.solana.signAndSendTransaction(transaction);
+  async signAndSendTransaction(transaction: Transaction | VersionedTransaction): Promise<string> {
+    const result = await this.solana.signAndSendTransaction(transaction);
+    return result.signature;
   }
 
   async signIn(data: SolanaSignInData): Promise<{ address: string; signature: Uint8Array; signedMessage: Uint8Array }> {
-
     return this.solana.signIn(data);
   }
 
   async signMessage(message: Uint8Array, encoding: 'utf8' | 'hex' = 'utf8'): Promise<any> {
-
     return this.solana.signMessage(message, encoding);
   }
 
   async signTransaction(transaction: Transaction): Promise<Transaction> {
-
     return this.solana.signTransaction(transaction);
   }
 }

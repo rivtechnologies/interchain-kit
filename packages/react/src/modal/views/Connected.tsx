@@ -1,8 +1,8 @@
+import { BaseWallet } from "@interchain-kit/core";
 import { ConnectModalHead, ConnectModalStatus } from "@interchain-ui/react";
 
 import { getWalletInfo } from "../../utils";
 import { AstronautSvg } from "./Astronaut";
-import { BaseWallet } from "@interchain-kit/core";
 
 export const ConnectedHeader = ({
   wallet,

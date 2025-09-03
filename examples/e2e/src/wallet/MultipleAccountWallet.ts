@@ -45,7 +45,6 @@ export class MultipleAccountCosmosWallet extends CosmosWallet {
       this.accountWalletMap['1'][chain.chainName] = wallet1;
       this.accountWalletMap['2'][chain.chainName] = wallet2
     }
-    console.log('accountWalletMap', this.accountWalletMap)
     //@ts-ignore
     window[this.info.windowKey] = {}
     //@ts-ignore

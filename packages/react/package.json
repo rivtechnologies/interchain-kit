@@ -36,6 +36,7 @@
   "dependencies": {
     "@chain-registry/types": "^2.0.1",
     "@interchain-kit/core": "0.3.46",
+    "@interchain-kit/store": "^0.0.1",
     "@interchain-ui/react": "^1.26.3",
     "@interchainjs/cosmos": "1.17.1",
     "@interchainjs/cosmos-types": "1.17.1",

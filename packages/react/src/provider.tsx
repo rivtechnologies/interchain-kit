@@ -1,17 +1,17 @@
-import React, { ReactElement, useEffect, useRef } from "react";
-import { createContext, useContext } from "react";
+import { AssetList, Chain } from "@chain-registry/types";
 import {
   BaseWallet,
-  SignerOptions,
   EndpointOptions,
-  WalletManager,
+  MultiChainWallet,
+  SignerOptions,
 } from "@interchain-kit/core";
-import { AssetList, Chain } from "@chain-registry/types";
-import { ModalRenderer, WalletModalProps } from "./modal";
-import { createInterchainStore, InterchainStore } from "./store";
-import { StoreApi } from "zustand";
+import { WalletManagerStore } from "@interchain-kit/store";
+import React, { ReactElement, useEffect, useRef } from "react";
+import { createContext, useContext } from "react";
 
-type InterchainWalletContextType = StoreApi<InterchainStore>;
+import { ModalRenderer, WalletModalProps } from "./modal";
+
+type InterchainWalletContextType = WalletManagerStore;
 
 type InterchainWalletProviderProps = {
   chains: Chain[];
@@ -38,19 +38,17 @@ export const ChainProvider = ({
   const store = useRef<InterchainWalletContextType | null>(null);
 
   if (!store.current) {
-    store.current = createInterchainStore(
-      new WalletManager(
-        chains,
-        assetLists,
-        wallets,
-        signerOptions,
-        endpointOptions
-      )
+    store.current = new WalletManagerStore(
+      chains,
+      assetLists,
+      wallets,
+      signerOptions,
+      endpointOptions
     );
   }
 
   useEffect(() => {
-    store.current.getState().init();
+    store.current.init();
   }, []);
 
   return (

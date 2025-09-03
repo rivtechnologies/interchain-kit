@@ -1,127 +1,126 @@
-import { MultiChainWallet } from '../../src/wallets/multichain-wallet';
-import { BaseWallet } from '../../src/wallets/base-wallet';
 import { Chain } from '@chain-registry/types';
-import { WalletAccount } from '../../src/types';
+import { BaseWallet, MultiChainWallet, WalletAccount } from '@interchain-kit/core';
+
 
 describe('MultiChainWallet', () => {
-    let multiChainWallet: MultiChainWallet;
-    let mockBaseWallet: BaseWallet;
+  let multiChainWallet: MultiChainWallet;
+  let mockBaseWallet: BaseWallet;
 
-    beforeEach(() => {
-        mockBaseWallet = {
-            setChainMap: jest.fn(),
-            addChain: jest.fn(),
-            setAssetLists: jest.fn(),
-            init: jest.fn(),
-            connect: jest.fn(),
-            disconnect: jest.fn(),
-            getAccount: jest.fn(),
-            getOfflineSigner: jest.fn(),
-            addSuggestChain: jest.fn(),
-            getProvider: jest.fn(),
-            events: {
-                on: jest.fn(),
-            }
-        } as unknown as BaseWallet;
+  beforeEach(() => {
+    mockBaseWallet = {
+      setChainMap: jest.fn(),
+      addChain: jest.fn(),
+      setAssetLists: jest.fn(),
+      init: jest.fn(),
+      connect: jest.fn(),
+      disconnect: jest.fn(),
+      getAccount: jest.fn(),
+      getOfflineSigner: jest.fn(),
+      addSuggestChain: jest.fn(),
+      getProvider: jest.fn(),
+      events: {
+        on: jest.fn(),
+      }
+    } as unknown as BaseWallet;
 
-        multiChainWallet = new MultiChainWallet();
-    });
+    multiChainWallet = new MultiChainWallet();
+  });
 
-    it('should set a network wallet', () => {
-        const chainType = 'cosmos';
-        multiChainWallet.setNetworkWallet(chainType, mockBaseWallet);
+  it('should set a network wallet', () => {
+    const chainType = 'cosmos';
+    multiChainWallet.setNetworkWallet(chainType, mockBaseWallet);
 
-        expect(multiChainWallet.networkWalletMap.get(chainType)).toBe(mockBaseWallet);
-    });
+    expect(multiChainWallet.networkWalletMap.get(chainType)).toBe(mockBaseWallet);
+  });
 
-    it('should set chain map and propagate to network wallets', () => {
-        const chains: Chain[] = [
-            { chainId: 'cosmoshub-4', chainType: 'cosmos', chainName: 'Cosmos Hub' },
-            { chainId: 'ethereum-mainnet', chainType: 'eip155', chainName: 'Ethereum Mainnet' },
-        ];
+  it('should set chain map and propagate to network wallets', () => {
+    const chains: Chain[] = [
+      { chainId: 'cosmoshub-4', chainType: 'cosmos', chainName: 'Cosmos Hub' },
+      { chainId: 'ethereum-mainnet', chainType: 'eip155', chainName: 'Ethereum Mainnet' },
+    ];
 
-        multiChainWallet.setNetworkWallet('cosmos', mockBaseWallet);
-        multiChainWallet.setChainMap(chains);
+    multiChainWallet.setNetworkWallet('cosmos', mockBaseWallet);
+    multiChainWallet.setChainMap(chains);
 
-        expect(multiChainWallet.chainMap.size).toBe(2);
-        expect(mockBaseWallet.setChainMap).toHaveBeenCalledWith(chains);
-    });
+    expect(multiChainWallet.chainMap.size).toBe(2);
+    expect(mockBaseWallet.setChainMap).toHaveBeenCalledWith(chains);
+  });
 
-    it('should add chain and propagate to network wallets', () => {
-        const chain: Chain = { chainId: 'cosmoshub-4', chainType: 'cosmos', chainName: 'Cosmos Hub' };
+  it('should add chain and propagate to network wallets', () => {
+    const chain: Chain = { chainId: 'cosmoshub-4', chainType: 'cosmos', chainName: 'Cosmos Hub' };
 
-        multiChainWallet.setNetworkWallet('cosmos', mockBaseWallet);
-        multiChainWallet.addChain(chain);
+    multiChainWallet.setNetworkWallet('cosmos', mockBaseWallet);
+    multiChainWallet.addChain(chain);
 
-        expect(multiChainWallet.chainMap.get(chain.chainId)).toBe(chain);
-        expect(mockBaseWallet.addChain).toHaveBeenCalledWith(chain);
-    })
+    expect(multiChainWallet.chainMap.get(chain.chainId)).toBe(chain);
+    expect(mockBaseWallet.addChain).toHaveBeenCalledWith(chain);
+  });
 
-    it('should initialize all network wallets', async () => {
-        multiChainWallet.setNetworkWallet('cosmos', mockBaseWallet);
+  it('should initialize all network wallets', async () => {
+    multiChainWallet.setNetworkWallet('cosmos', mockBaseWallet);
 
-        await multiChainWallet.init();
+    await multiChainWallet.init();
 
-        expect(mockBaseWallet.init).toHaveBeenCalled();
-    });
+    expect(mockBaseWallet.init).toHaveBeenCalled();
+  });
 
-    it('should throw an error if wallet for chain type is not found', () => {
-        expect(() => multiChainWallet.getWalletByChainType('unknown')).toThrow('Unsupported chain type');
-    });
+  it('should throw an error if wallet for chain type is not found', () => {
+    expect(() => multiChainWallet.getWalletByChainType('unknown')).toThrow('Unsupported chain type');
+  });
 
-    it('should connect to a chain', async () => {
-        const chain: Chain = { chainId: 'cosmoshub-4', chainType: 'cosmos', chainName: 'Cosmos Hub' };
-        jest.spyOn(multiChainWallet, 'getChainById').mockReturnValue(chain);
-        multiChainWallet.setNetworkWallet('cosmos', mockBaseWallet);
+  it('should connect to a chain', async () => {
+    const chain: Chain = { chainId: 'cosmoshub-4', chainType: 'cosmos', chainName: 'Cosmos Hub' };
+    jest.spyOn(multiChainWallet, 'getChainById').mockReturnValue(chain);
+    multiChainWallet.setNetworkWallet('cosmos', mockBaseWallet);
 
-        await multiChainWallet.connect(chain.chainId);
+    await multiChainWallet.connect(chain.chainId);
 
-        expect(mockBaseWallet.connect).toHaveBeenCalledWith(chain.chainId);
-    });
+    expect(mockBaseWallet.connect).toHaveBeenCalledWith(chain.chainId);
+  });
 
-    it('should disconnect from a chain', async () => {
-        const chain: Chain = { chainId: 'cosmoshub-4', chainType: 'cosmos', chainName: 'Cosmos Hub' };
-        jest.spyOn(multiChainWallet, 'getChainById').mockReturnValue(chain);
-        multiChainWallet.setNetworkWallet('cosmos', mockBaseWallet);
+  it('should disconnect from a chain', async () => {
+    const chain: Chain = { chainId: 'cosmoshub-4', chainType: 'cosmos', chainName: 'Cosmos Hub' };
+    jest.spyOn(multiChainWallet, 'getChainById').mockReturnValue(chain);
+    multiChainWallet.setNetworkWallet('cosmos', mockBaseWallet);
 
-        await multiChainWallet.disconnect(chain.chainId);
+    await multiChainWallet.disconnect(chain.chainId);
 
-        expect(mockBaseWallet.disconnect).toHaveBeenCalledWith(chain.chainId);
-    });
+    expect(mockBaseWallet.disconnect).toHaveBeenCalledWith(chain.chainId);
+  });
 
-    it('should get account for a chain', async () => {
-        const chain: Chain = { chainId: 'cosmoshub-4', chainType: 'cosmos', chainName: 'Cosmos Hub' };
-        const mockAccount: WalletAccount = { address: 'cosmos1...', algo: 'secp256k1', pubkey: new Uint8Array() };
-        jest.spyOn(multiChainWallet, 'getChainById').mockReturnValue(chain);
-        jest.spyOn(mockBaseWallet, 'getAccount').mockResolvedValue(mockAccount);
-        multiChainWallet.setNetworkWallet('cosmos', mockBaseWallet);
+  it('should get account for a chain', async () => {
+    const chain: Chain = { chainId: 'cosmoshub-4', chainType: 'cosmos', chainName: 'Cosmos Hub' };
+    const mockAccount: WalletAccount = { address: 'cosmos1...', algo: 'secp256k1', pubkey: new Uint8Array() };
+    jest.spyOn(multiChainWallet, 'getChainById').mockReturnValue(chain);
+    jest.spyOn(mockBaseWallet, 'getAccount').mockResolvedValue(mockAccount);
+    multiChainWallet.setNetworkWallet('cosmos', mockBaseWallet);
 
-        const account = await multiChainWallet.getAccount(chain.chainId);
+    const account = await multiChainWallet.getAccount(chain.chainId);
 
-        expect(account).toBe(mockAccount);
-        expect(mockBaseWallet.getAccount).toHaveBeenCalledWith(chain.chainId);
-    });
+    expect(account).toBe(mockAccount);
+    expect(mockBaseWallet.getAccount).toHaveBeenCalledWith(chain.chainId);
+  });
 
-    it('should add a suggested chain', async () => {
-        const chain: Chain = { chainId: 'cosmoshub-4', chainType: 'cosmos', chainName: 'Cosmos Hub' };
-        jest.spyOn(multiChainWallet.chainMap, 'get').mockReturnValue(chain);
-        multiChainWallet.setNetworkWallet('cosmos', mockBaseWallet);
+  it('should add a suggested chain', async () => {
+    const chain: Chain = { chainId: 'cosmoshub-4', chainType: 'cosmos', chainName: 'Cosmos Hub' };
+    jest.spyOn(multiChainWallet.chainMap, 'get').mockReturnValue(chain);
+    multiChainWallet.setNetworkWallet('cosmos', mockBaseWallet);
 
-        await multiChainWallet.addSuggestChain(chain.chainId as string);
+    await multiChainWallet.addSuggestChain(chain.chainId as string);
 
-        expect(mockBaseWallet.addSuggestChain).toHaveBeenCalledWith(chain.chainId);
-    });
+    expect(mockBaseWallet.addSuggestChain).toHaveBeenCalledWith(chain.chainId);
+  });
 
-    it('should get provider for a chain', async () => {
-        const chain: Chain = { chainId: 'cosmoshub-4', chainType: 'cosmos', chainName: 'Cosmos Hub' };
-        jest.spyOn(multiChainWallet, 'getChainById').mockReturnValue(chain);
-        jest.spyOn(mockBaseWallet, 'getProvider').mockResolvedValue('mockProvider');
-        multiChainWallet.setNetworkWallet('cosmos', mockBaseWallet);
+  it('should get provider for a chain', async () => {
+    const chain: Chain = { chainId: 'cosmoshub-4', chainType: 'cosmos', chainName: 'Cosmos Hub' };
+    jest.spyOn(multiChainWallet, 'getChainById').mockReturnValue(chain);
+    jest.spyOn(mockBaseWallet, 'getProvider').mockResolvedValue('mockProvider');
+    multiChainWallet.setNetworkWallet('cosmos', mockBaseWallet);
 
-        const provider = await multiChainWallet.getProvider(chain.chainId as string);
+    const provider = await multiChainWallet.getProvider(chain.chainId as string);
 
-        expect(provider).toBe('mockProvider');
-        expect(mockBaseWallet.getProvider).toHaveBeenCalledWith(chain.chainId);
-    });
+    expect(provider).toBe('mockProvider');
+    expect(mockBaseWallet.getProvider).toHaveBeenCalledWith(chain.chainId);
+  });
 
 });

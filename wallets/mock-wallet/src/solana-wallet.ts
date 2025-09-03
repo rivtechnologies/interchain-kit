@@ -70,6 +70,15 @@ export class MockSolanaWallet extends SolanaWallet {
     this.isConnected = false;
   }
 
+  async init(): Promise<void> {
+    //@ts-ignore1
+    window[this.info.windowKey] = {}
+    //@ts-ignore
+    window[this.info.solanaKey] = {}
+
+    await super.init();
+  }
+
   getCurrentKeypair(): Keypair {
     const keypair = this.keypairMap[this.currentKeypairIndex];
     if (!keypair) {
@@ -82,6 +91,7 @@ export class MockSolanaWallet extends SolanaWallet {
     this.currentKeypairIndex = this.currentKeypairIndex === '1' ? '2' : '1';
     //@ts-ignore
     window.dispatchEvent(new CustomEvent(this.info.keystoreChange));
+    console.log('trigger in mock solana wallet')
   }
 
 
