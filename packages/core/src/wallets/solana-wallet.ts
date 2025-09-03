@@ -1,6 +1,6 @@
 import { Chain } from '@chain-registry/types';
 
-import { SignType, Wallet, WalletAccount } from '../types';
+import { ISolanaWallet, SignType, Wallet, WalletAccount } from '../types';
 import { getClientFromExtension } from '../utils';
 import { BaseWallet } from './base-wallet';
 
@@ -19,14 +19,13 @@ function publicKeyToUint8Array(publicKey: any): Uint8Array {
   return new Uint8Array();
 }
 
-export class SolanaWallet extends BaseWallet {
+export class SolanaWallet extends BaseWallet implements ISolanaWallet {
   solana: any;
 
   constructor(info: Wallet) {
     super(info);
   }
   bindingEvent() {
-    console.log('bindingEvent', this.info.keystoreChange);
     window.addEventListener(this.info.keystoreChange, () => {
       this.events.emit('accountChanged', () => { });
     });

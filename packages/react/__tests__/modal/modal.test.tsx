@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 
+import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import {
   WalletModalElementProps,
@@ -10,8 +11,7 @@ import {
 import "@testing-library/jest-dom";
 import { transferToWalletUISchema } from "../../src/utils";
 import { MockWallet } from "../helpers/mock-wallet";
-import { StatefulWallet } from "../../src/store/stateful-wallet";
-import { InterchainStore } from "../../src/store";
+import { WalletStore, InterchainStore } from "@interchain-kit/store";
 
 describe("WalletModal", () => {
   const mockWallet = new MockWallet({
@@ -19,10 +19,33 @@ describe("WalletModal", () => {
     prettyName: "Test Wallet",
     mode: "extension",
   });
-  const statefulWallet = new StatefulWallet(
-    mockWallet,
-    () => ({} as InterchainStore)
-  );
+  const mockWalletStore = {
+    wallet: mockWallet,
+    chains: [],
+    chainWalletStoreMap: new Map(),
+    store: {} as InterchainStore,
+    walletManager: {} as any,
+    info: mockWallet.info,
+    events: {} as any,
+    chainMap: new Map(),
+    assetLists: [],
+    client: null,
+    walletState: "Disconnected" as any,
+    errorMessage: "",
+    init: jest.fn(),
+    getChainWalletStore: jest.fn(),
+    connect: jest.fn(),
+    disconnect: jest.fn(),
+    getAccount: jest.fn(),
+    addSuggestChain: jest.fn(),
+    getProvider: jest.fn(),
+    setChainMap: jest.fn(),
+    addChain: jest.fn(),
+    setAssetLists: jest.fn(),
+    addAssetList: jest.fn(),
+    getChainById: jest.fn(),
+    getAssetListByChainId: jest.fn(),
+  } as jest.Mocked<WalletStore>;
   const mockProps: WalletModalElementProps = {
     shouldShowList: false,
     isOpen: true,
@@ -30,7 +53,7 @@ describe("WalletModal", () => {
     wallets: [transferToWalletUISchema(mockWallet)] as any,
     username: "test-user",
     address: "test-address",
-    currentWallet: statefulWallet,
+    currentWallet: mockWalletStore,
     isConnecting: false,
     isConnected: false,
     isRejected: false,

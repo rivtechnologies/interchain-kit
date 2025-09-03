@@ -6,14 +6,14 @@ import { GoDesktopDownload } from "@react-icons/all-files/go/GoDesktopDownload";
 import { GrFirefox } from "@react-icons/all-files/gr/GrFirefox";
 import { RiAppStoreFill } from "@react-icons/all-files/ri/RiAppStoreFill";
 import { RiChromeFill } from "@react-icons/all-files/ri/RiChromeFill";
-import { StatefulWallet } from "../../store/stateful-wallet";
+import { WalletStore } from "@interchain-kit/store";
 
 export const NotExistHeader = ({
   wallet,
   close,
   onBack,
 }: {
-  wallet: StatefulWallet;
+  wallet: WalletStore;
   close: () => void;
   onBack: () => void;
 }) => {
@@ -33,7 +33,7 @@ export const NotExistContent = ({
   getDownloadLink,
   getEnv,
 }: {
-  wallet: StatefulWallet;
+  wallet: WalletStore;
   getDownloadLink: (walletName: string) => DownloadInfo;
   getEnv: () => { browser?: string; device?: string; os?: string };
 }) => {

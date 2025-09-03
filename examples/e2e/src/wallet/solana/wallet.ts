@@ -6,7 +6,9 @@ const senderWalletInfo: Wallet = {
   name: 'Mock Solana Wallet Sender',
   mode: 'extension',
   prettyName: 'Mock Solana Wallet Sender',
-  keystoreChange: 'accountChanged',
+  keystoreChange: 'sender_accountChanged',
+  solanaKey: 'mockSolana',
+  windowKey: 'mockSolana',
 }
 
 const mockSolanaWalletSender = new MultiChainWallet(senderWalletInfo);
@@ -19,7 +21,9 @@ const receiveWalletInfo: Wallet = {
   name: 'Mock Solana Wallet Receiver',
   mode: 'extension',
   prettyName: 'Mock Solana Wallet Receiver',
-  keystoreChange: 'accountChanged',
+  keystoreChange: 'receiver_accountChanged',
+  solanaKey: 'mockSolana',
+  windowKey: 'mockSolana'
 }
 
 const mockSolanaWalletReceiver = new MultiChainWallet(receiveWalletInfo);

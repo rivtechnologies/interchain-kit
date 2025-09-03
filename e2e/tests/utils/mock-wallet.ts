@@ -4,6 +4,9 @@ declare global {
   interface Window {
     mockWallet?: any;
     ethereum?: any;
+    keplr?: any;
+    mockSolana?: any
+    notInstalledWallet?: any
   }
 }
 
@@ -29,6 +32,20 @@ export async function mockWalletWindowObject(page: Page) {
           return ['0x1234567890abcdef1234567890abcdef12345678'];
         }
         throw new Error('Method not supported');
+      },
+    };
+    window.keplr = {
+      enable: async (chainId: string) => {
+        // Mock enabling the wallet for a specific chain
+        console.log(`Keplr enabled for chain: ${chainId}`);
+        return Promise.resolve();
+      },
+    };
+    window.mockSolana = {
+      enable: async (chainId: string) => {
+        // Mock enabling the wallet for a specific chain
+        console.log(`Phantom enabled for chain: ${chainId}`);
+        return Promise.resolve();
       },
     };
   });

@@ -1,13 +1,13 @@
 import { ConnectModalHead, ConnectModalStatus } from "@interchain-ui/react";
 import { getWalletInfo } from "../../utils";
-import { StatefulWallet } from "../../store/stateful-wallet";
+import { WalletStore } from "@interchain-kit/store";
 
 export const RejectHeader = ({
   wallet,
   close,
   onBack,
 }: {
-  wallet: StatefulWallet;
+  wallet: WalletStore;
   close: () => void;
   onBack: () => void;
 }) => {
@@ -26,7 +26,7 @@ export const RejectContent = ({
   wallet,
   onReconnect,
 }: {
-  wallet: StatefulWallet;
+  wallet: WalletStore;
   onReconnect: () => void;
 }) => {
   return (

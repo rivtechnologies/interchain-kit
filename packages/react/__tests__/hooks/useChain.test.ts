@@ -6,10 +6,11 @@ import { renderHook, act, waitFor } from '@testing-library/react';
 import { useChain } from '../../src/hooks/useChain';
 import { useWalletManager } from '../../src/hooks/useWalletManager';
 import { ChainNameNotExist, WalletState } from '@interchain-kit/core';
-import { ChainWalletState, InterchainStore } from '../../src/store';
+
 import { MockWallet } from '../helpers/mock-wallet';
-import { StatefulWallet } from '../../src/store/stateful-wallet';
 import { useWalletModal } from '../../src/hooks';
+import { WalletManagerStore, ChainWalletState, InterchainStore } from '@interchain-kit/store';
+import { WalletStore } from '@interchain-kit/store';
 
 jest.mock('../../src/hooks/useWalletManager');
 jest.mock('../../src/hooks/useWalletModal.ts');
@@ -21,47 +22,80 @@ describe('useChain', () => {
 
   const mockWallet = new MockWallet({ name: 'test-wallet', mode: 'extension', prettyName: 'Test Wallet' });
 
-  const statefulWallet = new StatefulWallet(mockWallet, () => ({} as InterchainStore))
-
-
-  const mockWalletManager: jest.Mocked<InterchainStore> = {
+  const mockWalletStore = {
+    wallet: mockWallet,
     chains: [{ chainName: 'test-chain', chainType: 'cosmos' as const }],
-    assetLists: [{ chainName: 'test-chain', assets: [] }],
-    wallets: [statefulWallet],
-    currentWalletName: 'test-wallet',
-    currentChainName: 'test-chain',
-    chainWalletState: [],
-    walletConnectQRCodeUri: '',
-    signerOptions: {},
-    signerOptionMap: {},
-    endpointOptions: {},
-    endpointOptionsMap: {},
-    preferredSignTypeMap: {},
+    chainWalletStoreMap: new Map(),
+    store: {} as InterchainStore,
+    walletManager: {} as any,
+    info: mockWallet.info,
+    events: {} as any,
+    chainMap: new Map(),
+    assetLists: [],
+    client: null,
+    walletState: WalletState.Disconnected,
+    errorMessage: '',
     init: jest.fn(),
+    getChainWalletStore: jest.fn(),
     connect: jest.fn(),
     disconnect: jest.fn(),
-    addChains: jest.fn(),
-    setCurrentChainName: jest.fn(),
+    getAccount: jest.fn(),
+    addSuggestChain: jest.fn(),
+    getProvider: jest.fn(),
+    setChainMap: jest.fn(),
+    addChain: jest.fn(),
+    setAssetLists: jest.fn(),
+    addAssetList: jest.fn(),
+    getChainById: jest.fn(),
+    getAssetListByChainId: jest.fn(),
+  } as jest.Mocked<WalletStore>;
+
+
+  const mockWalletManager: jest.Mocked<WalletManagerStore> = {
+    chains: [{ chainName: 'test-chain', chainType: 'cosmos' as const }],
+    assetLists: [{ chainName: 'test-chain', assets: [] }],
+    wallets: [mockWalletStore],
+    store: {} as InterchainStore,
+    walletManager: {} as any,
+    localStorage: {} as any,
+    init: jest.fn(),
+    restore: jest.fn(),
+    subscribe: jest.fn(),
+    getState: jest.fn(),
+    walletConnectQRCodeUri: '',
+    isReady: true,
+    currentWalletName: 'test-wallet',
+    currentChainName: 'test-chain',
     setCurrentWalletName: jest.fn(),
-    getChainByName: jest.fn().mockReturnValue({ name: 'test-chain' }),
-    getDraftChainWalletState: jest.fn(),
+    setCurrentChainName: jest.fn(),
+    getChainById: jest.fn(),
+    getChainWalletState: jest.fn(),
     updateChainWalletState: jest.fn(),
+    getChainWalletByName: jest.fn(),
+    modalIsOpen: false,
+    openModal: jest.fn(),
+    closeModal: jest.fn(),
+    signerOptions: {},
+    endpointOptions: {},
+    preferredSignTypeMap: {},
+    signerOptionMap: {},
+    endpointOptionsMap: {},
+    addChains: jest.fn(),
+    getChainLogoUrl: jest.fn(),
+    getWalletByName: jest.fn(),
+    getChainByName: jest.fn().mockReturnValue({ name: 'test-chain' }),
     getAssetListByName: jest.fn(),
+    connect: jest.fn(),
+    disconnect: jest.fn(),
+    getAccount: jest.fn(),
+    getRpcEndpoint: jest.fn(),
     getPreferSignType: jest.fn(),
     getSignerOptions: jest.fn(),
     getOfflineSigner: jest.fn(),
-    getWalletByName: jest.fn(),
-    getChainWalletState: jest.fn(),
-    getChainLogoUrl: jest.fn(),
     getSigningClient: jest.fn(),
-    getRpcEndpoint: jest.fn(),
-    getAccount: jest.fn(),
     getEnv: jest.fn(),
     getDownloadLink: jest.fn(),
-    setWalletConnectQRCodeUri: jest.fn(),
-    isReady: true,
-    modalIsOpen: false, openModal: jest.fn(), closeModal: jest.fn(), getStatefulWalletByName: jest.fn(),
-  }
+  } as jest.Mocked<WalletManagerStore>
 
   const mockWalletModal = {
     open: jest.fn(),
@@ -95,7 +129,7 @@ describe('useChain', () => {
 
     mockWalletManager.getChainByName.mockReturnValue(mockChain);
     mockWalletManager.getChainWalletState.mockReturnValue(mockChainWalletState);
-    mockWalletManager.getWalletByName.mockReturnValue(mockWallet);
+    mockWalletManager.getWalletByName.mockReturnValue(mockWalletStore);
 
     const { result } = renderHook(() => useChain('test-chain'));
 
