@@ -6,31 +6,6 @@ import bs58 from 'bs58';
 import { derivePath } from 'ed25519-hd-key';
 import * as nacl from 'tweetnacl';
 
-// 定义 SignIn 参数接口
-interface SignInParams {
-  domain?: string;
-  statement?: string;
-  uri?: string;
-  version?: string;
-  chainId?: string;
-  nonce?: string;
-  issuedAt?: string;
-  expirationTime?: string;
-}
-
-// 定义 SignIn 返回值接口
-interface SignInResult {
-  signedMessage: string;
-  signature: string;
-  publicKey: string;
-}
-
-// 定义 SignMessage 返回值接口
-interface SignMessageResult {
-  signature: string;
-  publicKey: string;
-}
-
 export class MockSolanaWallet extends SolanaWallet {
   private connection: Connection;
   public isConnected: boolean;

@@ -1,6 +1,6 @@
 import { Chain } from '@chain-registry/types';
 
-import { SignType, Wallet, WalletAccount } from '../types';
+import { ISolanaWallet, SignType, Wallet, WalletAccount } from '../types';
 import { getClientFromExtension } from '../utils';
 import { BaseWallet } from './base-wallet';
 
@@ -96,9 +96,9 @@ export class SolanaWallet extends BaseWallet implements ISolanaWallet {
     return this.solana.signAndSendAllTransactions(transactions);
   }
 
-  async signAndSendTransaction(transaction: Transaction | VersionedTransaction): Promise<TransactionSignature> {
-
-    return this.solana.signAndSendTransaction(transaction);
+  async signAndSendTransaction(transaction: Transaction | VersionedTransaction): Promise<string> {
+    const result = await this.solana.signAndSendTransaction(transaction);
+    return result.signature;
   }
 
   async signIn(data: SolanaSignInData): Promise<{ address: string; signature: Uint8Array; signedMessage: Uint8Array }> {
