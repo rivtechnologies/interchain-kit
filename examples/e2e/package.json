@@ -1,6 +1,6 @@
 {
   "name": "e2e",
-  "version": "0.3.46",
+  "version": "0.3.47",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -9,10 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@interchain-kit/keplr-extension": "0.3.46",
-    "@interchain-kit/metamask-extension": "0.3.46",
-    "@interchain-kit/mock-wallet": "^0.3.45",
-    "@interchain-kit/react": "0.3.46",
+    "@interchain-kit/keplr-extension": "0.3.47",
+    "@interchain-kit/metamask-extension": "0.3.47",
+    "@interchain-kit/mock-wallet": "0.3.47",
+    "@interchain-kit/react": "0.3.47",
     "@interchainjs/ethereum": "1.17.3",
     "@solana/web3.js": "^1.98.4",
     "ethers": "^6.15.0",
