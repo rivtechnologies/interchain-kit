@@ -1,6 +1,6 @@
 {
   "name": "next-app-router",
-  "version": "0.3.47",
+  "version": "0.3.48",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -9,9 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@interchain-kit/keplr-extension": "0.3.47",
-    "@interchain-kit/metamask-extension": "0.3.47",
-    "@interchain-kit/react": "0.3.47",
+    "@interchain-kit/keplr-extension": "0.3.48",
+    "@interchain-kit/metamask-extension": "0.3.48",
+    "@interchain-kit/react": "0.3.48",
     "next": "15.3.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
