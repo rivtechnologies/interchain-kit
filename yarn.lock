@@ -3047,10 +3047,25 @@
     rxjs "^7.8.1"
     semver "^7.3.5"
 
+"@ledgerhq/devices@8.5.0":
+  version "8.5.0"
+  resolved "https://registry.npmmirror.com/@ledgerhq/devices/-/devices-8.5.0.tgz#34588d06648a8577555acc7c8cc52b5bcf5f7f6b"
+  integrity sha512-zDB6Pdk6NYYbYis8cWoLLkL9k/IvjhC3hkuuz2lhpJ2AxIs3/PDMUKoyK4DpjPtRyKk1W1lwsnpc6J1i87r4/Q==
+  dependencies:
+    "@ledgerhq/errors" "^6.24.0"
+    "@ledgerhq/logs" "^6.13.0"
+    rxjs "^7.8.1"
+    semver "^7.3.5"
+
 "@ledgerhq/errors@^6.19.1", "@ledgerhq/errors@^6.23.0":
   version "6.23.0"
   resolved "https://registry.yarnpkg.com/@ledgerhq/errors/-/errors-6.23.0.tgz#fae7b61095ce4c033394d16085b5f14ca9f9d738"
   integrity sha512-bM7tPYShPThtBy1Y+9D28iquOeP5W5s4p7KKD/cUQoaVaPibrtC7Mm4u+IeSlH4WGvFJkTmv0vmZJajuZtM79A==
+
+"@ledgerhq/errors@^6.24.0":
+  version "6.24.0"
+  resolved "https://registry.npmmirror.com/@ledgerhq/errors/-/errors-6.24.0.tgz#323ed3b1a9bcd91a974dd1852f0b424349a6e39f"
+  integrity sha512-UMy+nGH4hmlaML7vPiSwGQ/mOoq/rwExYGEZVpb9TPoG0AcSfzpG43LAdAemvCTX/gK0MUO+int4FpNkD1ZrtQ==
 
 "@ledgerhq/hw-app-cosmos@^6.30.4":
   version "6.32.4"
@@ -3059,6 +3074,15 @@
   dependencies:
     "@ledgerhq/errors" "^6.23.0"
     "@ledgerhq/hw-transport" "^6.31.8"
+    bip32-path "^0.4.2"
+
+"@ledgerhq/hw-app-solana@^7.5.2":
+  version "7.5.2"
+  resolved "https://registry.npmmirror.com/@ledgerhq/hw-app-solana/-/hw-app-solana-7.5.2.tgz#acedbba1354a720ca328f579f5405ea34756a595"
+  integrity sha512-7JnI0Xk7jkujzEqCJ5QbC2LVyYKPBj4yNaN/Hl6UjM2qhLJIpybCQbDztxHhQ/Dvd81Em4MFoJuqI9NuNa0p9w==
+  dependencies:
+    "@ledgerhq/errors" "^6.24.0"
+    "@ledgerhq/hw-transport" "^6.31.9"
     bip32-path "^0.4.2"
 
 "@ledgerhq/hw-transport-webhid@^6.29.4", "@ledgerhq/hw-transport-webhid@^6.30.0":
@@ -3098,6 +3122,16 @@
   dependencies:
     "@ledgerhq/devices" "8.4.8"
     "@ledgerhq/errors" "^6.23.0"
+    "@ledgerhq/logs" "^6.13.0"
+    events "^3.3.0"
+
+"@ledgerhq/hw-transport@^6.31.9":
+  version "6.31.9"
+  resolved "https://registry.npmmirror.com/@ledgerhq/hw-transport/-/hw-transport-6.31.9.tgz#6c4a2f2c54beed52644dd9c8e9479900a5eace3a"
+  integrity sha512-HqB2Whl2qbrzyvs9gC/GmLhIy8RO4CWzjqHS4k0bPWDZRqKa8m6H32vjrbXGO//pUL1Mlu87UwvxvLyuICdjwg==
+  dependencies:
+    "@ledgerhq/devices" "8.5.0"
+    "@ledgerhq/errors" "^6.24.0"
     "@ledgerhq/logs" "^6.13.0"
     events "^3.3.0"
 
@@ -5257,7 +5291,7 @@
     chalk "^5.4.1"
     commander "^14.0.0"
 
-"@solana/web3.js@^1.98.2", "@solana/web3.js@^1.98.4":
+"@solana/web3.js@^1.87.6", "@solana/web3.js@^1.98.2", "@solana/web3.js@^1.98.4":
   version "1.98.4"
   resolved "https://registry.npmmirror.com/@solana/web3.js/-/web3.js-1.98.4.tgz#df51d78be9d865181ec5138b4e699d48e6895bbe"
   integrity sha512-vv9lfnvjUsRiq//+j5pBdXig0IQdtzA0BRZ3bXEP4KaIyF1CcaydWqgyzQgfZMNIsWNWmG+AUHwPy4AHOD6gpw==

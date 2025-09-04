@@ -1,12 +1,12 @@
-import { WalletAccount } from "../../types";
-import { WalletConnectIcon } from "../../constant";
-import { ISolanaWallet } from "../../types/wallet-types";
-import { IWCCommon } from "./wc-common";
-import { Chain } from "@chain-registry/types";
-import UniversalProvider from "@walletconnect/universal-provider";
-import { BaseWallet } from "../base-wallet";
-import { WCWallet } from "./wc-wallet";
-import { SolanaWallet } from "../solana-wallet";
+import { Chain } from '@chain-registry/types';
+import { PublicKey } from '@solana/web3.js';
+import UniversalProvider from '@walletconnect/universal-provider';
+
+import { WalletConnectIcon } from '../../constant';
+import { WalletAccount } from '../../types';
+import { SolanaWallet } from '../solana-wallet';
+import { IWCCommon } from './wc-common';
+import { WCWallet } from './wc-wallet';
 
 export class WCSolanaWallet extends SolanaWallet implements IWCCommon {
   provider: UniversalProvider;
@@ -47,45 +47,47 @@ export class WCSolanaWallet extends SolanaWallet implements IWCCommon {
     return Promise.resolve();
   }
 
-  async connect(chainId: Chain["chainId"]): Promise<void> {
+  async connect(chainId: Chain['chainId']): Promise<void> {
     return this.wcWallet.connect(chainId);
   }
 
-  async disconnect(chainId: Chain["chainId"]): Promise<void> {
+  async disconnect(chainId: Chain['chainId']): Promise<void> {
     return this.wcWallet.disconnect();
   }
 
-  async getAccount(chainId: Chain["chainId"]): Promise<WalletAccount> {
+  async getAccount(chainId: Chain['chainId']): Promise<WalletAccount> {
     if (!this.provider) {
       throw new Error('Provider not initialized');
     }
 
-    try {
-      const accounts = await this.provider.request({
-        method: 'solana_accounts',
-        params: []
-      }, `solana:${chainId}`) as string[];
+    if (!this.provider.session) {
+      throw new Error('Session not initialized');
+    }
 
+
+    const accounts = this.provider.session.namespaces.solana.accounts;
+    if (accounts.length > 0) {
+      // CAIP-10 format: solana:<chain_id>:<address>
+      const account = accounts[0].split(':')[2]; // Extract the address part
+      const publicKey = new PublicKey(account); // Validate Solana address
       return {
-        address: accounts[0],
-        algo: 'secp256k1', // Solana uses ed25519 but we'll use secp256k1 for compatibility
-        pubkey: null,
+        address: account,
+        pubkey: publicKey.toBytes(),
+        algo: 'secp256k1',
         username: '',
         isNanoLedger: null,
         isSmartContract: null
       };
-    } catch (error) {
-      console.log('get solana account error', error);
-      throw error;
     }
+
   }
 
-  async addSuggestChain(chainId: Chain["chainId"]): Promise<void> {
+  async addSuggestChain(chainId: Chain['chainId']): Promise<void> {
     // Solana chain addition is typically handled by the wallet
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 
-  async getProvider(chainId: Chain["chainId"]): Promise<any> {
+  async getProvider(chainId: Chain['chainId']): Promise<any> {
     return this.provider;
   }
 

@@ -1,10 +1,16 @@
-import { LedgerWallet } from './ledger';
+import { MultiChainWallet } from '@interchain-kit/core';
+
+import { LedgerCosmosWallet } from './cosmos';
 import { LedgerInfo } from './registry';
+import { LedgerSolanaWallet } from './solana';
 
-export * from './registry'
-export * from './constant'
+export * from './constant';
+export * from './registry';
 
-const ledgerWallet = new LedgerWallet(LedgerInfo)
+const ledgerWallet = new MultiChainWallet(LedgerInfo);
 
-export { ledgerWallet }
+ledgerWallet.setNetworkWallet('cosmos', new LedgerCosmosWallet(LedgerInfo));
+ledgerWallet.setNetworkWallet('solana', new LedgerSolanaWallet(LedgerInfo));
+
+export { ledgerWallet };
 

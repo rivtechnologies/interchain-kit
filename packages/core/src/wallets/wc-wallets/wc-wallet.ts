@@ -1,16 +1,15 @@
 import { Chain } from '@chain-registry/types';
+import type { StdSignature } from '@interchainjs/amino';
 import { AminoSignResponse, DirectSignResponse, SignOptions } from '@interchainjs/cosmos';
 import { StdSignDoc } from '@interchainjs/types';
 import { PairingTypes, SessionTypes, SignClientTypes } from '@walletconnect/types';
 import UniversalProvider, { ConnectParams, UniversalProviderOpts } from '@walletconnect/universal-provider';
 import { fromByteArray, toByteArray } from 'base64-js';
-
-
-import type { Algo, StdSignature } from '@interchainjs/amino';
-import { MultiChainWallet } from '../multichain-wallet';
 import { BroadcastMode } from 'interchainjs';
+
 import { WalletConnectIcon } from '../../constant';
-import { WalletAccount, Wallet, SignType, DirectSignDoc, WCDirectSignResponse, WcEventTypes, WcProviderEventType } from '../../types';
+import { DirectSignDoc, SignType, Wallet, WalletAccount, WCDirectSignResponse, WcEventTypes, WcProviderEventType } from '../../types';
+import { MultiChainWallet } from '../multichain-wallet';
 import { isWCCommon } from './wc-common';
 
 
@@ -83,7 +82,7 @@ export class WCWallet extends MultiChainWallet {
         wallet.setWCProvider(this.provider);
         wallet.setWCWallet(this);
       }
-      wallet.info = this.info
+      wallet.info = this.info;
       wallet.chainMap = this.chainMap;
     });
 
@@ -159,13 +158,8 @@ export class WCWallet extends MultiChainWallet {
     if (solanaChainNS.length) {
       connectParam.namespaces.solana = {
         methods: [
-          'solana_accounts',
           'solana_signTransaction',
-          'solana_signAllTransactions',
-          'solana_signAndSendTransaction',
-          'solana_signAndSendAllTransactions',
           'solana_signMessage',
-          'solana_signIn',
         ],
         chains: solanaChainNS,
         events: []
@@ -227,43 +221,12 @@ export class WCWallet extends MultiChainWallet {
   }
 
   async getAccount(chainId: Chain['chainId']): Promise<WalletAccount> {
-
-    if (this.accountToRestore) {
-      return this.accountToRestore;
-    }
-
-    const account = await this.getCosmosAccount(chainId);
-
-    return {
-      address: account.address,
-      algo: 'secp256k1',
-      pubkey: toByteArray(account.pubkey),
-      username: '',
-      isNanoLedger: null,
-      isSmartContract: null
-    };
+    const chain = this.getChainById(chainId);
+    const wallet = this.getWalletByChainType(chain.chainType);
+    return wallet.getAccount(chainId);
   }
 
-  async getCosmosAccount(chainId: string): Promise<{ address: string, algo: Algo, pubkey: string }> {
 
-    try {
-
-      const accounts = await this.provider.request({
-        method: 'cosmos_getAccounts',
-        params: []
-      }, `cosmos:${chainId}`) as any[];
-
-      const { address, algo, pubkey } = accounts[0];
-      return {
-        address,
-        algo: algo as Algo,
-        pubkey: pubkey,
-      };
-    } catch (error) {
-      console.log('get cosmos account error', error);
-      throw error;
-    }
-  }
 
   async getOfflineSigner(chainId: string, preferredSignType?: SignType) {
     if (preferredSignType === 'amino') {
@@ -272,14 +235,14 @@ export class WCWallet extends MultiChainWallet {
         signAmino: async (signer: string, signDoc: StdSignDoc) => {
           return this.signAmino(chainId, signer, signDoc);
         }
-      }
+      };
     } else if (preferredSignType === 'direct') {
       return {
         getAccounts: async () => [await this.getAccount(chainId)],
         signDirect: async (signer: string, signDoc: DirectSignDoc) => {
           return this.signDirect(chainId, signer, signDoc);
         }
-      }
+      };
     }
   }
 
@@ -370,12 +333,12 @@ export class WCWallet extends MultiChainWallet {
       console.error('disconnect:', error);
     });
 
-    this.provider.on("session_delete", (error: { message: string; code: number }) => {
-      console.log("session_delete:", error);
-      localStorage.removeItem('wc-session')
+    this.provider.on('session_delete', (error: { message: string; code: number }) => {
+      console.log('session_delete:', error);
+      localStorage.removeItem('wc-session');
 
       // Emit disconnect event to notify StatefulWallet
-      this.events.emit('disconnect', '')
+      this.events.emit('disconnect', '');
     });
 
     this.provider.on('session_event', (error: { message: string; code: number }) => {
