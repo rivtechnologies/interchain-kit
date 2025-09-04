@@ -2,6 +2,8 @@ import { CosmosWallet, EthereumWallet, ExtensionWallet, selectWalletByPlatform, 
 
 import { OkxwalletExtensionInfo } from './registry';
 
+export * from './registry';
+
 const web = new ExtensionWallet(OkxwalletExtensionInfo);
 
 web.setNetworkWallet('cosmos', new CosmosWallet(OkxwalletExtensionInfo));

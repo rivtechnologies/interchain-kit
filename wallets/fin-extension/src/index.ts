@@ -1,8 +1,11 @@
-import { CosmosWallet, ExtensionWallet } from "@interchain-kit/core";
-import { FinExtensionInfo } from "./registry";
+import { CosmosWallet, ExtensionWallet } from '@interchain-kit/core';
 
-const finWallet = new ExtensionWallet(FinExtensionInfo)
+import { FinExtensionInfo } from './registry';
 
-finWallet.setNetworkWallet('cosmos', new CosmosWallet(FinExtensionInfo))
+export * from './registry';
 
-export { finWallet }
+const finWallet = new ExtensionWallet(FinExtensionInfo);
+
+finWallet.setNetworkWallet('cosmos', new CosmosWallet(FinExtensionInfo));
+
+export { finWallet };

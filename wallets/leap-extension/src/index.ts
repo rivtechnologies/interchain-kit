@@ -3,6 +3,8 @@ import { CosmosWallet, EthereumWallet, ExtensionWallet, selectWalletByPlatform, 
 
 import { leapExtensionInfo } from './registry';
 
+export * from './registry';
+
 class LeapCosmosWallet extends CosmosWallet {
   async connect(chainId: string | string[]): Promise<void> {
     await this.client.enable(chainId);

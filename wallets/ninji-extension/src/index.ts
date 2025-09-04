@@ -1,9 +1,12 @@
-import { CosmosWallet, ExtensionWallet } from "@interchain-kit/core";
-import { ninjiExtensionInfo } from "./registry";
+import { CosmosWallet, ExtensionWallet } from '@interchain-kit/core';
 
-const ninjiWallet = new ExtensionWallet(ninjiExtensionInfo)
+import { ninjiExtensionInfo } from './registry';
 
-ninjiWallet.setNetworkWallet('cosmos', new CosmosWallet(ninjiExtensionInfo))
+export * from './registry';
+
+const ninjiWallet = new ExtensionWallet(ninjiExtensionInfo);
+
+ninjiWallet.setNetworkWallet('cosmos', new CosmosWallet(ninjiExtensionInfo));
 
 
-export { ninjiWallet }
+export { ninjiWallet };

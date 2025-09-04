@@ -1,8 +1,12 @@
-import { CosmosWallet, MultiChainWallet } from "@interchain-kit/core";
-import { compassExtensionInfo } from "./registry";
+import { CosmosWallet, MultiChainWallet } from '@interchain-kit/core';
 
-const compassWallet = new MultiChainWallet(compassExtensionInfo)
+import { compassExtensionInfo } from './registry';
 
-compassWallet.setNetworkWallet('cosmos', new CosmosWallet(compassExtensionInfo))
+export * from './registry';
 
-export { compassWallet }
+
+const compassWallet = new MultiChainWallet(compassExtensionInfo);
+
+compassWallet.setNetworkWallet('cosmos', new CosmosWallet(compassExtensionInfo));
+
+export { compassWallet };

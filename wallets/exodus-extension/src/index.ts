@@ -1,5 +1,8 @@
-import { EthereumWallet, ExtensionWallet } from "@interchain-kit/core";
-import { exodusExtensionInfo } from "./registry";
+import { EthereumWallet, ExtensionWallet } from '@interchain-kit/core';
+
+import { exodusExtensionInfo } from './registry';
+
+export * from './registry';
 
 const exodusWallet = new ExtensionWallet(exodusExtensionInfo);
 
