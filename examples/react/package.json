@@ -29,6 +29,7 @@
     "@interchain-kit/coin98-extension": "0.3.47",
     "@interchain-kit/compass-extension": "0.3.47",
     "@interchain-kit/core": "0.3.47",
+    "@interchain-kit/store": "0.3.47",
     "@interchain-kit/cosmos-extension-metamask": "0.3.47",
     "@interchain-kit/exodus-extension": "0.3.47",
     "@interchain-kit/fin-extension": "0.3.47",

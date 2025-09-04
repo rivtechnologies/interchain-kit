@@ -1,5 +1,5 @@
 import { Chain } from '@chain-registry/types';
-import { BaseWallet, WalletAccount, WalletManager, WalletState } from '@interchain-kit/core';
+import { BaseWallet, getWalletByType, WalletAccount, WalletManager, WalletState } from '@interchain-kit/core';
 
 import { InterchainStore } from '../store';
 import { ChainWalletStore } from './chain-wallet-store';
@@ -118,5 +118,8 @@ export class WalletStore extends BaseWallet {
       throw new Error(`Chain with ID ${chainId} not found`);
     }
     return this.getChainWalletStore(chain.chainName).getProvider();
+  }
+  getWalletOfType<T>(WalletClass: new (...args: any[]) => T) {
+    return getWalletByType(this.wallet, WalletClass);
   }
 }

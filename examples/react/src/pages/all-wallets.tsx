@@ -4,6 +4,7 @@ import {
   EthereumWallet,
   isMobile,
   MultiChainWallet,
+  SolanaWallet,
   WCWallet,
 } from "@interchain-kit/core";
 import {
@@ -22,7 +23,7 @@ import QRCode from "react-qr-code";
 import { send } from "interchainjs/cosmos/bank/v1beta1/tx.rpc.func";
 import { RpcClient } from "@interchainjs/cosmos/query/rpc";
 import { ethers } from "ethers";
-import { StatefulWallet } from "@interchain-kit/react/store/stateful-wallet";
+
 import {
   Connection,
   PublicKey,
@@ -31,10 +32,11 @@ import {
   SystemProgram,
 } from "@solana/web3.js";
 import { MsgSend } from "interchainjs/cosmos/bank/v1beta1/tx";
+import { ChainWalletStore } from "@interchain-kit/store";
 
 type BalanceProps = {
   address: string;
-  wallet: StatefulWallet;
+  wallet: ChainWalletStore;
   chainName: string;
   chainId: string;
   chain: Chain;
@@ -44,7 +46,7 @@ type BalanceProps = {
 const BalanceTd = ({ address, wallet, chain, assetList }: BalanceProps) => {
   const { rpcEndpoint } = useChainWallet(
     chain.chainName,
-    wallet.info?.name as string
+    wallet.info.name as string
   );
 
   const [isLoading, setIsLoading] = useState(false);
@@ -98,7 +100,7 @@ const BalanceTd = ({ address, wallet, chain, assetList }: BalanceProps) => {
 };
 
 type SendTokenProps = {
-  wallet: StatefulWallet;
+  wallet: ChainWalletStore;
   address: string;
   chain: Chain;
 };
@@ -207,9 +209,14 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
       transaction.feePayer = new PublicKey(address);
       const { blockhash } = await connection.getLatestBlockhash();
       transaction.recentBlockhash = blockhash;
-      const client = await wallet.getProvider(chain.chainId as string);
-      // 3. Phantom 签名
-      const signed = await client.signTransaction(transaction);
+      // const client = await wallet.getProvider(chain.chainId as string);
+      //3. Phantom 签名
+      // const signed = await client.signTransaction(transaction);
+      // console.log(signed);
+
+      const solanaWallet = wallet.getWalletOfType(SolanaWallet);
+      const signed = await solanaWallet.signTransaction(transaction);
+      console.log(signed);
 
       // 4. 发送交易
       const signature = await connection.sendRawTransaction(signed.serialize());

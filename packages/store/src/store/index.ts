@@ -144,7 +144,7 @@ export class InterchainStore {
   }
 
   isChainWalletStateExisted(walletName: string, chainName: string) {
-    return this.chainWalletIndexMap.get(`${walletName}-${chainName}`)
+    return this.chainWalletIndexMap.get(`${walletName}-${chainName}`) !== undefined;
   }
 }
 

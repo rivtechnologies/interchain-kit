@@ -149,7 +149,17 @@ const _chains = [
   //   "http://localhost:26657",
   //   "http://localhost:1317"
   // ),
-];
+].map((c) => {
+  if (c.chainName === "solana") {
+    c.chainId = "4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ";
+  }
+  /**
+   * 主网：solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ（或简化为 solana:mainnet）
+测试网：solana:8E9rvCKLFYuNbobMWfCabm7Kkm2PzQw6A6FMnH7nL5V（或 solana:devnet）
+开发网：solana:EtWTRABZaYq6iMfeAkw（或 solana:devnet）
+   */
+  return c;
+});
 // const _chains = [starshipChain1]
 const _assetLists = [
   ...assetLists.filter((a) => chainNames.includes(a.chainName)),
@@ -185,11 +195,11 @@ const _wallets: BaseWallet[] = [
   // cosmostationWallet,
   // stationWallet,
   // galaxyStationWallet,
-  // walletConnect,
-  // ledgerWallet,
-  // cosmosExtensionMetaMask,
   walletConnect,
   // ledgerWallet,
+  // cosmosExtensionMetaMask,
+  // walletConnect,
+  ledgerWallet,
   // leapCosmosExtensionMetaMask,
   // compassWallet,
   // trustWallet,

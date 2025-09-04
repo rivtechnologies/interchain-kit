@@ -1,6 +1,6 @@
-import { StdSignDoc } from '@interchainjs/types';
 import { Chain } from '@chain-registry/types';
 import { BaseWallet, CosmosWallet, DirectSignDoc, getWalletByType, isInstanceOf, OfflineAminoSigner, OfflineDirectSigner, SignType, WalletAccount, WalletManager, WalletState, WCWallet } from '@interchain-kit/core';
+import { StdSignDoc } from '@interchainjs/types';
 
 import { InterchainStore } from '../store';
 
@@ -21,6 +21,7 @@ export class ChainWalletStore extends BaseWallet {
     this.chain = chain;
     this.store = store;
     this.walletManager = walletManager;
+    this.info = this.wallet.info;
   }
 
   get walletState(): WalletState {
@@ -33,14 +34,14 @@ export class ChainWalletStore extends BaseWallet {
 
   async init(): Promise<void> {
     this.wallet.events.on('accountChanged', () => {
-      this.refreshAccount()
+      this.refreshAccount();
     });
   }
   async connect(): Promise<void> {
 
     const chainWalletState = this.store.getChainWalletState(this.wallet.info.name, this.chain.chainName);
     if (chainWalletState && chainWalletState.walletState === WalletState.NotExist) {
-      return Promise.resolve()
+      return Promise.resolve();
     }
 
     if (isInstanceOf(this.wallet, WCWallet)) {
@@ -51,7 +52,8 @@ export class ChainWalletStore extends BaseWallet {
     }
 
     try {
-      this.store.updateChainWalletState(this.wallet.info.name, this.chain.chainName, { walletState: WalletState.Connecting });
+      console.log(1);
+      this.store.updateChainWalletState(this.wallet.info.name, this.chain.chainName, { walletState: WalletState.Connecting, errorMessage: '' });
       await this.wallet.connect(this.chain.chainId);
       const account = await this.getAccount();
       this.store.updateChainWalletState(this.wallet.info.name, this.chain.chainName, { walletState: WalletState.Connected, account });
@@ -77,9 +79,7 @@ export class ChainWalletStore extends BaseWallet {
 
   async refreshAccount(): Promise<void> {
     try {
-      const account = await this.wallet.getAccount(this.chain.chainId)
-
-      console.log(this.wallet)
+      const account = await this.wallet.getAccount(this.chain.chainId);
 
       this.store.updateChainWalletState(this.wallet.info.name, this.chain.chainName, { account });
     } catch (error) {
@@ -108,20 +108,20 @@ export class ChainWalletStore extends BaseWallet {
 
     const preferredSignTypeFromSettings = this.walletManager.getPreferSignType(this.chain.chainName);
 
-    const account = await this.getAccount()
+    const account = await this.getAccount();
 
     const aminoOfflineSigner = {
       getAccounts: async () => [account],
       signAmino: async (signer: string, signDoc: StdSignDoc) => {
         return cosmosWallet.signAmino(this.chain.chainId, signer, signDoc, {});
       }
-    }
+    };
     const directOfflineSigner = {
       getAccounts: async () => [account],
       signDirect: async (signer: string, signDoc: DirectSignDoc) => {
         return cosmosWallet.signDirect(this.chain.chainId, signer, signDoc, {});
       }
-    }
+    };
 
     const signType = preferSignType || preferredSignTypeFromSettings;
 
