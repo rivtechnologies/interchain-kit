@@ -147,15 +147,14 @@ export class AOPProxy<T = any> {
 
           // Around advice - 传递绑定了原始目标上下文的原始方法
           if (methodAdvice.around) {
-            // 创建一个包装函数，确保 originalMethod 使用 proxy 作为 this 上下文
-            const wrappedOriginalMethod = (...methodArgs: any[]) => {
-              return originalMethod.apply(proxy, methodArgs);
-            };
+            // 创建一个包装函数，确保 originalMethod 使用 target 作为 this 上下文
+            // 使用 bind 来确保 this 上下文正确绑定
+            const wrappedOriginalMethod = originalMethod.bind(this.target);
             result = methodAdvice.around(methodName, proxy, wrappedOriginalMethod as T[K], ...(args as MethodArgs<T, K>));
             return result;
           } else {
-            // Execute original method with proxy as this context to ensure internal method calls use AOP proxy
-            result = originalMethod.apply(proxy, args);
+            // Execute original method with target as this context to ensure state consistency
+            result = originalMethod.apply(this.target, args);
           }
 
           // 检查结果是否是 Promise

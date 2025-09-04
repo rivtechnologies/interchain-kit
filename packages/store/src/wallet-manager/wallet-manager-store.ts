@@ -60,7 +60,7 @@ export class WalletManagerStore implements WalletManager {
       });
 
       await Promise.all(this.wallets.map(wallet => {
-        return wallet.init()
+        return wallet.init();
       }));
       this.store.setState({ isReady: true });
     } catch (error) {
@@ -82,7 +82,17 @@ export class WalletManagerStore implements WalletManager {
     // 重建索引映射
     this.store.buildIndexMap();
 
-    const newChainWalletStates: ChainWalletState[] = []
+    // 获取当前有效的 wallet 和 chain 名称集合
+    const validWalletNames = new Set(this.wallets.map(wallet => wallet.info.name));
+    const validChainNames = new Set(this.chains.map(chain => chain.chainName));
+
+    // 1. 移除不需要的 chain wallet state（wallet 或 chain 不再存在）
+    const filteredChainWalletStates = this.store.getState().chainWalletStates.filter(state => {
+      return validWalletNames.has(state.walletName) && validChainNames.has(state.chainName);
+    });
+
+    // 2. 新增原本没有的 chain wallet state
+    const newChainWalletStates: ChainWalletState[] = [];
     this.wallets.forEach(wallet => {
       this.chains.forEach(chain => {
         if (!this.store.isChainWalletStateExisted(wallet.info.name, chain.chainName)) {
@@ -93,17 +103,17 @@ export class WalletManagerStore implements WalletManager {
             walletState: WalletState.Disconnected,
             account: undefined,
             errorMessage: ''
-          })
+          });
         }
-      })
-    })
+      });
+    });
 
-    const chainWalletStates = [...this.store.getState().chainWalletStates, ...newChainWalletStates]
+    // 合并过滤后的状态和新增的状态
+    const finalChainWalletStates = [...filteredChainWalletStates, ...newChainWalletStates];
 
-    this.store.setState({ chainWalletStates });
+    this.store.setState({ chainWalletStates: finalChainWalletStates });
 
-    this.store.buildIndexMap()
-
+    this.store.buildIndexMap();
   }
 
 

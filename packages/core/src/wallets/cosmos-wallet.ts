@@ -87,7 +87,8 @@ export class CosmosWallet extends BaseWallet implements ICosmosWallet {
     }
   }
   async signAmino(chainId: string, signer: string, signDoc: StdSignDoc, signOptions?: SignOptions): Promise<AminoSignResponse> {
-    return this.client.signAmino(chainId, signer, signDoc, signOptions);
+
+    return this.client.signAmino(chainId, signer, signDoc, signOptions || this.defaultSignOptions);
   }
   async signArbitrary(chainId: string, signer: string, data: string | Uint8Array): Promise<StdSignature> {
     return this.client.signArbitrary(chainId, signer, data);
@@ -96,7 +97,7 @@ export class CosmosWallet extends BaseWallet implements ICosmosWallet {
     return this.client.verifyArbitrary(chainId, signer, data);
   }
   async signDirect(chainId: string, signer: string, signDoc: DirectSignDoc, signOptions?: SignOptions): Promise<DirectSignResponse> {
-    return this.client.signDirect(chainId, signer, signDoc, signOptions);
+    return this.client.signDirect(chainId, signer, signDoc, signOptions || this.defaultSignOptions);
   }
   async sendTx(chainId: string, tx: Uint8Array, mode: BroadcastMode): Promise<Uint8Array> {
     return this.client.sendTx(chainId, tx, mode);

@@ -1,8 +1,9 @@
-import { ExtensionWallet, SolanaWallet } from "@interchain-kit/core";
-import { phantomExtensionInfo } from "./registry";
+import { ExtensionWallet, SolanaWallet } from '@interchain-kit/core';
 
-const phantomWallet = new ExtensionWallet(phantomExtensionInfo)
+import { phantomExtensionInfo } from './registry';
 
-phantomWallet.setNetworkWallet('solana', new SolanaWallet(phantomExtensionInfo))
+const phantomWallet = new ExtensionWallet(phantomExtensionInfo);
 
-export { phantomWallet }
+phantomWallet.setNetworkWallet('solana', new SolanaWallet(phantomExtensionInfo));
+
+export { phantomWallet };
