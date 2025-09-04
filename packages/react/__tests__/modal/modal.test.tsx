@@ -2,16 +2,18 @@
  * @jest-environment jsdom
  */
 
-import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
-import {
-  WalletModalElementProps,
-  WalletModalElement,
-} from "../../src/modal/modal";
 import "@testing-library/jest-dom";
+
+import { InterchainStore, WalletStore } from "@interchain-kit/store";
+import { fireEvent, render, screen } from "@testing-library/react";
+import React from "react";
+
+import {
+  WalletModalElement,
+  WalletModalElementProps,
+} from "../../src/modal/modal";
 import { transferToWalletUISchema } from "../../src/utils";
 import { MockWallet } from "../helpers/mock-wallet";
-import { WalletStore, InterchainStore } from "@interchain-kit/store";
 
 describe("WalletModal", () => {
   const mockWallet = new MockWallet({
@@ -45,6 +47,7 @@ describe("WalletModal", () => {
     addAssetList: jest.fn(),
     getChainById: jest.fn(),
     getAssetListByChainId: jest.fn(),
+    getWalletOfType: jest.fn(),
   } as jest.Mocked<WalletStore>;
   const mockProps: WalletModalElementProps = {
     shouldShowList: false,

@@ -52,7 +52,6 @@ export class ChainWalletStore extends BaseWallet {
     }
 
     try {
-      console.log(1);
       this.store.updateChainWalletState(this.wallet.info.name, this.chain.chainName, { walletState: WalletState.Connecting, errorMessage: '' });
       await this.wallet.connect(this.chain.chainId);
       const account = await this.getAccount();

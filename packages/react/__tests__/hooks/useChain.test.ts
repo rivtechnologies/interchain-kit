@@ -2,15 +2,15 @@
  * @jest-environment jsdom
  */
 
-import { renderHook, act, waitFor } from '@testing-library/react';
+import { ChainNameNotExist, WalletState } from '@interchain-kit/core';
+import { ChainWalletState, InterchainStore, WalletManagerStore } from '@interchain-kit/store';
+import { WalletStore } from '@interchain-kit/store';
+import { act, renderHook, waitFor } from '@testing-library/react';
+
+import { useWalletModal } from '../../src/hooks';
 import { useChain } from '../../src/hooks/useChain';
 import { useWalletManager } from '../../src/hooks/useWalletManager';
-import { ChainNameNotExist, WalletState } from '@interchain-kit/core';
-
 import { MockWallet } from '../helpers/mock-wallet';
-import { useWalletModal } from '../../src/hooks';
-import { WalletManagerStore, ChainWalletState, InterchainStore } from '@interchain-kit/store';
-import { WalletStore } from '@interchain-kit/store';
 
 jest.mock('../../src/hooks/useWalletManager');
 jest.mock('../../src/hooks/useWalletModal.ts');
@@ -48,6 +48,7 @@ describe('useChain', () => {
     addAssetList: jest.fn(),
     getChainById: jest.fn(),
     getAssetListByChainId: jest.fn(),
+    getWalletOfType: jest.fn(),
   } as jest.Mocked<WalletStore>;
 
 
@@ -95,7 +96,7 @@ describe('useChain', () => {
     getSigningClient: jest.fn(),
     getEnv: jest.fn(),
     getDownloadLink: jest.fn(),
-  } as jest.Mocked<WalletManagerStore>
+  } as jest.Mocked<WalletManagerStore>;
 
   const mockWalletModal = {
     open: jest.fn(),
@@ -139,7 +140,7 @@ describe('useChain', () => {
       expect(result.current.username).toBe('test-user');
       expect(result.current.address).toBe('test-address');
       expect(result.current.rpcEndpoint).toBe('http://localhost:26657');
-    })
+    });
 
 
   });
@@ -157,7 +158,7 @@ describe('useChain', () => {
     await waitFor(() => {
       expect(mockWalletManager.setCurrentChainName).toHaveBeenCalledWith('test-chain');
       expect(mockWalletModal.open).toHaveBeenCalled();
-    })
+    });
   });
 
   it('should call disconnect when disconnect is invoked', async () => {
@@ -173,7 +174,7 @@ describe('useChain', () => {
     await waitFor(() => {
 
       expect(mockWalletManager.disconnect).toHaveBeenCalledWith('test-wallet', 'test-chain');
-    })
+    });
 
   });
 
@@ -190,7 +191,7 @@ describe('useChain', () => {
     await waitFor(() => {
       expect(mockWalletManager.setCurrentChainName).toHaveBeenCalledWith('test-chain');
       expect(mockWalletModal.open).toHaveBeenCalled();
-    })
+    });
 
   });
 
@@ -206,6 +207,6 @@ describe('useChain', () => {
 
     await waitFor(() => {
       expect(mockWalletModal.close).toHaveBeenCalled();
-    })
+    });
   });
 });
