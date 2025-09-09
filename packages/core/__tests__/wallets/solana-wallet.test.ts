@@ -50,6 +50,7 @@ describe('SolanaWallet', () => {
         toBytes: jest.fn().mockReturnValue(new Uint8Array([1, 2, 3])),
       },
       request: jest.fn(),
+      on: jest.fn(),
       signAllTransactions: jest.fn().mockImplementation((transactions: any[]) => transactions),
       signAndSendAllTransactions: jest.fn().mockImplementation((transactions: any[]) => ({ signatures: ['sig1'] })),
       signAndSendTransaction: jest.fn().mockImplementation((transaction: any) => ({ signature: 'sig1' })),
@@ -78,8 +79,10 @@ describe('SolanaWallet', () => {
 
   describe('bindingEvent', () => {
     it('should bind keystore change event', () => {
+      // Set up the solana client first
+      wallet.solana = mockSolanaClient;
       wallet.bindingEvent();
-      expect((global as any).window.addEventListener).toHaveBeenCalledWith('keystorechange', expect.any(Function));
+      expect(mockSolanaClient.on).toHaveBeenCalledWith('keystorechange', expect.any(Function));
     });
   });
 

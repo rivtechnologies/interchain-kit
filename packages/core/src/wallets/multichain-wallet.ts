@@ -29,20 +29,21 @@ export class MultiChainWallet extends BaseWallet {
   }
 
   setChainMap(chains: Chain[]): void {
-    this.chainMap = new Map(chains.map(chain => [chain.chainId, chain]));
+    super.setChainMap(chains);
     this.networkWalletMap.forEach(wallet => {
       wallet.setChainMap(chains);
     });
   }
 
   addChain(chain: Chain): void {
-    this.chainMap.set(chain.chainId, chain);
+    super.addChain(chain);
     this.networkWalletMap.forEach(wallet => {
       wallet.addChain(chain);
     });
   }
 
   setAssetLists(assetLists: AssetList[]): void {
+    super.setAssetLists(assetLists);
     this.networkWalletMap.forEach(wallet => {
       wallet.setAssetLists(assetLists);
     });
@@ -101,7 +102,7 @@ export class MultiChainWallet extends BaseWallet {
 
   }
   async addSuggestChain(chainId: string): Promise<void> {
-    const chain = this.chainMap.get(chainId);
+    const chain = this.getChainById(chainId);
     const networkWallet = this.getWalletByChainType(chain.chainType);
     return networkWallet.addSuggestChain(chainId);
   }

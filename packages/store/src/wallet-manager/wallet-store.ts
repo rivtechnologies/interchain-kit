@@ -72,7 +72,7 @@ export class WalletStore extends BaseWallet {
       await this.wallet.init();
 
     } catch (error) {
-      this.store.updateWalletState(this.wallet.info.name, { walletState: WalletState.NotExist, errorMessage: '' });
+      this.store.updateWalletState(this.wallet.info.name, { walletState: WalletState.NotExist, errorMessage: (error as any).message });
     }
   }
 

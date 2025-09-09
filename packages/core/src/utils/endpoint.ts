@@ -8,23 +8,30 @@ export type RpcInfo = {
 
 export const isValidRpcEndpoint = async (endpoint: string | HttpEndpoint, chainType: Chain['chainType']) => {
   let requestBody;
-  const rpcToCheck = typeof endpoint === 'string' ? endpoint : endpoint.url
+  const rpcToCheck = typeof endpoint === 'string' ? endpoint : endpoint.url;
   if (chainType === 'cosmos') {
     requestBody = {
-      jsonrpc: "2.0",
-      method: "status",
+      jsonrpc: '2.0',
+      method: 'status',
       params: [],
       id: 1
-    }
+    };
   } else if (chainType === 'eip155') {
     requestBody = {
-      jsonrpc: "2.0",
-      method: "eth_blockNumber",
+      jsonrpc: '2.0',
+      method: 'eth_blockNumber',
       params: [],
       id: 1
-    }
+    };
+  } else if (chainType === 'solana') {
+    requestBody = {
+      jsonrpc: '2.0',
+      method: 'getHealth',
+      params: [],
+      id: 1
+    };
   } else {
-    throw new Error('unsupported chain type')
+    throw new Error('unsupported chain type');
   }
   try {
     const response = await fetch(rpcToCheck, {
@@ -34,27 +41,27 @@ export const isValidRpcEndpoint = async (endpoint: string | HttpEndpoint, chainT
       },
       body: JSON.stringify(requestBody)
     });
-    return response.status === 200
+    return response.status === 200;
   } catch (error) {
-    return false
+    return false;
   }
 
-}
+};
 
-const timeoutCheck = (ms: number) => new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
+const timeoutCheck = (ms: number) => new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms));
 
 export const getValidRpcEndpoint = async (endpoints: RpcInfo[]) => {
-  let rpc: string | HttpEndpoint = ''
+  let rpc: string | HttpEndpoint = '';
   for (const endpoint of endpoints) {
     try {
-      const isValid = await Promise.race([isValidRpcEndpoint(endpoint.endpoint, endpoint.chainType), timeoutCheck(1500)]) as { status: number }
+      const isValid = await Promise.race([isValidRpcEndpoint(endpoint.endpoint, endpoint.chainType), timeoutCheck(1500)]) as { status: number };
       if (isValid) {
-        rpc = endpoint.endpoint
-        break
+        rpc = endpoint.endpoint;
+        break;
       }
     } catch (error) {
       // console.error(error)
     }
   }
-  return rpc
-}
+  return rpc;
+};

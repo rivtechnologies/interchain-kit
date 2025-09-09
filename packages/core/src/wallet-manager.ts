@@ -1,4 +1,5 @@
 import { AssetList, Chain } from '@chain-registry/types';
+import { getWalletByType } from '@interchain-kit/core';
 import { AminoSigner, CosmosSignerConfig, createCosmosQueryClient, DirectSigner, OfflineSigner } from '@interchainjs/cosmos';
 import { ISigningClient } from '@interchainjs/cosmos/types/signing-client';
 import { HttpEndpoint } from '@interchainjs/types';
@@ -8,10 +9,9 @@ import { getSigner } from 'interchainjs';
 import { ChainName, DeviceType, DownloadInfo, EndpointOptions, Endpoints, OS, SignerOptions, SignType } from './types';
 import { CosmosSigningOptions } from './types/cosmos';
 import { ChainNameNotExist, ChainNotExist, getValidRpcEndpoint, isInstanceOf, NoValidRpcEndpointFound, WalletNotExist } from './utils';
+import { CosmosWallet } from './wallets';
 import { BaseWallet } from './wallets/base-wallet';
 import { WCWallet } from './wallets/wc-wallet';
-import { getWalletByType } from '@interchain-kit/core';
-import { CosmosWallet } from './wallets';
 
 export class WalletManager {
   chains: Chain[] = [];

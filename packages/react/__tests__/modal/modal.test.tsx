@@ -30,6 +30,7 @@ describe("WalletModal", () => {
     info: mockWallet.info,
     events: {} as any,
     chainMap: new Map(),
+    chainNameMap: new Map(),
     assetLists: [],
     client: null,
     walletState: "Disconnected" as any,
@@ -46,6 +47,7 @@ describe("WalletModal", () => {
     setAssetLists: jest.fn(),
     addAssetList: jest.fn(),
     getChainById: jest.fn(),
+    getChainByName: jest.fn(),
     getAssetListByChainId: jest.fn(),
     getWalletOfType: jest.fn(),
   } as jest.Mocked<WalletStore>;

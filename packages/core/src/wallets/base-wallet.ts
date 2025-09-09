@@ -11,6 +11,7 @@ export abstract class BaseWallet implements IBaseWallet {
 
   events: EventEmitter<WalletEvents> = new EventEmitter();
   chainMap: Map<Chain['chainId'], Chain> = new Map();
+  chainNameMap: Map<Chain['chainName'], Chain> = new Map();
   assetLists: AssetList[] = [];
   client: any;
   constructor(info: Wallet) {
@@ -18,6 +19,7 @@ export abstract class BaseWallet implements IBaseWallet {
   }
   setChainMap(chains: Chain[]) {
     this.chainMap = new Map(chains.map(chain => [chain.chainId, chain]));
+    this.chainNameMap = new Map(chains.map(chain => [chain.chainName, chain]));
   }
   addChain(chain: Chain) {
     this.chainMap.set(chain.chainId, chain);
@@ -32,6 +34,13 @@ export abstract class BaseWallet implements IBaseWallet {
     const chain = this.chainMap.get(chainId);
     if (!chain) {
       throw new Error(`Chain Registry with id ${chainId} not found!`);
+    }
+    return chain;
+  }
+  getChainByName(chainName: Chain['chainName']): Chain {
+    const chain = this.chainNameMap.get(chainName);
+    if (!chain) {
+      throw new Error(`Chain Registry with name ${chainName} not found!`);
     }
     return chain;
   }

@@ -1,10 +1,11 @@
-import { isInstanceOf } from '@interchain-kit/core';
+import { isInstanceOf, SolanaWallet } from '@interchain-kit/core';
 import { CosmosWallet, EthereumWallet, MultiChainWallet } from '@interchain-kit/core';
 
 import { InterchainStore } from '../store';
 import { createCosmosWallet } from './cosmos-wallet';
 import { createEthereumWallet } from './ethereum-wallet';
 import { createMultiChainWallet } from './multi-chain-wallet';
+import { createSolanaWallet } from './solana-wallet';
 // import { createWCWallet } from './wc-wallet';
 
 export const createProxiedWallet = <T>(wallet: T, store: InterchainStore): T => {
@@ -16,6 +17,9 @@ export const createProxiedWallet = <T>(wallet: T, store: InterchainStore): T => 
   if (isInstanceOf(wallet, EthereumWallet)) {
     return createEthereumWallet(wallet, store) as T;
   }
+  if (isInstanceOf(wallet, SolanaWallet)) {
+    return createSolanaWallet(wallet, store) as T;
+  }
   if (isInstanceOf(wallet, MultiChainWallet)) {
     Array.from(wallet.networkWalletMap.keys()).forEach(chainType => {
       const chainWallet = wallet.networkWalletMap.get(chainType);
@@ -24,6 +28,9 @@ export const createProxiedWallet = <T>(wallet: T, store: InterchainStore): T => 
       }
       if (isInstanceOf(chainWallet, EthereumWallet)) {
         wallet.setNetworkWallet(chainType, createEthereumWallet(chainWallet, store));
+      }
+      if (isInstanceOf(chainWallet, SolanaWallet)) {
+        wallet.setNetworkWallet(chainType, createSolanaWallet(chainWallet, store));
       }
     });
 

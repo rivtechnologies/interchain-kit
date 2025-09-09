@@ -59,9 +59,8 @@ export class WalletManagerStore implements WalletManager {
         });
       });
 
-      await Promise.all(this.wallets.map(wallet => {
-        return wallet.init();
-      }));
+      await Promise.all(this.wallets.map(wallet => wallet.init()));
+
       this.store.setState({ isReady: true });
     } catch (error) {
       console.log(error);
@@ -72,12 +71,7 @@ export class WalletManagerStore implements WalletManager {
   restore() {
     const oldState = this.localStorage.load();
 
-    // 直接设置state，避免触发emit
-    this.store.setState({
-      chainWalletStates: oldState.chainWalletStates || [],
-      currentWalletName: oldState.currentWalletName || '',
-      currentChainName: oldState.currentChainName || '',
-    });
+
 
     // 重建索引映射
     this.store.buildIndexMap();
@@ -113,7 +107,29 @@ export class WalletManagerStore implements WalletManager {
 
     this.store.setState({ chainWalletStates: finalChainWalletStates });
 
+    let isOldWalletNameExisted = false;
+    let isOldChainNameExisted = false;
+    for (const cws of finalChainWalletStates) {
+      if (cws.walletName === oldState.currentWalletName) {
+        isOldWalletNameExisted = true;
+      }
+      if (cws.chainName === oldState.currentChainName) {
+        isOldChainNameExisted = true;
+      }
+    }
+
+    // 直接设置state，避免触发emit
+    this.store.setState({
+      chainWalletStates: oldState.chainWalletStates || [],
+      currentWalletName: isOldWalletNameExisted ? oldState.currentWalletName : '',
+      currentChainName: isOldChainNameExisted ? oldState.currentChainName : '',
+    });
+
+
     this.store.buildIndexMap();
+
+
+
   }
 
 

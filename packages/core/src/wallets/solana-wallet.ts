@@ -1,12 +1,11 @@
 import { Chain } from '@chain-registry/types';
+import { Transaction, TransactionSignature, VersionedTransaction } from '@solana/web3.js';
 
 import { ISolanaWallet, SignType, Wallet, WalletAccount } from '../types';
+import { OfflineAminoSigner, OfflineDirectSigner } from '../types/cosmos';
+import { SolanaSignInData } from '../types/solana';
 import { getClientFromExtension } from '../utils';
 import { BaseWallet } from './base-wallet';
-
-import { OfflineAminoSigner, OfflineDirectSigner } from '../types/cosmos';
-import { Transaction, TransactionSignature, VersionedTransaction } from '@solana/web3.js';
-import { SolanaSignInData } from '../types/solana';
 
 function publicKeyToUint8Array(publicKey: any): Uint8Array {
   if (publicKey?.toBytes) return publicKey.toBytes();
@@ -26,13 +25,14 @@ export class SolanaWallet extends BaseWallet implements ISolanaWallet {
     super(info);
   }
   bindingEvent() {
-    window.addEventListener(this.info.keystoreChange, () => {
+    this.solana.on(this.info.keystoreChange, () => {
       this.events.emit('accountChanged', () => { });
     });
   }
   async init(): Promise<void> {
-    this.bindingEvent();
+
     this.solana = await getClientFromExtension(this.info.solanaKey);
+    this.bindingEvent();
   }
 
 

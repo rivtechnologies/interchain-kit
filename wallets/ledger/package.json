@@ -34,9 +34,12 @@
   "dependencies": {
     "@chain-registry/types": "^2.0.1",
     "@interchain-kit/core": "0.3.48",
+    "@ledgerhq/hw-app-solana": "^7.5.2",
     "@ledgerhq/hw-transport": "^6.31.4",
     "@ledgerhq/hw-transport-webhid": "^6.29.4",
+    "@solana/web3.js": "^1.87.6",
     "@zondax/ledger-cosmos-js": "^4.0.0",
+    "bs58": "^6.0.0",
     "buffer": "^6.0.3",
     "chain-registry": "^2.0.1",
     "crypto": "npm:crypto-es",
