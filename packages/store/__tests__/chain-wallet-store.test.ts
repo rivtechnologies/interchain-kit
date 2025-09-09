@@ -197,7 +197,7 @@ describe('ChainWalletStore', () => {
       expect(mockInterchainStore.updateChainWalletState).toHaveBeenCalledWith(
         'keplr',
         'cosmoshub',
-        { walletState: WalletState.Connecting }
+        { walletState: WalletState.Connecting, errorMessage: '' }
       );
       expect(mockWallet.connect).toHaveBeenCalledWith('cosmoshub-4');
       expect(mockWallet.getAccount).toHaveBeenCalledWith('cosmoshub-4');
@@ -217,7 +217,7 @@ describe('ChainWalletStore', () => {
       expect(mockInterchainStore.updateChainWalletState).toHaveBeenCalledWith(
         'keplr',
         'cosmoshub',
-        { walletState: WalletState.Connecting }
+        { walletState: WalletState.Connecting, errorMessage: '' }
       );
       expect(mockInterchainStore.updateChainWalletState).toHaveBeenCalledWith(
         'keplr',

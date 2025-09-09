@@ -354,7 +354,7 @@ describe('WalletStore', () => {
 
       expect(mockInterchainStore.updateWalletState).toHaveBeenCalledWith(
         'keplr',
-        { walletState: WalletState.NotExist, errorMessage: '' }
+        { walletState: WalletState.NotExist, errorMessage: 'Init failed' }
       );
     });
   });

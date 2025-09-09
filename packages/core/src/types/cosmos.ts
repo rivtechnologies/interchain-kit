@@ -1,4 +1,4 @@
-import { AminoSignResponse, CosmosSignerConfig, DirectSignResponse } from '@interchainjs/cosmos';
+import { CosmosSignerConfig } from '@interchainjs/cosmos';
 
 import { DirectSignDoc, WalletAccount } from './wallet';
 

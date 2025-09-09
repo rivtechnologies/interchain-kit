@@ -15,7 +15,7 @@ module.exports = {
     ],
   },
   transformIgnorePatterns: [
-    "node_modules/(?!(uint8arrays|multiformats|@walletconnect|@interchain-kit|base64-js|@noble|@cosmjs)/)",
+    "node_modules/(?!(uint8arrays|multiformats|@walletconnect|@interchain-kit|base64-js|@noble|@cosmjs|uuid|@solana|jayson)/)",
   ],
   testRegex: "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
@@ -33,5 +33,6 @@ module.exports = {
     "^@walletconnect/core$": "<rootDir>/__mocks__/walletconnect.js",
     "^@walletconnect/utils$": "<rootDir>/__mocks__/walletconnect.js",
     "^base64-js$": "<rootDir>/__mocks__/base64-js.js",
+    "^uuid$": "<rootDir>/__mocks__/uuid.js",
   },
 };

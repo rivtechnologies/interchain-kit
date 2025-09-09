@@ -2,20 +2,20 @@
  * @jest-environment jsdom
  */
 
-import { act, renderHook, waitFor } from "@testing-library/react"
-import { useChainWallet } from "../../src/hooks/useChainWallet"
-import { useWalletManager } from "../../src/hooks/useWalletManager"
-import { MockWallet } from "../helpers/mock-wallet"
-import { BaseWallet, WalletState } from "@interchain-kit/core"
-import { SigningClient } from "../../src/types/sign-client"
-import { WalletManagerStore, ChainWalletStore, InterchainStore } from "@interchain-kit/store"
+import { WalletState } from '@interchain-kit/core';
+import { ChainWalletStore, InterchainStore, WalletManagerStore } from '@interchain-kit/store';
+import { renderHook, waitFor } from '@testing-library/react';
+
+import { useChainWallet } from '../../src/hooks/useChainWallet';
+import { useWalletManager } from '../../src/hooks/useWalletManager';
+import { MockWallet } from '../helpers/mock-wallet';
 
 // Mock the useWalletManager hook
-jest.mock("../../src/hooks/useWalletManager", () => ({
+jest.mock('../../src/hooks/useWalletManager', () => ({
   useWalletManager: jest.fn(),
-}))
+}));
 
-describe("useChainWallet", () => {
+describe('useChainWallet', () => {
 
   const mockWallet = new MockWallet({ name: 'test-wallet', mode: 'extension', prettyName: 'Test Wallet' });
 
@@ -28,6 +28,7 @@ describe("useChainWallet", () => {
     info: mockWallet.info,
     events: {} as any,
     chainMap: new Map(),
+    chainNameMap: new Map(),
     assetLists: [],
     client: null,
     walletState: 'Disconnected' as any,
@@ -43,6 +44,7 @@ describe("useChainWallet", () => {
     setAssetLists: jest.fn(),
     addAssetList: jest.fn(),
     getChainById: jest.fn(),
+    getChainByName: jest.fn(),
     getAssetListByChainId: jest.fn(),
     getOfflineSigner: jest.fn(),
     getWalletOfType: jest.fn(),
@@ -93,92 +95,92 @@ describe("useChainWallet", () => {
     getSigningClient: jest.fn(),
     getEnv: jest.fn(),
     getDownloadLink: jest.fn(),
-  } as jest.Mocked<WalletManagerStore>
+  } as jest.Mocked<WalletManagerStore>;
 
   beforeEach(() => {
     jest.clearAllMocks()
-      ; (useWalletManager as jest.Mock).mockReturnValue(mockWalletManager)
-  })
+      ; (useWalletManager as jest.Mock).mockReturnValue(mockWalletManager);
+  });
 
-  it("should return the correct chain and wallet data", async () => {
-    const chainName = "test-chain"
-    const walletName = "test-wallet"
+  it('should return the correct chain and wallet data', async () => {
+    const chainName = 'test-chain';
+    const walletName = 'test-wallet';
 
     const mockChain = { chainName: 'test-chain', chainType: 'cosmos' as const };
 
     const mockChainWalletState = {
       walletState: WalletState.Connected,
-      account: { username: "test-user", address: "test-address", algo: "secp256k1" as const, pubkey: new Uint8Array() },
+      account: { username: 'test-user', address: 'test-address', algo: 'secp256k1' as const, pubkey: new Uint8Array() },
       errorMessage: '',
-      rpcEndpoint: "http://localhost:26657",
-      chainName: "test-chain",
-      walletName: "test-wallet",
-    }
+      rpcEndpoint: 'http://localhost:26657',
+      chainName: 'test-chain',
+      walletName: 'test-wallet',
+    };
 
-    mockWalletManager.getChainByName.mockReturnValue(mockChain)
-    mockWalletManager.getChainWalletByName.mockReturnValue(mockChainWalletStore)
-    mockWalletManager.getChainWalletState.mockReturnValue(mockChainWalletState)
-    mockWalletManager.getChainLogoUrl.mockReturnValue("http://logo.url")
-    mockWalletManager.getAssetListByName.mockReturnValue({ chainName: 'test-chain', assets: [] })
+    mockWalletManager.getChainByName.mockReturnValue(mockChain);
+    mockWalletManager.getChainWalletByName.mockReturnValue(mockChainWalletStore);
+    mockWalletManager.getChainWalletState.mockReturnValue(mockChainWalletState);
+    mockWalletManager.getChainLogoUrl.mockReturnValue('http://logo.url');
+    mockWalletManager.getAssetListByName.mockReturnValue({ chainName: 'test-chain', assets: [] });
 
-    const { result } = renderHook(() => useChainWallet(chainName, walletName))
-
-    await waitFor(() => {
-      expect(result.current.chain).toEqual(mockChain)
-      expect(result.current.wallet).toBe(mockChainWalletStore)
-      expect(result.current.assetList).toEqual({ chainName: 'test-chain', assets: [] })
-      expect(result.current.status).toBe(WalletState.Connected)
-      expect(result.current.username).toBe("test-user")
-      expect(result.current.address).toBe("test-address")
-      expect(result.current.message).toBe("")
-      expect(result.current.rpcEndpoint).toBe("http://localhost:26657")
-      expect(result.current.logoUrl).toBe("http://logo.url")
-    })
-  })
-
-  it("should call disconnect when disconnect is invoked", async () => {
-    const chainName = "test-chain"
-    const walletName = "test-wallet"
-
-    const { result } = renderHook(() => useChainWallet(chainName, walletName))
-
-    result.current.disconnect()
+    const { result } = renderHook(() => useChainWallet(chainName, walletName));
 
     await waitFor(() => {
-      expect(mockWalletManager.disconnect).toHaveBeenCalledWith(walletName, chainName)
-    })
+      expect(result.current.chain).toEqual(mockChain);
+      expect(result.current.wallet).toBe(mockChainWalletStore);
+      expect(result.current.assetList).toEqual({ chainName: 'test-chain', assets: [] });
+      expect(result.current.status).toBe(WalletState.Connected);
+      expect(result.current.username).toBe('test-user');
+      expect(result.current.address).toBe('test-address');
+      expect(result.current.message).toBe('');
+      expect(result.current.rpcEndpoint).toBe('http://localhost:26657');
+      expect(result.current.logoUrl).toBe('http://logo.url');
+    });
+  });
 
+  it('should call disconnect when disconnect is invoked', async () => {
+    const chainName = 'test-chain';
+    const walletName = 'test-wallet';
 
-  })
+    const { result } = renderHook(() => useChainWallet(chainName, walletName));
 
-  it("should return the correct RPC endpoint", async () => {
-    const chainName = "test-chain"
-    const walletName = "test-wallet"
-
-    mockWalletManager.getRpcEndpoint.mockResolvedValue("http://localhost:26657")
-
-    const { result } = renderHook(() => useChainWallet(chainName, walletName))
-
-    const endpointResult = await result.current.getRpcEndpoint()
+    result.current.disconnect();
 
     await waitFor(() => {
-      expect(endpointResult).toBe("http://localhost:26657")
-    })
-  })
+      expect(mockWalletManager.disconnect).toHaveBeenCalledWith(walletName, chainName);
+    });
 
-  it("should return the signing client", async () => {
-    const chainName = "test-chain"
-    const walletName = "test-wallet"
+
+  });
+
+  it('should return the correct RPC endpoint', async () => {
+    const chainName = 'test-chain';
+    const walletName = 'test-wallet';
+
+    mockWalletManager.getRpcEndpoint.mockResolvedValue('http://localhost:26657');
+
+    const { result } = renderHook(() => useChainWallet(chainName, walletName));
+
+    const endpointResult = await result.current.getRpcEndpoint();
+
+    await waitFor(() => {
+      expect(endpointResult).toBe('http://localhost:26657');
+    });
+  });
+
+  it('should return the signing client', async () => {
+    const chainName = 'test-chain';
+    const walletName = 'test-wallet';
 
     const mockSigningClient: any = {
-    }
+    };
 
-    mockWalletManager.getSigningClient.mockReturnValue(mockSigningClient)
+    mockWalletManager.getSigningClient.mockReturnValue(mockSigningClient);
 
-    const { result } = renderHook(() => useChainWallet(chainName, walletName))
+    const { result } = renderHook(() => useChainWallet(chainName, walletName));
 
     await waitFor(() => {
-      expect(result.current.getSigningClient()).toBe(mockSigningClient)
-    })
-  })
-})
+      expect(result.current.getSigningClient()).toBe(mockSigningClient);
+    });
+  });
+});

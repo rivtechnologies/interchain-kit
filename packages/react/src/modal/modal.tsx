@@ -1,4 +1,6 @@
 import { DownloadInfo, WalletState } from "@interchain-kit/core";
+import { ChainWalletState } from "@interchain-kit/store/types";
+import { WalletStore } from "@interchain-kit/store/wallet-manager/wallet-store";
 import {
   ConnectModal,
   ThemeProvider,
@@ -25,8 +27,6 @@ import {
   WalletListContent,
   WalletListHeader,
 } from "./views";
-import { ChainWalletState } from "@interchain-kit/store/types";
-import { WalletStore } from "@interchain-kit/store/wallet-manager/wallet-store";
 
 export type WalletModalProps = {
   isOpen: boolean;

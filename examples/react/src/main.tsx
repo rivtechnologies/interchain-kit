@@ -49,6 +49,10 @@ import {
   createStarshipAssetList,
 } from "./utils/osmo-test-net.ts";
 import { create } from "domain";
+import {
+  createSolanaAssetList,
+  createSolanaChain,
+} from "./utils/solana-test-net.ts";
 
 const chainNames: string[] = [
   // "injectivetestnet",
@@ -61,7 +65,7 @@ const chainNames: string[] = [
   // "seitestnet2",
   // "ethereum",
   // "cosmoshubtestnet",
-  "solana",
+  // "solana",
 ];
 // const chainNames = ["osmosistestnet"];
 // const chainNames = ["cosmoshub"];
@@ -149,17 +153,10 @@ const _chains = [
   //   "http://localhost:26657",
   //   "http://localhost:1317"
   // ),
-].map((c) => {
-  if (c.chainName === "solana") {
-    c.chainId = "4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ";
-  }
-  /**
-   * 主网：solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ（或简化为 solana:mainnet）
-测试网：solana:8E9rvCKLFYuNbobMWfCabm7Kkm2PzQw6A6FMnH7nL5V（或 solana:devnet）
-开发网：solana:EtWTRABZaYq6iMfeAkw（或 solana:devnet）
-   */
-  return c;
-});
+  // createSolanaChain("devnet"),
+  // createSolanaChain("testnet"),
+  createSolanaChain("mainnet-beta"),
+];
 // const _chains = [starshipChain1]
 const _assetLists = [
   ...assetLists.filter((a) => chainNames.includes(a.chainName)),
@@ -168,6 +165,9 @@ const _assetLists = [
   // createAssetListFromEthereumChainInfo(sepoliaEthereumTestNet),
   // createAssetListFromEthereumChainInfo(HOLESKY_TESTNET),
   // createStarshipAssetList("osmosis"),
+  // createSolanaAssetList("devnet"),
+  // createSolanaAssetList("testnet"),
+  createSolanaAssetList("mainnet-beta"),
 ];
 
 // const mock1Wallet = new MockWallet(wallet1Mnemonic, _chains, {
@@ -186,7 +186,7 @@ if (isInstanceOf(keplrWallet, ExtensionWallet)) {
     preferNoSetFee: false,
   });
 }
-
+// console.log(_chains);
 const _wallets: BaseWallet[] = [
   // mock1Wallet,
   // mock2Wallet,
@@ -199,7 +199,7 @@ const _wallets: BaseWallet[] = [
   // ledgerWallet,
   // cosmosExtensionMetaMask,
   // walletConnect,
-  ledgerWallet,
+  // ledgerWallet,
   // leapCosmosExtensionMetaMask,
   // compassWallet,
   // trustWallet,
@@ -258,6 +258,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           // injectivetestnet: {
           //   rpc: ["https://testnet.explorer.injective.network/"],
           // },
+          solana: {
+            rpc: ["https://api.devnet.solana.com"],
+          },
         },
       }}
     >

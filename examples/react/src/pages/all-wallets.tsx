@@ -13,7 +13,7 @@ import {
   useWalletManager,
   useWalletModal,
 } from "@interchain-kit/react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { makeKeplrChainInfo } from "../utils";
 import { Chain, Asset, AssetList } from "@chain-registry/types";
 import { coins } from "@cosmjs/amino";
@@ -21,13 +21,11 @@ import { ChainInfo } from "@keplr-wallet/types";
 import { getBalance } from "interchainjs/cosmos/bank/v1beta1/query.rpc.func";
 import QRCode from "react-qr-code";
 import { send } from "interchainjs/cosmos/bank/v1beta1/tx.rpc.func";
-import { RpcClient } from "@interchainjs/cosmos/query/rpc";
 import { ethers } from "ethers";
 
 import {
   Connection,
   PublicKey,
-  clusterApiUrl,
   Transaction,
   SystemProgram,
 } from "@solana/web3.js";
@@ -75,7 +73,7 @@ const BalanceTd = ({ address, wallet, chain, assetList }: BalanceProps) => {
       balance = { balance: { amount: result.toString() } };
     }
     if (chain.chainType === "solana") {
-      const connection = new Connection(clusterApiUrl("testnet"), "confirmed");
+      const connection = new Connection(rpcEndpoint as string, "confirmed");
       const result = await connection.getBalance(new PublicKey(address));
       balance = { balance: { amount: result.toString() } };
     }
@@ -194,7 +192,7 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
     }
 
     if (chain.chainType === "solana") {
-      const connection = new Connection(clusterApiUrl("testnet"), "confirmed");
+      const connection = new Connection(rpcEndpoint as string, "confirmed");
 
       // 1. 构建转账指令
       const transaction = new Transaction().add(
@@ -215,8 +213,8 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
       // console.log(signed);
 
       const solanaWallet = wallet.getWalletOfType(SolanaWallet);
+
       const signed = await solanaWallet.signTransaction(transaction);
-      console.log(signed);
 
       // 4. 发送交易
       const signature = await connection.sendRawTransaction(signed.serialize());

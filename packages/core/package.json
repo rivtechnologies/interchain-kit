@@ -48,6 +48,7 @@
     "base64-js": "^1.5.1",
     "bowser": "^2.11.0",
     "buffer": "^6.0.3",
+    "bs58": "^6.0.0",
     "chain-registry": "^2.0.1",
     "interchainjs": "1.17.3",
     "long": "^5.2.3",

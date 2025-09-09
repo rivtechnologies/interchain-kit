@@ -102,8 +102,8 @@ export class WCWallet extends MultiChainWallet {
 
     // const chainIdsWithNS = Array.isArray(chainIds) ? chainIds.map((chainId) => `cosmos:${chainId}`) : [`cosmos:${chainIds}`]
 
-    if (this.session) {
-      return;
+    if (this.provider.session) {
+      return Promise.resolve();
     }
 
     const _chainIds = Array.from(this.chainMap).map(([chainId, chain]) => chainId);
@@ -156,13 +156,14 @@ export class WCWallet extends MultiChainWallet {
     }
 
     if (solanaChainNS.length) {
+
       connectParam.namespaces.solana = {
         methods: [
           'solana_signTransaction',
           'solana_signMessage',
         ],
         chains: solanaChainNS,
-        events: []
+        events: [],
       };
     }
 
@@ -186,7 +187,7 @@ export class WCWallet extends MultiChainWallet {
     // await this.provider.client.session.delete(this.provider?.session?.topic, { code: 6000, message: 'user disconnect!!' })
 
     this.session = null;
-    if (this.provider.session) {
+    if (this.provider?.session) {
       await this.provider.disconnect();
       localStorage.removeItem('wc-session');
     }
