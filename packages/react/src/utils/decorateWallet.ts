@@ -1,11 +1,11 @@
-import { BaseWallet } from "@interchain-kit/core";
+import { BaseWallet } from '@interchain-kit/core';
 
 export const decorateWallet = <T extends BaseWallet>(wallet: T, decorateMethods: Partial<T>): T => {
   return new Proxy(wallet, {
     get(target, prop, receiver) {
       if (prop in decorateMethods) {
         const value = decorateMethods[prop as keyof T];
-        if (typeof value === "function") {
+        if (typeof value === 'function') {
           return value.bind(target);
         }
         return value;
@@ -20,4 +20,4 @@ export const decorateWallet = <T extends BaseWallet>(wallet: T, decorateMethods:
       return Reflect.set(target, prop, value, receiver);
     },
   });
-}
+};

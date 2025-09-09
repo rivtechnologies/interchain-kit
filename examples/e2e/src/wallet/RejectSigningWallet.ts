@@ -1,20 +1,21 @@
-import { Wallet } from "@interchain-kit/core";
-import { MockCosmosWallet, MockMultiChainWallet } from "./mock-cosmos-wallet";
+import { Wallet } from '@interchain-kit/core';
+
+import { MockCosmosWallet, MockMultiChainWallet } from './mock-cosmos-wallet';
 
 class RejectSigningWallet extends MockCosmosWallet {
   signDirect(chainId: string, signer: string, signDoc: any, signOptions?: any): Promise<any> {
-    throw new Error('reject')
+    throw new Error('reject');
   }
 
 }
 
 const rejectSigningWalletInfo: Wallet = {
-  windowKey: "signingMock",
-  cosmosKey: "signingMockCosmos",
-  name: "signingMockWallet",
-  prettyName: "Signing Mock Wallet",
-  mode: "extension",
-}
+  windowKey: 'signingMock',
+  cosmosKey: 'signingMockCosmos',
+  name: 'signingMockWallet',
+  prettyName: 'Signing Mock Wallet',
+  mode: 'extension',
+};
 
 
 const rejectSigningCosmosWallet = new RejectSigningWallet(
@@ -25,6 +26,6 @@ const rejectSigningCosmosWallet = new RejectSigningWallet(
 
 
 
-export const rejectSigningWallet = new MockMultiChainWallet(rejectSigningWalletInfo)
-rejectSigningWallet.setNetworkWallet('cosmos', rejectSigningCosmosWallet)
+export const rejectSigningWallet = new MockMultiChainWallet(rejectSigningWalletInfo);
+rejectSigningWallet.setNetworkWallet('cosmos', rejectSigningCosmosWallet);
 

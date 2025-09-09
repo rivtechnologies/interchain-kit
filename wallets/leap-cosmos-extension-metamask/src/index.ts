@@ -1,10 +1,10 @@
-import { LeapCosmosExtensionMetaMask } from "./extension";
-import { metamaskLeapCosmosSnapInfo } from "./registry";
+import { LeapCosmosExtensionMetaMask } from './extension';
+import { metamaskLeapCosmosSnapInfo } from './registry';
 
-export * from './constant'
-export * from './extension'
-export * from './registry'
+export * from './constant';
+export * from './extension';
+export * from './registry';
 
-const leapCosmosExtensionMetaMask = new LeapCosmosExtensionMetaMask(metamaskLeapCosmosSnapInfo)
+const leapCosmosExtensionMetaMask = new LeapCosmosExtensionMetaMask(metamaskLeapCosmosSnapInfo);
 
-export { leapCosmosExtensionMetaMask }
+export { leapCosmosExtensionMetaMask };

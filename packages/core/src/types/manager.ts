@@ -1,7 +1,8 @@
+import { Chain } from '@chain-registry/types';
 import { HttpEndpoint } from '@interchainjs/types';
-import { Chain } from "@chain-registry/types";
-import { ChainName } from './chain'
-import { SignType } from "./common";
+
+import { ChainName } from './chain';
+import { SignType } from './common';
 
 export interface SignerOptions {
   signing?: (chain: Chain | ChainName) => any | undefined;

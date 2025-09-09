@@ -1,5 +1,5 @@
-import { MultiChainWallet, Wallet } from "@interchain-kit/core";
-import { MockSolanaWallet } from "@interchain-kit/mock-wallet";
+import { MultiChainWallet, Wallet } from '@interchain-kit/core';
+import { MockSolanaWallet } from '@interchain-kit/mock-wallet';
 
 
 const senderWalletInfo: Wallet = {
@@ -9,13 +9,13 @@ const senderWalletInfo: Wallet = {
   keystoreChange: 'sender_accountChanged',
   solanaKey: 'mockSolana',
   windowKey: 'mockSolana',
-}
+};
 
 const mockSolanaWalletSender = new MultiChainWallet(senderWalletInfo);
 
 const senderMnemonic = 'faint angry hamster average borrow urge quality execute farm split brand canoe';
 
-mockSolanaWalletSender.setNetworkWallet('solana', new MockSolanaWallet('devnet', senderWalletInfo, senderMnemonic))
+mockSolanaWalletSender.setNetworkWallet('solana', new MockSolanaWallet('devnet', senderWalletInfo, senderMnemonic));
 
 const receiveWalletInfo: Wallet = {
   name: 'Mock Solana Wallet Receiver',
@@ -24,16 +24,15 @@ const receiveWalletInfo: Wallet = {
   keystoreChange: 'receiver_accountChanged',
   solanaKey: 'mockSolana',
   windowKey: 'mockSolana'
-}
+};
 
 const mockSolanaWalletReceiver = new MultiChainWallet(receiveWalletInfo);
 
 const receiverMnemonic = 'steak trade rack impact wall chaos cheese plate combine rich aerobic stuff';
 
-mockSolanaWalletReceiver.setNetworkWallet('solana', new MockSolanaWallet('devnet', receiveWalletInfo, receiverMnemonic))
+mockSolanaWalletReceiver.setNetworkWallet('solana', new MockSolanaWallet('devnet', receiveWalletInfo, receiverMnemonic));
 
 
 export {
-  mockSolanaWalletSender,
-  mockSolanaWalletReceiver
-}
+  mockSolanaWalletReceiver,
+  mockSolanaWalletSender};

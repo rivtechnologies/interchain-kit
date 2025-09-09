@@ -21,12 +21,13 @@
     "indent": ["error", 2],
     "quotes": [
       "error",
-      "double",
+      "single",
       {
         "avoidEscape": true,
         "allowTemplateLiterals": true
       }
     ],
+    "jsx-quotes": ["error", "prefer-double"],
     "quote-props": ["error", "as-needed"],
     "semi": ["error", "always"],
     "simple-import-sort/imports": 1,

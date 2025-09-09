@@ -1,13 +1,13 @@
-import { WalletManager } from '../src/wallet-manager';
-import { Chain, AssetList } from '@chain-registry/types';
-import { BaseWallet } from '../src/wallets/base-wallet';
-import { SignerOptions, EndpointOptions, SignType } from '../src/types';
-import { WalletNotExist, ChainNameNotExist, NoValidRpcEndpointFound, getValidRpcEndpoint } from '../src/utils';
+import { AssetList,Chain } from '@chain-registry/types';
 
+import { EndpointOptions, SignerOptions, SignType } from '../src/types';
+import { ChainNameNotExist, getValidRpcEndpoint,NoValidRpcEndpointFound, WalletNotExist } from '../src/utils';
+import { WalletManager } from '../src/wallet-manager';
+import { BaseWallet } from '../src/wallets/base-wallet';
 import { createMockAssetList } from './helpers/mock-asset-list-factory';
 import { createMockChain } from './helpers/mock-chain-factory';
-import { createMockAccount, createMockWallet } from './helpers/mock-wallet-factory';
 import { createSignerOption } from './helpers/mock-setting-factory';
+import { createMockAccount, createMockWallet } from './helpers/mock-wallet-factory';
 
 jest.mock('../src/utils/endpoint.ts', () => {
   return {
@@ -31,16 +31,16 @@ describe('WalletManager', () => {
   let chains: Chain[];
   let assetLists: AssetList[];
   let wallets: BaseWallet[];
-  let signerOptions: SignerOptions
+  let signerOptions: SignerOptions;
   let endpointOptions: EndpointOptions;
   let walletManager: WalletManager;
 
   let wallet1: BaseWallet;
   let wallet2: BaseWallet;
-  let chain1: Chain
-  let chain2: Chain
-  let assetList1: AssetList
-  let assetList2: AssetList
+  let chain1: Chain;
+  let chain2: Chain;
+  let assetList1: AssetList;
+  let assetList2: AssetList;
 
 
 
@@ -93,22 +93,22 @@ describe('WalletManager', () => {
         const map = {
           [chain1.chainName]: 'amino' as SignType,
           [chain2.chainName]: 'direct' as SignType
-        }
+        };
         return map[chainName as string] || 'amino';
       },
-    }
+    };
     endpointOptions = { endpoints: { 'chain-1': { rpc: ['http://localhost:26657'] } } };
 
     walletManager = new WalletManager(chains, assetLists, wallets, signerOptions, endpointOptions);
 
 
-    (getValidRpcEndpoint as jest.Mock).mockClear()
+    (getValidRpcEndpoint as jest.Mock).mockClear();
   });
 
   it('should set assetLists for wallets, after walletManager constructor', () => {
     expect(wallet1.assetLists).toStrictEqual([assetList1, assetList2]);
     expect(wallet2.assetLists).toStrictEqual([assetList1, assetList2]);
-  })
+  });
 
   it('should set chainMap for wallets, after walletManager constructor', () => {
     expect(wallet1.chainMap.get(chain1.chainId)).toEqual(chain1);
@@ -281,7 +281,7 @@ describe('WalletManager', () => {
     await walletManager.addChains([newChain], [newAssetList], signerOptions, endpointOptions);
     expect(wallet1.chainMap.get(newChain.chainId)).toEqual(newChain);
     expect(wallet2.chainMap.get(newChain.chainId)).toEqual(newChain);
-  })
+  });
 
   it('addChains should update right signerOptions for new chains', async () => {
     const newChain = createMockChain({ chainName: 'chainToAdd', chainId: '3', rpcEndpoint: [{ address: 'http://localhost:26659' }], chainType: 'cosmos' });
@@ -289,21 +289,21 @@ describe('WalletManager', () => {
 
     const endpointOptions1 = {
       endpoints: {
-        'chainToAdd': {
+        chainToAdd: {
           rpc: ['http://localhost:26679']
         }
       }
-    } as EndpointOptions
+    } as EndpointOptions;
 
     const signerOptions1 = {
       signing: jest.fn().mockImplementation((chainName: string) => {
         return {
-          'chainToAdd': {
+          chainToAdd: {
             gasPrice: '1000uatom',
           }
-        }[chainName]
+        }[chainName];
       })
-    } as SignerOptions
+    } as SignerOptions;
 
 
     await walletManager.addChains([newChain], [newAssetList], signerOptions1, endpointOptions1);
@@ -314,27 +314,27 @@ describe('WalletManager', () => {
 
     const endpointOptions2 = {
       endpoints: {
-        'chainToAdd': {
+        chainToAdd: {
           rpc: ['http://localhost:26659']
         }
       }
-    } as EndpointOptions
+    } as EndpointOptions;
 
     const signerOptions2 = {
       signing: jest.fn().mockImplementation((chainName: string) => {
         return {
-          'chainToAdd': {
+          chainToAdd: {
             gasPrice: '2000uatom',
           }
-        }[chainName]
+        }[chainName];
       })
-    } as SignerOptions
+    } as SignerOptions;
 
 
     await walletManager.addChains([newChain], [newAssetList], signerOptions2, endpointOptions2);
     expect(walletManager.signerOptionMap[newChain.chainName]).toEqual({ gasPrice: '2000uatom' });
     expect(walletManager.endpointOptionsMap[newChain.chainName]).toEqual({ rpc: ['http://localhost:26659'] });
-  })
+  });
 
   it('addChains should update endpoint from chain rpc list', async () => {
     (getValidRpcEndpoint as jest.Mock).mockReturnValue('https://rpc.example.com');
@@ -347,7 +347,7 @@ describe('WalletManager', () => {
     expect(walletManager.assetLists).toContain(newAssetList);
     expect(walletManager.endpointOptionsMap[newChain.chainName]).toEqual({ rpc: ['https://rpc.example.com'] });
 
-  })
+  });
 
 });
 

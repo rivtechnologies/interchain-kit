@@ -2,7 +2,6 @@ import { SolanaWallet, Wallet, WalletAccount } from '@interchain-kit/core';
 import { SolanaSignInData } from '@interchain-kit/core/types/solana';
 import { Connection, Keypair, LAMPORTS_PER_SOL, Transaction } from '@solana/web3.js';
 import * as bip39 from 'bip39';
-import bs58 from 'bs58';
 import { derivePath } from 'ed25519-hd-key';
 import * as nacl from 'tweetnacl';
 
@@ -48,9 +47,9 @@ export class MockSolanaWallet extends SolanaWallet {
 
   async init(): Promise<void> {
     //@ts-ignore
-    window[this.info.windowKey] = {}
+    window[this.info.windowKey] = {};
     //@ts-ignore
-    window[this.info.solanaKey] = {}
+    window[this.info.solanaKey] = {};
 
     await super.init();
   }
@@ -73,7 +72,7 @@ export class MockSolanaWallet extends SolanaWallet {
     this.currentKeypairIndex = this.currentKeypairIndex === '1' ? '2' : '1';
     //@ts-ignore
     window.dispatchEvent(new CustomEvent(this.info.keystoreChange));
-    console.log('trigger in mock solana wallet')
+    console.log('trigger in mock solana wallet');
   }
 
 
@@ -240,45 +239,45 @@ Expiration Time: ${expirationTime}`;
   async request(method: string, params: any): Promise<any> {
     const keypair = this.getCurrentKeypair();
     switch (method) {
-      case 'connect':
-        this.isConnected = true;
-        return { publicKey: keypair.publicKey };
-      case 'disconnect':
-        this.isConnected = false;
-        return {};
-      case 'getAccountInfo':
+    case 'connect':
+      this.isConnected = true;
+      return { publicKey: keypair.publicKey };
+    case 'disconnect':
+      this.isConnected = false;
+      return {};
+    case 'getAccountInfo':
+      return {
+        address: keypair.publicKey.toBase58(),
+        publicKey: keypair.publicKey
+      };
+    case 'signMessage':
+      if (params?.message) {
+        const messageBytes = typeof params.message === 'string' ? new TextEncoder().encode(params.message) : params.message;
+        const signature = nacl.sign.detached(messageBytes, keypair.secretKey);
         return {
-          address: keypair.publicKey.toBase58(),
+          signature: signature,
           publicKey: keypair.publicKey
         };
-      case 'signMessage':
-        if (params?.message) {
-          const messageBytes = typeof params.message === 'string' ? new TextEncoder().encode(params.message) : params.message;
-          const signature = nacl.sign.detached(messageBytes, keypair.secretKey);
-          return {
-            signature: signature,
-            publicKey: keypair.publicKey
-          };
-        }
-        throw new Error('Message parameter required');
-      case 'signTransaction':
-        if (params?.transaction) {
-          const tx = params.transaction as Transaction;
-          tx.partialSign(keypair);
-          return tx;
-        }
-        throw new Error('Transaction parameter required');
-      case 'signAndSendTransaction':
-        if (params?.transaction) {
-          const tx = params.transaction as Transaction;
-          tx.partialSign(keypair);
-          const signature = await this.connection.sendTransaction(tx, [keypair]);
-          await this.connection.confirmTransaction(signature);
-          return { signature };
-        }
-        throw new Error('Transaction parameter required');
-      default:
-        return Promise.resolve({ method, params });
+      }
+      throw new Error('Message parameter required');
+    case 'signTransaction':
+      if (params?.transaction) {
+        const tx = params.transaction as Transaction;
+        tx.partialSign(keypair);
+        return tx;
+      }
+      throw new Error('Transaction parameter required');
+    case 'signAndSendTransaction':
+      if (params?.transaction) {
+        const tx = params.transaction as Transaction;
+        tx.partialSign(keypair);
+        const signature = await this.connection.sendTransaction(tx, [keypair]);
+        await this.connection.confirmTransaction(signature);
+        return { signature };
+      }
+      throw new Error('Transaction parameter required');
+    default:
+      return Promise.resolve({ method, params });
     }
   }
 }

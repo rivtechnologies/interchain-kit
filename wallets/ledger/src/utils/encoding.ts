@@ -6,7 +6,7 @@
  */
 export const convertDerToFixed64 = (derSignature: Uint8Array): Uint8Array => {
   if (derSignature[0] !== 0x30) {
-    throw new Error("Invalid DER signature format.");
+    throw new Error('Invalid DER signature format.');
   }
 
   // Read the total length of the sequence (second byte)
@@ -15,7 +15,7 @@ export const convertDerToFixed64 = (derSignature: Uint8Array): Uint8Array => {
 
   // Parse the `r` component
   if (derSignature[offset] !== 0x02) {
-    throw new Error("Invalid DER signature format for r component.");
+    throw new Error('Invalid DER signature format for r component.');
   }
   const rLength = derSignature[offset + 1];
   let r = derSignature.slice(offset + 2, offset + 2 + (rLength & 0xff));
@@ -23,7 +23,7 @@ export const convertDerToFixed64 = (derSignature: Uint8Array): Uint8Array => {
 
   // Parse the `s` component
   if (derSignature[offset] !== 0x02) {
-    throw new Error("Invalid DER signature format for s component.");
+    throw new Error('Invalid DER signature format for s component.');
   }
   const sLength = derSignature[offset + 1];
   let s = derSignature.slice(offset + 2, offset + 2 + (sLength & 0xff));
@@ -38,11 +38,11 @@ export const convertDerToFixed64 = (derSignature: Uint8Array): Uint8Array => {
 
   // Pad r and s to 32 bytes if they are less than 32 bytes long
   if (r.length > 32) {
-    throw new Error("Invalid length for r component.");
+    throw new Error('Invalid length for r component.');
   }
 
   if (s.length > 32) {
-    throw new Error("Invalid length for s component.");
+    throw new Error('Invalid length for s component.');
   }
 
   const rPadded = new Uint8Array(32);
@@ -56,5 +56,5 @@ export const convertDerToFixed64 = (derSignature: Uint8Array): Uint8Array => {
   fixed64Signature.set(sPadded, 32);
 
   return fixed64Signature;
-}
+};
 

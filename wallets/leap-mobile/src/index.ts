@@ -1,5 +1,6 @@
-import { WCWallet } from "@interchain-kit/core";
-import { LeapMobileInfo } from "./registry";
+import { WCWallet } from '@interchain-kit/core';
+
+import { LeapMobileInfo } from './registry';
 
 export class LeapMobile extends WCWallet { }
 

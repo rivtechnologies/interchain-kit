@@ -1,4 +1,4 @@
-import { expect } from "@playwright/test";
+import { expect } from '@playwright/test';
 
 
 export class WalletModalModel {
@@ -14,7 +14,7 @@ export class WalletModalModel {
   }
 
   async isSelectWalletVisible() {
-    await this.isOpen()
+    await this.isOpen();
     await expect(this.page.locator('text=select your wallet')).toBeVisible();
   }
 

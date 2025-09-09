@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { expect,Page } from '@playwright/test';
 
 export class EthereumTransactionPage {
   readonly page: Page;

@@ -3,7 +3,7 @@ import { ExtensionWallet, WalletAccount } from '@interchain-kit/core';
 export class GalaxyStationExtension extends ExtensionWallet {
   async connect(chainId: string | string[]): Promise<void> {
     try {
-      this.client.connect(chainId)
+      this.client.connect(chainId);
     } catch (e) {
       console.error('GalaxyStationExtension connect error.', e);
     }

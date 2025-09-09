@@ -1,16 +1,16 @@
-import { DownloadInfo, WalletState } from "@interchain-kit/core";
-import { ChainWalletState } from "@interchain-kit/store/types";
-import { WalletStore } from "@interchain-kit/store/wallet-manager/wallet-store";
+import { DownloadInfo, WalletState } from '@interchain-kit/core';
+import { ChainWalletState } from '@interchain-kit/store/types';
+import { WalletStore } from '@interchain-kit/store/wallet-manager/wallet-store';
 import {
   ConnectModal,
   ThemeProvider,
   ThemeProviderProps,
   Wallet as InterchainUIWalletType,
-} from "@interchain-ui/react";
-import { ReactElement, useMemo, useState } from "react";
+} from '@interchain-ui/react';
+import { ReactElement, useMemo, useState } from 'react';
 
-import { useWalletManager } from "../hooks";
-import { transferToWalletUISchema } from "../utils";
+import { useWalletManager } from '../hooks';
+import { transferToWalletUISchema } from '../utils';
 import {
   ConnectedContent,
   ConnectedHeader,
@@ -26,7 +26,7 @@ import {
   RejectHeader,
   WalletListContent,
   WalletListHeader,
-} from "./views";
+} from './views';
 
 export type WalletModalProps = {
   isOpen: boolean;
@@ -209,7 +209,7 @@ export const WalletModalElement = ({
   const { header, content } = useMemo(() => {
     if (
       shouldShowList ||
-      (isDisconnected && currentWallet.errorMessage === "")
+      (isDisconnected && currentWallet.errorMessage === '')
     ) {
       return {
         header: <WalletListHeader close={close} />,
@@ -224,7 +224,7 @@ export const WalletModalElement = ({
     if (
       currentWallet &&
       walletConnectQRCodeUri &&
-      currentWallet.info.name === "WalletConnect"
+      currentWallet.info.name === 'WalletConnect'
     ) {
       return {
         header: (

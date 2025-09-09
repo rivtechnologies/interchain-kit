@@ -2,8 +2,8 @@
  * @jest-environment jsdom
  */
 
-import { travelObject, getClientFromExtension } from '../../src/utils/extension';
 import { clientNotExistError } from '../../src/utils/errors';
+import { getClientFromExtension,travelObject } from '../../src/utils/extension';
 
 describe('travelObject', () => {
   it('should return the correct nested object', () => {
@@ -42,14 +42,14 @@ describe('getClientFromExtension', () => {
     Object.defineProperty(global, 'window', {
       value: undefined,
       writable: true,
-    })
+    });
 
     expect(await getClientFromExtension('myWallet')).toBeUndefined();
 
     Object.defineProperty(global, 'window', {
       value: windoww,
       writable: true,
-    })
+    });
 
   });
 

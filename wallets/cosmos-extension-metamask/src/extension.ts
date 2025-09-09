@@ -6,12 +6,13 @@ declare global {
   }
 }
 
-import { AminoSignResponse, StdSignature, DirectSignResponse } from '@interchainjs/cosmos/types/wallet';
+import { AminoSignResponse, DirectSignResponse,StdSignature } from '@interchainjs/cosmos/types/wallet';
 import { StdSignDoc } from '@interchainjs/types';
-import { getMetaMaskCosmosChainInfo } from './utils';
-import { Chain as MetaMaskCosmosChainInfo } from './types'
 
-export const DEFAULT_SNAP_ID = "npm:@cosmsnap/snap";
+import { Chain as MetaMaskCosmosChainInfo } from './types';
+import { getMetaMaskCosmosChainInfo } from './utils';
+
+export const DEFAULT_SNAP_ID = 'npm:@cosmsnap/snap';
 
 export const isSnapInstalled = async (snapId = DEFAULT_SNAP_ID) => {
 
@@ -19,10 +20,10 @@ export const isSnapInstalled = async (snapId = DEFAULT_SNAP_ID) => {
 
   const installed = Object.keys(result).includes(snapId);
 
-  console.log('isSnapInstalled', installed)
+  console.log('isSnapInstalled', installed);
 
-  return installed
-}
+  return installed;
+};
 
 export const isSnapInitialized = async (snapId = DEFAULT_SNAP_ID): Promise<boolean> => {
   const initialized = await window.ethereum.request({
@@ -42,10 +43,10 @@ export const isSnapInitialized = async (snapId = DEFAULT_SNAP_ID): Promise<boole
 
   // }
 
-  console.log('isInitialize', initialized)
+  console.log('isInitialize', initialized);
 
-  return initialized.data.initialized
-}
+  return initialized.data.initialized;
+};
 
 export const installSnap = async (snapId = DEFAULT_SNAP_ID) => {
   let installed = await isSnapInstalled();
@@ -71,12 +72,12 @@ export const installSnap = async (snapId = DEFAULT_SNAP_ID) => {
       },
     });
   };
-}
+};
 
 
 export class CosmosExtensionMetaMask extends CosmosWallet {
 
-  chains: MetaMaskCosmosChainInfo[] = []
+  chains: MetaMaskCosmosChainInfo[] = [];
 
   async getChains(): Promise<MetaMaskCosmosChainInfo[]> {
     const result = await window.ethereum.request({
@@ -88,7 +89,7 @@ export class CosmosExtensionMetaMask extends CosmosWallet {
         },
       },
     });
-    return result.data.chains
+    return result.data.chains;
   }
 
   async init(meta?: unknown) {
@@ -97,7 +98,7 @@ export class CosmosExtensionMetaMask extends CosmosWallet {
         throw new Error('MetaMask is not installed');
       }
       await installSnap();
-      this.chains = await this.getChains()
+      this.chains = await this.getChains();
     } catch (error) {
       console.error('Error initializing MetaMask:', error);
       throw error;
@@ -111,7 +112,7 @@ export class CosmosExtensionMetaMask extends CosmosWallet {
         [DEFAULT_SNAP_ID]: {},
       },
     });
-    this.chains = await this.getChains()
+    this.chains = await this.getChains();
     const chain = this.chains.find(c => c.chain_id === chainId);
 
     if (!chain) {
@@ -153,7 +154,7 @@ export class CosmosExtensionMetaMask extends CosmosWallet {
       isNanoLedger: false,
       isSmartContract: false,
       username: 'cosmos in metamask',
-    }
+    };
   }
 
   async getOfflineSigner(chainId: string) {
@@ -178,7 +179,7 @@ export class CosmosExtensionMetaMask extends CosmosWallet {
       });
       return result.data;
     } catch (error) {
-      console.log(error)
+      console.log(error);
       throw new Error('Error signing transaction: ' + error);
     }
   }
@@ -207,9 +208,9 @@ export class CosmosExtensionMetaMask extends CosmosWallet {
           },
         },
       });
-      return result.data
+      return result.data;
     } catch (error) {
-      console.log(error)
+      console.log(error);
       throw new Error('Error signing transaction: ' + error);
     }
   }
@@ -235,7 +236,7 @@ export class CosmosExtensionMetaMask extends CosmosWallet {
       },
     });
 
-    this.chains = await this.getChains()
+    this.chains = await this.getChains();
   }
 
 }

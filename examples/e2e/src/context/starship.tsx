@@ -1,11 +1,12 @@
-import { ConfigContext } from "@/starship/config";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
+
+import { ConfigContext } from '@/starship/config';
 
 export const Starship = ({ children }: { children: React.ReactNode }) => {
   const [isStarshipReady, setStarshipReady] = useState(false);
 
   useEffect(() => {
-    ConfigContext.init("x").then(() => {
+    ConfigContext.init('x').then(() => {
       setStarshipReady(true);
     });
   }, []);

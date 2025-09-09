@@ -1,6 +1,7 @@
 
 
 import { Wallet } from '@interchain-kit/core';
+
 import { LEAP_LOGO, METAMASK_LOGO } from './constant';
 
 export const metamaskLeapCosmosSnapInfo: Wallet = {

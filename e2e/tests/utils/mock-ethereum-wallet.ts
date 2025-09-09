@@ -17,47 +17,47 @@ export async function mockEthereumWallet(page: Page) {
         console.log(`Ethereum request: ${method}`, params);
         
         switch (method) {
-          case 'eth_requestAccounts':
-            // Return mock Ethereum addresses
-            return [
-              '0x1234567890abcdef1234567890abcdef12345678', // Sender address
-              '0xabcdef1234567890abcdef1234567890abcdef12'  // Receiver address
-            ];
+        case 'eth_requestAccounts':
+          // Return mock Ethereum addresses
+          return [
+            '0x1234567890abcdef1234567890abcdef12345678', // Sender address
+            '0xabcdef1234567890abcdef1234567890abcdef12'  // Receiver address
+          ];
           
-          case 'eth_accounts':
-            // Return currently connected accounts
-            return [
-              '0x1234567890abcdef1234567890abcdef12345678',
-              '0xabcdef1234567890abcdef1234567890abcdef12'
-            ];
+        case 'eth_accounts':
+          // Return currently connected accounts
+          return [
+            '0x1234567890abcdef1234567890abcdef12345678',
+            '0xabcdef1234567890abcdef1234567890abcdef12'
+          ];
           
-          case 'eth_chainId':
-            // Return Sepolia testnet chain ID
-            return '0xaa36a7'; // 11155111 in hex (Sepolia)
+        case 'eth_chainId':
+          // Return Sepolia testnet chain ID
+          return '0xaa36a7'; // 11155111 in hex (Sepolia)
           
-          case 'eth_getBalance':
-            // Return mock balance
-            return '0x2386f26fc10000'; // 10 ETH in wei (hex)
+        case 'eth_getBalance':
+          // Return mock balance
+          return '0x2386f26fc10000'; // 10 ETH in wei (hex)
           
-          case 'personal_sign':
-            // Mock personal signature
-            return '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef';
+        case 'personal_sign':
+          // Mock personal signature
+          return '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef';
           
-          case 'eth_signTypedData_v4':
-            // Mock typed data signature
-            return '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef';
+        case 'eth_signTypedData_v4':
+          // Mock typed data signature
+          return '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef';
           
-          case 'wallet_switchEthereumChain':
-            // Mock chain switching
-            return null;
+        case 'wallet_switchEthereumChain':
+          // Mock chain switching
+          return null;
           
-          case 'wallet_addEthereumChain':
-            // Mock adding new chain
-            return null;
+        case 'wallet_addEthereumChain':
+          // Mock adding new chain
+          return null;
           
-          default:
-            console.warn(`Unhandled Ethereum method: ${method}`);
-            throw new Error(`Method ${method} not supported`);
+        default:
+          console.warn(`Unhandled Ethereum method: ${method}`);
+          throw new Error(`Method ${method} not supported`);
         }
       },
       

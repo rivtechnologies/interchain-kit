@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useChain } from "@interchain-kit/react";
+import { useChain } from '@interchain-kit/react';
 
 export default function ConnectWallet() {
-  const { connect, disconnect, status, address } = useChain("osmosis");
+  const { connect, disconnect, status, address } = useChain('osmosis');
 
   return (
     <div>

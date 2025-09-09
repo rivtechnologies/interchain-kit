@@ -2,6 +2,7 @@ import { AssetList, Chain } from '@chain-registry/types';
 import { BaseWallet, WalletState } from '@interchain-kit/core';
 import { HttpEndpoint } from '@interchainjs/types';
 import { ComputedRef, Ref } from 'vue';
+
 import { SigningClient } from './sign-client';
 
 export type CosmosKitUseChainReturnType = {

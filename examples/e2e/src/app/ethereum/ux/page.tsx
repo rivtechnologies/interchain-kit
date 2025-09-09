@@ -1,12 +1,13 @@
-"use client";
+'use client';
 
-import { mockEthereumWalletSender } from "@/wallet/ethereum/wallet";
-import { MockEthereumWallet } from "@interchain-kit/mock-wallet";
-import { useChainWallet } from "@interchain-kit/react";
+import { MockEthereumWallet } from '@interchain-kit/mock-wallet';
+import { useChainWallet } from '@interchain-kit/react';
+
+import { mockEthereumWalletSender } from '@/wallet/ethereum/wallet';
 
 export default function EthereumUx() {
   const { address, connect, wallet } = useChainWallet(
-    "Sepolia Testnet",
+    'Sepolia Testnet',
     mockEthereumWalletSender.info.name
   );
 

@@ -1,4 +1,4 @@
-import { clientNotExistError, ChainNotExist, ChainNameNotExist, WalletNotExist, NoWalletConnectedYet, NoGasPriceFound, NoActiveWallet, NoValidRpcEndpointFound } from '../../src/utils/errors';
+import { ChainNameNotExist, ChainNotExist, clientNotExistError, NoActiveWallet, NoGasPriceFound, NoValidRpcEndpointFound,NoWalletConnectedYet, WalletNotExist } from '../../src/utils/errors';
 
 describe('Error Tests', () => {
   test('clientNotExistError should have correct message', () => {

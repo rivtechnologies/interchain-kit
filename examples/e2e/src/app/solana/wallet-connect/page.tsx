@@ -1,15 +1,16 @@
-"use client";
+'use client';
+
+import { useChain, useChainWallet } from '@interchain-kit/react';
 
 import {
   mockSolanaWalletReceiver,
   mockSolanaWalletSender,
-} from "@/wallet/solana/wallet";
-import { useChain, useChainWallet } from "@interchain-kit/react";
+} from '@/wallet/solana/wallet';
 export default function SolanaWalletConnect() {
-  const { openView } = useChain("solana");
+  const { openView } = useChain('solana');
 
-  const sender = useChainWallet("solana", mockSolanaWalletSender.info.name);
-  const receiver = useChainWallet("solana", mockSolanaWalletReceiver.info.name);
+  const sender = useChainWallet('solana', mockSolanaWalletSender.info.name);
+  const receiver = useChainWallet('solana', mockSolanaWalletReceiver.info.name);
 
   return (
     <div>

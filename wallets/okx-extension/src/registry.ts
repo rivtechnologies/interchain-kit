@@ -1,5 +1,6 @@
-import { Wallet } from "@interchain-kit/core";
-import { ICON } from "./constant";
+import { Wallet } from '@interchain-kit/core';
+
+import { ICON } from './constant';
 
 
 export const OkxwalletExtensionInfo: Wallet = {
@@ -27,5 +28,5 @@ export const OkxwalletExtensionInfo: Wallet = {
       link: 'https://www.okx.com/download',
     },
   ],
-  dappBrowserLink: () => "https://www.okx.com/download?deeplink=" + encodeURIComponent("okx://wallet/dapp/url?dappUrl=" + encodeURIComponent(location.href))
+  dappBrowserLink: () => 'https://www.okx.com/download?deeplink=' + encodeURIComponent('okx://wallet/dapp/url?dappUrl=' + encodeURIComponent(location.href))
 };

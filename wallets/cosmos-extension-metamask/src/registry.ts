@@ -1,4 +1,5 @@
-import { Wallet } from "@interchain-kit/core";
+import { Wallet } from '@interchain-kit/core';
+
 import { ICON } from './constant';
 
 export const cosmosSnapExtensionInfo: Wallet = {

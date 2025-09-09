@@ -1,6 +1,7 @@
-import { WalletState, Algo } from '@interchain-kit/core';
+import { Algo,WalletState } from '@interchain-kit/core';
+
 import { InterchainStore } from '../src/store';
-import { ChainWalletState, InterchainStoreType } from '../src/types';
+import { ChainWalletState } from '../src/types';
 
 describe('InterchainStore', () => {
   let store: InterchainStore;

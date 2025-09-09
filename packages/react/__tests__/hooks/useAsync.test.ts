@@ -1,129 +1,130 @@
-import { renderHook, act, waitFor, cleanup } from '@testing-library/react';
-import { useAsync, cache, activeRequests } from '../../src/hooks/useAsync';
+import { act, cleanup,renderHook, waitFor } from '@testing-library/react';
+
+import { activeRequests,cache, useAsync } from '../../src/hooks/useAsync';
 
 describe('useAsync', () => {
-    beforeEach(() => {
-        cache.clear();
-        activeRequests.clear();
-    });
-    afterEach(cleanup)
+  beforeEach(() => {
+    cache.clear();
+    activeRequests.clear();
+  });
+  afterEach(cleanup);
 
-    it('should return initial state', async () => {
-        const { result } = renderHook(() =>
-            useAsync({
-                queryKey: 'test1',
-                queryFn: async () => 'data',
-            })
-        );
-        await waitFor(() => {
-            expect(result.current.data).toBeNull();
-            expect(result.current.isLoading).toBe(true);
-            expect(result.current.error).toBeNull();
-        })
-
+  it('should return initial state', async () => {
+    const { result } = renderHook(() =>
+      useAsync({
+        queryKey: 'test1',
+        queryFn: async () => 'data',
+      })
+    );
+    await waitFor(() => {
+      expect(result.current.data).toBeNull();
+      expect(result.current.isLoading).toBe(true);
+      expect(result.current.error).toBeNull();
     });
 
-    it('should fetch data and update state', async () => {
-        const queryFn = jest.fn().mockResolvedValue('data');
+  });
 
-        const { result } = renderHook(() =>
-            useAsync({
-                queryKey: 'test2',
-                queryFn,
-            })
-        );
+  it('should fetch data and update state', async () => {
+    const queryFn = jest.fn().mockResolvedValue('data');
 
-        expect(result.current.isLoading).toBe(true);
+    const { result } = renderHook(() =>
+      useAsync({
+        queryKey: 'test2',
+        queryFn,
+      })
+    );
 
-        await waitFor(() => {
-            expect(result.current.isLoading).toBe(false);
-        });
+    expect(result.current.isLoading).toBe(true);
 
-        expect(result.current.data).toBe('data');
-        expect(result.current.isLoading).toBe(false);
-        expect(result.current.error).toBeNull();
-        expect(queryFn).toHaveBeenCalledTimes(1);
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
     });
 
-    it('should handle errors', async () => {
-        const queryFn = jest.fn().mockRejectedValue(new Error('Error occurred'));
+    expect(result.current.data).toBe('data');
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.error).toBeNull();
+    expect(queryFn).toHaveBeenCalledTimes(1);
+  });
 
-        const { result } = renderHook(() =>
-            useAsync({
-                queryKey: 'test3',
-                queryFn,
-            })
-        );
+  it('should handle errors', async () => {
+    const queryFn = jest.fn().mockRejectedValue(new Error('Error occurred'));
 
-        expect(result.current.isLoading).toBe(true);
+    const { result } = renderHook(() =>
+      useAsync({
+        queryKey: 'test3',
+        queryFn,
+      })
+    );
 
-        await waitFor(() => {
-            expect(result.current.isLoading).toBe(false);
-        });
+    expect(result.current.isLoading).toBe(true);
 
-        expect(result.current.data).toBeNull();
-        expect(result.current.error?.message).toEqual('Error occurred');
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
     });
 
-    it('should use cached data if available', async () => {
-        cache.set('test4', 'cachedData');
+    expect(result.current.data).toBeNull();
+    expect(result.current.error?.message).toEqual('Error occurred');
+  });
 
-        const queryFn = jest.fn().mockResolvedValue('data');
+  it('should use cached data if available', async () => {
+    cache.set('test4', 'cachedData');
 
-        const { result } = renderHook(() =>
-            useAsync({
-                queryKey: 'test4',
-                queryFn,
-            })
-        );
+    const queryFn = jest.fn().mockResolvedValue('data');
 
-        expect(result.current.data).toBe('cachedData');
-        expect(result.current.isLoading).toBe(false);
-        expect(result.current.error).toBeNull();
-        expect(queryFn).not.toHaveBeenCalled();
+    const { result } = renderHook(() =>
+      useAsync({
+        queryKey: 'test4',
+        queryFn,
+      })
+    );
+
+    expect(result.current.data).toBe('cachedData');
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.error).toBeNull();
+    expect(queryFn).not.toHaveBeenCalled();
+  });
+
+  it('should refetch data when refetch is called', async () => {
+    const queryFn = jest.fn().mockResolvedValue('data');
+
+    const { result } = renderHook(() =>
+      useAsync({
+        queryKey: 'test5',
+        queryFn,
+      })
+    );
+
+    await waitFor(async () => {
+      await expect(result.current.isLoading).toBe(false);
+    });
+    expect(result.current.data).toBe('data');
+
+    expect(result.current.data).toBe('data');
+
+    queryFn.mockResolvedValue('newData');
+
+    await act(async () => {
+      await result.current.refetch();
     });
 
-    it('should refetch data when refetch is called', async () => {
-        const queryFn = jest.fn().mockResolvedValue('data');
+    expect(result.current.data).toBe('newData');
+    expect(queryFn).toHaveBeenCalledTimes(2);
+  });
 
-        const { result } = renderHook(() =>
-            useAsync({
-                queryKey: 'test5',
-                queryFn,
-            })
-        );
+  it('should not fetch data if enabled is false', () => {
+    const queryFn = jest.fn();
 
-        await waitFor(async () => {
-            await expect(result.current.isLoading).toBe(false);
-        });
-        expect(result.current.data).toBe('data');
+    const { result } = renderHook(() =>
+      useAsync({
+        queryKey: 'test6',
+        queryFn,
+        enabled: false,
+      })
+    );
 
-        expect(result.current.data).toBe('data');
-
-        queryFn.mockResolvedValue('newData');
-
-        await act(async () => {
-            await result.current.refetch();
-        });
-
-        expect(result.current.data).toBe('newData');
-        expect(queryFn).toHaveBeenCalledTimes(2);
-    });
-
-    it('should not fetch data if enabled is false', () => {
-        const queryFn = jest.fn();
-
-        const { result } = renderHook(() =>
-            useAsync({
-                queryKey: 'test6',
-                queryFn,
-                enabled: false,
-            })
-        );
-
-        expect(result.current.data).toBeNull();
-        expect(result.current.isLoading).toBe(false);
-        expect(result.current.error).toBeNull();
-        expect(queryFn).not.toHaveBeenCalled();
-    });
+    expect(result.current.data).toBeNull();
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.error).toBeNull();
+    expect(queryFn).not.toHaveBeenCalled();
+  });
 });

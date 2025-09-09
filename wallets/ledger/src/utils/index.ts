@@ -1,2 +1,2 @@
-export * from './helpers'
-export * from './encoding'
+export * from './encoding';
+export * from './helpers';

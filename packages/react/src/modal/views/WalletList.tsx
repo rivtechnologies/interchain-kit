@@ -1,5 +1,5 @@
-import { ConnectModalHead, ConnectModalWalletList } from "@interchain-ui/react";
-import { Wallet as InterchainUIWalletType } from "@interchain-ui/react";
+import { ConnectModalHead, ConnectModalWalletList } from '@interchain-ui/react';
+import { Wallet as InterchainUIWalletType } from '@interchain-ui/react';
 
 export const WalletListHeader = ({ close }: { close: () => void }) => {
   return (

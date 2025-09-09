@@ -1,4 +1,4 @@
-import { AOPProxy, createAOPProxy, applyAdvice, MethodAdvice } from '../src/utils/aop';
+import { AOPProxy, applyAdvice, createAOPProxy } from '../src/utils/aop';
 
 // Test classes for AOP testing
 class TestClass {

@@ -21,4 +21,4 @@ export const getWCInfoByProjectId = async (id: string) => {
     }
     );
 
-}
+};

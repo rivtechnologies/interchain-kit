@@ -1,4 +1,5 @@
-import { test, expect } from '@playwright/test';
+import { expect,test } from '@playwright/test';
+
 import { SolanaTransactionPage } from './page-models/solana-transaction';
 
 test.describe('Solana Transaction', () => {

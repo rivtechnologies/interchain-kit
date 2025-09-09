@@ -1,22 +1,23 @@
-import { useChain as useStarshipChain } from "@/starship/hook"
-import { useChainWallet } from "@interchain-kit/react"
-import { MsgTransfer, send, transfer } from "interchainjs"
+import { useChainWallet } from '@interchain-kit/react';
+import { MsgTransfer, send, transfer } from 'interchainjs';
+
+import { useChain as useStarshipChain } from '@/starship/hook';
 
 export const useSendToken = (chainName: string, walletName: string) => {
 
-  const { chainInfo } = useStarshipChain(chainName)
+  const { chainInfo } = useStarshipChain(chainName);
 
 
-  const { signingClient, address: fromAddress, assetList } = useChainWallet(chainName, walletName)
+  const { signingClient, address: fromAddress, assetList } = useChainWallet(chainName, walletName);
 
 
-  const denom = assetList.assets[0].base
+  const denom = assetList.assets[0].base;
 
   const sendNativeToken = async (toAddress: string, amount: string) => {
     const fee = {
       amount: [{ denom, amount }],
-      gas: "100000",
-    }
+      gas: '100000',
+    };
     if (signingClient) {
       const res = await send(signingClient, fromAddress, {
         fromAddress: fromAddress,
@@ -27,28 +28,28 @@ export const useSendToken = (chainName: string, walletName: string) => {
             amount: amount,
           },
         ],
-      }, fee, 'send native token')
+      }, fee, 'send native token');
 
-      console.log('Transaction result:', res)
+      console.log('Transaction result:', res);
 
       try {
-        await res.wait()
+        await res.wait();
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
     }
 
 
 
-  }
+  };
 
 
   const sendIbcToken = async (toAddress: string, amount: string) => {
     if (signingClient) {
 
       const fee = {
-        amount: [{ denom, amount: "1000" }],
-        gas: "200000",
+        amount: [{ denom, amount: '1000' }],
+        gas: '200000',
       };
 
       const token = {
@@ -61,7 +62,7 @@ export const useSendToken = (chainName: string, walletName: string) => {
 
       const ibcInfos = chainInfo.fetcher.getChainIbcData(chainName);
 
-      const chains = chainInfo.fetcher.chains
+      const chains = chainInfo.fetcher.chains;
 
       const toChain = chains.find((c) => c.bech32_prefix === toAddress.split('1')[0]);
 
@@ -85,32 +86,32 @@ export const useSendToken = (chainName: string, walletName: string) => {
         timeoutHeight: undefined,
         timeoutTimestamp: BigInt(timeoutTime),
         memo: 'test transfer',
-      }), fee, "send ibc")
+      }), fee, 'send ibc');
 
-      console.log('res:', res)
+      console.log('res:', res);
 
       try {
-        await res.wait()
+        await res.wait();
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     }
-  }
+  };
 
   const sendToken = async (toAddress: string, amount: string) => {
-    const fromChainPrefix = fromAddress.split('1')[0]
-    const toChainPrefix = toAddress.split('1')[0]
+    const fromChainPrefix = fromAddress.split('1')[0];
+    const toChainPrefix = toAddress.split('1')[0];
 
-    console.log('fromChainPrefix:', fromChainPrefix)
-    console.log('toChainPrefix:', toChainPrefix)
+    console.log('fromChainPrefix:', fromChainPrefix);
+    console.log('toChainPrefix:', toChainPrefix);
 
     if (fromChainPrefix === toChainPrefix) {
-      await sendNativeToken(toAddress, amount)
+      await sendNativeToken(toAddress, amount);
     } else {
-      await sendIbcToken(toAddress, amount)
+      await sendIbcToken(toAddress, amount);
     }
-  }
+  };
 
 
-  return sendToken
-}
+  return sendToken;
+};

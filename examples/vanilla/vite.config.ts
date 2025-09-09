@@ -1,5 +1,5 @@
-import { defineConfig } from "vite";
-import { nodePolyfills } from "vite-plugin-node-polyfills";
+import { defineConfig } from 'vite';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -7,10 +7,10 @@ export default defineConfig({
     // ngrok("2i8RfnPRNlOIzTxFbQZb1VF7cP3_26mbZ8HB2zSrbwwQNYPH5"),
     nodePolyfills({
       // To add only specific polyfills, add them here. If no option is passed, adds all polyfills
-      include: ["path"],
+      include: ['path'],
       // To exclude specific polyfills, add them to this list. Note: if include is provided, this has no effect
       exclude: [
-        "http", // Excludes the polyfill for `http` and `node:http`.
+        'http', // Excludes the polyfill for `http` and `node:http`.
       ],
       // Whether to polyfill specific globals.
       globals: {
@@ -22,7 +22,7 @@ export default defineConfig({
       // Override the default polyfills for specific modules.
       overrides: {
         // Since `fs` is not supported in browsers, we can use the `memfs` package to polyfill it.
-        fs: "memfs",
+        fs: 'memfs',
       },
       // Whether to polyfill `node:` protocol imports.
       protocolImports: true,

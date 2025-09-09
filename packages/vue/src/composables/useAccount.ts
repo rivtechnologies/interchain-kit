@@ -1,8 +1,8 @@
 import { ChainNameNotExist, WalletAccount, WalletState } from '@interchain-kit/core';
 import { computed, Ref, ref, watch } from 'vue';
+import { onMounted } from 'vue';
 
 import { useWalletManager } from './useWalletManager';
-import { onMounted } from 'vue';
 
 export const useAccount = (chainName: Ref<string>, walletName: Ref<string>): Ref<WalletAccount | null> => {
   let account = ref<WalletAccount | null>(null);
@@ -10,11 +10,11 @@ export const useAccount = (chainName: Ref<string>, walletName: Ref<string>): Ref
 
   const wallet = computed(() => {
     return walletManager.wallets.find(w => w.info.name === walletName.value);
-  })
+  });
 
   const chain = computed(() => {
     return walletManager.chains.find(c => c.chainName === chainName.value);
-  })
+  });
 
   const getAccount = async () => {
     if (!chain.value) {
@@ -38,15 +38,15 @@ export const useAccount = (chainName: Ref<string>, walletName: Ref<string>): Ref
   watch([wallet, chain, walletManager], getAccount);
   watch(wallet, (newWt, oldWt) => {
     if (newWt) {
-      oldWt?.events.off('accountChanged', getAccount)
-      newWt?.events.on('accountChanged', getAccount)
+      oldWt?.events.off('accountChanged', getAccount);
+      newWt?.events.on('accountChanged', getAccount);
     }
-  })
+  });
   getAccount();
 
   onMounted(() => {
-    wallet.value?.events.on('accountChanged', getAccount)
-  })
+    wallet.value?.events.on('accountChanged', getAccount);
+  });
 
   return account;
 };

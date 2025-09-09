@@ -15,7 +15,7 @@ export class ChainNameNotExist extends Error {
 
 export class WalletNotExist extends Error {
   constructor(walletName: string) {
-    super(`Wallet ${walletName} not Exist, please add it first`)
+    super(`Wallet ${walletName} not Exist, please add it first`);
   }
 }
 export class NoWalletConnectedYet extends Error {

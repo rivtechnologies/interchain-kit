@@ -1,8 +1,9 @@
+import { AssetList,Chain } from '@chain-registry/types';
+import { CosmosWallet, DirectSignDoc, SignOptions, WalletAccount } from '@interchain-kit/core';
 import { AminoSignResponse } from '@interchainjs/cosmos/types/wallet';
 import { StdSignDoc } from '@interchainjs/types';
-import { CosmosWallet, DirectSignDoc, ExtensionWallet, SignOptions, WalletAccount } from '@interchain-kit/core';
+
 import { ChainInfo } from './types';
-import { Chain, AssetList } from '@chain-registry/types';
 
 declare global {
   interface Window {
@@ -11,9 +12,9 @@ declare global {
 }
 
 export class LeapCosmosExtensionMetaMask extends CosmosWallet {
-  snapId: string = 'npm:@leapwallet/metamask-cosmos-snap'
+  snapId: string = 'npm:@leapwallet/metamask-cosmos-snap';
 
-  supportedChains: { [chainId: string]: ChainInfo } = {}
+  supportedChains: { [chainId: string]: ChainInfo } = {};
 
   async init() {
     try {
@@ -37,7 +38,7 @@ export class LeapCosmosExtensionMetaMask extends CosmosWallet {
           method: 'getSupportedChains',
         },
       },
-    })
+    });
   }
 
   async connect(chainId: string) {
@@ -86,11 +87,11 @@ export class LeapCosmosExtensionMetaMask extends CosmosWallet {
       isNanoLedger,
       isSmartContract: false,
       username: 'leap cosmos in metamask',
-    }
+    };
   }
 
   async getOfflineSigner(chainId: string) {
-    return super.getOfflineSigner(chainId, 'amino')
+    return super.getOfflineSigner(chainId, 'amino');
   }
 
   async getAccounts(chainIds: string[]): Promise<WalletAccount[]> {
@@ -103,7 +104,7 @@ export class LeapCosmosExtensionMetaMask extends CosmosWallet {
       signAmino: async (signer: string, signDoc: StdSignDoc, signOptions?: SignOptions) => {
         return this.signAmino(chainId, signer, signDoc, signOptions);
       }
-    }
+    };
   }
 
   async signAmino(chainId: string, signer: string, signDoc: any, signOptions?: any): Promise<AminoSignResponse> {
@@ -120,8 +121,8 @@ export class LeapCosmosExtensionMetaMask extends CosmosWallet {
           }
         },
       },
-    })
-    return result
+    });
+    return result;
   }
 
   getOfflineSignerDirect(chainId: string) {
@@ -130,7 +131,7 @@ export class LeapCosmosExtensionMetaMask extends CosmosWallet {
       signDirect: async (signer: string, signDoc: DirectSignDoc, signOptions?: SignOptions) => {
         return this.signDirect(chainId, signer, signDoc, signOptions);
       }
-    }
+    };
   }
 
   async signDirect(chainId: string, signer: string, signDoc: DirectSignDoc, signOptions?: SignOptions): Promise<any> {
@@ -147,7 +148,7 @@ export class LeapCosmosExtensionMetaMask extends CosmosWallet {
           }
         },
       },
-    })
+    });
   }
 
   async addSuggestChain(chain: Chain, assetLists: AssetList[]): Promise<void> {
@@ -159,7 +160,7 @@ export class LeapCosmosExtensionMetaMask extends CosmosWallet {
       bech32Config: {
         bech32PrefixAccAddr: chain.bech32Prefix
       },
-    }
+    };
 
     return window.ethereum.request({
       method: 'wallet_invokeSnap',
@@ -172,6 +173,6 @@ export class LeapCosmosExtensionMetaMask extends CosmosWallet {
           }
         }
       }
-    })
+    });
   }
 }

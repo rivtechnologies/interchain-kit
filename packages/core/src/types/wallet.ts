@@ -1,7 +1,8 @@
 
 
-import { SignClientTypes } from '@walletconnect/types';
 import { StdSignature } from '@interchainjs/amino';
+import { SignClientTypes } from '@walletconnect/types';
+
 import { DappEnv, OS } from './common';
 import { EndpointOptions } from './manager';
 export interface Key {

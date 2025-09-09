@@ -1,4 +1,4 @@
-import { HttpEndpoint } from "@cosmjs/stargate";
+import { HttpEndpoint } from '@cosmjs/stargate';
 
 export interface Chain {
     chain_name: string;

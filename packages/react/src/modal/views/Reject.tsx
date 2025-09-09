@@ -1,6 +1,7 @@
-import { ConnectModalHead, ConnectModalStatus } from "@interchain-ui/react";
-import { getWalletInfo } from "../../utils";
-import { WalletStore } from "@interchain-kit/store";
+import { WalletStore } from '@interchain-kit/store';
+import { ConnectModalHead, ConnectModalStatus } from '@interchain-ui/react';
+
+import { getWalletInfo } from '../../utils';
 
 export const RejectHeader = ({
   wallet,
@@ -33,8 +34,8 @@ export const RejectContent = ({
     <ConnectModalStatus
       status="Rejected"
       wallet={getWalletInfo(wallet)}
-      contentHeader={"Request Rejected"}
-      contentDesc={wallet.errorMessage || "Connection permission is denied."}
+      contentHeader={'Request Rejected'}
+      contentDesc={wallet.errorMessage || 'Connection permission is denied.'}
       onConnect={onReconnect}
     />
   );

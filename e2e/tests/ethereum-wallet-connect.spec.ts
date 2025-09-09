@@ -1,4 +1,5 @@
-import { test, expect } from '@playwright/test';
+import { expect,test } from '@playwright/test';
+
 import { EthereumWalletConnectPage } from './page-models/ethereum-wallet-connect';
 import { mockEthereumWallet, mockEthereumWalletConnectionError } from './utils/mock-ethereum-wallet';
 

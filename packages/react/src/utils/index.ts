@@ -1,3 +1,3 @@
-export * from './wallet'
-export * from './dedupeAsync'
-export * from './restoreAccount'
+export * from './dedupeAsync';
+export * from './restoreAccount';
+export * from './wallet';

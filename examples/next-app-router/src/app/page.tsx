@@ -1,4 +1,4 @@
-import ConnectWallet from "@/component/connect-wallet";
+import ConnectWallet from '@/component/connect-wallet';
 export default function Home() {
   return (
     <div>

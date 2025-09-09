@@ -1,6 +1,6 @@
 
-import { AssetList, Chain } from "@chain-registry/types";
-import ethereumChain from 'chain-registry/mainnet/ethereum/chain'
+import { AssetList, Chain } from '@chain-registry/types';
+import ethereumChain from 'chain-registry/mainnet/ethereum/chain';
 
 type EthereumChainConfig = {
   chainId: string; // Chain ID in hexadecimal format
@@ -24,9 +24,9 @@ export const createChainFromEthereumChainInfo = (etherChainInfo: EthereumChainCo
       rpc: etherChainInfo.rpcUrls.map((address) => ({ address })),
     },
     explorers: etherChainInfo.blockExplorerUrls?.map(url => ({ url }))
-  }
-  return newChain
-}
+  };
+  return newChain;
+};
 
 export const createAssetListFromEthereumChainInfo = (etherChainInfo: EthereumChainConfig): AssetList => {
   return {
@@ -70,6 +70,6 @@ export const createAssetListFromEthereumChainInfo = (etherChainInfo: EthereumCha
         }]
       }
     ]
-  }
-}
+  };
+};
 

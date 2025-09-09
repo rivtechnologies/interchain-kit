@@ -1,17 +1,16 @@
-import { WalletAccount } from "../../types";
-import { WalletConnectIcon } from "../../constant";
-import { IEthereumWallet } from "../../types/wallet-types";
-import { IWCCommon } from "./wc-common";
-import { Chain } from "@chain-registry/types";
-import UniversalProvider from "@walletconnect/universal-provider";
-import { BaseWallet } from "../base-wallet";
-import { WCWallet } from "./wc-wallet";
-import { EthereumWallet } from "../ethereum-wallet";
+import { Chain } from '@chain-registry/types';
+import UniversalProvider from '@walletconnect/universal-provider';
+
+import { WalletConnectIcon } from '../../constant';
+import { WalletAccount } from '../../types';
+import { EthereumWallet } from '../ethereum-wallet';
+import { IWCCommon } from './wc-common';
+import { WCWallet } from './wc-wallet';
 
 export class WCEthereumWallet extends EthereumWallet implements IWCCommon {
 
   provider: UniversalProvider;
-  wcWallet: WCWallet
+  wcWallet: WCWallet;
 
   constructor() {
     super({
@@ -45,13 +44,13 @@ export class WCEthereumWallet extends EthereumWallet implements IWCCommon {
     // Initialization is handled by the parent WCWallet
     return Promise.resolve();
   }
-  connect(chainId: Chain["chainId"]): Promise<void> {
+  connect(chainId: Chain['chainId']): Promise<void> {
     return this.wcWallet.connect(chainId);
   }
-  disconnect(chainId: Chain["chainId"]): Promise<void> {
+  disconnect(chainId: Chain['chainId']): Promise<void> {
     return this.wcWallet.disconnect();
   }
-  async getAccount(chainId: Chain["chainId"]): Promise<WalletAccount> {
+  async getAccount(chainId: Chain['chainId']): Promise<WalletAccount> {
     if (!this.provider) {
       throw new Error('Provider not initialized');
     }
@@ -76,12 +75,12 @@ export class WCEthereumWallet extends EthereumWallet implements IWCCommon {
     }
   }
 
-  async addSuggestChain(chainId: Chain["chainId"]): Promise<void> {
+  async addSuggestChain(chainId: Chain['chainId']): Promise<void> {
     // Ethereum chain addition is typically handled by the wallet
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 
-  async getProvider(chainId: Chain["chainId"]): Promise<any> {
+  async getProvider(chainId: Chain['chainId']): Promise<any> {
     return this.provider;
   }
 

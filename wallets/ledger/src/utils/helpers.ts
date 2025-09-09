@@ -1,5 +1,5 @@
 export const sortedObject = (obj: Record<string, any>): any => {
-  if (typeof obj !== "object" || obj === null) {
+  if (typeof obj !== 'object' || obj === null) {
     return obj;
   }
   if (Array.isArray(obj)) {
@@ -12,4 +12,4 @@ export const sortedObject = (obj: Record<string, any>): any => {
     result[key] = sortedObject(obj[key]);
   });
   return result;
-}
+};

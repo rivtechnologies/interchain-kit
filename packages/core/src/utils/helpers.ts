@@ -1,5 +1,5 @@
 export function isInstanceOf<T>(obj: any, type: new (...args: any[]) => T): obj is T {
-  if (!obj || typeof obj !== "object") return false;
+  if (!obj || typeof obj !== 'object') return false;
 
   // Check for custom metadata
   if (obj.__class === type.name) return true;
@@ -32,7 +32,7 @@ export async function waitForCondition(
       if (condition()) {
         resolve();
       } else if (Date.now() - start >= timeout) {
-        reject(new Error("Timeout waiting for condition"));
+        reject(new Error('Timeout waiting for condition'));
       } else {
         setTimeout(checkCondition, interval);
       }

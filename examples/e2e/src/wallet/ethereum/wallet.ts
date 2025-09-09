@@ -1,11 +1,11 @@
-import { MultiChainWallet, Wallet } from "@interchain-kit/core";
-import { MockEthereumWallet } from "@interchain-kit/mock-wallet";
+import { MultiChainWallet, Wallet } from '@interchain-kit/core';
+import { MockEthereumWallet } from '@interchain-kit/mock-wallet';
 
 const senderWalletInfo: Wallet = {
-  name: "Mock Ethereum Wallet Sender",
-  mode: "extension",
-  prettyName: "Mock Ethereum Wallet Sender",
-  keystoreChange: "accountChanged",
+  name: 'Mock Ethereum Wallet Sender',
+  mode: 'extension',
+  prettyName: 'Mock Ethereum Wallet Sender',
+  keystoreChange: 'accountChanged',
 };
 
 const mockEthereumWalletSender = new MultiChainWallet(senderWalletInfo);
@@ -15,15 +15,15 @@ const senderMnemonic = 'usual burden law job pledge pulse version trade link lea
 const mockEthereumWalletSenderInstance = new MockEthereumWallet(senderWalletInfo, senderMnemonic);
 
 
-mockEthereumWalletSender.setNetworkWallet('eip155', mockEthereumWalletSenderInstance)
+mockEthereumWalletSender.setNetworkWallet('eip155', mockEthereumWalletSenderInstance);
 
 
 
 const receiverWalletInfo: Wallet = {
-  name: "Mock Ethereum Wallet Receiver",
-  mode: "extension",
-  prettyName: "Mock Ethereum Wallet Receiver",
-  keystoreChange: "accountChanged",
+  name: 'Mock Ethereum Wallet Receiver',
+  mode: 'extension',
+  prettyName: 'Mock Ethereum Wallet Receiver',
+  keystoreChange: 'accountChanged',
 };
 
 const mockEthereumWalletReceiver = new MultiChainWallet(receiverWalletInfo);
@@ -34,9 +34,8 @@ const mockEthereumWalletReceiverInstance = new MockEthereumWallet(receiverWallet
 
 
 
-mockEthereumWalletReceiver.setNetworkWallet('eip155', mockEthereumWalletReceiverInstance)
+mockEthereumWalletReceiver.setNetworkWallet('eip155', mockEthereumWalletReceiverInstance);
 
 export {
-  mockEthereumWalletSender,
-  mockEthereumWalletReceiver
-}
+  mockEthereumWalletReceiver,
+  mockEthereumWalletSender};

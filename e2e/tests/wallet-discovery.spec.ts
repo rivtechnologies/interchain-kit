@@ -3,8 +3,8 @@ import { WalletState } from '@interchain-kit/core';
 import { test } from '@playwright/test';
 import { expect } from '@playwright/test';
 
-import { WalletModalModel } from './page-models/wallet-modal';
 import { WalletConnectPage } from './page-models/wallet-connect';
+import { WalletModalModel } from './page-models/wallet-modal';
 import { mockWalletWindowObject } from './utils/mock-wallet';
 
 test.describe('Wallet Discovery & Connection', () => {
@@ -17,18 +17,18 @@ test.describe('Wallet Discovery & Connection', () => {
 
     // Navigate to the application
     // await page.goto('/');
-  })
+  });
 
 
   test('should be disconnected when init, if wallet exist', async ({ page }) => {
-    await mockWalletWindowObject(page)
+    await mockWalletWindowObject(page);
     await page.goto('/cosmos/wallet-connect');
     const element = await page.locator('#wallet-state');
     await expect(element).toContainText(WalletState.Disconnected);
   });
 
   test('should show connected, after connect wallet', async ({ page }) => {
-    await mockWalletWindowObject(page)
+    await mockWalletWindowObject(page);
     await page.goto('/cosmos/wallet-connect');
     const connectBtn = page.locator('[data-testid="connect-wallet-btn"]');
     await connectBtn.click();
@@ -37,15 +37,15 @@ test.describe('Wallet Discovery & Connection', () => {
   });
 
   test('can open modal', async ({ page }) => {
-    await mockWalletWindowObject(page)
+    await mockWalletWindowObject(page);
     await page.goto('/cosmos/wallet-connect');
     const walletModal = new WalletModalModel(page);
     await page.locator('[data-testid="open-modal-btn"]').click();
-    await walletModal.isOpen()
-  })
+    await walletModal.isOpen();
+  });
 
   test('should show disconnected, after disconnect wallet', async ({ page }) => {
-    await mockWalletWindowObject(page)
+    await mockWalletWindowObject(page);
     await page.goto('/cosmos/wallet-connect');
     const connectBtn = page.locator('[data-testid="connect-wallet-btn"]');
     await connectBtn.click();
@@ -66,7 +66,7 @@ test.describe('Wallet Discovery & Connection', () => {
     const walletModal = new WalletModalModel(page);
     await walletModal.isOpen();
     expect(page.locator(`text='${address}'`)).toBeVisible();
-  })
+  });
 
   test('disconnect from wallet modal', async ({ page }) => {
     await mockWalletWindowObject(page);
@@ -79,7 +79,7 @@ test.describe('Wallet Discovery & Connection', () => {
     await walletModalModel.isOpen();
     await walletModalModel.disconnectWallet('Mock Wallet');
     await walletConnectPage.isDisconnected();
-  })
+  });
 
   test('should show install instructions, if wallet not exist', async ({ page }) => {
     await page.goto('/cosmos/wallet-connect');
@@ -89,6 +89,6 @@ test.describe('Wallet Discovery & Connection', () => {
     await walletModal.connectWallet('Not Installed Wallet');
     await walletModal.isNotExistWalletVisible('Not Installed Wallet');
 
-  })
+  });
 
 });

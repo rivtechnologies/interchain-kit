@@ -1,5 +1,6 @@
-import { OS, Wallet } from "@interchain-kit/core";
-import { ICON } from "./constant";
+import { OS, Wallet } from '@interchain-kit/core';
+
+import { ICON } from './constant';
 
 export const LeapMobileInfo: Wallet = {
   name: 'leap-cosmos-mobile',
@@ -43,12 +44,12 @@ export const LeapMobileInfo: Wallet = {
       const plainAppUrl = appUrl.split(':')[0];
       const encodedWcUrl = encodeURIComponent(wcUri);
       switch (os) {
-        case 'ios':
-          return `${plainAppUrl}://wcV2?${encodedWcUrl}`;
-        case 'android':
-          return `${plainAppUrl}://wcV2?${encodedWcUrl}#Intent;package=io.leapwallet.cosmos;scheme=leapwallet;end;`;
-        default:
-          return `${plainAppUrl}://wcV2?${encodedWcUrl}`;
+      case 'ios':
+        return `${plainAppUrl}://wcV2?${encodedWcUrl}`;
+      case 'android':
+        return `${plainAppUrl}://wcV2?${encodedWcUrl}#Intent;package=io.leapwallet.cosmos;scheme=leapwallet;end;`;
+      default:
+        return `${plainAppUrl}://wcV2?${encodedWcUrl}`;
       }
     },
   },

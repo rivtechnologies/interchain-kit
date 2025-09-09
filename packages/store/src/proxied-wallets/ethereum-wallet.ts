@@ -1,4 +1,4 @@
-import { EthereumWallet, WalletState } from '@interchain-kit/core';
+import { EthereumWallet } from '@interchain-kit/core';
 
 import { InterchainStore } from '../store';
 import { createAOPProxy } from '../utils';

@@ -10,5 +10,5 @@ export const createSignerOption = (chainName: string): any => {
     signerOptions: {
       prefix: chainName,
     }
-  }
-}
+  };
+};

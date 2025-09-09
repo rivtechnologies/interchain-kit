@@ -1,5 +1,6 @@
-import { InterchainKit } from "@/context/InterchainKit";
-import "./globals.css";
+import './globals.css';
+
+import { InterchainKit } from '@/context/InterchainKit';
 
 export default function RootLayout({
   children,

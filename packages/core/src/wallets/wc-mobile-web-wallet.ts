@@ -1,44 +1,44 @@
 
-import { getWCInfoByProjectId, isAndroid, isIOS } from "../utils";
-import { WCWallet } from "./wc-wallet";
+import { isAndroid, isIOS } from '../utils';
+import { WCWallet } from './wc-wallet';
 
 export class WCMobileWebWallet extends WCWallet {
-  walletConnectData: any
+  walletConnectData: any;
 
   async navigateWalletConnectLink(uri: string) {
     // const appUrl = this.walletConnectData.mobile.native || this.walletConnectData.mobile.universal
-    let wcUrl = ''
+    let wcUrl = '';
     if (isAndroid()) {
-      wcUrl = this.info.walletConnectLink?.android?.replace('{wc-uri}', encodeURIComponent(uri))
+      wcUrl = this.info.walletConnectLink?.android?.replace('{wc-uri}', encodeURIComponent(uri));
     }
     if (isIOS()) {
-      wcUrl = this.info.walletConnectLink?.ios?.replace('{wc-uri}', encodeURIComponent(uri))
+      wcUrl = this.info.walletConnectLink?.ios?.replace('{wc-uri}', encodeURIComponent(uri));
     }
 
     if (wcUrl) {
-      window.open(wcUrl, "_blank", "noopener,noreferrer")
+      window.open(wcUrl, '_blank', 'noopener,noreferrer');
     }
   }
 
   async navigateToDappBrowserLink() {
     if (!this.info.dappBrowserLink) {
-      return
+      return;
     }
-    const link = this.info.dappBrowserLink(window.location.href)
-    window.open(link, "_blank", "noopener,noreferrer")
+    const link = this.info.dappBrowserLink(window.location.href);
+    window.open(link, '_blank', 'noopener,noreferrer');
   }
 
   async init() {
     // this.walletConnectData = await getWCInfoByProjectId(this.info.walletconnect.projectId)
-    await super.init()
+    await super.init();
     this.provider.on('display_uri', async (uri: string) => {
-      await this.navigateWalletConnectLink(uri)
-      await this.navigateToDappBrowserLink()
-    })
+      await this.navigateWalletConnectLink(uri);
+      await this.navigateToDappBrowserLink();
+    });
   }
 
   async connect() {
-    await this.navigateToDappBrowserLink()
-    await super.connect('')
+    await this.navigateToDappBrowserLink();
+    await super.connect('');
   }
 } 

@@ -1,4 +1,5 @@
 import { Chain } from '@chain-registry/types';
+import { StdSignature } from '@interchainjs/amino';
 import { AminoSignResponse, DirectSignResponse } from '@interchainjs/cosmos';
 import { StdSignDoc } from '@interchainjs/types';
 import { PairingTypes, SessionTypes, SignClientTypes } from '@walletconnect/types';
@@ -9,7 +10,6 @@ import { WalletConnectIcon } from '../constant';
 import { BroadcastMode, DirectSignDoc, SignOptions, SignType, WalletAccount } from '../types';
 import { Algo, Wallet, WCDirectSignResponse, WcEventTypes, WcProviderEventType } from '../types/wallet';
 import { BaseWallet } from './base-wallet';
-import { StdSignature } from '@interchainjs/amino';
 
 
 export class WCWallet extends BaseWallet {
@@ -228,14 +228,14 @@ export class WCWallet extends BaseWallet {
         signAmino: async (signer: string, signDoc: StdSignDoc) => {
           return this.signAmino(chainId, signer, signDoc);
         }
-      }
+      };
     } else if (preferredSignType === 'direct') {
       return {
         getAccounts: async () => [await this.getAccount(chainId)],
         signDirect: async (signer: string, signDoc: DirectSignDoc) => {
           return this.signDirect(chainId, signer, signDoc);
         }
-      }
+      };
     }
   }
 
@@ -327,12 +327,12 @@ export class WCWallet extends BaseWallet {
       console.error('disconnect:', error);
     });
 
-    this.provider.on("session_delete", (error: { message: string; code: number }) => {
-      console.log("session_delete:", error);
-      localStorage.removeItem('wc-session')
+    this.provider.on('session_delete', (error: { message: string; code: number }) => {
+      console.log('session_delete:', error);
+      localStorage.removeItem('wc-session');
 
       // Emit disconnect event to notify StatefulWallet
-      this.events.emit('disconnect', '')
+      this.events.emit('disconnect', '');
     });
 
     this.provider.on('session_event', (error: { message: string; code: number }) => {

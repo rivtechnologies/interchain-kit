@@ -99,7 +99,7 @@ describe('useChainWallet', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-      ; (useWalletManager as jest.Mock).mockReturnValue(mockWalletManager);
+    ; (useWalletManager as jest.Mock).mockReturnValue(mockWalletManager);
   });
 
   it('should return the correct chain and wallet data', async () => {

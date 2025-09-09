@@ -1,4 +1,4 @@
-import { InterchainStoreType } from "../types";
+import { InterchainStoreType } from '../types';
 
 const INTERCHAIN_KIT_STORAGE_KEY = 'interchain-kit-store';
 

@@ -1,19 +1,20 @@
-"use client";
+'use client';
+
+import { useChain, useChainWallet } from '@interchain-kit/react';
 
 import {
   mockEthereumWalletReceiver,
   mockEthereumWalletSender,
-} from "@/wallet/ethereum/wallet";
-import { useChain, useChainWallet } from "@interchain-kit/react";
+} from '@/wallet/ethereum/wallet';
 export default function EthereumWalletConnect() {
-  const { openView } = useChain("Sepolia Testnet");
+  const { openView } = useChain('Sepolia Testnet');
 
   const sender = useChainWallet(
-    "Sepolia Testnet",
+    'Sepolia Testnet',
     mockEthereumWalletSender.info.name
   );
   const receiver = useChainWallet(
-    "Sepolia Testnet",
+    'Sepolia Testnet',
     mockEthereumWalletReceiver.info.name
   );
 

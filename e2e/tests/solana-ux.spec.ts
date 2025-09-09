@@ -1,4 +1,5 @@
-import { test, expect } from '@playwright/test';
+import { expect,test } from '@playwright/test';
+
 import { SolanaUxPage } from './page-models/solana-ux';
 
 test.describe('Solana UX Test', () => {

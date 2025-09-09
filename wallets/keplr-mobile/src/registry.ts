@@ -53,12 +53,12 @@ export const keplrMobileInfo: Wallet = {
       const plainAppUrl = appUrl.split(':')[0];
       const encodedWcUrl = encodeURIComponent(wcUri);
       switch (os) {
-        case 'ios':
-          return `${plainAppUrl}://wcV2?${encodedWcUrl}`;
-        case 'android':
-          return `intent://wcV2?${encodedWcUrl}#Intent;package=com.chainapsis.keplr;scheme=keplrwallet;end;`;
-        default:
-          return `${plainAppUrl}://wcV2?${encodedWcUrl}`;
+      case 'ios':
+        return `${plainAppUrl}://wcV2?${encodedWcUrl}`;
+      case 'android':
+        return `intent://wcV2?${encodedWcUrl}#Intent;package=com.chainapsis.keplr;scheme=keplrwallet;end;`;
+      default:
+        return `${plainAppUrl}://wcV2?${encodedWcUrl}`;
       }
     },
   },

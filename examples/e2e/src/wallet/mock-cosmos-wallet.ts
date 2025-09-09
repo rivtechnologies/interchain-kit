@@ -1,35 +1,34 @@
 import { Chain } from '@chain-registry/types';
-import { CosmosWallet, Wallet, WalletAccount, DirectSignDoc, SignOptions, ExtensionWallet } from '@interchain-kit/core';
-import { Secp256k1HDWallet } from '@interchainjs/cosmos/wallets/secp256k1hd';
+import { CosmosWallet, DirectSignDoc, ExtensionWallet,SignOptions, Wallet, WalletAccount } from '@interchain-kit/core';
 import { DirectSignResponse } from '@interchainjs/cosmos';
-import { HDPath } from '@interchainjs/types';
+import { Secp256k1HDWallet } from '@interchainjs/cosmos/wallets/secp256k1hd';
 
 
 export class MockMultiChainWallet extends ExtensionWallet {
   async init() {
-    await Promise.resolve()
+    await Promise.resolve();
   }
 }
 
 
 export class MockCosmosWallet extends CosmosWallet {
 
-  directWalletMap: Record<Chain['chainName'], Secp256k1HDWallet> = {}
+  directWalletMap: Record<Chain['chainName'], Secp256k1HDWallet> = {};
   cosmosHdPath: string = "m/44'/118'/0'/0/0";
-  mnemonic: string
+  mnemonic: string;
 
   constructor(info: Wallet, mnemonic: string) {
-    super(info)
+    super(info);
     this.mnemonic = mnemonic;
   }
   async init(): Promise<void> {
-    return super.init()
+    return super.init();
   }
   async connect(chainId: string): Promise<void> {
     if (this.client) {
       return super.connect(chainId);
     }
-    const chain = this.getChainById(chainId)
+    const chain = this.getChainById(chainId);
 
 
     //create mock address base on chainId
@@ -40,7 +39,7 @@ export class MockCosmosWallet extends CosmosWallet {
       }]
     });
 
-    this.directWalletMap[chain.chainName] = wallet
+    this.directWalletMap[chain.chainName] = wallet;
   }
   async disconnect(chainId: string): Promise<void> {
 
@@ -72,7 +71,7 @@ export class MockCosmosWallet extends CosmosWallet {
     if (!wallet) {
       throw new Error(`Wallet not connected for chain: ${chainId}`);
     }
-    const accounts = await (await wallet.toOfflineDirectSigner()).getAccounts()
+    const accounts = await (await wallet.toOfflineDirectSigner()).getAccounts();
 
     return {
       address: accounts[0].address || '',
@@ -81,7 +80,7 @@ export class MockCosmosWallet extends CosmosWallet {
       username: undefined,
       isNanoLedger: false,
       isSmartContract: false,
-    }
+    };
   }
   async getOfflineSigner(chainId: string, preferredSignType?: unknown) {
     const chain = this.getChainById(chainId);
@@ -95,7 +94,7 @@ export class MockCosmosWallet extends CosmosWallet {
       signDirect: async (signer, signDoc) => {
         return this.signDirect(chainId, signer, signDoc as DirectSignDoc);
       }
-    }
+    };
   }
 
 

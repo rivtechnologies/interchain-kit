@@ -1,6 +1,6 @@
-import { defineConfig } from 'vite';
+import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill';
 import vue from '@vitejs/plugin-vue';
-import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
+import { defineConfig } from 'vite';
 
 
 // https://vitejs.dev/config/
@@ -22,7 +22,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "crypto": "crypto-browserify",
+      crypto: 'crypto-browserify',
     }
   }
 });

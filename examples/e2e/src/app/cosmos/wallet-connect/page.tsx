@@ -1,8 +1,9 @@
-"use client";
+'use client';
 
-import { mockWallet } from "@/wallet/MockWallet";
-import { useChain, useChainWallet } from "@interchain-kit/react";
-import { chain } from "chain-registry/mainnet/osmosis";
+import { useChain, useChainWallet } from '@interchain-kit/react';
+import { chain } from 'chain-registry/mainnet/osmosis';
+
+import { mockWallet } from '@/wallet/MockWallet';
 
 export default function WalletConnect() {
   const { connect, disconnect, status } = useChainWallet(

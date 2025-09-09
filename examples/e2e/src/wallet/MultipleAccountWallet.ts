@@ -1,15 +1,15 @@
-import { HDWallet, Secp256k1HDWallet } from '@interchainjs/cosmos/wallets/secp256k1hd';
+import { Algo, CosmosWallet, MultiChainWallet, Wallet } from '@interchain-kit/core';
+import { Secp256k1HDWallet } from '@interchainjs/cosmos/wallets/secp256k1hd';
 import { generateMnemonic } from '@interchainjs/crypto';
-import { Algo, CosmosWallet, ExtensionWallet, MultiChainWallet, Wallet } from '@interchain-kit/core';
 
 const hdPath = "m/44'/118'/0'/0/0";
 
 export class MultipleAccountCosmosWallet extends CosmosWallet {
   currentAccountIndex: '1' | '2' = '1';
   accountWalletMap: Record<'1' | '2', Record<string, Secp256k1HDWallet>> = {
-    '1': {},
-    '2': {},
-  }
+    1: {},
+    2: {},
+  };
 
   getCurrentAccountWallet(chainName: string): Secp256k1HDWallet {
     const wallet = this.accountWalletMap[this.currentAccountIndex][chainName];
@@ -27,7 +27,7 @@ export class MultipleAccountCosmosWallet extends CosmosWallet {
 
   async init() {
 
-    const chains = Array.from(this.chainMap.values())
+    const chains = Array.from(this.chainMap.values());
 
     for (const chain of chains) {
       const wallet1 = await Secp256k1HDWallet.fromMnemonic(generateMnemonic(), {
@@ -43,23 +43,23 @@ export class MultipleAccountCosmosWallet extends CosmosWallet {
         }]
       });
       this.accountWalletMap['1'][chain.chainName] = wallet1;
-      this.accountWalletMap['2'][chain.chainName] = wallet2
+      this.accountWalletMap['2'][chain.chainName] = wallet2;
     }
     //@ts-ignore
-    window[this.info.windowKey] = {}
+    window[this.info.windowKey] = {};
     //@ts-ignore
-    window[this.info.cosmosKey] = {}
+    window[this.info.cosmosKey] = {};
 
 
-    return super.init()
+    return super.init();
   }
 
   connect() {
-    return Promise.resolve()
+    return Promise.resolve();
   }
 
   disconnect() {
-    return Promise.resolve()
+    return Promise.resolve();
   }
 
   async getAccount(chainId: string) {
@@ -73,7 +73,7 @@ export class MultipleAccountCosmosWallet extends CosmosWallet {
       username: `Account ${this.currentAccountIndex}`,
       isNanoLedger: false,
       isSmartContract: false,
-    }
+    };
   }
 
   async signAmino(chainId: string, signerAddress: string, signDoc: any) {
@@ -98,8 +98,8 @@ const multipleAccountWalletConfig: Wallet = {
   prettyName: 'Multiple Account Wallet',
   keystoreChange: 'multipleMockAccountChange',
   downloads: []
-}
+};
 
-export const multipleAccountWallet = new MultiChainWallet(multipleAccountWalletConfig)
+export const multipleAccountWallet = new MultiChainWallet(multipleAccountWalletConfig);
 
-multipleAccountWallet.setNetworkWallet('cosmos', new MultipleAccountCosmosWallet(multipleAccountWalletConfig))
+multipleAccountWallet.setNetworkWallet('cosmos', new MultipleAccountCosmosWallet(multipleAccountWalletConfig));

@@ -1,18 +1,18 @@
-const { execSync } = require("child_process");
-const { readFileSync } = require("fs");
-const path = require("path");
-const https = require("https");
-const fs = require("fs");
+const { execSync } = require('child_process');
+const { readFileSync } = require('fs');
+const path = require('path');
+const https = require('https');
+const fs = require('fs');
 
 function getAllPackagePaths() {
-  const baseDirs = ["packages", "wallets"];
+  const baseDirs = ['packages', 'wallets'];
   const packagePaths = [];
 
   baseDirs.forEach((dir) => {
     const fullDir = path.resolve(__dirname, dir);
     if (fs.existsSync(fullDir)) {
       fs.readdirSync(fullDir).forEach((subdir) => {
-        const pkgJsonPath = path.join(fullDir, subdir, "package.json");
+        const pkgJsonPath = path.join(fullDir, subdir, 'package.json');
         if (fs.existsSync(pkgJsonPath)) {
           packagePaths.push(pkgJsonPath);
         }
@@ -24,19 +24,19 @@ function getAllPackagePaths() {
 }
 
 function getPackageJson(packagePath) {
-  const file = readFileSync(path.resolve(packagePath), "utf8");
+  const file = readFileSync(path.resolve(packagePath), 'utf8');
   return JSON.parse(file);
 }
 
 function getGitTags() {
   try {
-    const tags = execSync("git tag", { encoding: "utf8" })
-      .split("\n")
+    const tags = execSync('git tag', { encoding: 'utf8' })
+      .split('\n')
       .map((tag) => tag.trim())
       .filter((tag) => tag);
     return tags;
   } catch (e) {
-    console.error("Failed to get git tags:", e.message);
+    console.error('Failed to get git tags:', e.message);
     process.exit(1);
   }
 }
@@ -46,18 +46,18 @@ function fetchNpmVersion(packageName) {
     const url = `https://registry.npmjs.org/${packageName}`;
     https
       .get(url, (res) => {
-        let data = "";
-        res.on("data", (chunk) => (data += chunk));
-        res.on("end", () => {
+        let data = '';
+        res.on('data', (chunk) => (data += chunk));
+        res.on('end', () => {
           try {
             const json = JSON.parse(data);
-            resolve(json["dist-tags"].latest); // 获取最新发布的版本
+            resolve(json['dist-tags'].latest); // 获取最新发布的版本
           } catch (err) {
             reject(`Failed to parse npm data: ${err.message}`);
           }
         });
       })
-      .on("error", (err) => {
+      .on('error', (err) => {
         reject(`Request failed: ${err.message}`);
       });
   });

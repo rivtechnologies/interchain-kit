@@ -1,3 +1,3 @@
-export * from './wallet'
-export * from './solana-wallet'
-export * from './ethereum-wallet'
+export * from './ethereum-wallet';
+export * from './solana-wallet';
+export * from './wallet';

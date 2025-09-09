@@ -1,6 +1,5 @@
 import { Chain } from '@chain-registry/types';
 
-
 import { OfflineAminoSigner, OfflineDirectSigner, SignType, Wallet, WalletAccount } from '../../src/types';
 import { BaseWallet } from '../../src/wallets/base-wallet';
 
@@ -15,9 +14,9 @@ export const createMockAccount = (addressPrefix: string) => {
     address: `${addressPrefix}xxxxxxx`,
     algo: 'secp256k1',
     pubkey: new Uint8Array(0)
-  }
-  return account
-}
+  };
+  return account;
+};
 
 
 export class MockBaseWallet extends BaseWallet {
@@ -43,7 +42,7 @@ export class MockBaseWallet extends BaseWallet {
     return Promise.reject(new Error('Method not implemented.'));
   }
   async getProvider(chainId: Chain['chainId']) {
-    return {}
+    return {};
   }
   addMockAccount(chainId: string, walletName: string, account: WalletAccount): void {
     this.mockAccounts.push({ chainId, walletName, account });
@@ -55,5 +54,5 @@ export const createMockWallet = (info: Wallet) => {
 
 
 
-  return mockWallet
-}
+  return mockWallet;
+};

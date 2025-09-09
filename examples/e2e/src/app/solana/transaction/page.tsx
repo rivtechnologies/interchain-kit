@@ -1,26 +1,27 @@
-"use client";
+'use client';
 
-import {
-  mockSolanaWalletReceiver,
-  mockSolanaWalletSender,
-} from "@/wallet/solana/wallet";
-import { MockSolanaWallet } from "@interchain-kit/mock-wallet";
-import { useChainWallet } from "@interchain-kit/react";
-import { useState } from "react";
+import { MockSolanaWallet } from '@interchain-kit/mock-wallet';
+import { useChainWallet } from '@interchain-kit/react';
 import {
   clusterApiUrl,
   Connection,
   SystemProgram,
   Transaction,
-} from "@solana/web3.js";
-import { PublicKey } from "@solana/web3.js";
+} from '@solana/web3.js';
+import { PublicKey } from '@solana/web3.js';
+import { useState } from 'react';
 
-const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+import {
+  mockSolanaWalletReceiver,
+  mockSolanaWalletSender,
+} from '@/wallet/solana/wallet';
+
+const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
 
 export default function SolanaTransaction() {
-  const sender = useChainWallet("solana", mockSolanaWalletSender.info.name);
+  const sender = useChainWallet('solana', mockSolanaWalletSender.info.name);
 
-  const receiver = useChainWallet("solana", mockSolanaWalletReceiver.info.name);
+  const receiver = useChainWallet('solana', mockSolanaWalletReceiver.info.name);
 
   const [senderBalance, setSenderBalance] = useState<number>(0);
   const [receiverBalance, setReceiverBalance] = useState<number>(0);
@@ -43,22 +44,22 @@ export default function SolanaTransaction() {
     const toKey = new PublicKey(to);
 
     if (!solanaWallet) {
-      throw new Error("Sender wallet not found");
+      throw new Error('Sender wallet not found');
     }
 
     // 检查余额
     const balance = await connection.getBalance(fromKey);
-    console.log("Sender balance:", balance, "lamports");
+    console.log('Sender balance:', balance, 'lamports');
 
     if (balance < amount + 5000) {
-      throw new Error("Insufficient balance to cover transfer + fee");
+      throw new Error('Insufficient balance to cover transfer + fee');
     }
 
     // 检查收款账户
     const toInfo = await connection.getAccountInfo(toKey);
     if (!toInfo) {
       console.warn(
-        "Destination account does not exist, will be created automatically."
+        'Destination account does not exist, will be created automatically.'
       );
     }
 
@@ -83,11 +84,11 @@ export default function SolanaTransaction() {
           skipPreflight: false,
         }
       );
-      console.log("Transaction signature:", signature);
+      console.log('Transaction signature:', signature);
       await connection.confirmTransaction(signature);
     } catch (error: any) {
       if (error.getLogs) {
-        console.error("Transaction logs:", await error.getLogs());
+        console.error('Transaction logs:', await error.getLogs());
       } else {
         console.error(error);
       }

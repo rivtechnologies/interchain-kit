@@ -42,9 +42,9 @@ export type SolanaSignInData = {
   resources?: string[];
 };
 
-export type DisplayEncoding = "utf8" | "hex";
+export type DisplayEncoding = 'utf8' | 'hex';
 
-export type PhantomEventType = "connect" | "disconnect" | "accountChanged";
+export type PhantomEventType = 'connect' | 'disconnect' | 'accountChanged';
 
 export interface PhantomSolanaProvider {
   isPhantom: boolean;
@@ -67,8 +67,8 @@ export interface PhantomSolanaProvider {
     transactions: (Transaction | VersionedTransaction)[],
   ) => Promise<(Transaction | VersionedTransaction)[]>;
   signTransaction: (transaction: Transaction | VersionedTransaction) => Promise<Transaction | VersionedTransaction>;
-  on: (event: "connect" | "disconnect" | "accountChanged", handler: (publicKey?: PublicKey) => void) => void;
-  off: (event: "connect" | "disconnect" | "accountChanged", handler: (publicKey?: PublicKey) => void) => void;
+  on: (event: 'connect' | 'disconnect' | 'accountChanged', handler: (publicKey?: PublicKey) => void) => void;
+  off: (event: 'connect' | 'disconnect' | 'accountChanged', handler: (publicKey?: PublicKey) => void) => void;
 }
 
 export interface SolanaOperationOptions {

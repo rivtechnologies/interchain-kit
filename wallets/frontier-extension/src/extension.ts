@@ -1,4 +1,4 @@
-import { ExtensionWallet, WalletAccount } from '@interchain-kit/core';
+import { ExtensionWallet } from '@interchain-kit/core';
 
 export class FrontierExtension extends ExtensionWallet {
   async connect(chainId: string | string[]): Promise<void> {

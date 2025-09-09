@@ -9,7 +9,7 @@ export const faucet = async (faucetPort: string, address: string, denom: string)
       'Content-type': 'application/json'
     }
   });
-}
+};
 
 export const getChainInfo = async (chainId: string) => {
   const result = await fetch(`http://localhost:8081/chains/${chainId}`);
@@ -18,7 +18,7 @@ export const getChainInfo = async (chainId: string) => {
   }
   const data = await result.json();
   return data;
-}
+};
 
 export const getAssetListInfo = async (chainId: string) => {
   const result = await fetch(`http://localhost:8081/chains/${chainId}/assets`);
@@ -27,4 +27,4 @@ export const getAssetListInfo = async (chainId: string) => {
   }
   const data = await result.json();
   return data;
-}
+};

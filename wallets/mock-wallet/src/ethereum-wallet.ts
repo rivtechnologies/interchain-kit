@@ -1,6 +1,5 @@
-import { Chain } from '@chain-registry/types';
-import { Wallet, WalletAccount, EthereumWallet } from "@interchain-kit/core";
-import { ethers, HDNodeWallet, Wallet as EtherWallet, Eip1193Provider } from 'ethers';
+import { EthereumWallet,Wallet, WalletAccount } from '@interchain-kit/core';
+import { Eip1193Provider,ethers, HDNodeWallet } from 'ethers';
 
 export interface MockEthereumNetwork {
   chainId: number;
@@ -38,7 +37,7 @@ export class MockEthereumWallet extends EthereumWallet {
     super(options);
 
     // 设置默认值
-    this.mnemonic = mnemonic
+    this.mnemonic = mnemonic;
     this.derivationPaths = [
       `44'/60'/0'/0/0`,  // 第一个钱包
       `44'/60'/0'/0/1`   // 第二个钱包
@@ -52,7 +51,7 @@ export class MockEthereumWallet extends EthereumWallet {
 
     const chains = Array.from(this.chainMap.values());
 
-    console.log(chains)
+    console.log(chains);
 
     this.currentChainId = chains[0].chainId;
 
@@ -64,17 +63,17 @@ export class MockEthereumWallet extends EthereumWallet {
 
       const wallet1 = hdNode.derivePath("44'/60'/0'/0/1");
 
-      const rpc = chain.apis?.rpc[0].address || ''
+      const rpc = chain.apis?.rpc[0].address || '';
 
-      const provider = new ethers.JsonRpcProvider(rpc)
+      const provider = new ethers.JsonRpcProvider(rpc);
 
       this.walletMap[chain.chainId] = {
-        '0': {
+        0: {
           wallet: wallet0,
           provider,
           signer: new ethers.Wallet(wallet0.privateKey, provider)
         },
-        '1': {
+        1: {
           wallet: wallet1,
           provider,
           signer: new ethers.Wallet(wallet1.privateKey, provider)
@@ -106,11 +105,11 @@ export class MockEthereumWallet extends EthereumWallet {
   async switchAccount(): Promise<void> {
 
     this.currentAccountIndex = this.currentAccountIndex === 0 ? 1 : 0;
-    this.events.emit('accountChanged', () => { })
+    this.events.emit('accountChanged', () => { });
   }
 
   async getAccount(): Promise<WalletAccount> {
-    const account = this.walletMap[this.currentChainId][this.currentAccountIndex].wallet
+    const account = this.walletMap[this.currentChainId][this.currentAccountIndex].wallet;
 
     return {
       address: account.address,
@@ -135,7 +134,7 @@ export class MockEthereumWallet extends EthereumWallet {
 
   async getBalance(): Promise<string> {
 
-    const { provider, wallet } = this.walletMap[this.currentChainId][this.currentAccountIndex]
+    const { provider, wallet } = this.walletMap[this.currentChainId][this.currentAccountIndex];
 
     const balance = await provider.getBalance(wallet.address);
 
@@ -151,7 +150,7 @@ export class MockEthereumWallet extends EthereumWallet {
     gasLimit?: string;
     gasPrice?: string;
   }): Promise<string> {
-    const { signer } = this.walletMap[this.currentChainId][this.currentAccountIndex]
+    const { signer } = this.walletMap[this.currentChainId][this.currentAccountIndex];
 
     const tx = await signer.sendTransaction({
       from: transaction.from,
@@ -168,14 +167,14 @@ export class MockEthereumWallet extends EthereumWallet {
 
   async signMessage(message: string): Promise<string> {
 
-    const { signer } = this.walletMap[this.currentChainId][this.currentAccountIndex]
+    const { signer } = this.walletMap[this.currentChainId][this.currentAccountIndex];
     const signature = await signer.signMessage(message);
     console.log(`Message signed: ${signature}`);
     return signature;
   }
 
   async signTypedData(domain: any, types: any, value: any): Promise<string> {
-    const { signer } = this.walletMap[this.currentChainId][this.currentAccountIndex]
+    const { signer } = this.walletMap[this.currentChainId][this.currentAccountIndex];
 
     const signature = await signer.signTypedData(domain, types, value);
     console.log(`Typed data signed: ${signature}`);
@@ -194,7 +193,7 @@ export class MockEthereumWallet extends EthereumWallet {
     derivationPaths: string[];
     accountCount: number;
     currentAccountIndex: number;
-  } {
+    } {
     return {
       mnemonic: this.mnemonic,
       derivationPaths: [...this.derivationPaths],

@@ -1,5 +1,5 @@
-import { ConnectModalHead, ConnectModalQRCode } from "@interchain-ui/react";
-import { BaseWallet } from "@interchain-kit/core";
+import { BaseWallet } from '@interchain-kit/core';
+import { ConnectModalHead, ConnectModalQRCode } from '@interchain-ui/react';
 
 export const QRCodeHeader = ({
   wallet,
@@ -12,7 +12,7 @@ export const QRCodeHeader = ({
 }) => {
   return (
     <ConnectModalHead
-      title={wallet?.info?.prettyName || ""}
+      title={wallet?.info?.prettyName || ''}
       hasBackButton={true}
       onClose={() => void 0}
       onBack={onBack}
@@ -31,11 +31,11 @@ export const QRCodeContent = ({
 }) => {
   return (
     <ConnectModalQRCode
-      status={walletConnectQRCodeUri ? "Done" : "Pending"}
+      status={walletConnectQRCodeUri ? 'Done' : 'Pending'}
       link={walletConnectQRCodeUri}
-      description={"Open App to connect"}
-      errorTitle={"errorTitle"}
-      errorDesc={errorMessage || ""}
+      description={'Open App to connect'}
+      errorTitle={'errorTitle'}
+      errorDesc={errorMessage || ''}
       onRefresh={onReconnect}
     />
   );

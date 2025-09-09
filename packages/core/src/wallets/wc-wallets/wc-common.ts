@@ -1,4 +1,5 @@
 import UniversalProvider from '@walletconnect/universal-provider';
+
 import { WCWallet } from './wc-wallet';
 
 
@@ -12,4 +13,4 @@ export interface IWCCommon {
 
 export const isWCCommon = (wallet: any): wallet is IWCCommon => {
   return wallet.setWCProvider && wallet.getWCProvider;
-}
+};

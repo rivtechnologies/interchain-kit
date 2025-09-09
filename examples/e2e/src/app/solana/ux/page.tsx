@@ -1,12 +1,13 @@
-"use client";
+'use client';
 
-import { mockSolanaWalletSender } from "@/wallet/solana/wallet";
-import { MockSolanaWallet } from "@interchain-kit/mock-wallet";
-import { useChainWallet } from "@interchain-kit/react";
+import { MockSolanaWallet } from '@interchain-kit/mock-wallet';
+import { useChainWallet } from '@interchain-kit/react';
+
+import { mockSolanaWalletSender } from '@/wallet/solana/wallet';
 
 export default function UxPage() {
   const { address, connect, wallet } = useChainWallet(
-    "solana",
+    'solana',
     mockSolanaWalletSender.info.name
   );
 

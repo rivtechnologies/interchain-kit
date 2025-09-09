@@ -1,4 +1,4 @@
-import { clientNotExistError, CosmosWallet, ExtensionWallet, Wallet } from "@interchain-kit/core";
+import { clientNotExistError, CosmosWallet, ExtensionWallet, Wallet } from '@interchain-kit/core';
 
 const notInstalledWalletInfo: Wallet = {
   name: 'notInstalledWallet',
@@ -13,14 +13,14 @@ const notInstalledWalletInfo: Wallet = {
       link: 'http://show-not-installed-wallet.link',
     },
   ]
-}
+};
 
 
 
 export const notInstalledWallet = new ExtensionWallet(notInstalledWalletInfo);
 
-notInstalledWallet.setNetworkWallet('cosmos', new CosmosWallet(notInstalledWalletInfo))
+notInstalledWallet.setNetworkWallet('cosmos', new CosmosWallet(notInstalledWalletInfo));
 
 notInstalledWallet.init = () => {
-  throw clientNotExistError
-}
+  throw clientNotExistError;
+};

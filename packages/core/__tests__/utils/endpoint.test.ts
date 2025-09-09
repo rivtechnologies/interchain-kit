@@ -1,4 +1,4 @@
-import { isValidRpcEndpoint, getValidRpcEndpoint, RpcInfo } from '../../src/utils/endpoint';
+import { getValidRpcEndpoint, isValidRpcEndpoint, RpcInfo } from '../../src/utils/endpoint';
 
 describe('endpoint utility functions', () => {
   const mockFetch = jest.fn();

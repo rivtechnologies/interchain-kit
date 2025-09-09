@@ -1,6 +1,7 @@
 import { AssetList, Chain } from '@chain-registry/types';
 import { ChainNameNotExist, WalletState } from '@interchain-kit/core';
 import { computed, inject, Ref, ref, watch } from 'vue';
+
 import { CosmosKitUseChainReturnType, UseChainReturnType } from '../types/chain';
 import { CLOSE_MODAL_KEY, OPEN_MODAL_KEY } from '../utils';
 import { useAccount } from './useAccount';
@@ -41,7 +42,7 @@ export const useChain = (chainName: Ref<string>): UseChainReturnType => {
   const disconnect = computed(() => {
     return () => {
       walletManager.disconnect(currentWallet.value?.info?.name);
-    }
+    };
   });
 
   const cosmosKitUserChainReturnType: CosmosKitUseChainReturnType = {
@@ -51,7 +52,7 @@ export const useChain = (chainName: Ref<string>): UseChainReturnType => {
           return;
         }
         open();
-      }
+      };
     }),
     disconnect,
     openView: open,

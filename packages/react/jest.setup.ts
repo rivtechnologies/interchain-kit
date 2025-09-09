@@ -1,7 +1,7 @@
-import "@testing-library/jest-dom";
+import '@testing-library/jest-dom';
 
 // Polyfill for TextEncoder and TextDecoder
-import { TextEncoder, TextDecoder } from "util";
+import { TextDecoder,TextEncoder } from 'util';
 
 // Type assertion to resolve TypeScript compatibility issues
 (global as any).TextEncoder = TextEncoder;

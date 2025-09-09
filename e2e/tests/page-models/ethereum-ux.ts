@@ -1,4 +1,4 @@
-import { Page, Locator, expect } from '@playwright/test';
+import { expect,Locator, Page } from '@playwright/test';
 
 /**
  * Page Model 类，代表Ethereum UX页面的交互和元素
