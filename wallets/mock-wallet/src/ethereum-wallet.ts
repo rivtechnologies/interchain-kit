@@ -190,7 +190,7 @@ export class MockEthereumWallet extends EthereumWallet {
     derivationPaths: string[];
     accountCount: number;
     currentAccountIndex: number;
-  } {
+    } {
     return {
       mnemonic: this.mnemonic,
       derivationPaths: [...this.derivationPaths],
