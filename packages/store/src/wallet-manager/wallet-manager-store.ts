@@ -71,7 +71,11 @@ export class WalletManagerStore implements WalletManager {
   restore() {
     const oldState = this.localStorage.load();
 
-
+    this.store.setState({
+      chainWalletStates: oldState.chainWalletStates || [],
+      currentWalletName: oldState.currentWalletName || '',
+      currentChainName: oldState.currentChainName || ''
+    });
 
     // 重建索引映射
     this.store.buildIndexMap();
@@ -101,7 +105,6 @@ export class WalletManagerStore implements WalletManager {
         }
       });
     });
-
     // 合并过滤后的状态和新增的状态
     const finalChainWalletStates = [...filteredChainWalletStates, ...newChainWalletStates];
 
@@ -120,7 +123,7 @@ export class WalletManagerStore implements WalletManager {
 
     // 直接设置state，避免触发emit
     this.store.setState({
-      chainWalletStates: oldState.chainWalletStates || [],
+      chainWalletStates: finalChainWalletStates,
       currentWalletName: isOldWalletNameExisted ? oldState.currentWalletName : '',
       currentChainName: isOldChainNameExisted ? oldState.currentChainName : '',
     });

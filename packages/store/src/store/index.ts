@@ -139,7 +139,6 @@ export class InterchainStore {
       }
       return cws;
     });
-
     this.setState({ chainWalletStates: newChainWalletStates });
   }
 

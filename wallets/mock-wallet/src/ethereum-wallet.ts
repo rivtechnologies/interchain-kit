@@ -1,5 +1,5 @@
-import { EthereumWallet,Wallet, WalletAccount } from '@interchain-kit/core';
-import { Eip1193Provider,ethers, HDNodeWallet } from 'ethers';
+import { EthereumWallet, Wallet, WalletAccount } from '@interchain-kit/core';
+import { Eip1193Provider, ethers, HDNodeWallet } from 'ethers';
 
 export interface MockEthereumNetwork {
   chainId: number;
@@ -48,10 +48,7 @@ export class MockEthereumWallet extends EthereumWallet {
 
 
   async init(): Promise<void> {
-
     const chains = Array.from(this.chainMap.values());
-
-    console.log(chains);
 
     this.currentChainId = chains[0].chainId;
 
@@ -193,7 +190,7 @@ export class MockEthereumWallet extends EthereumWallet {
     derivationPaths: string[];
     accountCount: number;
     currentAccountIndex: number;
-    } {
+  } {
     return {
       mnemonic: this.mnemonic,
       derivationPaths: [...this.derivationPaths],

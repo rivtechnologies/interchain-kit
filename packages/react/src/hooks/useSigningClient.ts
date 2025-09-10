@@ -4,7 +4,17 @@ import { useAsync } from './useAsync';
 import { useWalletManager } from './useWalletManager';
 
 export const useSigningClient = (chainName: string, walletName: string) => {
-  const { getSigningClient, getChainWalletState, getRpcEndpoint, isReady } = useWalletManager();
+  const { getSigningClient, getChainWalletState, getRpcEndpoint, isReady, getChainByName } = useWalletManager();
+
+  const chain = getChainByName(chainName);
+
+  if (chain.chainType !== 'cosmos') {
+    return {
+      signingClient: null,
+      isLoading: false,
+      error: null,
+    };
+  }
 
   const chainWalletState = getChainWalletState(walletName, chainName);
 
