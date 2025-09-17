@@ -2,6 +2,7 @@ import { AssetList, Chain } from '@chain-registry/types';
 import { StdSignature } from '@interchainjs/amino';
 import { AminoSignResponse, DirectSignResponse } from '@interchainjs/cosmos';
 import { StdSignDoc } from '@interchainjs/types';
+import { PublicKey } from '@solana/web3.js';
 
 import { SignType } from './common';
 import { OfflineAminoSigner, OfflineDirectSigner } from './cosmos';
@@ -52,6 +53,8 @@ export interface IEthereumWallet extends IBaseWallet {
 export interface ISolanaWallet extends IBaseWallet {
   // Solana-specific properties
   solana: any;
+
+  publicKey: PublicKey;
 
   // Solana-specific methods
   bindingEvent(): void;

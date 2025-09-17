@@ -1,4 +1,4 @@
-import { assetLists, chains } from "chain-registry";
+import { assetLists, chains } from 'chain-registry';
 import {
   BaseWallet,
   EthereumWallet,
@@ -6,31 +6,31 @@ import {
   MultiChainWallet,
   SolanaWallet,
   WCWallet,
-} from "@interchain-kit/core";
+} from '@interchain-kit/core';
 import {
   SigningClient,
   useChainWallet,
   useWalletManager,
   useWalletModal,
-} from "@interchain-kit/react";
-import { useRef, useState } from "react";
-import { makeKeplrChainInfo } from "../utils";
-import { Chain, Asset, AssetList } from "@chain-registry/types";
-import { coins } from "@cosmjs/amino";
-import { ChainInfo } from "@keplr-wallet/types";
-import { getBalance } from "interchainjs/cosmos/bank/v1beta1/query.rpc.func";
-import QRCode from "react-qr-code";
-import { send } from "interchainjs/cosmos/bank/v1beta1/tx.rpc.func";
-import { ethers } from "ethers";
+} from '@interchain-kit/react';
+import { useRef, useState } from 'react';
+import { makeKeplrChainInfo } from '../utils';
+import { Chain, Asset, AssetList } from '@chain-registry/types';
+import { coins } from '@cosmjs/amino';
+import { ChainInfo } from '@keplr-wallet/types';
+import { getBalance } from 'interchainjs/cosmos/bank/v1beta1/query.rpc.func';
+import QRCode from 'react-qr-code';
+import { send } from 'interchainjs/cosmos/bank/v1beta1/tx.rpc.func';
+import { ethers } from 'ethers';
 
 import {
   Connection,
   PublicKey,
   Transaction,
   SystemProgram,
-} from "@solana/web3.js";
-import { MsgSend } from "interchainjs/cosmos/bank/v1beta1/tx";
-import { ChainWalletStore } from "@interchain-kit/store";
+} from '@solana/web3.js';
+import { MsgSend } from 'interchainjs/cosmos/bank/v1beta1/tx';
+import { ChainWalletStore } from '@interchain-kit/store';
 
 type BalanceProps = {
   address: string;
@@ -55,7 +55,7 @@ const BalanceTd = ({ address, wallet, chain, assetList }: BalanceProps) => {
 
     setIsLoading(true);
 
-    if (chain.chainType === "cosmos") {
+    if (chain.chainType === 'cosmos') {
       balance = await getBalance(rpcEndpoint as string, {
         address,
         denom:
@@ -63,7 +63,7 @@ const BalanceTd = ({ address, wallet, chain, assetList }: BalanceProps) => {
           assetList.assets[0].base,
       });
     }
-    if (chain.chainType === "eip155") {
+    if (chain.chainType === 'eip155') {
       const provider = await wallet.getProvider(chain.chainId as string);
       // provider = new ethers.providers.JsonRpcProvider(rpcEndpoint as string);
 
@@ -72,8 +72,8 @@ const BalanceTd = ({ address, wallet, chain, assetList }: BalanceProps) => {
 
       balance = { balance: { amount: result.toString() } };
     }
-    if (chain.chainType === "solana") {
-      const connection = new Connection(rpcEndpoint as string, "confirmed");
+    if (chain.chainType === 'solana') {
+      const connection = new Connection(rpcEndpoint as string, 'confirmed');
       const result = await connection.getBalance(new PublicKey(address));
       balance = { balance: { amount: result.toString() } };
     }
@@ -109,7 +109,7 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
   const { assetList, signingClient, isSigningClientLoading, rpcEndpoint } =
     useChainWallet(chain.chainName, wallet.info?.name as string);
   if (
-    chain.chainType === "cosmos" &&
+    chain.chainType === 'cosmos' &&
     (isSigningClientLoading || !signingClient)
   ) {
     return <td>loading...</td>;
@@ -120,7 +120,7 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
       return;
     }
 
-    if (chain.chainType === "cosmos") {
+    if (chain.chainType === 'cosmos') {
       const recipientAddress = toAddressRef.current.value;
       const denom =
         (chain.staking?.stakingTokens[0].denom as string) ||
@@ -128,7 +128,7 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
 
       const fee = {
         amount: coins(25000, denom),
-        gas: "100000",
+        gas: '100000',
       };
 
       const token = {
@@ -148,7 +148,7 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
           address,
           msgSend,
           fee,
-          "test"
+          'test'
         );
         console.log(tx);
       } catch (error) {
@@ -156,7 +156,7 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
       }
     }
 
-    if (chain.chainType === "eip155") {
+    if (chain.chainType === 'eip155') {
       const transaction = {
         from: address,
         to: toAddressRef.current.value,
@@ -172,7 +172,7 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
         provider = wallet.getProvider(chain.chainId as string);
       }
       if (wallet instanceof MultiChainWallet) {
-        const ethWallet = wallet.getWalletByChainType("eip155");
+        const ethWallet = wallet.getWalletByChainType('eip155');
         provider = ethWallet.getProvider(chain.chainId as string);
       }
       provider = new ethers.providers.JsonRpcProvider(rpcEndpoint as string);
@@ -184,15 +184,15 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
         const tx = await signer.sendTransaction(transaction);
         console.log(tx);
         const txReceipt = await tx.wait();
-        console.log("Transaction hash:", txReceipt?.hash);
+        console.log('Transaction hash:', txReceipt?.hash);
         console.log(txResponse);
       } catch (error) {
         console.log(error);
       }
     }
 
-    if (chain.chainType === "solana") {
-      const connection = new Connection(rpcEndpoint as string, "confirmed");
+    if (chain.chainType === 'solana') {
+      const connection = new Connection(rpcEndpoint as string, 'confirmed');
 
       // 1. 构建转账指令
       const transaction = new Transaction().add(
@@ -219,7 +219,7 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
       // 4. 发送交易
       const signature = await connection.sendRawTransaction(signed.serialize());
       await connection.confirmTransaction(signature);
-      console.log("交易已发送:", signature);
+      console.log('交易已发送:', signature);
     }
   };
 
@@ -235,7 +235,7 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
         />
       </div>
       <div>
-        amount:{" "}
+        amount:{' '}
         <input className="border-red-300 border-2 rounded-sm" ref={amountRef} />
       </div>
     </td>
@@ -323,11 +323,11 @@ const WalletConnectTd = ({ wallet }: { wallet: StatefulWallet }) => {
   );
 
   const connect = () => {
-    walletManager.connect(wallet.info?.name as string, "osmosis");
+    walletManager.connect(wallet.info?.name as string, 'osmosis');
   };
 
   const disconnect = () => {
-    walletManager.disconnect(wallet.info?.name as string, "osmosis");
+    walletManager.disconnect(wallet.info?.name as string, 'osmosis');
   };
 
   const uri = walletManager.walletConnectQRCodeUri;
@@ -366,29 +366,29 @@ const E2ETest = () => {
 
   const addChain = async () => {
     const keplrExtension = walletManager.wallets.find(
-      (w) => w.info?.name === "keplr-extension"
+      (w) => w.info?.name === 'keplr-extension'
     );
 
-    const chain = chains.find((c) => c.chainName === "cosmoshub");
-    const assetList = assetLists.find((a) => a.chainName === "cosmoshub");
+    const chain = chains.find((c) => c.chainName === 'cosmoshub');
+    const assetList = assetLists.find((a) => a.chainName === 'cosmoshub');
 
     const chainInfo: ChainInfo = makeKeplrChainInfo(
       chain as Chain,
       assetList?.assets[0] as Asset,
-      "http://localhost:26653",
-      "http://localhost:1313",
-      "test-cosmoshub-4",
-      "cosmoshub"
+      'http://localhost:26653',
+      'http://localhost:1313',
+      'test-cosmoshub-4',
+      'cosmoshub'
     );
 
     keplrExtension?.addSuggestChain(chainInfo);
   };
 
-  const chainNameToAdd = "cosmoshubtestnet";
+  const chainNameToAdd = 'cosmoshubtestnet';
 
   return (
     <div>
-      <table style={{ width: "1000px" }}>
+      <table style={{ width: '1000px' }}>
         <thead>
           <tr>
             <th>Name</th>
@@ -454,7 +454,7 @@ const E2ETest = () => {
             {
               endpoints: {
                 [chainNameToAdd]: {
-                  rpc: ["http://localhost:26657"],
+                  rpc: ['http://localhost:26657'],
                 },
               },
             }

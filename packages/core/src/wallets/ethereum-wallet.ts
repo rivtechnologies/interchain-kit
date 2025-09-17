@@ -76,7 +76,7 @@ export class EthereumWallet extends BaseWallet implements IEthereumWallet {
   }
   async getAccount(chainId: Chain['chainId']): Promise<WalletAccount> {
     await this.switchChain(chainId);
-    const accounts = await this.ethereum.request({ method: 'eth_requestAccounts', params: [{ chainId }] });
+    const accounts = await this.ethereum.request({ method: 'eth_requestAccounts' });
 
     return {
       address: accounts[0],

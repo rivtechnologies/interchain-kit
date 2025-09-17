@@ -59,7 +59,7 @@ import {
 const chainNames: string[] = [
   // "injectivetestnet",
   // "osmosistestnet",
-  // "osmosis",
+  // 'osmosis',
   // "juno",
   // "cosmoshub",
   // "stargaze",
@@ -147,7 +147,7 @@ const _chains = [
   ...chains.filter((c) => chainNames.includes(c.chainName)),
   // createChainFromEthereumChainInfo(bscethertestnet),
   // createChainFromEthereumChainInfo(goerliethereumtestnet),
-  // createChainFromEthereumChainInfo(sepoliaEthereumTestNet),
+  createChainFromEthereumChainInfo(sepoliaEthereumTestNet),
   // createChainFromEthereumChainInfo(HOLESKY_TESTNET),
   // createStarshipChain(
   //   "test-osmosis-1",
@@ -164,7 +164,7 @@ const _assetLists = [
   ...assetLists.filter((a) => chainNames.includes(a.chainName)),
   // createAssetListFromEthereumChainInfo(bscethertestnet),
   // createAssetListFromEthereumChainInfo(goerliethereumtestnet),
-  // createAssetListFromEthereumChainInfo(sepoliaEthereumTestNet),
+  createAssetListFromEthereumChainInfo(sepoliaEthereumTestNet),
   // createAssetListFromEthereumChainInfo(HOLESKY_TESTNET),
   // createStarshipAssetList("osmosis"),
   createSolanaAssetList('devnet'),

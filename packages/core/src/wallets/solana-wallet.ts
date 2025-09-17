@@ -1,5 +1,5 @@
 import { Chain } from '@chain-registry/types';
-import { Transaction, TransactionSignature, VersionedTransaction } from '@solana/web3.js';
+import { PublicKey, Transaction, TransactionSignature, VersionedTransaction } from '@solana/web3.js';
 
 import { ISolanaWallet, SignType, Wallet, WalletAccount } from '../types';
 import { OfflineAminoSigner, OfflineDirectSigner } from '../types/cosmos';
@@ -24,6 +24,11 @@ export class SolanaWallet extends BaseWallet implements ISolanaWallet {
   constructor(info: Wallet) {
     super(info);
   }
+
+  get publicKey(): PublicKey {
+    return this.solana?.publicKey;
+  }
+
   bindingEvent() {
     this.solana.on(this.info.keystoreChange, () => {
       this.events.emit('accountChanged', () => { });
