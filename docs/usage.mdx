@@ -113,6 +113,125 @@ function WalletManagerComponent() {
 }
 ```
 
+### useChains
+
+The `useChains` hook allows you to work with multiple chains simultaneously. This is useful when you need to access data and functionality from several blockchains at once:
+
+```tsx
+import { useChains } from '@interchain-kit/react';
+
+function MultiChainComponent() {
+  // Access data and functions for multiple chains
+  const chains = useChains(['osmosis', 'juno', 'cosmoshub']);
+  
+  return (
+    <div>
+      <h2>Multi-Chain Dashboard</h2>
+      
+      {/* Osmosis Chain */}
+      <div>
+        <h3>Osmosis</h3>
+        <div>Status: {chains.osmosis.status}</div>
+        <div>Address: {chains.osmosis.address}</div>
+        <div>Chain ID: {chains.osmosis.chain.chainId}</div>
+        {chains.osmosis.status === 'Connected' ? (
+          <button onClick={chains.osmosis.disconnect}>Disconnect Osmosis</button>
+        ) : (
+          <button onClick={chains.osmosis.connect}>Connect Osmosis</button>
+        )}
+      </div>
+
+      {/* Juno Chain */}
+      <div>
+        <h3>Juno</h3>
+        <div>Status: {chains.juno.status}</div>
+        <div>Address: {chains.juno.address}</div>
+        <div>Chain ID: {chains.juno.chain.chainId}</div>
+        {chains.juno.status === 'Connected' ? (
+          <button onClick={chains.juno.disconnect}>Disconnect Juno</button>
+        ) : (
+          <button onClick={chains.juno.connect}>Connect Juno</button>
+        )}
+      </div>
+
+      {/* Cosmos Hub Chain */}
+      <div>
+        <h3>Cosmos Hub</h3>
+        <div>Status: {chains.cosmoshub.status}</div>
+        <div>Address: {chains.cosmoshub.address}</div>
+        <div>Chain ID: {chains.cosmoshub.chain.chainId}</div>
+        {chains.cosmoshub.status === 'Connected' ? (
+          <button onClick={chains.cosmoshub.disconnect}>Disconnect Cosmos Hub</button>
+        ) : (
+          <button onClick={chains.cosmoshub.connect}>Connect Cosmos Hub</button>
+        )}
+      </div>
+    </div>
+  );
+}
+```
+
+### Advanced Multi-Chain Usage
+
+You can also use `useChains` for more complex scenarios like cross-chain operations:
+
+```tsx
+import { useChains } from '@interchain-kit/react';
+import { useState } from 'react';
+
+function CrossChainComponent() {
+  const chains = useChains(['osmosis', 'juno']);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const performCrossChainOperation = async () => {
+    if (chains.osmosis.status !== 'Connected' || chains.juno.status !== 'Connected') {
+      alert('Please connect to both Osmosis and Juno');
+      return;
+    }
+
+    setIsProcessing(true);
+    try {
+      // Example: Get signing clients for both chains
+      const osmosisClient = await chains.osmosis.getSigningClient();
+      const junoClient = await chains.juno.getSigningClient();
+
+      // Perform operations on both chains
+      console.log('Osmosis address:', chains.osmosis.address);
+      console.log('Juno address:', chains.juno.address);
+      
+      // Your cross-chain logic here
+      console.log('Cross-chain operation completed');
+    } catch (error) {
+      console.error('Cross-chain operation failed:', error);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  return (
+    <div>
+      <h2>Cross-Chain Operations</h2>
+      
+      <div>
+        <h3>Chain Status</h3>
+        <div>Osmosis: {chains.osmosis.status}</div>
+        <div>Juno: {chains.juno.status}</div>
+      </div>
+
+      <button 
+        onClick={performCrossChainOperation}
+        disabled={isProcessing || 
+          chains.osmosis.status !== 'Connected' || 
+          chains.juno.status !== 'Connected'
+        }
+      >
+        {isProcessing ? 'Processing...' : 'Perform Cross-Chain Operation'}
+      </button>
+    </div>
+  );
+}
+```
+
 ### useWalletModal
 
 The `useWalletModal` hook controls the built-in wallet modal for connecting and switching wallets:
@@ -193,6 +312,84 @@ const {
     <div>Address: {{ address }}</div>
     <button @click="connect.value()">Connect</button>
     <button @click="disconnect.value()">Disconnect</button>
+  </div>
+</template>
+```
+
+### useChains
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useChains } from '@interchain-kit/vue';
+
+const chainNames = ref(['osmosis', 'juno', 'cosmoshub']);
+const chains = useChains(chainNames);
+</script>
+
+<template>
+  <div>
+    <h2>Multi-Chain Dashboard</h2>
+    
+    <!-- Osmosis Chain -->
+    <div>
+      <h3>Osmosis</h3>
+      <div>Status: {{ chains.osmosis.status }}</div>
+      <div>Address: {{ chains.osmosis.address }}</div>
+      <div>Chain ID: {{ chains.osmosis.chain.chainId }}</div>
+      <button 
+        v-if="chains.osmosis.status === 'Connected'" 
+        @click="chains.osmosis.disconnect.value()"
+      >
+        Disconnect Osmosis
+      </button>
+      <button 
+        v-else 
+        @click="chains.osmosis.connect.value()"
+      >
+        Connect Osmosis
+      </button>
+    </div>
+
+    <!-- Juno Chain -->
+    <div>
+      <h3>Juno</h3>
+      <div>Status: {{ chains.juno.status }}</div>
+      <div>Address: {{ chains.juno.address }}</div>
+      <div>Chain ID: {{ chains.juno.chain.chainId }}</div>
+      <button 
+        v-if="chains.juno.status === 'Connected'" 
+        @click="chains.juno.disconnect.value()"
+      >
+        Disconnect Juno
+      </button>
+      <button 
+        v-else 
+        @click="chains.juno.connect.value()"
+      >
+        Connect Juno
+      </button>
+    </div>
+
+    <!-- Cosmos Hub Chain -->
+    <div>
+      <h3>Cosmos Hub</h3>
+      <div>Status: {{ chains.cosmoshub.status }}</div>
+      <div>Address: {{ chains.cosmoshub.address }}</div>
+      <div>Chain ID: {{ chains.cosmoshub.chain.chainId }}</div>
+      <button 
+        v-if="chains.cosmoshub.status === 'Connected'" 
+        @click="chains.cosmoshub.disconnect.value()"
+      >
+        Disconnect Cosmos Hub
+      </button>
+      <button 
+        v-else 
+        @click="chains.cosmoshub.connect.value()"
+      >
+        Connect Cosmos Hub
+      </button>
+    </div>
   </div>
 </template>
 ```
@@ -337,6 +534,430 @@ function EVMComponent() {
   );
 }
 ```
+
+## Supporting Solana
+
+Interchain Kit provides comprehensive support for Solana blockchain through SolanaWallet:
+
+### Available Solana Wallets
+
+Interchain Kit supports several popular Solana wallets:
+
+- **Phantom Extension** - Most popular Solana wallet
+- **Backpack Extension** - Multi-chain wallet with Solana support
+- **Solflare Extension** - Feature-rich Solana wallet
+- **Ledger** - Hardware wallet support for Solana
+- **Mock Wallet** - For development and testing
+
+### Basic Solana Integration
+
+```tsx
+import { useChainWallet } from '@interchain-kit/react';
+import { SolanaWallet } from '@interchain-kit/core';
+
+function SolanaComponent() {
+  const { 
+    address, 
+    status, 
+    wallet, 
+    connect, 
+    disconnect 
+  } = useChainWallet('solana', 'phantom-extension');
+
+  return (
+    <div>
+      <div>Wallet: Phantom</div>
+      <div>Chain: Solana</div>
+      <div>Status: {status}</div>
+      <div>Address: {address}</div>
+      <button onClick={connect}>Connect</button>
+      <button onClick={disconnect}>Disconnect</button>
+    </div>
+  );
+}
+```
+
+### Solana Transaction Signing
+
+```tsx
+import { useChainWallet } from '@interchain-kit/react';
+import { SolanaWallet } from '@interchain-kit/core';
+import { 
+  Connection, 
+  PublicKey, 
+  Transaction, 
+  SystemProgram,
+  LAMPORTS_PER_SOL 
+} from '@solana/web3.js';
+
+function SolanaTransactionComponent() {
+  const { address, status, wallet } = useChainWallet('solana', 'phantom-extension');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const sendSol = async () => {
+    if (status !== 'Connected' || !address) return;
+    
+    setIsLoading(true);
+    try {
+      // Get Solana wallet instance
+      const solanaWallet = wallet.getWalletOfType(SolanaWallet);
+      if (!solanaWallet) throw new Error('Solana wallet not found');
+
+      // Create connection to Solana network
+      const connection = new Connection('https://api.mainnet-beta.solana.com');
+      
+      // Create transaction
+      const transaction = new Transaction().add(
+        SystemProgram.transfer({
+          fromPubkey: new PublicKey(address),
+          toPubkey: new PublicKey('recipient-address'),
+          lamports: 0.1 * LAMPORTS_PER_SOL, // 0.1 SOL
+        })
+      );
+
+      // Get recent blockhash
+      const { blockhash } = await connection.getLatestBlockhash();
+      transaction.recentBlockhash = blockhash;
+      transaction.feePayer = new PublicKey(address);
+
+      // Sign and send transaction
+      const signedTransaction = await solanaWallet.signTransaction(transaction);
+      const signature = await connection.sendRawTransaction(signedTransaction.serialize());
+      
+      console.log('Transaction signature:', signature);
+    } catch (error) {
+      console.error('Transaction failed:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div>
+      <button 
+        onClick={sendSol} 
+        disabled={isLoading || status !== 'Connected'}
+      >
+        {isLoading ? 'Sending...' : 'Send 0.1 SOL'}
+      </button>
+    </div>
+  );
+}
+```
+
+### Signing Solana Messages
+
+```tsx
+import { useChainWallet } from '@interchain-kit/react';
+import { SolanaWallet } from '@interchain-kit/core';
+
+function SolanaMessageComponent() {
+  const { address, status, wallet } = useChainWallet('solana', 'phantom-extension');
+  const [message, setMessage] = useState('');
+  const [signature, setSignature] = useState<Uint8Array | null>(null);
+
+  const signMessage = async () => {
+    if (status !== 'Connected' || !message) return;
+    
+    try {
+      const solanaWallet = wallet.getWalletOfType(SolanaWallet);
+      if (!solanaWallet) throw new Error('Solana wallet not found');
+
+      // Convert message to Uint8Array
+      const messageBytes = new TextEncoder().encode(message);
+      
+      // Sign the message
+      const signedMessage = await solanaWallet.signMessage(messageBytes, 'utf8');
+      setSignature(signedMessage);
+      
+      console.log('Message signed:', signedMessage);
+    } catch (error) {
+      console.error('Failed to sign message:', error);
+    }
+  };
+
+  return (
+    <div>
+      <h3>Sign Solana Message</h3>
+      <textarea
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        placeholder="Enter message to sign"
+        rows={3}
+        cols={50}
+      />
+      <br />
+      <button onClick={signMessage} disabled={status !== 'Connected'}>
+        Sign Message
+      </button>
+      {signature && (
+        <div>
+          <h4>Signature:</h4>
+          <pre>{Array.from(signature).map(b => b.toString(16).padStart(2, '0')).join('')}</pre>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+### Batch Transaction Signing
+
+```tsx
+import { useChainWallet } from '@interchain-kit/react';
+import { SolanaWallet } from '@interchain-kit/core';
+import { 
+  Connection, 
+  PublicKey, 
+  Transaction, 
+  SystemProgram,
+  LAMPORTS_PER_SOL 
+} from '@solana/web3.js';
+
+function SolanaBatchTransactionComponent() {
+  const { address, status, wallet } = useChainWallet('solana', 'phantom-extension');
+
+  const signBatchTransactions = async () => {
+    if (status !== 'Connected' || !address) return;
+    
+    try {
+      const solanaWallet = wallet.getWalletOfType(SolanaWallet);
+      if (!solanaWallet) throw new Error('Solana wallet not found');
+
+      const connection = new Connection('https://api.mainnet-beta.solana.com');
+      const { blockhash } = await connection.getLatestBlockhash();
+
+      // Create multiple transactions
+      const transactions = [
+        new Transaction().add(
+          SystemProgram.transfer({
+            fromPubkey: new PublicKey(address),
+            toPubkey: new PublicKey('recipient1-address'),
+            lamports: 0.1 * LAMPORTS_PER_SOL,
+          })
+        ),
+        new Transaction().add(
+          SystemProgram.transfer({
+            fromPubkey: new PublicKey(address),
+            toPubkey: new PublicKey('recipient2-address'),
+            lamports: 0.05 * LAMPORTS_PER_SOL,
+          })
+        )
+      ];
+
+      // Set recent blockhash for all transactions
+      transactions.forEach(tx => {
+        tx.recentBlockhash = blockhash;
+        tx.feePayer = new PublicKey(address);
+      });
+
+      // Sign all transactions at once
+      const signedTransactions = await solanaWallet.signAllTransactions(transactions);
+      
+      console.log('Batch transactions signed:', signedTransactions);
+    } catch (error) {
+      console.error('Batch signing failed:', error);
+    }
+  };
+
+  return (
+    <div>
+      <button onClick={signBatchTransactions} disabled={status !== 'Connected'}>
+        Sign Batch Transactions
+      </button>
+    </div>
+  );
+}
+```
+
+### Solana Account Information
+
+```tsx
+import { useChainWallet } from '@interchain-kit/react';
+import { Connection, PublicKey } from '@solana/web3.js';
+import { useState, useEffect } from 'react';
+
+function SolanaAccountInfo() {
+  const { address, status } = useChainWallet('solana', 'phantom-extension');
+  const [balance, setBalance] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetchBalance = async () => {
+    if (status !== 'Connected' || !address) return;
+    
+    setIsLoading(true);
+    try {
+      const connection = new Connection('https://api.mainnet-beta.solana.com');
+      const publicKey = new PublicKey(address);
+      const balance = await connection.getBalance(publicKey);
+      setBalance(balance / LAMPORTS_PER_SOL); // Convert lamports to SOL
+    } catch (error) {
+      console.error('Failed to fetch balance:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (status === 'Connected') {
+      fetchBalance();
+    }
+  }, [status, address]);
+
+  return (
+    <div>
+      <h3>Account Information</h3>
+      <div>Address: {address}</div>
+      <div>Status: {status}</div>
+      <div>
+        Balance: {isLoading ? 'Loading...' : balance !== null ? `${balance} SOL` : 'N/A'}
+      </div>
+      <button onClick={fetchBalance} disabled={isLoading || status !== 'Connected'}>
+        Refresh Balance
+      </button>
+    </div>
+  );
+}
+```
+
+### Vue Solana Integration
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useChainWallet } from '@interchain-kit/vue';
+import { SolanaWallet } from '@interchain-kit/core';
+import { Connection, PublicKey, Transaction, SystemProgram, LAMPORTS_PER_SOL } from '@solana/web3.js';
+
+const chainName = ref('solana');
+const walletName = ref('phantom-extension');
+const { address, connect, disconnect, status, wallet } = useChainWallet(chainName, walletName);
+
+const sendSol = async () => {
+  if (status.value !== 'Connected' || !address.value) return;
+  
+  try {
+    const solanaWallet = wallet.value.getWalletOfType(SolanaWallet);
+    if (!solanaWallet) throw new Error('Solana wallet not found');
+
+    const connection = new Connection('https://api.mainnet-beta.solana.com');
+    const transaction = new Transaction().add(
+      SystemProgram.transfer({
+        fromPubkey: new PublicKey(address.value),
+        toPubkey: new PublicKey('recipient-address'),
+        lamports: 0.1 * LAMPORTS_PER_SOL,
+      })
+    );
+
+    const { blockhash } = await connection.getLatestBlockhash();
+    transaction.recentBlockhash = blockhash;
+    transaction.feePayer = new PublicKey(address.value);
+
+    const signedTransaction = await solanaWallet.signTransaction(transaction);
+    const signature = await connection.sendRawTransaction(signedTransaction.serialize());
+    
+    console.log('Transaction signature:', signature);
+  } catch (error) {
+    console.error('Transaction failed:', error);
+  }
+};
+</script>
+
+<template>
+  <div>
+    <div>Wallet: Phantom</div>
+    <div>Chain: Solana</div>
+    <div>Status: {{ status }}</div>
+    <div>Address: {{ address }}</div>
+    <button @click="connect.value()" v-if="status !== 'Connected'">Connect</button>
+    <button @click="disconnect.value()" v-else>Disconnect</button>
+    <button @click="sendSol" v-if="status === 'Connected'">Send 0.1 SOL</button>
+  </div>
+</template>
+```
+
+### Solana Wallet Setup
+
+To use Solana wallets in your application, you need to include them in your ChainProvider:
+
+```tsx
+import { ChainProvider } from '@interchain-kit/react';
+import { phantomWallet } from '@interchain-kit/phantom-extension';
+import { backPackWallet } from '@interchain-kit/backpack-extension';
+import { solflareWallet } from '@interchain-kit/solflare-extension';
+
+// Define Solana chain configuration
+const solanaChain = {
+  chainId: 'solana',
+  chainName: 'Solana',
+  rpc: 'https://api.mainnet-beta.solana.com',
+  rest: 'https://api.mainnet-beta.solana.com',
+  bip44: {
+    coinType: 501,
+  },
+  bech32Config: {
+    bech32PrefixAccAddr: 'sol',
+    bech32PrefixAccPub: 'solpub',
+    bech32PrefixValAddr: 'solvaloper',
+    bech32PrefixValPub: 'solvaloperpub',
+    bech32PrefixConsAddr: 'solvalcons',
+    bech32PrefixConsPub: 'solvalconspub',
+  },
+  currencies: [
+    {
+      coinDenom: 'SOL',
+      coinMinimalDenom: 'lamports',
+      coinDecimals: 9,
+    },
+  ],
+  feeCurrencies: [
+    {
+      coinDenom: 'SOL',
+      coinMinimalDenom: 'lamports',
+      coinDecimals: 9,
+    },
+  ],
+  stakeCurrency: {
+    coinDenom: 'SOL',
+    coinMinimalDenom: 'lamports',
+    coinDecimals: 9,
+  },
+  coinType: 501,
+  features: ['ibc-transfer'],
+};
+
+function App() {
+  return (
+    <ChainProvider
+      wallets={[phantomWallet, backPackWallet, solflareWallet]}
+      chains={[solanaChain]}
+      assetLists={[]}
+    >
+      {/* Your app components */}
+    </ChainProvider>
+  );
+}
+```
+
+### Solana-Specific Features
+
+Interchain Kit's Solana support includes:
+
+- **Transaction Signing**: Sign individual and batch transactions
+- **Message Signing**: Sign arbitrary messages for authentication
+- **Account Management**: Access to public keys and account information
+- **Provider Access**: Direct access to Solana wallet providers
+- **Multi-Wallet Support**: Support for multiple Solana wallets simultaneously
+- **Error Handling**: Comprehensive error handling for Solana-specific operations
+
+### Best Practices for Solana
+
+1. **Network Selection**: Always specify the correct Solana network (mainnet-beta, devnet, testnet)
+2. **Transaction Fees**: Solana transactions require SOL for fees - ensure sufficient balance
+3. **Recent Blockhash**: Always fetch and set recent blockhash for transactions
+4. **Error Handling**: Handle Solana-specific errors like insufficient funds or network issues
+5. **Account Validation**: Validate Solana addresses before sending transactions
+6. **Batch Operations**: Use batch transaction signing for better UX when possible
 
 ## Using WalletConnect
 
