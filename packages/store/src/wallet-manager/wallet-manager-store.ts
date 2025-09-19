@@ -271,7 +271,7 @@ export class WalletManagerStore implements WalletManager {
         queryClient: await createCosmosQueryClient(rpcEndpoint as string),
         addressPrefix: chain.bech32Prefix,
         chainId: chain.chainId,
-        ...defaultSignerOptions,
+        ...defaultSignerOptions.cosmosSignerConfig,
       };
 
       if (preferredSignType === 'direct') {
