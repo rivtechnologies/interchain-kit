@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.50](https://github.com/interchain-kit/store/compare/@interchain-kit/store@0.3.49...@interchain-kit/store@0.3.50) (2025-09-19)
+
+### Bug Fixes
+
+- cosmos sign config in getSigningClient ([e9dc70e](https://github.com/interchain-kit/store/commit/e9dc70e4704f8985f1a6ed01a52f1a3749deb398))
+
 ## [0.3.49](https://github.com/interchain-kit/store/compare/@interchain-kit/store@0.3.48...@interchain-kit/store@0.3.49) (2025-09-10)
 
 **Note:** Version bump only for package @interchain-kit/store

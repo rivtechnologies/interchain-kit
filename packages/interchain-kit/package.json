@@ -1,6 +1,6 @@
 {
   "name": "interchain-kit",
-  "version": "0.3.49",
+  "version": "0.3.50",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "Universal wallet connector for the interchain",
   "main": "index.js",
