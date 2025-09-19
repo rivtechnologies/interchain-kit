@@ -3,9 +3,10 @@ import { HttpEndpoint } from '@interchainjs/types';
 
 import { ChainName } from './chain';
 import { SignType } from './common';
+import { CosmosSigningOptions } from './cosmos';
 
 export interface SignerOptions {
-  signing?: (chain: Chain | ChainName) => any | undefined;
+  signing?: (chain: Chain | ChainName) => CosmosSigningOptions | undefined;
   preferredSignType?: (chain: Chain | ChainName) => SignType | undefined; // using `amino` if undefined
 }
 
