@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.52](https://github.com/interchain-kit/store/compare/@interchain-kit/store@0.3.51...@interchain-kit/store@0.3.52) (2025-10-11)
+
+### Bug Fixes
+
+- more correct return type for getSigningClient https://github.com/hyperweb-io/interchain-kit/pull/29 ([55882a9](https://github.com/interchain-kit/store/commit/55882a9be1b1fe1810a7e7b7992ff44b6387c4ea))
+
 ## [0.3.51](https://github.com/interchain-kit/store/compare/@interchain-kit/store@0.3.50...@interchain-kit/store@0.3.51) (2025-09-29)
 
 **Note:** Version bump only for package @interchain-kit/store

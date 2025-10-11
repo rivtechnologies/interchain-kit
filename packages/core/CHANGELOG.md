@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.52](https://github.com/@interchain-kit/core/compare/@interchain-kit/core@0.3.51...@interchain-kit/core@0.3.52) (2025-10-11)
+
+### Bug Fixes
+
+- more correct return type for getSigningClient ([04fe08a](https://github.com/@interchain-kit/core/commit/04fe08a78923049a11cdbcddaa6f7be84364ff62))
+
 ## [0.3.51](https://github.com/@interchain-kit/core/compare/@interchain-kit/core@0.3.50...@interchain-kit/core@0.3.51) (2025-09-29)
 
 **Note:** Version bump only for package @interchain-kit/core
