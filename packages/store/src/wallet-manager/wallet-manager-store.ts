@@ -1,7 +1,6 @@
 import { AssetList, Chain } from '@chain-registry/types';
 import { BaseWallet, ChainName, CosmosSigningOptions, DeviceType, DownloadInfo, EndpointOptions, Endpoints, OS, SignerOptions, SignType, WalletAccount, WalletManager, WalletState } from '@interchain-kit/core';
-import { AminoSigner, CosmosSignerConfig, createCosmosQueryClient, ISigningClient, OfflineSigner } from '@interchainjs/cosmos';
-import { DirectSigner } from '@interchainjs/cosmos';
+import { AminoSigner, CosmosSignerConfig, createCosmosQueryClient, DirectSigner,OfflineSigner } from '@interchainjs/cosmos';
 import { HttpEndpoint } from '@interchainjs/types';
 import { getSigner } from 'interchainjs';
 
@@ -259,7 +258,7 @@ export class WalletManagerStore implements WalletManager {
   getOfflineSigner(walletName: string, chainName: string): Promise<any> {
     return this.getWalletByName(walletName).getChainWalletStore(chainName).getOfflineSigner();
   }
-  async getSigningClient(walletName: string, chainName: ChainName): Promise<ISigningClient> {
+  async getSigningClient(walletName: string, chainName: ChainName): Promise<DirectSigner | AminoSigner> {
     try {
       const chain = this.getChainByName(chainName);
       const rpcEndpoint = await this.getRpcEndpoint(walletName, chainName);
