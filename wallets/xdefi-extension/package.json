@@ -1,7 +1,7 @@
 {
   "name": "@interchain-kit/xdefi-extension",
   "version": "0.3.52",
-  "author": "Hyperweb <developers@hyperweb.io>",
+  "author": "Interweb <developers@interweb.co>",
   "description": "interchain-kit wallet connector",
   "main": "index.js",
   "module": "esm/index.js",
