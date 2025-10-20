@@ -253,18 +253,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           //   rpc: ['http://localhost:26657'],
           //   rest: ['http://localhost:1317']
           // },
-          cosmoshub: {
-            rpc: [
-              'https://cosmoshub-rpc.lavenderfive.com',
-              'https://cosmos-rpc.polkachu.com',
-              'https://rpc.cosmos.directory/cosmoshub',
-            ],
-            rest: [
-              'https://cosmoshub-api.lavenderfive.com',
-              'https://cosmos-rest.polkachu.com',
-              'https://rest.cosmos.directory/cosmoshub',
-            ],
-          },
+          // 'cosmoshub': {
+          //   rpc: ['http://localhost:26653'],
+          //   rest: ['http://localhost:1313']
+          // }
           // 'osmosistestnet': {
           //   rpc: ['https://rpc.testnet.osmosis.zone'],
           //   rest: ['https://lcd.testnet.osmosis.zone']
