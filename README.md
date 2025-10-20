@@ -47,14 +47,13 @@ Whether you're developing with React or Vue, Interchain Kit offers tools and com
   <img height="40" src="public/images/logos/frameworks/vue.svg" alt="Vue" />
 </p>
 
-
 ## 📦 Packages
 
-| Name                                                                                                       | Description                                                             |
-| ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| [@interchain-kit/core](https://github.com/hyperweb-io/interchain-kit/tree/main/packages/core)                   | Core Interchain Kit functionality                                           
-| [@interchain-kit/react](https://github.com/hyperweb-io/interchain-kit/tree/main/packages/react)                 | React integration with Interchain UI Modal for simple usage             |
-| [@interchain-kit/vue](https://github.com/hyperweb-io/interchain-kit/tree/main/packages/vue)       | Vue integration with Interchain UI Modal for simple usage |
+| Name                                                                                            | Description                                                 |
+| ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| [@interchain-kit/core](https://github.com/hyperweb-io/interchain-kit/tree/main/packages/core)   | Core Interchain Kit functionality                           |
+| [@interchain-kit/react](https://github.com/hyperweb-io/interchain-kit/tree/main/packages/react) | React integration with Interchain UI Modal for simple usage |
+| [@interchain-kit/vue](https://github.com/hyperweb-io/interchain-kit/tree/main/packages/vue)     | Vue integration with Interchain UI Modal for simple usage   |
 
 ## 📦 Wallets
 
@@ -92,6 +91,9 @@ Explore the range of wallet adapters available in our [wallets directory](https:
 </a>
 <a href="https://chromewebstore.google.com/detail/galaxy-station-wallet/akckefnapafjbpphkefbpkpcamkoaoai?hl=en">
   <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/interchain-kit/main/public/images/logos/wallets/galaxystation.svg" />
+</a>
+<a href="https://chromewebstore.google.com/detail/vultisig-extension/ggafhcdaplkhmmnlbfjpnnkepdfjaelb?hl=en">
+  <img width="30px" src="https://raw.githubusercontent.com/hyperweb-io/interchain-kit/main/public/images/logos/wallets/vultisig.svg" />
 </a>
 </p>
 
@@ -141,8 +143,8 @@ flowchart TD
 
 ```
 
-
 ## UML
+
 ```mermaid
 classDiagram
     class BaseWallet{
@@ -157,7 +159,7 @@ classDiagram
 
         +getAccounts(chainIds: string[])
 
-        +getSimpleAccount(chainId: string) 
+        +getSimpleAccount(chainId: string)
 
         +getOfflineSignerAmino(chainId: string)
 
@@ -197,12 +199,12 @@ classDiagram
     ExtensionWallet <|-- KeplrExtensionWallet
     ExtensionWallet <|-- LeapExtensionWallet
 
-  
+
     class KeplrExtensionWallet {
 
     }
     class KeplrMobileWallet {
-  
+
     }
 
 ```
@@ -233,21 +235,21 @@ lerna publish
 # lerna publish major
 ```
 
-## Interchain JavaScript Stack 
+## Interchain JavaScript Stack
 
 A unified toolkit for building applications and smart contracts in the Interchain ecosystem ⚛️
 
-| Category              | Tools                                                                                                                  | Description                                                                                           |
-|----------------------|------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
-| **Chain Information**   | [**Chain Registry**](https://github.com/hyperweb-io/chain-registry), [**Utils**](https://www.npmjs.com/package/@chain-registry/utils), [**Client**](https://www.npmjs.com/package/@chain-registry/client) | Everything from token symbols, logos, and IBC denominations for all assets you want to support in your application. |
-| **Wallet Connectors**| [**Interchain Kit**](https://github.com/hyperweb-io/interchain-kit)<sup>beta</sup>, [**Cosmos Kit**](https://github.com/hyperweb-io/cosmos-kit) | Experience the convenience of connecting with a variety of web3 wallets through a single, streamlined interface. |
-| **Signing Clients**          | [**InterchainJS**](https://github.com/hyperweb-io/interchainjs)<sup>beta</sup>, [**CosmJS**](https://github.com/cosmos/cosmjs) | A single, universal signing interface for any network |
-| **SDK Clients**              | [**Telescope**](https://github.com/hyperweb-io/telescope)                                                          | Your Frontend Companion for Building with TypeScript with Cosmos SDK Modules. |
-| **Starter Kits**     | [**Create Interchain App**](https://github.com/hyperweb-io/create-interchain-app)<sup>beta</sup>, [**Create Cosmos App**](https://github.com/hyperweb-io/create-cosmos-app) | Set up a modern Interchain app by running one command. |
-| **UI Kits**          | [**Interchain UI**](https://github.com/hyperweb-io/interchain-ui)                                                   | The Interchain Design System, empowering developers with a flexible, easy-to-use UI kit. |
-| **Testing Frameworks**          | [**Starship**](https://github.com/hyperweb-io/starship)                                                             | Unified Testing and Development for the Interchain. |
-| **TypeScript Smart Contracts** | [**Create Hyperweb App**](https://github.com/hyperweb-io/create-hyperweb-app)                              | Build and deploy full-stack blockchain applications with TypeScript |
-| **CosmWasm Contracts** | [**CosmWasm TS Codegen**](https://github.com/CosmWasm/ts-codegen)                                                   | Convert your CosmWasm smart contracts into dev-friendly TypeScript classes. |
+| Category                       | Tools                                                                                                                                                                                                     | Description                                                                                                         |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| **Chain Information**          | [**Chain Registry**](https://github.com/hyperweb-io/chain-registry), [**Utils**](https://www.npmjs.com/package/@chain-registry/utils), [**Client**](https://www.npmjs.com/package/@chain-registry/client) | Everything from token symbols, logos, and IBC denominations for all assets you want to support in your application. |
+| **Wallet Connectors**          | [**Interchain Kit**](https://github.com/hyperweb-io/interchain-kit)<sup>beta</sup>, [**Cosmos Kit**](https://github.com/hyperweb-io/cosmos-kit)                                                           | Experience the convenience of connecting with a variety of web3 wallets through a single, streamlined interface.    |
+| **Signing Clients**            | [**InterchainJS**](https://github.com/hyperweb-io/interchainjs)<sup>beta</sup>, [**CosmJS**](https://github.com/cosmos/cosmjs)                                                                            | A single, universal signing interface for any network                                                               |
+| **SDK Clients**                | [**Telescope**](https://github.com/hyperweb-io/telescope)                                                                                                                                                 | Your Frontend Companion for Building with TypeScript with Cosmos SDK Modules.                                       |
+| **Starter Kits**               | [**Create Interchain App**](https://github.com/hyperweb-io/create-interchain-app)<sup>beta</sup>, [**Create Cosmos App**](https://github.com/hyperweb-io/create-cosmos-app)                               | Set up a modern Interchain app by running one command.                                                              |
+| **UI Kits**                    | [**Interchain UI**](https://github.com/hyperweb-io/interchain-ui)                                                                                                                                         | The Interchain Design System, empowering developers with a flexible, easy-to-use UI kit.                            |
+| **Testing Frameworks**         | [**Starship**](https://github.com/hyperweb-io/starship)                                                                                                                                                   | Unified Testing and Development for the Interchain.                                                                 |
+| **TypeScript Smart Contracts** | [**Create Hyperweb App**](https://github.com/hyperweb-io/create-hyperweb-app)                                                                                                                             | Build and deploy full-stack blockchain applications with TypeScript                                                 |
+| **CosmWasm Contracts**         | [**CosmWasm TS Codegen**](https://github.com/CosmWasm/ts-codegen)                                                                                                                                         | Convert your CosmWasm smart contracts into dev-friendly TypeScript classes.                                         |
 
 ## Credits
 

@@ -323,11 +323,11 @@ const WalletConnectTd = ({ wallet }: { wallet: StatefulWallet }) => {
   );
 
   const connect = () => {
-    walletManager.connect(wallet.info?.name as string, 'osmosis');
+    walletManager.connect(wallet.info?.name as string, 'cosmoshub');
   };
 
   const disconnect = () => {
-    walletManager.disconnect(wallet.info?.name as string, 'osmosis');
+    walletManager.disconnect(wallet.info?.name as string, 'cosmoshub');
   };
 
   const uri = walletManager.walletConnectQRCodeUri;
