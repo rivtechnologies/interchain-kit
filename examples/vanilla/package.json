@@ -2,7 +2,7 @@
   "name": "@interchain-kit/vanilla-examples",
   "author": "Interweb <developers@interweb.co>",
   "description": "interchain-kit wallet connector core package",
-  "version": "0.3.53",
+  "version": "0.3.54",
   "type": "module",
   "private": true,
   "scripts": {
