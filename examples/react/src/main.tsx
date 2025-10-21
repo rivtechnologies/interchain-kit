@@ -33,6 +33,7 @@ import { compassWallet } from '@interchain-kit/compass-extension';
 import { trustWallet } from '@interchain-kit/trust-extension';
 import { leapCosmosExtensionMetaMask } from '@interchain-kit/leap-cosmos-extension-metamask';
 import { xdefinWallet } from '@interchain-kit/xdefi-extension';
+import { vultisigWallet } from '@interchain-kit/vultisig-extension';
 // import { MockWallet } from "@interchain-kit/mock-wallet";
 import { metaMaskWallet } from '@interchain-kit/metamask-extension';
 import { exodusWallet } from '@interchain-kit/exodus-extension';
@@ -61,7 +62,7 @@ const chainNames: string[] = [
   // "osmosistestnet",
   // 'osmosis',
   // "juno",
-  // "cosmoshub",
+  'cosmoshub',
   // "stargaze",
   // "noble",
   // "seitestnet2",
@@ -216,6 +217,7 @@ const _wallets: BaseWallet[] = [
   phantomWallet,
   backPackWallet,
   solflareWallet,
+  vultisigWallet,
 ];
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -270,9 +272,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     >
       <BrowserRouter>
         <App />
-        {/* <InterchainWalletModal
-          modalThemeProviderProps={{ defaultTheme: "light" }}
-        /> */}
+        {
+          <InterchainWalletModal
+            modalThemeProviderProps={{ defaultTheme: 'light' }}
+          />
+        }
       </BrowserRouter>
     </ChainProvider>
   </React.StrictMode>
