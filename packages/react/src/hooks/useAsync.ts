@@ -60,7 +60,14 @@ export function useAsync<T>({
   }, []);
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled) {
+      setState({
+        data: null,
+        isLoading: false,
+        error: null,
+      });
+      return;
+    }
 
     if (!disableCache && cache.has(cacheKey)) {
       setState(prev => ({

@@ -127,4 +127,32 @@ describe('useAsync', () => {
     expect(result.current.error).toBeNull();
     expect(queryFn).not.toHaveBeenCalled();
   });
+
+  it('should clear states on enabled change to false', async () => {
+    const queryFn = jest.fn().mockResolvedValue('data');
+
+    const { result, rerender } = renderHook(
+      ({ enabled }) =>
+        useAsync({
+          queryKey: 'test7',
+          queryFn,
+          enabled,
+        }),
+      {
+        initialProps: { enabled: true },
+      }
+    );
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+
+    expect(result.current.data).toBe('data');
+
+    rerender({ enabled: false });
+
+    expect(result.current.data).toBeNull();
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.error).toBeNull();
+  });
 });
