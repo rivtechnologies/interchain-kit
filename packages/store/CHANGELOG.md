@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.55](https://github.com/interchain-kit/store/compare/@interchain-kit/store@0.3.54...@interchain-kit/store@0.3.55) (2025-10-22)
+
+### Bug Fixes
+
+- correct return type of useChain hook ([80a1493](https://github.com/interchain-kit/store/commit/80a14936b10041621f65afd6a3d46a4f3a69874b))
+
 ## [0.3.54](https://github.com/interchain-kit/store/compare/@interchain-kit/store@0.3.53...@interchain-kit/store@0.3.54) (2025-10-21)
 
 **Note:** Version bump only for package @interchain-kit/store
