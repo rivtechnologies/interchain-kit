@@ -8,6 +8,7 @@ import { createProxiedWallet } from '../proxied-wallets';
 import { InterchainStore } from '../store';
 import { ChainWalletState, InterchainStoreType } from '../types';
 import { LocalStorage } from '../utils/local-storage';
+import type { ChainWalletStore } from './chain-wallet-store';
 import { WalletStore } from './wallet-store';
 export class WalletManagerStore implements WalletManager {
 
@@ -179,7 +180,7 @@ export class WalletManagerStore implements WalletManager {
     this.store.updateChainWalletState(walletName, chainName, data);
   }
 
-  getChainWalletByName(walletName: string, chainName: Chain['chainName']) {
+  getChainWalletByName(walletName: string, chainName: Chain['chainName']): ChainWalletStore | undefined {
     const walletStore = this.wallets.find(w => w.info.name === walletName);
     return walletStore?.getChainWalletStore(chainName);
   }

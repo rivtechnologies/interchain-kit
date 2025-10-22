@@ -21,7 +21,7 @@ export type UseChainReturnType = {
   chain: Chain,
   assetList: AssetList,
   address: string,
-  wallet: ChainWalletStore,
+  wallet: ChainWalletStore | undefined,
   rpcEndpoint: string | HttpEndpoint | unknown
   getSigningClient: () => Promise<SigningClient>
 
